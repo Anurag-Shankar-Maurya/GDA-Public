@@ -1,0 +1,182 @@
+{% extends "content_management_base.html" %}
+{% load static %}
+
+{% block title %}FAQ Detail: {{ faq.question }}{% endblock %}
+
+{% block breadcrumb %}
+<li class="flex items-center">
+    <a href="{% url 'faq_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">FAQs</a>
+    <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+</li>
+<li class="flex items-center">
+    <span class="text-gray-500 dark:text-gray-400">{{ faq.question|truncatechars:50 }}</span>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- FAQ Header -->
+    <div class="bg-gradient-to-r from-orange-600 to-red-600 rounded-lg shadow-lg overflow-hidden mb-8">
+        <div class="px-6 py-8 text-white">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-question-circle text-3xl mr-3 text-orange-200 content-center"></i>
+                        <h1 class="text-4xl font-bold">FAQ #{{ faq.order }}</h1>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        {% if faq.is_schema_ready %}
+                            <span class="px-3 py-1 bg-green-500 text-white text-sm font-medium rounded-full">Schema Ready</span>
+                        {% else %}
+                            <span class="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full">Schema Pending</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex-shrink-0">
+                    <div class="text-center">
+                        <div class="text-6xl font-bold text-orange-200">{{ faq.order }}</div>
+                        <div class="text-sm text-orange-100">Order</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Question & Answer -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-text-light dark:text-text-dark mb-4 flex items-center">
+                        <i class="fas fa-question text-orange-600 mr-2 content-center"></i>
+                        Question
+                    </h2>
+                    <div class="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg border-l-4 border-orange-500">
+                        <p class="text-xl font-semibold text-text-light dark:text-text-dark leading-relaxed">
+                            {{ faq.question }}
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold text-text-light dark:text-text-dark mb-4 flex items-center">
+                        <i class="fas fa-lightbulb text-green-600 mr-2 content-center"></i>
+                        Answer
+                    </h3>
+                    <div class="prose dark:prose-invert max-w-none bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border-l-4 border-green-500 leading-relaxed">
+                        {{ faq.answer|linebreaks }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- FAQ Details -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-info-circle text-primary-blue mr-2 content-center"></i>
+                    FAQ Details
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <i class="fas fa-sort-numeric-up text-gray-500 mr-3 mt-1 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Display Order</p>
+                            <p class="font-semibold text-lg">{{ faq.order }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-search text-gray-500 mr-3 mt-1 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">SEO Schema</p>
+                            <p class="font-semibold">
+                                {% if faq.is_schema_ready %}
+                                    <span class="text-green-600 flex items-center">
+                                        <i class="fas fa-check-circle mr-1 content-center"></i>Ready
+                                    </span>
+                                {% else %}
+                                    <span class="text-yellow-600 flex items-center">
+                                        <i class="fas fa-clock mr-1 content-center"></i>Pending
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- User Feedback -->
+                    {% if faq.total_votes > 0 %}
+                    <div class="flex items-start">
+                        <i class="fas fa-thumbs-up text-gray-500 mr-3 mt-1 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">User Feedback</p>
+                            <div class="flex items-center space-x-4">
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-green-600">{{ faq.thumbs_up }}</div>
+                                    <div class="text-xs text-gray-500">Helpful</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-red-600">{{ faq.thumbs_down }}</div>
+                                    <div class="text-xs text-gray-500">Not Helpful</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-blue-600">{{ faq.helpfulness_ratio }}%</div>
+                                    <div class="text-xs text-gray-500">Helpful</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-history text-primary-blue mr-2 content-center"></i>
+                    Timeline
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-plus-circle text-green-500 mr-3 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Created</p>
+                            <p class="font-semibold">{{ faq.created_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-edit text-blue-500 mr-3 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Last Updated</p>
+                            <p class="font-semibold">{{ faq.updated_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-cogs text-primary-blue mr-2 content-center"></i>
+                    Actions
+                </h3>
+                <div class="space-y-3">
+                    <a href="{% url 'faq_update' faq.pk %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-edit mr-2 content-center"></i>
+                        Edit FAQ
+                    </a>
+                    <a href="{% url 'faq_delete' faq.pk %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-trash-alt mr-2 content-center"></i>
+                        Delete FAQ
+                    </a>
+                    <a href="{% url 'faq_list' %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg shadow-sm text-text-light dark:text-text-dark bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-gray transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-arrow-left mr-2 content-center"></i>
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,570 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark"> <!-- Added 'dark' class for initial dark mode, will be toggled by JS -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Site{% endblock %}</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font aswome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable dark mode based on class
+            theme: {
+                extend: {
+                    colors: {
+                        // Define root color theme based on reference site
+                        'primary-blue': '#007bff', // Primary action color
+                        'secondary-gray': '#6c757d', // Secondary/footer color
+                        'accent-blue': '#3b82f6', // Hover/link color
+                        'bg-light': '#ffffff',
+                        'text-light': '#1f2937', // Dark text for light mode
+                        'bg-dark': '#111827', // Very dark background for dark mode
+                        'text-dark': '#e5e7eb', // Light text for dark mode
+                        'card-bg-light': '#f9fafb', // Light card background
+                        'card-bg-dark': '#1f2937', // Dark card background
+                        'border-light': '#e5e7eb', // Light border color
+                        'border-dark': '#374151', // Dark border color
+                    }
+                }
+            }
+        }
+    </script>
+    {% load static %}
+    <style>
+        /* Custom animations for enhanced UI */
+        @keyframes slideInFromTop {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.6);
+            }
+        }
+
+        .animate-slide-in-top {
+            animation: slideInFromTop 0.5s ease-out;
+        }
+
+        .animate-slide-in-left {
+            animation: slideInFromLeft 0.5s ease-out;
+        }
+
+        .animate-bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Enhanced mobile menu animations */
+        #mobile-menu-content {
+            animation: slideInFromTop 0.4s ease-out;
+        }
+
+        /* Smooth scrolling for better UX */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar - Applied globally to all scrollable elements */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #007bff, #3b82f6);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #0056b3, #2563eb);
+        }
+
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #60a5fa, #93c5fd);
+        }
+
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+        }
+
+        /* Ensure scrollbar applies to all scrollable containers */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #007bff #f1f1f1;
+        }
+
+        .dark * {
+            scrollbar-color: #60a5fa #374151;
+        }
+
+        /* Specific scrollbar styling for common scrollable elements */
+        aside::-webkit-scrollbar,
+        nav::-webkit-scrollbar,
+        main::-webkit-scrollbar,
+        .overflow-y-auto::-webkit-scrollbar,
+        .overflow-x-auto::-webkit-scrollbar,
+        .overflow-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        aside::-webkit-scrollbar-track,
+        nav::-webkit-scrollbar-track,
+        main::-webkit-scrollbar-track,
+        .overflow-y-auto::-webkit-scrollbar-track,
+        .overflow-x-auto::-webkit-scrollbar-track,
+        .overflow-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .dark aside::-webkit-scrollbar-track,
+        .dark nav::-webkit-scrollbar-track,
+        .dark main::-webkit-scrollbar-track,
+        .dark .overflow-y-auto::-webkit-scrollbar-track,
+        .dark .overflow-x-auto::-webkit-scrollbar-track,
+        .dark .overflow-scroll::-webkit-scrollbar-track {
+            background: #374151;
+        }
+    </style>
+    {% block static_css %}{% endblock %}
+</head>
+<body class="bg-bg-light text-text-light dark:bg-bg-dark dark:text-text-dark font-sans antialiased transition-colors duration-300 flex h-screen">
+    <!-- Sidebar for Desktop -->
+    <aside class="w-64 bg-gradient-to-b from-card-bg-light to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-xl transition-all duration-300 hidden lg:flex flex-col border-r border-border-light dark:border-border-dark">
+        <div class="py-6 px-6 border-b border-border-light dark:border-border-dark">
+            <a class="flex items-center space-x-3 text-xl font-extrabold bg-gradient-to-r from-primary-blue to-accent-blue bg-clip-text text-transparent hover:from-accent-blue hover:to-primary-blue transition-all duration-300 transform hover:scale-105" href="{% url 'management_dashboard' %}">
+                <img src="{% static 'images/logo.png' %}" alt="GDA Logo" class="h-12 w-auto rounded">
+                <span>GDA Content Management</span>
+            </a>
+        </div>
+        <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+            <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'management_dashboard' %}">
+                <i class="fas fa-tachometer-alt mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <span>Dashboard</span>
+                <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
+            </a>
+            <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'project_list' %}">
+                <i class="fas fa-folder mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <span>Projects</span>
+                <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
+            </a>
+            <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'news_event_list' %}">
+                <i class="fas fa-newspaper mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <span>News & Events</span>
+                <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
+            </a>
+            <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'success_story_list' %}">
+                <i class="fas fa-star mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <span>Success Stories</span>
+                <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
+            </a>
+            <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'faq_list' %}">
+                <i class="fas fa-question-circle mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <span>FAQs</span>
+                <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
+            </a>
+            <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'user_analytics' %}">
+                <i class="fas fa-chart-bar mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <span>User Analytics</span>
+                <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
+            </a>
+            <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'application_analytics' %}">
+                <i class="fas fa-chart-pie mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                <span>Application Analytics</span>
+                <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
+            </a>
+        </nav>
+        <div class="px-4 py-6 border-t border-border-light dark:border-border-dark bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-card-bg-dark">
+            {% if user.is_authenticated and user.is_staff %}
+            <div class="mb-4">
+                <a href="{% url 'profile' %}" class="group flex items-center px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+                    <div class="flex-shrink-0 mr-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-primary-blue to-accent-blue rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-xl transition-all duration-300">
+                            {{ user.first_name|first|default:user.username|first|upper }}
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-text-light dark:text-text-dark group-hover:text-white truncate">{{ user.get_full_name|default:user.username }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-100 truncate">{{ user.email }}</p>
+                        <div class="flex items-center mt-1">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                            <span class="text-xs text-green-600 dark:text-green-400 font-medium">Online</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all duration-300"></i>
+                </a>
+            </div>
+            {% else %}
+            <div class="mb-4">
+                <a href="{% url 'login' %}" class="group flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-primary-blue to-accent-blue text-white hover:from-accent-blue hover:to-primary-blue transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-medium">
+                    <i class="fas fa-sign-in-alt mr-2 group-hover:rotate-12 transition-transform duration-300"></i>
+                    <span>Login</span>
+                </a>
+            </div>
+            {% endif %}
+            <button id="theme-toggle" type="button" class="w-full group flex items-center justify-center px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-moon h-5 w-5 mr-3 group-hover:rotate-180 transition-transform duration-500" id="theme-toggle-dark-icon"></i>
+                <i class="fas fa-sun h-5 w-5 mr-3 group-hover:rotate-180 transition-transform duration-500" id="theme-toggle-light-icon"></i>
+                <span class="font-medium">Toggle Theme</span>
+                <i class="fas fa-palette ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="fixed inset-0 bg-bg-light dark:bg-bg-dark bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center z-50 transition-opacity duration-500">
+            <div class="text-center">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent mb-4"></div>
+                <p class="text-text-light dark:text-text-dark font-medium">Loading GDA Content...</p>
+            </div>
+        </div>
+
+        <!-- Top Bar for Mobile and Breadcrumbs/Quick Actions -->
+        <header class="bg-gradient-to-r from-card-bg-light to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-xl py-6 transition-all duration-300 lg:hidden border-b border-border-light dark:border-border-dark">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+                <a class="text-2xl font-extrabold bg-gradient-to-r from-primary-blue to-accent-blue bg-clip-text text-transparent hover:from-accent-blue hover:to-primary-blue transition-all duration-300 transform hover:scale-105" href="{% url 'management_dashboard' %}">
+                    <i class="fas fa-crown mr-2 text-yellow-500"></i>
+                    GDA Content
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex lg:hidden">
+                    <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-3 rounded-xl text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Icon when menu is closed. -->
+                        <i class="fas fa-bars h-6 w-6 block transition-transform duration-300 hover:rotate-90" id="mobile-menu-open-icon"></i>
+                        <!-- Icon when menu is open. -->
+                        <i class="fas fa-times h-6 w-6 hidden transition-transform duration-300 hover:rotate-90" id="mobile-menu-close-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile menu, show/hide based on menu state. -->
+            <div class="lg:hidden hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gradient-to-b from-card-bg-light to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-2xl border-t border-border-light dark:border-border-dark transform transition-all duration-500 ease-in-out" id="mobile-menu-content">
+                    <a href="{% url 'management_dashboard' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
+                        <i class="fas fa-tachometer-alt mr-3 text-lg group-hover:animate-pulse"></i>
+                        Dashboard
+                        <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </a>
+                    <a href="{% url 'project_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
+                        <i class="fas fa-folder mr-3 text-lg group-hover:animate-pulse"></i>
+                        Projects
+                        <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </a>
+                    <a href="{% url 'news_event_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
+                        <i class="fas fa-newspaper mr-3 text-lg group-hover:animate-pulse"></i>
+                        News & Events
+                        <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </a>
+                    <a href="{% url 'success_story_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
+                        <i class="fas fa-star mr-3 text-lg group-hover:animate-pulse"></i>
+                        Success Stories
+                        <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </a>
+                    <a href="{% url 'faq_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
+                        <i class="fas fa-question-circle mr-3 text-lg group-hover:animate-pulse"></i>
+                        FAQs
+                        <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </a>
+                    <a href="{% url 'user_analytics' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
+                        <i class="fas fa-chart-bar mr-3 text-lg group-hover:animate-pulse"></i>
+                        User Analytics
+                        <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </a>
+                    <a href="{% url 'application_analytics' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
+                        <i class="fas fa-chart-pie mr-3 text-lg group-hover:animate-pulse"></i>
+                        Application Analytics
+                        <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                    </a>
+                    <!-- Add other navigation links if needed -->
+                     <!-- Authentication Links -->
+                    {% if user.is_authenticated and user.is_staff %}
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
+                        <a href="{% url 'profile' %}" class="flex items-center px-3 py-2 rounded-md hover:bg-primary-blue hover:text-white transition-colors duration-300 cursor-pointer">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-primary-blue rounded-full flex items-center justify-center text-white font-semibold">
+                                    {{ user.first_name|first|default:user.username|first|upper }}
+                                </div>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-base font-medium text-text-light dark:text-text-dark">{{ user.get_full_name|default:user.username }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</p>
+                            </div>
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
+                        <a href="{% url 'login' %}" class="block w-full px-3 py-2 rounded-md text-base text-text-light dark:text-text-dark hover:bg-primary-blue hover:text-white transition-colors duration-300 text-center">
+                            <i class="fas fa-sign-in-alt mr-2 content-center"></i> Login
+                        </a>
+                    </div>
+                    {% endif %}
+                    <!-- theme toggle -->
+                    <div class="px-2 pb-3 pt-2">
+                        <button id="theme-toggle-mobile" type="button" class="w-full text-left p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-blue flex items-center justify-center space-x-2 transition-colors duration-300">
+                            <i class="fas fa-moon h-6 w-6 content-center" id="theme-toggle-dark-icon-mobile"></i>
+                            <i class="fas fa-sun h-6 w-6 content-center" id="theme-toggle-light-icon-mobile"></i>
+                            <span>Toggle Theme</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-900">
+            <div class="container mx-auto px-6 py-8">
+                <!-- Breadcrumb Navigation -->
+                <nav class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4 max-w-7xl mx-auto" aria-label="Breadcrumb">
+                    <ol class="list-none p-0 flex flex-wrap">
+                        {% block breadcrumb %}{% endblock %}
+                    </ol>
+                </nav>
+
+                <!-- Quick Actions Section -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-lg p-4 mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-bolt mr-3 text-yellow-500"></i>
+                        Quick Actions
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                        <a href="{% url 'project_create' %}" class="group flex items-center p-2 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-plus text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">New Project</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">Create a new project</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'news_event_create' %}" class="group flex items-center p-2 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900 dark:to-yellow-800 rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-bullhorn text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">Add News</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">Publish news or event</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'success_story_create' %}" class="group flex items-center p-2 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-star text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">Success Story</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">Share an impact story</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'faq_create' %}" class="group flex items-center p-2 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-question-circle text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">Add FAQ</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">Create help content</p>
+                            </div>
+                        </a>
+
+                        <a href="{% url 'user_create' %}" class="group flex items-center p-2 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-user-plus text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">Add User</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">Create new user account</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-mobile');
+        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        // For script at the end of body, we initialize the theme based on localStorage or system preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIconMobile.classList.remove('hidden');
+            themeToggleLightIconMobile.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIcon.classList.add('hidden');
+            themeToggleLightIconMobile.classList.remove('hidden');
+            themeToggleDarkIconMobile.classList.add('hidden');
+        }
+
+        function toggleTheme() {
+            // toggle icons
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            themeToggleDarkIconMobile.classList.toggle('hidden');
+            themeToggleLightIconMobile.classList.toggle('hidden');
+
+            // if set via local storage previously
+            if (localStorage.getItem('theme')) {
+                if (localStorage.getItem('theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            } else {
+                // if system default is dark
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+        // Mobile Menu Toggle Logic
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuContent = document.getElementById('mobile-menu-content');
+        const mobileMenuOpenIcon = document.getElementById('mobile-menu-open-icon');
+        const mobileMenuCloseIcon = document.getElementById('mobile-menu-close-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+
+            if (isHidden) {
+                // Opening menu
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => {
+                    mobileMenuContent.classList.add('animate-slide-in-top');
+                }, 10);
+            } else {
+                // Closing menu
+                mobileMenuContent.classList.remove('animate-slide-in-top');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 400);
+            }
+
+            // Toggle hamburger icon with animation
+            mobileMenuOpenIcon.classList.toggle('hidden');
+            mobileMenuCloseIcon.classList.toggle('hidden');
+
+            // Add bounce effect to button
+            mobileMenuButton.classList.add('animate-bounce-in');
+            setTimeout(() => {
+                mobileMenuButton.classList.remove('animate-bounce-in');
+            }, 600);
+        });
+
+        // Active Nav Link Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                // Check if the link's href matches the current path
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('bg-primary-blue', 'text-white');
+                    link.classList.remove('hover:text-accent-blue', 'dark:text-text-dark', 'hover:bg-primary-blue', 'hover:text-white');
+                }
+            });
+
+            // Hide loading overlay with animation
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) {
+                setTimeout(() => {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                }, 800);
+            }
+
+            // Add entrance animations to main content
+            const mainContent = document.querySelector('main');
+            if (mainContent) {
+                mainContent.classList.add('animate-slide-in-left');
+            }
+        });
+    </script>
+    {% block static_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,549 @@
+{% extends 'content_management_base.html' %}
+{% load static %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block breadcrumb %}
+<li class="flex items-center">
+    <a href="{% url 'management_dashboard' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">Dashboard</a>
+</li>
+{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js for data visualization -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Modern Gradient Header Section -->
+<div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-800 rounded-xl shadow-2xl p-8 mb-8 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+    <div class="relative z-10">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-2 flex items-center">
+                    <i class="fas fa-tachometer-alt mr-4 text-yellow-300"></i>
+                    Analytics Dashboard
+                </h1>
+                <p class="text-blue-100 text-lg md:text-xl">Comprehensive overview of your content management system</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-right">
+                    <p class="text-sm text-blue-200">Last Updated</p>
+                    <p class="text-lg font-semibold">{{ last_updated|default:"Just now" }}</p>
+                </div>
+                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-chart-line text-2xl text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white border-opacity-20">
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-yellow-300">{{ total_projects }}</div>
+                <div class="text-sm text-blue-200">Projects</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-green-300">{{ active_projects }}</div>
+                <div class="text-sm text-blue-200">Active</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-purple-300">{{ total_beneficiaries }}</div>
+                <div class="text-sm text-blue-200">Beneficiaries</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-pink-300">{{ total_hours_contributed }}</div>
+                <div class="text-sm text-blue-200">Hours</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- Enhanced Analytics Navigation -->
+    <div class="mb-8">
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-chart-bar mr-3 text-primary-blue"></i>
+                Detailed Analytics
+            </h2>
+            <div class="flex flex-wrap gap-4">
+                <a href="{% url 'user_analytics' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fas fa-users mr-3"></i>
+                    User Analytics
+                    <i class="fas fa-arrow-right ml-3"></i>
+                </a>
+                <a href="{% url 'application_analytics' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fas fa-chart-pie mr-3"></i>
+                    Application Analytics
+                    <i class="fas fa-arrow-right ml-3"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Total Projects</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_projects }}</p>
+                <p class="text-sm opacity-80 mt-1">All time</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Active Projects</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ active_projects }}</p>
+                <p class="text-sm opacity-80 mt-1">Currently running</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-play-circle"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">News & Events</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_news_events }}</p>
+                <p class="text-sm opacity-80 mt-1">Published content</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-newspaper"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Success Stories</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_success_stories }}</p>
+                <p class="text-sm opacity-80 mt-1">Impact stories</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-trophy"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Total FAQs</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_faqs }}</p>
+                <p class="text-sm opacity-80 mt-1">Help content</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-question-circle"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Total Beneficiaries</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_beneficiaries }}</p>
+                <p class="text-sm opacity-80 mt-1">People helped</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Hours Contributed</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_hours_contributed }}</p>
+                <p class="text-sm opacity-80 mt-1">Community effort</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Visualization & Content Analytics -->
+    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <i class="fas fa-chart-pie mr-3 text-primary-blue"></i>
+                Content Distribution
+            </h3>
+            <div class="relative">
+                <canvas id="contentDistributionChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <i class="fas fa-chart-line mr-3 text-green-500"></i>
+                Monthly Activity Trend
+            </h3>
+            <div class="relative">
+                <canvas id="activityTrendChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Enhanced Recent Content Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Recent Projects -->
+        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <i class="fas fa-folder-open mr-3 text-blue-500"></i>
+                Recent Projects
+                <span class="ml-auto text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">{{ recent_projects|length }}</span>
+            </h3>
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700 space-y-1">
+                {% for project in recent_projects %}
+                <li class="py-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-3 py-2 transition-colors duration-200 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-project-diagram text-blue-600 dark:text-blue-400"></i>
+                        </div>
+                        <div>
+                            <a href="{% url 'project_detail' pk=project.pk %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium group-hover:underline transition-all duration-200">{{ project.title|truncatechars:25 }}</a>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ project.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                            {% if project.status == 'active' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300{% else %}bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                            {{ project.get_status_display|default:"Draft" }}
+                        </span>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="py-8 text-center">
+                    <i class="fas fa-folder-open text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                    <p class="text-gray-500 dark:text-gray-400">No recent projects.</p>
+                    <a href="{% url 'project_create' %}" class="inline-flex items-center mt-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+                        <i class="fas fa-plus mr-1"></i> Create your first project
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% if recent_projects %}
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="{% url 'project_list' %}" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium transition-colors duration-200">
+                    View all projects
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent News & Events -->
+        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <i class="fas fa-newspaper mr-3 text-yellow-500"></i>
+                Recent News & Events
+                <span class="ml-auto text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">{{ recent_news_events|length }}</span>
+            </h3>
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700 space-y-1">
+                {% for news in recent_news_events %}
+                <li class="py-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-3 py-2 transition-colors duration-200 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-bullhorn text-yellow-600 dark:text-yellow-400"></i>
+                        </div>
+                        <div>
+                            <a href="{% url 'news_event_detail' pk=news.pk %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium group-hover:underline transition-all duration-200">{{ news.title|truncatechars:25 }}</a>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ news.publish_date|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                            {% if news.is_published %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300{% else %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300{% endif %}">
+                            {% if news.is_published %}Published{% else %}Draft{% endif %}
+                        </span>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="py-8 text-center">
+                    <i class="fas fa-newspaper text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                    <p class="text-gray-500 dark:text-gray-400">No recent news or events.</p>
+                    <a href="{% url 'news_event_create' %}" class="inline-flex items-center mt-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+                        <i class="fas fa-plus mr-1"></i> Create your first news item
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% if recent_news_events %}
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="{% url 'news_event_list' %}" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium transition-colors duration-200">
+                    View all news & events
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Success Stories -->
+        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <i class="fas fa-trophy mr-3 text-purple-500"></i>
+                Recent Success Stories
+                <span class="ml-auto text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">{{ recent_success_stories|length }}</span>
+            </h3>
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700 space-y-1">
+                {% for story in recent_success_stories %}
+                <li class="py-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-3 py-2 transition-colors duration-200 group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-star text-purple-600 dark:text-purple-400"></i>
+                        </div>
+                        <div>
+                            <a href="{% url 'success_story_detail' pk=story.pk %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium group-hover:underline transition-all duration-200">{{ story.title|truncatechars:25 }}</a>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ story.published_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                            {% if story.is_published %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300{% else %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300{% endif %}">
+                            {% if story.is_published %}Published{% else %}Draft{% endif %}
+                        </span>
+                    </div>
+                </li>
+                {% empty %}
+                <li class="py-8 text-center">
+                    <i class="fas fa-trophy text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                    <p class="text-gray-500 dark:text-gray-400">No recent success stories.</p>
+                    <a href="{% url 'success_story_create' %}" class="inline-flex items-center mt-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium">
+                        <i class="fas fa-plus mr-1"></i> Share your first success story
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% if recent_success_stories %}
+            <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="{% url 'success_story_list' %}" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 font-medium transition-colors duration-200">
+                    View all success stories
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- <div class="mt-12">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Data Filtering and Export (Placeholder)</h2>
+        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 text-gray-500 dark:text-gray-400">
+            <p>Filtering controls (e.g., date range, content type) and export buttons (CSV, PDF) will be implemented here.</p>
+            <button class="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Export Data</button>
+        </div>
+    </div> -->
+
+</div>
+
+{% endblock %}
+
+{% block static_js %}
+<script>
+// Content Distribution Pie Chart
+const contentDistributionCtx = document.getElementById('contentDistributionChart').getContext('2d');
+const contentDistributionChart = new Chart(contentDistributionCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Projects', 'News & Events', 'Success Stories', 'FAQs'],
+        datasets: [{
+            data: [{{ total_projects|default:0 }}, {{ total_news_events|default:0 }}, {{ total_success_stories|default:0 }}, {{ total_faqs|default:0 }}],
+            backgroundColor: [
+                'rgba(59, 130, 246, 0.8)',
+                'rgba(245, 158, 11, 0.8)',
+                'rgba(168, 85, 247, 0.8)',
+                'rgba(239, 68, 68, 0.8)'
+            ],
+            borderColor: [
+                'rgba(59, 130, 246, 1)',
+                'rgba(245, 158, 11, 1)',
+                'rgba(168, 85, 247, 1)',
+                'rgba(239, 68, 68, 1)'
+            ],
+            borderWidth: 2,
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                        return `${label}: ${value} (${percentage}%)`;
+                    }
+                }
+            }
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+});
+
+// Monthly Activity Trend Line Chart
+const activityTrendCtx = document.getElementById('activityTrendChart').getContext('2d');
+const activityTrendChart = new Chart(activityTrendCtx, {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            label: 'Projects Created',
+            data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 38, 42, 45],
+            borderColor: 'rgba(59, 130, 246, 1)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+        }, {
+            label: 'Success Stories',
+            data: [8, 12, 10, 18, 15, 22, 20, 25, 28, 30, 35, 38],
+            borderColor: 'rgba(168, 85, 247, 1)',
+            backgroundColor: 'rgba(168, 85, 247, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: 'rgba(168, 85, 247, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            intersect: false,
+            mode: 'index'
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    usePointStyle: true,
+                    padding: 20
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: 'rgba(59, 130, 246, 0.5)',
+                borderWidth: 1
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)'
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)'
+                }
+            }
+        },
+        animation: {
+            duration: 2000,
+            easing: 'easeInOutQuart'
+        }
+    }
+});
+
+// Add loading animation for charts
+document.addEventListener('DOMContentLoaded', function() {
+    const chartContainers = document.querySelectorAll('.chart-container');
+    chartContainers.forEach(container => {
+        container.style.opacity = '0';
+        container.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            container.style.transition = 'all 0.6s ease-out';
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        }, 300);
+    });
+
+    // Animate summary cards on scroll
+    const summaryCards = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-4 > div');
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, index * 100);
+            }
+        });
+    }, observerOptions);
+
+    summaryCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease-out';
+        observer.observe(card);
+    });
+
+    // Add hover effects for quick action cards
+    const quickActionCards = document.querySelectorAll('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 a');
+    quickActionCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-4px) scale(1.02)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Animate header gradient on load
+    const header = document.querySelector('.bg-gradient-to-r.from-blue-600');
+    if (header) {
+        header.style.opacity = '0';
+        header.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+            header.style.transition = 'all 0.8s ease-out';
+            header.style.opacity = '1';
+            header.style.transform = 'translateY(0)';
+        }, 100);
+    }
+
+    // Add pulse animation to key metrics in header
+    const headerStats = document.querySelectorAll('.bg-gradient-to-r.from-blue-600 .grid.grid-cols-2.md\\:grid-cols-4 .font-bold');
+    headerStats.forEach((stat, index) => {
+        setTimeout(() => {
+            stat.style.animation = 'pulse 2s ease-in-out';
+        }, 1000 + index * 200);
+    });
+});
+</script>
+{% endblock %}

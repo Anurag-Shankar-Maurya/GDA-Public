@@ -1,0 +1,182 @@
+{% extends "content_base.html" %}
+{% load i18n %}
+
+{% block title %}GDA News: {{ news_event.title }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'content_news_event_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "News & Events" %}</a>
+        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <span class="text-gray-500 dark:text-gray-400">{{ news_event.title }}</span>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                <article class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl overflow-hidden">
+                    
+                    {# Back button #}
+                    <div class="p-6 pb-0">
+                        <a href="{% url 'content_news_event_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-secondary-gray hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 transition-all duration-300 ease-in-out hover:shadow-lg transform hover:scale-105">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            {% trans "Back to News & Events" %}
+                        </a>
+                    </div>
+
+                    <!-- Article Header -->
+                    <div class="p-8">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% if news_event.is_published %}
+                                <span class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-check-circle mr-1"></i>{% trans "Published" %}
+                                </span>
+                            {% else %}
+                                <span class="px-3 py-1 bg-gray-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-file-alt mr-1"></i>{% trans "Draft" %}
+                                </span>
+                            {% endif %}
+                            
+                            <span class="px-3 py-1 {% if news_event.content_type == 'news' %}bg-blue-500{% elif news_event.content_type == 'event' %}bg-purple-500{% else %}bg-orange-500{% endif %} text-white text-xs font-semibold rounded-full">
+                                <i class="fas {% if news_event.content_type == 'news' %}fa-newspaper{% elif news_event.content_type == 'event' %}fa-calendar{% else %}fa-bullhorn{% endif %} mr-1"></i>
+                                {{ news_event.get_content_type_display }}
+                            </span>
+                            
+                            {% if news_event.is_hero_highlight %}
+                                <span class="px-3 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-star mr-1"></i>{% trans "Hero Highlight" %}
+                                </span>
+                            {% endif %}
+                            {% if news_event.is_featured %}
+                                <span class="px-3 py-1 bg-rose-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-heart mr-1"></i>{% trans "Featured" %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight">
+                            {{ news_event.title }}
+                        </h1>
+                        
+                        <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-2 text-blue-600"></i>
+                                <span>{{ news_event.publish_date|date:"F d, Y" }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-clock mr-2 text-green-600"></i>
+                                <span>{{ news_event.publish_date|date:"H:i" }}</span>
+                            </div>
+                        </div>
+
+                        {% if news_event.cover_image_blob or news_event.cover_image or news_event.cover_image_url %}
+                        <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
+                            {% if news_event.cover_image_blob %}
+                                <img src="{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}" alt="{{ news_event.title }} cover" class="w-full h-96 object-cover">
+                            {% elif news_event.cover_image %}
+                                <img src="{{ news_event.cover_image.url }}" alt="{{ news_event.title }} cover" class="w-full h-96 object-cover">
+                            {% elif news_event.cover_image_url %}
+                                <img src="{{ news_event.cover_image_url }}" alt="{{ news_event.title }} cover" class="w-full h-96 object-cover">
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 mb-8">
+                            {{ news_event.body|linebreaks }}
+                        </div>
+
+                        {% if news_event.external_link %}
+                        <div class="mt-8 p-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
+                            <div class="flex items-center justify-between text-white">
+                                <div>
+                                    <h3 class="text-lg font-bold mb-2">
+                                        <i class="fas fa-link mr-2"></i>{% trans "External Resource" %}
+                                    </h3>
+                                    <p class="opacity-90 text-sm">{% trans "Read the full article on the external website" %}</p>
+                                </div>
+                                <a href="{{ news_event.external_link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                                    <i class="fas fa-external-link-alt mr-2"></i>
+                                    {% trans "Visit Site" %}
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </article>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Article Info -->
+                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                        {% trans "Article Info" %}
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <div class="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-wide mb-1">{% trans "Type" %}</div>
+                            <div class="text-sm font-bold text-blue-900 dark:text-blue-300">{{ news_event.get_content_type_display }}</div>
+                        </div>
+                        <div class="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                            <div class="text-xs text-green-600 dark:text-green-400 uppercase tracking-wide mb-1">{% trans "Published" %}</div>
+                            <div class="text-sm font-bold text-green-900 dark:text-green-300">{{ news_event.publish_date|date:"M d, Y H:i" }}</div>
+                        </div>
+                        <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                            <div class="text-xs text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">{% trans "Last Updated" %}</div>
+                            <div class="text-sm font-bold text-purple-900 dark:text-purple-300">{{ news_event.updated_at|date:"M d, Y" }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related News & Events -->
+                {% if related_news_events %}
+                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-newspaper text-blue-600 mr-2"></i>
+                        {% trans "Related Articles" %}
+                    </h3>
+                    <div class="space-y-4">
+                        {% for rel_news in related_news_events %}
+                        <a href="{% url 'content_news_event_detail' rel_news.pk %}" class="block group h-full">
+                            <div class="h-full p-4 bg-gradient-to-br {% if rel_news.content_type == 'news' %}from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border-blue-200 dark:border-blue-700{% elif rel_news.content_type == 'event' %}from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-purple-200 dark:border-purple-700{% else %}from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 border-orange-200 dark:border-orange-700{% endif %} rounded-xl border hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105">
+                                <div class="flex items-start justify-between mb-3">
+                                    <span class="px-3 py-1 {% if rel_news.content_type == 'news' %}bg-blue-500{% elif rel_news.content_type == 'event' %}bg-purple-500{% else %}bg-orange-500{% endif %} text-white rounded-full text-xs font-bold flex items-center gap-1">
+                                        <i class="{% if rel_news.content_type == 'news' %}fas fa-newspaper{% elif rel_news.content_type == 'event' %}fas fa-calendar{% else %}fas fa-bullhorn{% endif %}"></i>
+                                        {{ rel_news.get_content_type_display }}
+                                    </span>
+                                </div>
+                                <h4 class="font-bold text-gray-900 dark:text-white mb-3 group-hover:{% if rel_news.content_type == 'news' %}text-blue-700 dark:text-blue-300{% elif rel_news.content_type == 'event' %}text-purple-700 dark:text-purple-300{% else %}text-orange-700 dark:text-orange-300{% endif %} transition-colors line-clamp-3 leading-snug">
+                                    {{ rel_news.title }}
+                                </h4>
+                                <div class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 pt-3 border-t {% if rel_news.content_type == 'news' %}border-blue-200 dark:border-blue-700{% elif rel_news.content_type == 'event' %}border-purple-200 dark:border-purple-700{% else %}border-orange-200 dark:border-orange-700{% endif %}">
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ rel_news.publish_date|date:"M d, Y" }}
+                                    </span>
+                                    <span class="{% if rel_news.content_type == 'news' %}text-blue-600 dark:text-blue-400{% elif rel_news.content_type == 'event' %}text-purple-600 dark:text-purple-400{% else %}text-orange-600 dark:text-orange-400{% endif %} group-hover:translate-x-1 transition-transform font-semibold">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'content_news_event_list' %}" class="block mt-6 w-full text-center px-4 py-2 bg-gradient-to-r {% if news_event.content_type == 'news' %}from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700{% elif news_event.content_type == 'event' %}from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700{% else %}from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700{% endif %} text-white rounded-lg font-semibold transition-all duration-300 hover:shadow-lg">
+                        <i class="fas fa-list mr-2"></i>{% trans "View All News & Events" %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,353 @@
+{% extends "content_base.html" %}
+{% load i18n %}
+
+{% block title %}GDA: FAQs{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'content_faq_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "FAQs" %}</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="relative max-w-7xl h-[60vh] mx-auto px-4 py-32 text-center bg-gradient-to-br from-primary-blue via-accent-blue to-blue-600 dark:from-blue-800 dark:via-blue-700 dark:to-blue-900 text-white rounded-2xl shadow-2xl mb-16 hero-section overflow-hidden flex flex-col items-center justify-center">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
+            <div class="absolute top-40 right-20 w-24 h-24 bg-white rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-20 left-1/4 w-16 h-16 bg-white rounded-full animate-pulse" style="animation-delay: 2s;"></div>
+        </div>
+        
+        <div class="relative z-10">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 animate-fade-in-up bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100 line-clamp-2 ellipsis-title">
+                {% trans "Frequently Asked" %}<br>
+                <span class="text-yellow-300">{% trans "Questions" %}</span>
+            </h1>
+            <p class="text-lg md:text-xl lg:text-2xl mb-10 leading-relaxed opacity-95 animate-fade-in max-w-3xl mx-auto line-clamp-2 ellipsis-subtitle">
+                {% trans "Find answers to common questions about our volunteer programs and community initiatives." %}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#faq-section" class="group inline-flex items-center bg-white text-primary-blue font-bold py-4 px-8 rounded-full shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
+                    <i class="fas fa-arrow-down animate-pulse content-center"></i>
+                </a>
+                <!-- <a href="#" class="group inline-flex items-center bg-transparent border-2 border-white text-white font-bold py-4 px-8 rounded-full hover:bg-white hover:text-primary-blue transition-all duration-300 ease-in-out transform hover:scale-105">
+                    <i class="fas fa-play mr-2 group-hover:animate-pulse"></i>
+                    Watch Video
+                </a> -->
+            </div>
+        </div>
+    </section>
+
+    <section id="faq-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-4xl font-bold text-center mb-12 text-text-light dark:text-text-dark">{% trans "Frequently Asked Questions" %}</h1>
+
+        <!-- Search and Sort Form -->
+        <form method="get" class="bg-card-bg-light dark:bg-card-bg-dark p-6 rounded-lg shadow-md border border-border-light dark:border-border-dark mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                <!-- Search -->
+                <div class="md:col-span-1">
+                    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{% trans "Search:" %}</label>
+                    <input type="text" id="search" name="search" placeholder="{% trans "Search FAQs..." %}" value="{{ request.GET.search }}"
+                           class="p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
+                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
+                </div>
+
+                <!-- Sort -->
+                <div class="md:col-span-1">
+                    <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{% trans "Sort By:" %}</label>
+                    <select id="sort" name="sort"
+                            class="p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                                   focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
+                                   dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
+                        {% for option in sort_options %}
+                            <option value="{{ option.value }}" {% if request.GET.sort == option.value %}selected{% endif %}>{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Spacer div for alignment on larger screens if needed, otherwise removed for simplicity in this case -->
+                <div class="hidden md:block"></div>
+
+                <!-- Submit and Clear Buttons -->
+                <div class="md:col-span-3 flex flex-col md:flex-row justify-center items-center space-y-3 md:space-y-0 md:space-x-4 pt-4">
+                    <button type="submit" class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-filter h-5 w-5 content-center"></i>
+                        {% trans "Apply Filters" %}
+                    </button>
+                    <button type="button" class="clear-filters-btn inline-flex items-center px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300">
+                         <i class="fas fa-times h-5 w-5 content-center"></i>
+                        {% trans "Clear Filters" %}
+                    </button>
+                </div>
+            </div>
+            <!-- Preserve other GET parameters if any -->
+            {% for key, value in request.GET.items %}
+                {% if key not in 'search sort' %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                {% endif %}
+            {% endfor %}
+        </form>
+
+        {% if faqs %}
+            <div class="max-w-4xl mx-auto space-y-4">
+                {% for faq in faqs %}
+                    <div class="faq-item bg-card-bg-light dark:bg-card-bg-dark border border-border-light dark:border-border-dark rounded-xl overflow-hidden transition-all duration-300">
+                        <button class="faq-question w-full px-6 py-4 text-left flex items-center justify-between cursor-pointer group hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                            <h3 class="text-lg font-semibold text-primary-blue dark:text-blue-400 group-hover:text-accent-blue transition-colors duration-200">{{ faq.question }}</h3>
+                            <svg class="faq-icon w-6 h-6 text-primary-blue dark:text-blue-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="faq-answer px-6 overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+                            <p class="text-gray-700 dark:text-gray-300 text-base pb-6">
+                                {{ faq.answer }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination Controls -->
+            {% if is_paginated %}
+                <div class="flex justify-center mt-8 space-x-1 sm:space-x-2 overflow-x-auto">
+                    <!-- Previous Button -->
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    {% else %}
+                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                            <i class="fas fa-angle-left"></i>
+                        </span>
+                    {% endif %}
+
+                    <!-- First Page -->
+                    <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                    class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == 1 %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                        1
+                    </a>
+
+                    <!-- Left Dots (if current page is far from first) -->
+                    {% if page_obj.number > 3 %}
+                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+                    {% endif %}
+
+                    <!-- Before Previous Adjacent Page -->
+                    {% if page_obj.number > 3 %}
+                        <a href="?page={{ page_obj.number|add:'-2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                            {{ page_obj.number|add:'-2' }}
+                        </a>
+                    {% endif %}
+
+                    <!-- Previous Adjacent Page -->
+                    {% if page_obj.number > 2 %}
+                        <a href="?page={{ page_obj.number|add:'-1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                            {{ page_obj.number|add:'-1' }}
+                        </a>
+                    {% endif %}
+
+                    <!-- Current Page (only if not first or last) -->
+                    {% if page_obj.number != 1 and page_obj.number != paginator.num_pages %}
+                        <a href="?page={{ page_obj.number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-accent-blue text-white rounded-lg transition-colors duration-200">
+                            {{ page_obj.number }}
+                        </a>
+                    {% endif %}
+
+                    <!-- Next Adjacent Page -->
+                    {% if page_obj.number < paginator.num_pages|add:'-1' %}
+                        <a href="?page={{ page_obj.number|add:'1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                            {{ page_obj.number|add:'1' }}
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Second Next Adjacent Page -->
+                    {% if page_obj.number < paginator.num_pages|add:'-2' %}
+                        <a href="?page={{ page_obj.number|add:'2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                            {{ page_obj.number|add:'2' }}
+                        </a>
+                    {% endif %}
+
+                    <!-- Right Dots (if current page is far from last) -->
+                    {% if page_obj.number < paginator.num_pages|add:'-2' %}
+                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+                    {% endif %}
+
+                    <!-- Last Page (only if more than 1 page) -->
+                    {% if paginator.num_pages > 1 %}
+                        <a href="?page={{ paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == paginator.num_pages %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                            {{ paginator.num_pages }}
+                        </a>
+                    {% endif %}
+
+                    <!-- Next Button -->
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                    {% else %}
+                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                            <i class="fas fa-angle-right"></i>
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Page Info -->
+                <div class="text-center mt-4 text-gray-600 text-sm">
+                    {% blocktrans with page_number=page_obj.number total_pages=paginator.num_pages %}Page {{ page_number }} of {{ total_pages }}{% endblocktrans %}
+                </div>
+                
+            {% endif %}
+        {% else %}
+            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-xl overflow-hidden rounded-2xl p-12 text-center border border-border-light dark:border-border-dark">
+                <div class="mb-6">
+                    <i class="fas fa-search text-6xl text-gray-300 dark:text-gray-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{% trans "No FAQs Yet" %}</h3>
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                    {% trans "There are currently no FAQs available. Please check back later or contact us for more information." %}
+                </p>
+            </div>
+        {% endif %}
+    </section>
+
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .ellipsis-title {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+        .ellipsis-subtitle {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+    </style>
+
+    <script>
+        // Function to scroll to FAQ section smoothly
+        function scrollToFaqSection() {
+            setTimeout(() => {
+                const faqSection = document.getElementById('faq-section');
+                if (faqSection) {
+                    faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // FAQ Accordion functionality
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const icon = item.querySelector('.faq-icon');
+                
+                question.addEventListener('click', () => {
+                    const isOpen = answer.style.maxHeight;
+                    
+                    // Close all FAQ items
+                    faqItems.forEach(otherItem => {
+                        const otherAnswer = otherItem.querySelector('.faq-answer');
+                        const otherIcon = otherItem.querySelector('.faq-icon');
+                        
+                        otherAnswer.style.maxHeight = null;
+                        otherIcon.style.transform = 'rotate(0deg)';
+                    });
+                    
+                    // Toggle clicked item
+                    if (!isOpen) {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            // Smooth scroll for hero section button
+            const exploreButton = document.querySelector('a[href="#faq-section"]');
+            if (exploreButton) {
+                exploreButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    scrollToFaqSection();
+                });
+            }
+
+            // Auto-scroll to FAQ section after applying or clearing filters
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasFilters = urlParams.has('search') || urlParams.has('sort');
+            
+            // If filters are present, scroll to FAQ section
+            if (hasFilters) {
+                scrollToFaqSection();
+            }
+
+            // Add auto-scroll on form submission
+            const filterForm = document.querySelector('form[method="get"]');
+            if (filterForm) {
+                filterForm.addEventListener('submit', (event) => {
+                    // Scroll to FAQ section after form submission
+                    scrollToFaqSection();
+                });
+            }
+
+            // Handle clear filters button
+            const clearButton = document.querySelector('.clear-filters-btn');
+            if (clearButton) {
+                clearButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    // Add a flag to sessionStorage to indicate we should scroll
+                    sessionStorage.setItem('scrollToFaq', 'true');
+                    // Navigate to the FAQ page without filters
+                    const clearFiltersUrl = "{% url 'content_faq_list' %}";
+                    window.location.href = clearFiltersUrl;
+                });
+            }
+
+            // Check if we need to scroll after returning from clear filters
+            if (sessionStorage.getItem('scrollToFaq') === 'true') {
+                sessionStorage.removeItem('scrollToFaq');
+                scrollToFaqSection();
+            }
+        });
+
+        // Also scroll on page show (handles back/forward navigation)
+        window.addEventListener('pageshow', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasFilters = urlParams.has('search') || urlParams.has('sort');
+            
+            if (hasFilters || sessionStorage.getItem('scrollToFaq') === 'true') {
+                sessionStorage.removeItem('scrollToFaq');
+                scrollToFaqSection();
+            }
+        });
+    </script>
+{% endblock %}

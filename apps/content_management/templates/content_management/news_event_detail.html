@@ -1,0 +1,221 @@
+{% extends "content_management_base.html" %}
+{% load static %}
+
+{% block title %}News/Event Detail: {{ news_event.title }}{% endblock %}
+
+{% block breadcrumb %}
+<li class="flex items-center">
+    <a href="{% url 'news_event_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">News & Events</a>
+    <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+</li>
+<li class="flex items-center">
+    <span class="text-gray-500 dark:text-gray-400">{{ news_event.title }}</span>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- News/Event Header -->
+    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-lg overflow-hidden mb-8">
+        <div class="px-6 py-8 text-white">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-4xl font-bold mb-2">{{ news_event.title }}</h1>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        {% if news_event.is_published %}
+                            <span class="px-3 py-1 bg-green-500 text-white text-sm font-medium rounded-full">Published</span>
+                        {% else %}
+                            <span class="px-3 py-1 bg-gray-500 text-white text-sm font-medium rounded-full">Draft</span>
+                        {% endif %}
+                        <span class="px-3 py-1 bg-blue-500 text-white text-sm font-medium rounded-full">
+                            {% if news_event.content_type == 'NEWS' %}
+                                <i class="fas fa-newspaper mr-1 content-center"></i>News
+                            {% elif news_event.content_type == 'EVENT' %}
+                                <i class="fas fa-calendar-alt mr-1 content-center"></i>Event
+                            {% else %}
+                                <i class="fas fa-bullhorn mr-1 content-center"></i>Announcement
+                            {% endif %}
+                        </span>
+                        {% if news_event.is_hero_highlight %}
+                            <span class="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full"><i class="fas fa-star mr-1"></i>Hero Highlight</span>
+                        {% endif %}
+                        {% if news_event.is_featured %}
+                            <span class="px-3 py-1 bg-rose-500 text-white text-sm font-medium rounded-full"><i class="fas fa-heart mr-1"></i>Featured</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if news_event.cover_image_blob %}
+                    <div class="flex-shrink-0">
+                        <img src="{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}" alt="{{ news_event.title }} cover" class="w-24 h-24 md:w-32 md:h-32 rounded-lg shadow-md object-cover border-4 border-white">
+                    </div>
+                {% elif news_event.cover_image %}
+                    <div class="flex-shrink-0">
+                        <img src="{{ news_event.cover_image.url }}" alt="{{ news_event.title }} cover" class="w-24 h-24 md:w-32 md:h-32 rounded-lg shadow-md object-cover border-4 border-white">
+                    </div>
+                {% elif news_event.cover_image_url %}
+                    <div class="flex-shrink-0">
+                        <img src="{{ news_event.cover_image_url }}" alt="{{ news_event.title }} cover" class="w-24 h-24 md:w-32 md:h-32 rounded-lg shadow-md object-cover border-4 border-white">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-6">
+            {% if news_event.cover_image_blob or news_event.cover_image or news_event.cover_image_url %}
+            <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
+                {% if news_event.cover_image_blob %}
+                    <img src="{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}" alt="{{ news_event.title }} cover" class="w-full h-96 object-cover">
+                {% elif news_event.cover_image %}
+                    <img src="{{ news_event.cover_image.url }}" alt="{{ news_event.title }} cover" class="w-full h-96 object-cover">
+                {% elif news_event.cover_image_url %}
+                    <img src="{{ news_event.cover_image_url }}" alt="{{ news_event.title }} cover" class="w-full h-96 object-cover">
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Content Body -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h2 class="text-2xl font-bold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-file-alt text-primary-blue mr-2 content-center"></i>
+                    Content
+                </h2>
+                <div class="prose dark:prose-invert max-w-none bg-gray-50 dark:bg-gray-800 p-6 rounded-lg leading-relaxed">
+                    {{ news_event.body|linebreaks }}
+                </div>
+            </div>
+
+            <!-- External Link -->
+            {% if news_event.external_link %}
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-external-link-alt text-primary-blue mr-2 content-center"></i>
+                    External Link
+                </h3>
+                <a href="{{ news_event.external_link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200">
+                    <i class="fas fa-external-link-alt mr-2 content-center"></i>
+                    Visit External Source
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Content Details -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-info-circle text-primary-blue mr-2 content-center"></i>
+                    Content Details
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-start">
+                        <i class="fas fa-tag text-gray-500 mr-3 mt-1 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Content Type</p>
+                            <p class="font-semibold">{{ news_event.get_content_type_display }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-calendar-check text-gray-500 mr-3 mt-1 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Publish Date</p>
+                            <p class="font-semibold">{{ news_event.publish_date|date:"M d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fas fa-eye text-gray-500 mr-3 mt-1 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Status</p>
+                            <p class="font-semibold">
+                                {% if news_event.is_published %}
+                                    <span class="text-green-600">Published</span>
+                                {% else %}
+                                    <span class="text-gray-600">Draft</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cover Image -->
+            <!-- {% if news_event.cover_image_blob %}
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-image text-primary-blue mr-2 content-center"></i>
+                    Cover Image
+                </h3>
+                <img src="{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}" alt="{{ news_event.title }} cover" class="w-full h-48 object-cover rounded-lg shadow-md border border-border-light dark:border-border-dark">
+            </div>
+            {% elif news_event.cover_image %}
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-image text-primary-blue mr-2 content-center"></i>
+                    Cover Image
+                </h3>
+                <img src="{{ news_event.cover_image.url }}" alt="{{ news_event.title }} cover" class="w-full h-48 object-cover rounded-lg shadow-md border border-border-light dark:border-border-dark">
+            </div>
+            {% elif news_event.cover_image_url %}
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-link text-primary-blue mr-2 content-center"></i>
+                    Cover Image
+                </h3>
+                <a href="{{ news_event.cover_image_url }}" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline break-all">
+                    {{ news_event.cover_image_url }}
+                </a>
+            </div>
+            {% endif %} -->
+
+            <!-- Timeline -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-history text-primary-blue mr-2 content-center"></i>
+                    Timeline
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-plus-circle text-green-500 mr-3 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Created</p>
+                            <p class="font-semibold">{{ news_event.created_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-edit text-blue-500 mr-3 content-center"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Last Updated</p>
+                            <p class="font-semibold">{{ news_event.updated_at|date:"M d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
+                <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
+                    <i class="fas fa-cogs text-primary-blue mr-2 content-center"></i>
+                    Actions
+                </h3>
+                <div class="space-y-3">
+                    <a href="{% url 'news_event_update' news_event.pk %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-edit mr-2 content-center"></i>
+                        Edit News/Event
+                    </a>
+                    <a href="{% url 'news_event_delete' news_event.pk %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-trash-alt mr-2 content-center"></i>
+                        Delete News/Event
+                    </a>
+                    <a href="{% url 'news_event_list' %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg shadow-sm text-text-light dark:text-text-dark bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-gray transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-arrow-left mr-2 content-center"></i>
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

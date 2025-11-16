@@ -1,0 +1,622 @@
+{% extends 'content_management_base.html' %}
+{% load static %}
+
+{% block title %}User Analytics{% endblock %}
+
+{% block breadcrumb %}
+<li class="flex items-center">
+    <a href="{% url 'management_dashboard' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">Dashboard</a>
+    <span class="mx-2 text-gray-400">/</span>
+</li>
+<li class="flex items-center">
+    <span class="text-gray-500 dark:text-gray-400">User Analytics</span>
+</li>
+{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js for data visualization -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Modern Gradient Header Section -->
+<div class="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-xl shadow-2xl p-8 mb-8 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+    <div class="relative z-10">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-2 flex items-center">
+                    <i class="fas fa-users mr-4 text-pink-300"></i>
+                    User Analytics
+                </h1>
+                <p class="text-purple-100 text-lg md:text-xl">Comprehensive insights into user engagement and demographics</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-right">
+                    <p class="text-sm text-purple-200">Data as of</p>
+                    <p class="text-lg font-semibold">{{ last_updated|default:"Today" }}</p>
+                </div>
+                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-chart-bar text-2xl text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Row -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white border-opacity-20">
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-pink-300">{{ total_users }}</div>
+                <div class="text-sm text-purple-200">Total Users</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-yellow-300">{{ active_users }}</div>
+                <div class="text-sm text-purple-200">Active Users</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-green-300">{{ new_users_this_month|default:0 }}</div>
+                <div class="text-sm text-purple-200">New This Month</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl font-bold text-blue-300">{{ user_engagement_rate|default:0 }}%</div>
+                <div class="text-sm text-purple-200">Engagement</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- Enhanced Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Total Users</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_users }}</p>
+                <p class="text-sm opacity-80 mt-1">Registered accounts</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Active Users</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ active_users }}</p>
+                <p class="text-sm opacity-80 mt-1">Last 30 days</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-user-check"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">New Registrations</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ new_users_this_month|default:0 }}</p>
+                <p class="text-sm opacity-80 mt-1">This month</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-user-plus"></i>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div>
+                <h3 class="text-lg font-medium mb-1">Engagement Rate</h3>
+                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ user_engagement_rate|default:0 }}%</p>
+                <p class="text-sm opacity-80 mt-1">User activity</p>
+            </div>
+            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Charts Section -->
+    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12"> -->
+        <!-- Users by Gender -->
+        <!-- <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <i class="fas fa-venus-mars mr-3 text-purple-500"></i>
+                Gender Distribution
+            </h3>
+            <div class="relative">
+                <canvas id="genderChart" width="400" height="300"></canvas>
+            </div>
+        </div> -->
+
+        <!-- Users by Country -->
+        <!-- <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+                <i class="fas fa-globe mr-3 text-green-500"></i>
+                Geographic Distribution
+            </h3>
+            <div class="relative">
+                <canvas id="countryChart" width="400" height="300"></canvas>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- User Registration Trends -->
+    <!-- <div class="bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg mb-12">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+            <i class="fas fa-chart-area mr-3 text-blue-500"></i>
+            User Registration Trends
+        </h3>
+        <div class="mb-6 flex flex-wrap gap-3">
+            <button id="monthlyBtn" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium">
+                <i class="fas fa-calendar-day mr-2"></i>Monthly View
+            </button>
+            <button id="yearlyBtn" class="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium">
+                <i class="fas fa-calendar-alt mr-2"></i>Yearly View
+            </button>
+        </div>
+        <div class="relative">
+            <canvas id="registrationChart" width="800" height="400"></canvas>
+        </div>
+    </div> -->
+
+    <!-- Search and Filters Section -->
+    <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6 mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 mb-6">
+            <div class="flex items-center space-x-4">
+                <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-filter text-purple-600 mr-2 content-center"></i>
+                    Filters & Search
+                </h2>
+                <div class="flex items-center space-x-2">
+                    <button id="auto-refresh-toggle" class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <i class="fas fa-sync-alt mr-1.5 content-center" id="refresh-icon"></i>
+                        <span id="refresh-status">Auto Refresh: ON</span>
+                    </button>
+                    <button id="manual-refresh" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200">
+                        <i class="fas fa-redo mr-1.5 content-center"></i>
+                        Refresh Now
+                    </button>
+                </div>
+            </div>
+            <div class="text-sm text-gray-600 dark:text-gray-400" id="last-updated">
+                <i class="fas fa-clock mr-1 content-center"></i>
+                Last updated: <span id="update-time">Just now</span>
+            </div>
+        </div>
+
+        <form method="GET" class="space-y-4" id="filter-form">
+            <div class="flex flex-col sm:flex-row gap-4">
+                <!-- Search Input -->
+                <div class="flex-1">
+                    <label for="search" class="block text-sm font-semibold text-text-light dark:text-text-dark mb-2 flex items-center">
+                        <i class="fas fa-search text-purple-600 mr-2 content-center"></i>
+                        Search Users
+                    </label>
+                    <div class="relative">
+                        <input type="text" name="search" id="search" value="{{ search_query }}"
+                               class="block w-full px-4 py-3 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                      focus:border-purple-500 focus:ring-purple-500 focus:bg-purple-50 dark:focus:bg-purple-900/20
+                                      dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                               placeholder="Search by name, email, username, or country...">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400 content-center"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sort Dropdown -->
+                <div class="sm:w-64">
+                    <label for="sort" class="block text-sm font-semibold text-text-light dark:text-text-dark mb-2 flex items-center">
+                        <i class="fas fa-sort text-blue-600 mr-2 content-center"></i>
+                        Sort By
+                    </label>
+                    <select name="sort" id="sort"
+                            class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                   focus:border-blue-500 focus:ring-blue-500 focus:bg-blue-50 dark:focus:bg-blue-900/20
+                                   dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg">
+                        <option value="-date_joined" {% if current_sort == '-date_joined' %}selected{% endif %}>Newest First</option>
+                        <option value="date_joined" {% if current_sort == 'date_joined' %}selected{% endif %}>Oldest First</option>
+                        <option value="first_name" {% if current_sort == 'first_name' %}selected{% endif %}>First Name (A-Z)</option>
+                        <option value="-first_name" {% if current_sort == '-first_name' %}selected{% endif %}>First Name (Z-A)</option>
+                        <option value="username" {% if current_sort == 'username' %}selected{% endif %}>Username (A-Z)</option>
+                        <option value="-username" {% if current_sort == '-username' %}selected{% endif %}>Username (Z-A)</option>
+                        <option value="country_code" {% if current_sort == 'country_code' %}selected{% endif %}>Country (A-Z)</option>
+                        <option value="-country_code" {% if current_sort == '-country_code' %}selected{% endif %}>Country (Z-A)</option>
+                        <option value="-is_active" {% if current_sort == '-is_active' %}selected{% endif %}>Active First</option>
+                        <option value="is_active" {% if current_sort == 'is_active' %}selected{% endif %}>Inactive First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-300">
+                    <i class="fas fa-search h-5 w-5 mr-2 content-center"></i>
+                    Search & Filter
+                </button>
+                {% if search_query or current_sort != '-date_joined' %}
+                    <a href="{% url 'user_analytics' %}" class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-300">
+                        <i class="fas fa-times h-5 w-5 mr-2 content-center"></i>
+                        Clear Filters
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="mb-6" id="results-summary">
+        {% if search_query %}
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+                <i class="fas fa-info-circle mr-1 content-center"></i>
+                Showing results for "<strong>{{ search_query }}</strong>"
+                {% if viewed_users|length == 0 %}
+                    - No users found
+                {% else %}
+                    - Found {{ paginator.count }} user{{ paginator.count|pluralize }}
+                {% endif %}
+            </p>
+        {% endif %}
+    </div>
+
+    {% if viewed_users %}
+        <!-- Add User Button -->
+        <div class="mb-4 flex justify-end">
+            <a href="{% url 'user_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                <i class="fas fa-user-plus mr-2"></i>
+                Add User
+            </a>
+        </div>
+
+        <!-- Users Table -->
+        <div id="user-table-container" class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-border-light dark:divide-border-dark">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == 'first_name' %}-first_name{% else %}first_name{% endif %}"
+                                   class="flex items-center hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200 group">
+                                    <i class="fas fa-user text-purple-600 mr-2 content-center"></i>
+                                    User
+                                    {% if current_sort == 'first_name' %}<i class="fas fa-sort-up ml-1 text-purple-600 content-center"></i>{% elif current_sort == '-first_name' %}<i class="fas fa-sort-down ml-1 text-purple-600 content-center"></i>{% else %}<i class="fas fa-sort ml-1 text-gray-400 group-hover:text-purple-600 content-center"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == 'country_code' %}-country_code{% else %}country_code{% endif %}"
+                                   class="flex items-center hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 group">
+                                    <i class="fas fa-globe-americas text-green-600 mr-2 content-center"></i>
+                                    Country
+                                    {% if current_sort == 'country_code' %}<i class="fas fa-sort-up ml-1 text-green-600 content-center"></i>{% elif current_sort == '-country_code' %}<i class="fas fa-sort-down ml-1 text-green-600 content-center"></i>{% else %}<i class="fas fa-sort ml-1 text-gray-400 group-hover:text-green-600 content-center"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == '-is_active' %}is_active{% else %}-is_active{% endif %}"
+                                   class="flex items-center hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors duration-200 group">
+                                    <i class="fas fa-check-circle text-yellow-600 mr-2 content-center"></i>
+                                    Status
+                                    {% if current_sort == '-is_active' %}<i class="fas fa-sort-up ml-1 text-yellow-600 content-center"></i>{% elif current_sort == 'is_active' %}<i class="fas fa-sort-down ml-1 text-yellow-600 content-center"></i>{% else %}<i class="fas fa-sort ml-1 text-gray-400 group-hover:text-yellow-600 content-center"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == '-date_joined' %}date_joined{% else %}-date_joined{% endif %}"
+                                   class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 group">
+                                    <i class="fas fa-calendar-alt text-indigo-600 mr-2 content-center"></i>
+                                    Date Joined
+                                    {% if current_sort == '-date_joined' %}<i class="fas fa-sort-up ml-1 text-indigo-600 content-center"></i>{% elif current_sort == 'date_joined' %}<i class="fas fa-sort-down ml-1 text-indigo-600 content-center"></i>{% else %}<i class="fas fa-sort ml-1 text-gray-400 group-hover:text-indigo-600 content-center"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    <i class="fas fa-cogs text-gray-600 mr-2 content-center"></i>
+                                    Actions
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-border-light dark:divide-border-dark">
+                        {% for user in viewed_users %}
+                        <tr class="{% cycle 'bg-card-bg-light dark:bg-card-bg-dark' 'bg-gray-50 dark:bg-gray-800' %} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-4 flex-shrink-0">
+                                        {{ user.first_name|first|default:user.username|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-text-light dark:text-text-dark">{{ user.first_name }} {{ user.last_name }}</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">{{ user.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                    {% if user.country_code %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300{% else %}bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300{% endif %}">
+                                    {% if user.country_code %}
+                                    <i class="fas fa-map-marker-alt mr-1"></i>{{ user.country_code }}
+                                    {% else %}
+                                    <i class="fas fa-question-circle mr-1"></i>Unknown
+                                    {% endif %}
+                                </span>
+                            </td>
+                            
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if user.is_active %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100">
+                                        <i class="fas fa-check-circle mr-1 content-center"></i>
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100">
+                                        <i class="fas fa-times-circle mr-1 content-center"></i>
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-text-light dark:text-text-dark">
+                                {{ user.date_joined|date:"M j, Y" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex flex-col space-y-2">
+                                    <a href="{% url 'user_detail' user.pk %}" class="inline-flex items-center justify-center w-24 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                        <i class="fas fa-eye h-4 w-4 mr-1 content-center"></i>
+                                        View
+                                    </a>
+                                    <a href="{% url 'user_update' user.pk %}" class="inline-flex items-center justify-center w-24 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200">
+                                        <i class="fas fa-edit h-4 w-4 mr-1 content-center"></i>
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'user_delete' user.pk %}" class="inline-flex items-center justify-center w-24 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                                        <i class="fas fa-trash-alt h-4 w-4 mr-1 content-center"></i>
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="flex justify-center mt-8 space-x-1 sm:space-x-2 overflow-x-auto">
+            <!-- Previous Button -->
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                    <i class="fas fa-angle-left content-center"></i>
+                </a>
+            {% else %}
+                <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                    <i class="fas fa-angle-left content-center"></i>
+                </span>
+            {% endif %}
+
+            <!-- First Page -->
+            <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == 1 %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                1
+            </a>
+
+            <!-- Left Dots (if current page is far from first) -->
+            {% if page_obj.number > 3 %}
+                <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+            {% endif %}
+
+            <!-- Before Previous Adjacent Page -->
+            {% if page_obj.number > 3 %}
+                <a href="?page={{ page_obj.number|add:'-2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                    {{ page_obj.number|add:'-2' }}
+                </a>
+            {% endif %}
+
+            <!-- Previous Adjacent Page -->
+            {% if page_obj.number > 2 %}
+                <a href="?page={{ page_obj.number|add:'-1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                    {{ page_obj.number|add:'-1' }}
+                </a>
+            {% endif %}
+
+            <!-- Current Page (only if not first or last) -->
+            {% if page_obj.number != 1 and page_obj.number != paginator.num_pages %}
+                <a href="?page={{ page_obj.number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-accent-blue text-white rounded-lg transition-colors duration-200">
+                    {{ page_obj.number }}
+                </a>
+            {% endif %}
+
+            <!-- Next Adjacent Page -->
+            {% if page_obj.number < paginator.num_pages|add:'-1' %}
+                <a href="?page={{ page_obj.number|add:'1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                    {{ page_obj.number|add:'1' }}
+                </a>
+            {% endif %}
+            
+            <!-- Second Next Adjacent Page -->
+            {% if page_obj.number < paginator.num_pages|add:'-2' %}
+                <a href="?page={{ page_obj.number|add:'2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                    {{ page_obj.number|add:'2' }}
+                </a>
+            {% endif %}
+
+            <!-- Right Dots (if current page is far from last) -->
+            {% if page_obj.number < paginator.num_pages|add:'-2' %}
+                <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+            {% endif %}
+
+            <!-- Last Page (only if more than 1 page) -->
+            {% if paginator.num_pages > 1 %}
+                <a href="?page={{ paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == paginator.num_pages %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                    {{ paginator.num_pages }}
+                </a>
+            {% endif %}
+
+            <!-- Next Button -->
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
+                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                    <i class="fas fa-angle-right content-center"></i>
+                </a>
+            {% else %}
+                <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                    <i class="fas fa-angle-right content-center"></i>
+                </span>
+            {% endif %}
+        </div>
+
+        <!-- Page Info -->
+        <div class="text-center mt-4 text-gray-600 text-sm">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}
+        </div>
+        {% endif %}
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-12 text-center">
+            <div class="max-w-md mx-auto">
+                <div class="mx-auto h-24 w-24 text-gray-400 mb-6">
+                    <i class="fas fa-users-slash text-6xl content-center"></i>
+                </div>
+                <h3 class="text-lg font-medium text-text-light dark:text-text-dark mb-2">No Users Found</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6">
+                    {% if search_query %}
+                        No users match your search criteria. Try adjusting your search terms or filters.
+                    {% else %}
+                        Get started by creating your first user to build your community.
+                    {% endif %}
+                </p>
+                <div class="space-y-3">
+                    {% if search_query %}
+                        <a href="{% url 'user_analytics' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300">
+                            <i class="fas fa-times h-5 w-5 mr-2 content-center"></i>
+                            Clear Search
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'user_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-300">
+                        <i class="fas fa-plus h-5 w-5 mr-2 content-center"></i>
+                        Create First User
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Chart rendering logic can be placed here
+    // ...
+
+    // Auto-refresh and dynamic search functionality
+    let autoRefreshEnabled = localStorage.getItem('user_analytics_auto_refresh') !== 'false';
+    let refreshInterval;
+    const REFRESH_INTERVAL = 30000; // 30 seconds
+
+    const refreshIcon = document.getElementById('refresh-icon');
+    const refreshStatus = document.getElementById('refresh-status');
+    const updateTimeElement = document.getElementById('update-time');
+    const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
+    const manualRefreshBtn = document.getElementById('manual-refresh');
+
+    updateRefreshUI();
+
+    autoRefreshToggle.addEventListener('click', function() {
+        autoRefreshEnabled = !autoRefreshEnabled;
+        localStorage.setItem('user_analytics_auto_refresh', autoRefreshEnabled);
+        updateRefreshUI();
+        autoRefreshEnabled ? startAutoRefresh() : stopAutoRefresh();
+    });
+
+    manualRefreshBtn.addEventListener('click', refreshData);
+
+    let searchTimeout;
+    const searchInput = document.getElementById('search');
+    const sortSelect = document.getElementById('sort');
+
+    searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => document.getElementById('filter-form').submit(), 500);
+    });
+
+    sortSelect.addEventListener('change', () => document.getElementById('filter-form').submit());
+
+    function updateRefreshUI() {
+        if (autoRefreshEnabled) {
+            refreshStatus.textContent = 'Auto Refresh: ON';
+            refreshIcon.classList.add('fa-spin');
+            autoRefreshToggle.classList.remove('bg-gray-100', 'dark:bg-gray-800');
+            autoRefreshToggle.classList.add('bg-green-100', 'dark:bg-green-800', 'text-green-700', 'dark:text-green-300');
+        } else {
+            refreshStatus.textContent = 'Auto Refresh: OFF';
+            refreshIcon.classList.remove('fa-spin');
+            autoRefreshToggle.classList.remove('bg-green-100', 'dark:bg-green-800', 'text-green-700', 'dark:text-green-300');
+            autoRefreshToggle.classList.add('bg-gray-100', 'dark:bg-gray-800');
+        }
+    }
+
+    function startAutoRefresh() {
+        if (refreshInterval) clearInterval(refreshInterval);
+        refreshInterval = setInterval(refreshData, REFRESH_INTERVAL);
+    }
+
+    function stopAutoRefresh() {
+        if (refreshInterval) clearInterval(refreshInterval);
+    }
+
+    function refreshData() {
+        refreshIcon.classList.add('fa-spin');
+        manualRefreshBtn.disabled = true;
+        manualRefreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5 content-center"></i>Refreshing...';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        fetch(`${window.location.pathname}?${urlParams.toString()}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(html, 'text/html');
+            
+            const newTableContainer = newDoc.getElementById('user-table-container');
+            const currentTableContainer = document.getElementById('user-table-container');
+            if (newTableContainer && currentTableContainer) {
+                currentTableContainer.innerHTML = newTableContainer.innerHTML;
+            }
+
+            const newPagination = newDoc.getElementById('pagination-container');
+            const currentPagination = document.getElementById('pagination-container');
+            if (newPagination && currentPagination) {
+                currentPagination.innerHTML = newPagination.innerHTML;
+            }
+
+            const newSummary = newDoc.getElementById('results-summary');
+            const currentSummary = document.getElementById('results-summary');
+            if (newSummary && currentSummary) {
+                currentSummary.innerHTML = newSummary.innerHTML;
+            }
+
+            updateTimeElement.textContent = new Date().toLocaleTimeString();
+        })
+        .catch(error => {
+            console.error('Refresh failed:', error);
+            updateTimeElement.textContent = 'Refresh failed';
+        })
+        .finally(() => {
+            if (!autoRefreshEnabled) refreshIcon.classList.remove('fa-spin');
+            manualRefreshBtn.disabled = false;
+            manualRefreshBtn.innerHTML = '<i class="fas fa-redo mr-1.5 content-center"></i>Refresh Now';
+        });
+    }
+
+    if (autoRefreshEnabled) startAutoRefresh();
+    setInterval(() => {
+        updateTimeElement.textContent = new Date().toLocaleTimeString();
+    }, 60000);
+});
+</script>
+{% endblock %}```

@@ -1,0 +1,204 @@
+{% extends "content_management_base.html" %}
+{% load static %}
+
+{% block title %}
+{% if faq.question %}
+Update FAQ: {{ faq.question }}
+{% else %}
+New FAQ
+{% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="flex items-center">
+    <a href="{% url 'faq_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">FAQs</a>
+    <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+</li>
+<li class="flex items-center">
+    {% if faq.question %}
+    <span class="text-gray-500 dark:text-gray-400">{{ faq.question }}</span>
+    {% else %}
+    <span class="text-gray-500 dark:text-gray-400">New FAQ</span>
+    {% endif %}
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- FAQ Form Header -->
+    <div class="bg-gradient-to-r from-orange-600 to-red-600 rounded-lg shadow-lg overflow-hidden mb-8">
+        <div class="px-6 py-8 text-white">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 mr-4">
+                    <i class="fas fa-question-circle text-4xl text-orange-200 content-center"></i>
+                </div>
+                <div>
+                    {% if faq.question %}
+                    <h1 class="text-3xl font-bold mb-2">Update FAQ</h1>
+                    <p class="text-orange-100">{{ faq.question|truncatechars:80 }}</p>
+                    {% else %}
+                    <h1 class="text-3xl font-bold mb-2">Create New FAQ</h1>
+                    <p class="text-orange-100">Add a new frequently asked question</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-border-light dark:border-border-dark">
+            <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
+                <i class="fas fa-edit text-primary-blue mr-2 content-center"></i>
+                {% if faq.question %}Edit FAQ Details{% else %}FAQ Information{% endif %}
+            </h2>
+        </div>
+
+        <form method="post" class="p-6 space-y-8">
+            {% csrf_token %}
+
+            <!-- Question Field -->
+            <div class="space-y-2">
+                <label for="{{ form.question.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-question text-orange-600 mr-2 content-center"></i>
+                    {{ form.question.label_tag }}
+                    {% if form.question.field.required %}
+                        <span class="text-red-500 ml-1">*</span>
+                    {% endif %}
+                </label>
+                <input type="text" name="{{ form.question.name }}" id="{{ form.question.id_for_label }}"
+                       class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                              focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 dark:focus:bg-orange-900/20
+                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                       value="{% if form.question.value %}{{ form.question.value }}{% endif %}"
+                       placeholder="Enter the frequently asked question..."
+                       {% if form.question.field.required %}required{% endif %}>
+                {% if form.question.errors %}
+                    <div class="mt-2">
+                        {% for error in form.question.errors %}
+                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">This will be displayed as the main question users see</p>
+            </div>
+
+            <!-- Order Field -->
+            <div class="space-y-2">
+                <label for="{{ form.order.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-sort-numeric-up text-blue-600 mr-2 content-center"></i>
+                    {{ form.order.label_tag }}
+                    {% if form.order.field.required %}
+                        <span class="text-red-500 ml-1">*</span>
+                    {% endif %}
+                </label>
+                <input type="number" name="{{ form.order.name }}" id="{{ form.order.id_for_label }}"
+                       class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                              focus:border-blue-500 focus:ring-blue-500 focus:bg-blue-50 dark:focus:bg-blue-900/20
+                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg max-w-xs"
+                       value="{% if form.order.value %}{{ form.order.value }}{% endif %}"
+                       placeholder="1"
+                       min="0"
+                       {% if form.order.field.required %}required{% endif %}>
+                {% if form.order.errors %}
+                    <div class="mt-2">
+                        {% for error in form.order.errors %}
+                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Lower numbers appear first. Use unique values.</p>
+            </div>
+
+            <!-- Answer Field -->
+            <div class="space-y-2">
+                <label for="{{ form.answer.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-lightbulb text-green-600 mr-2 content-center"></i>
+                    {{ form.answer.label_tag }}
+                    {% if form.answer.field.required %}
+                        <span class="text-red-500 ml-1">*</span>
+                    {% endif %}
+                </label>
+                <textarea name="{{ form.answer.name }}" id="{{ form.answer.id_for_label }}" rows="8"
+                          class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                 focus:border-green-500 focus:ring-green-500 focus:bg-green-50 dark:focus:bg-green-900/20
+                                 dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-base leading-relaxed"
+                          placeholder="Provide a clear, helpful answer to the question..."
+                          {% if form.answer.field.required %}required{% endif %}>{% if form.answer.value %}{{ form.answer.value }}{% endif %}</textarea>
+                {% if form.answer.errors %}
+                    <div class="mt-2">
+                        {% for error in form.answer.errors %}
+                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Provide a comprehensive answer that fully addresses the question</p>
+            </div>
+
+            <!-- Schema Ready Field -->
+            <div class="space-y-2">
+                <label for="{{ form.is_schema_ready.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-search text-purple-600 mr-2 content-center"></i>
+                    {{ form.is_schema_ready.label_tag }}
+                </label>
+                <div class="flex items-center space-x-3">
+                    <input type="checkbox" name="{{ form.is_schema_ready.name }}" id="{{ form.is_schema_ready.id_for_label }}"
+                           class="h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 dark:border-gray-600 rounded transition-all duration-200"
+                           {% if form.is_schema_ready.value %}checked{% endif %}>
+                    <div class="flex-1">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Mark this FAQ as ready for SEO schema markup</span>
+                        {% if form.is_schema_ready.errors %}
+                            <div class="mt-1">
+                                {% for error in form.is_schema_ready.errors %}
+                                    <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">When enabled, this FAQ will be included in structured data for search engines</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-border-light dark:border-border-dark">
+                <a href="{% url 'faq_list' %}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg shadow-sm text-text-light dark:text-text-dark bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-arrow-left mr-2 content-center"></i>
+                    Cancel
+                </a>
+                <button type="submit" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-save mr-2 content-center"></i>
+                    {% if faq.question %}Update FAQ{% else %}Create FAQ{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <i class="fas fa-info-circle text-blue-600 dark:text-blue-400 content-center"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">FAQ Best Practices</h3>
+                <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Keep questions clear and concise</li>
+                        <li>Provide comprehensive answers that fully address the question</li>
+                        <li>Use unique order numbers to control display sequence</li>
+                        <li>Ensure answers are helpful and easy to understand</li>
+                        <li>Enable "Schema Ready" for FAQs that should appear in search engine results</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

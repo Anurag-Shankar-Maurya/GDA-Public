@@ -1,0 +1,409 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GDA{% endblock %}</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable dark mode based on class
+            theme: {
+                extend: {
+                    colors: {
+                        // Define root color theme based on reference site
+                        'primary-blue': '#007bff', // Primary action color
+                        'secondary-gray': '#6c757d', // Secondary/footer color
+                        'accent-blue': '#0000ff', // Hover/link color
+                        'bg-light': '#ffffff', // White background for light mode
+                        'text-light': '#1f2937', // Dark text for light mode
+                        'bg-dark': '#111827', // Very dark background for dark mode
+                        'text-dark': '#e5e7eb', // Light text for dark mode
+                        'card-bg-light': '#f9fafb', // Light card background
+                        'card-bg-dark': '#1f2937', // Dark card background
+                        'border-light': '#e5e7eb', // Light border color
+                        'border-dark': '#374151', // Dark border color
+                    }
+                }
+            }
+        }
+    </script>
+    {% load static %}
+    {% block extra_head %}
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body class="pt-20 bg-bg-light text-text-light dark:bg-bg-dark dark:text-text-dark transition-colors duration-300 font-sans antialiased">
+    <!-- Floating Social Media Icons -->
+    <div class="fixed right-4 sm:right-6 top-1/2 transform -translate-y-1/2 z-40 flex flex-col space-y-3 sm:space-y-4">
+        <a href="https://www.facebook.com/globaldevotion/" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-all duration-300 hover:scale-110" title="Facebook" aria-label="Follow us on Facebook">
+            <i class="fab fa-facebook-f text-sm sm:text-base"></i>
+        </a>
+        <a href="https://www.instagram.com/globaldevotionassociation/" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-500 hover:bg-pink-600 text-white shadow-lg transition-all duration-300 hover:scale-110" title="Instagram" aria-label="Follow us on Instagram">
+            <i class="fab fa-instagram text-sm sm:text-base"></i>
+        </a>
+        <a href="https://www.youtube.com/@globaldevotionassociation5751" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg transition-all duration-300 hover:scale-110" title="YouTube" aria-label="Subscribe to our YouTube">
+            <i class="fab fa-youtube text-sm sm:text-base"></i>
+        </a>
+        <a href="https://lin.ee/zJScL7G" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-lg transition-all duration-300 hover:scale-110" title="Line" aria-label="Add us on Line">
+            <i class="fab fa-line text-sm sm:text-base"></i>
+        </a>
+    </div>
+
+    <header class="fixed top-0 left-0 right-0 z-50 bg-bg-light dark:bg-gray-800 text-text-light dark:text-text-dark py-4 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <!-- <h1 class="text-2xl font-bold">
+                <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-blue-300 hover:text-accent-blue dark:hover:text-blue-400">GDA Content Website</a>
+            </h1> -->
+            <!-- Logo -->
+            <a href="{% url 'landing_page' %}" class="flex items-center bg-white p-1 rounded">
+                <img src="{% static 'images/logo.png' %}" alt="{% trans "GDA Logo" %}" class="h-12 w-auto rounded">
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex lg:items-center lg:space-x-2">
+                <a href="{% url 'landing_page' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Home" %}</a>
+                <a href="{% url 'content_project_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Projects" %}</a>
+                <a href="{% url 'content_news_event_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "News" %}</a>
+                <a href="{% url 'content_success_story_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Success Stories" %}</a>
+                <a href="{% url 'content_faq_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "FAQs" %}</a>
+            </nav>
+
+            {% if user.is_authenticated %}
+            <div class="flex items-center ml-6">
+                <a href="{% url 'profile' %}" class="flex items-center space-x-2 text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">
+                    <div class="h-8 w-8 rounded-full bg-primary-blue flex items-center justify-center text-white text-sm font-bold">
+                        {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                    </div>
+                    <span class="hidden md:inline">{{ user.get_full_name }}</span>
+                </a>
+            </div>
+            {% else %}
+            <div class="flex items-center ml-6">
+                <a href="{% url 'login' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Login" %}</a>
+            </div>
+            {% endif %}
+
+            <!-- Language Switch -->
+            <div class="hidden lg:flex lg:items-center ml-6">
+                <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                    <button type="submit" name="language" value="en" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">EN</button>
+                    <span class="text-text-light dark:text-text-dark">|</span>
+                    <button type="submit" name="language" value="zh-tw" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">中文</button>
+                </form>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="flex lg:hidden">
+                <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue" aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <!-- Icon when menu is closed. -->
+                    <i class="fas fa-bars h-6 w-6 block content-center" id="mobile-menu-open-icon"></i>
+                    <!-- Icon when menu is open. -->
+                    <i class="fas fa-times h-6 w-6 hidden content-center" id="mobile-menu-close-icon"></i>
+                </button>
+            </div>
+
+            <!-- Desktop Theme Toggle -->
+            <div class="hidden lg:flex lg:items-center ml-6">
+                <button id="theme-toggle" type="button" class="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-blue transition-colors duration-300">
+                    <span class="sr-only">Toggle theme</span>
+                    <i class="fas fa-moon h-6 w-6 content-center" id="theme-toggle-dark-icon"></i>
+                    <i class="fas fa-sun h-6 w-6 content-center" id="theme-toggle-light-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (hidden by default) -->
+        <div class="lg:hidden hidden transition-[max-height] duration-300 ease-in-out" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="{% url 'landing_page' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Home" %}</a>
+                <a href="{% url 'content_project_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Projects" %}</a>
+                <a href="{% url 'content_news_event_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "News" %}</a>
+                <a href="{% url 'content_success_story_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Success Stories" %}</a>
+                <a href="{% url 'content_faq_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "FAQs" %}</a>
+            </div>
+            {% if not user.is_authenticated %}
+            <div class="px-2 pt-2 pb-3">
+                <a href="{% url 'login' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Login" %}</a>
+            </div>
+            {% endif %}
+            <!-- Language Switch Mobile -->
+            <div class="px-2 pt-2 pb-3">
+                <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                    <button type="submit" name="language" value="en" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">EN</button>
+                    <span class="text-text-light dark:text-text-dark">|</span>
+                    <button type="submit" name="language" value="zh-tw" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">中文</button>
+                </form>
+            </div>
+            <div class="px-2 pb-3 pt-2">
+                <button id="theme-toggle-mobile" type="button" class="w-full text-left p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-blue flex items-center justify-center space-x-2 transition-colors duration-300">
+                    <i class="fas fa-moon h-6 w-6 content-center" id="theme-toggle-dark-icon-mobile"></i>
+                    <i class="fas fa-sun h-6 w-6 content-center" id="theme-toggle-light-icon-mobile"></i>
+                    <span>{% trans "Toggle Theme" %}</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-bg-light dark:bg-bg-dark bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center z-50 transition-opacity duration-500">
+        <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent mb-4"></div>
+            <p class="text-text-light dark:text-text-dark font-medium">{% trans "Loading GDA..." %}</p>
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto">
+            <div class="container mx-auto px-6 pt-6">
+                <!-- Breadcrumb Navigation -->
+                <nav class="text-sm font-semibold text-gray-500 dark:text-gray-400 max-w-7xl mx-auto" aria-label="Breadcrumb">
+                    <ol class="list-none p-0 flex flex-wrap">
+                        <!-- <li class="flex items-center">
+                            <a href="{% url 'management_dashboard' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-300 hover:text-accent-blue">Dashboard</a>
+                            <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+                        </li> -->
+                        {% block breadcrumb %}{% endblock %}
+                    </ol>
+                </nav>
+            </div>
+        </main>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-6 sm:py-8 mt-12 w-full overflow-x-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 sm:gap-8">
+            <div class="flex-shrink-0 flex items-center space-x-3 sm:space-x-4 min-w-0">
+                <div class="bg-white p-1 sm:p-2 rounded flex-shrink-0">
+                    <img src="{% static 'images/logo.png' %}" alt="{% trans "Global Devotion Association" %}" class="h-16 sm:h-24 w-auto">
+                </div>
+                <div class="min-w-0 flex-1">
+                    <h3 class="text-base sm:text-xl font-bold text-primary-blue dark:text-blue-300 break-words">Global Devotion Association</h3>
+                    <p class="text-xs sm:text-sm text-gray-300 break-words">桃園市全球貢（共）學志工協會</p>
+                    <p class="text-gray-400 text-xs mt-1 sm:mt-2">{% trans "&copy; 2025 GDA. All rights reserved." %}</p>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-auto flex flex-col sm:flex-row sm:flex-wrap gap-6 sm:gap-x-8 sm:gap-y-4">
+                <nav class="flex flex-col min-w-0">
+                    <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Quick Links" %}</h4>
+                    <ul class="space-y-1 sm:space-y-2 text-sm sm:text-base">
+                        <li><a href="{% url 'landing_page' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Home" %}</a></li>
+                        <li><a href="{% url 'content_project_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Projects" %}</a></li>
+                        <li><a href="{% url 'content_news_event_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "News" %}</a></li>
+                    </ul>
+                </nav>
+
+                <nav class="flex flex-col min-w-0">
+                    <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Resources" %}</h4>
+                    <ul class="space-y-1 sm:space-y-2 text-sm sm:text-base">
+                        <li><a href="{% url 'content_success_story_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Success Stories" %}</a></li>
+                        <li><a href="{% url 'content_faq_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "FAQs" %}</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Privacy Policy" %}</a></li>
+                    </ul>
+                </nav>
+
+                <div class="flex flex-col min-w-0">
+                    <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Connect" %}</h4>
+                    <div class="flex space-x-3 sm:space-x-4 flex-wrap">
+                        <a href="https://www.facebook.com/globaldevotion/" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/globaldevotionassociation/" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@globaldevotionassociation5751" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://lin.ee/zJScL7G" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="Line"><i class="fab fa-line"></i></a>
+                    </div>
+                </div>
+
+                <div class="flex flex-col min-w-0">
+                    <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Contact Us" %}</h4>
+                    <div class="text-gray-300 text-xs sm:text-sm space-y-1 sm:space-y-2">
+                        <div>
+                            <p class="text-xs font-semibold">{% trans "USA Office:" %}</p>
+                            <p class="break-words">{% trans "18031 Irvine Blvd Unit 209" %}</p>
+                            <p class="break-words">{% trans "Tustin, CA 92780, USA" %}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold">{% trans "Taiwan Office:" %}</p>
+                            <p class="break-words">{% trans "1F., No.238, Sec. 2, Linghang N. Rd." %}</p>
+                            <p class="break-words">{% trans "Zhongli Dist., Taoyuan City 320014, Taiwan" %}</p>
+                        </div>
+                        <div class="pt-1 sm:pt-2 space-y-1">
+                            <p class="break-words"><i class="fas fa-phone text-primary-blue mr-2"></i><a href="tel:+886342551" class="hover:text-primary-blue transition-colors">(03)4255189</a></p>
+                            <p class="break-words"><i class="fas fa-phone text-primary-blue mr-2"></i><a href="tel:+886342810857" class="hover:text-primary-blue transition-colors">(03)2810857</a></p>
+                            <p class="break-words"><i class="fas fa-envelope text-primary-blue mr-2"></i><a href="mailto:globaldevotion2017@gmail.com" class="hover:text-primary-blue transition-colors">globaldevotion2017@gmail.com</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_footer %}
+    <script>
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-mobile');
+        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        // For script at the end of body, we initialize the theme based on localStorage or system preference
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIconMobile.classList.remove('hidden');
+            themeToggleLightIconMobile.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIcon.classList.add('hidden');
+            themeToggleLightIconMobile.classList.remove('hidden');
+            themeToggleDarkIconMobile.classList.add('hidden');
+        }
+
+        function toggleTheme() {
+            // toggle icons
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            themeToggleDarkIconMobile.classList.toggle('hidden');
+            themeToggleLightIconMobile.classList.toggle('hidden');
+
+            // if set via local storage previously
+            if (localStorage.getItem('theme')) {
+                if (localStorage.getItem('theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            } else {
+                // if system default is dark
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+        // Mobile Menu Toggle Logic
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOpenIcon = document.getElementById('mobile-menu-open-icon');
+        const mobileMenuCloseIcon = document.getElementById('mobile-menu-close-icon');
+
+        // Smooth mobile menu toggle
+        // mobileMenu.style.maxHeight = '0'; // Removed as it's now handled by Tailwind class and `hidden`
+        mobileMenu.style.overflow = 'hidden';
+        // mobileMenu.style.transition = 'max-height 0.3s ease-in-out'; // Removed as it's now in Tailwind class
+
+        mobileMenuButton.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+            } else {
+                mobileMenu.style.maxHeight = '0';
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+            }
+            // Toggle hamburger icon
+            mobileMenuOpenIcon.classList.toggle('hidden');
+            mobileMenuCloseIcon.classList.toggle('hidden');
+        });
+
+        // Ensure theme toggle icons are synced on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                themeToggleDarkIcon.classList.remove('hidden');
+                themeToggleLightIcon.classList.add('hidden');
+                themeToggleDarkIconMobile.classList.remove('hidden');
+                themeToggleLightIconMobile.classList.add('hidden');
+            } else {
+                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleDarkIcon.classList.add('hidden');
+                themeToggleLightIconMobile.classList.remove('hidden');
+                themeToggleDarkIconMobile.classList.add('hidden');
+            }
+        });
+
+        // Active Nav Link Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                // Check if the link's href matches the current path
+                // Special handling for the root '/content' to match exactly
+                if (link.getAttribute('href') === currentPath ||
+                    (link.getAttribute('href') === '/content' && currentPath === '/content/')) {
+                    link.classList.add('bg-primary-blue', 'text-white');
+                    link.classList.remove('hover:text-accent-blue', 'dark:hover:text-blue-400', 'hover:bg-primary-blue', 'hover:text-white', 'dark:hover:text-white');
+                }
+            });
+
+            // Hide loading overlay with animation
+            const loadingOverlay = document.getElementById('loading-overlay');
+            if (loadingOverlay) {
+                setTimeout(() => {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                }, 800);
+            }
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

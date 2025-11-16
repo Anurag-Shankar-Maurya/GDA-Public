@@ -1,0 +1,633 @@
+{% extends "content_management_base.html" %}
+{% load static %}
+
+{% block title %}
+{% if success_story.title %}
+Success Story: {{ success_story.title }}
+{% else %}
+New Success Story
+{% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="flex items-center">
+    <a href="{% url 'success_story_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">Success Stories</a>
+    <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+</li>
+<li class="flex items-center">
+    {% if success_story.title %}
+    <span class="text-gray-500 dark:text-gray-400">{{ success_story.title }}</span>
+    {% else %}
+    <span class="text-gray-500 dark:text-gray-400">New Success Story</span>
+    {% endif %}
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Success Story Form Header -->
+    <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-lg shadow-lg overflow-hidden mb-8">
+        <div class="px-6 py-8 text-white">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 mr-4">
+                    <i class="fas fa-trophy text-4xl text-green-200 content-center"></i>
+                </div>
+                <div>
+                    {% if success_story.title %}
+                    <h1 class="text-3xl font-bold mb-2">Update Success Story</h1>
+                    <p class="text-green-100">{{ success_story.title|truncatechars:80 }}</p>
+                    {% else %}
+                    <h1 class="text-3xl font-bold mb-2">Create New Success Story</h1>
+                    <p class="text-green-100">Share an inspiring success story from your community</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark overflow-hidden">
+        <form method="post" enctype="multipart/form-data" class="divide-y divide-border-light dark:divide-border-dark">
+            {% csrf_token %}
+
+            <!-- Basic Information Section -->
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-border-light dark:border-border-dark">
+                <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-info-circle text-green-600 mr-2 content-center"></i>
+                    {% if success_story.title %}Edit Basic Information{% else %}Basic Information{% endif %}
+                </h2>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Title Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-heading text-green-600 mr-2 content-center"></i>
+                        {{ form.title.label_tag }}
+                        {% if form.title.field.required %}
+                            <span class="text-red-500 ml-1">*</span>
+                        {% endif %}
+                    </label>
+                    <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}"
+                           class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                  focus:border-green-500 focus:ring-green-500 focus:bg-green-50 dark:focus:bg-green-900/20
+                                  dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                           value="{% if form.title.value %}{{ form.title.value }}{% endif %}"
+                           placeholder="Enter an inspiring title for this success story..."
+                           {% if form.title.field.required %}required{% endif %}>
+                    {% if form.title.errors %}
+                        <div class="mt-2">
+                            {% for error in form.title.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                    <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Choose a compelling title that captures the essence of this success</p>
+                </div>
+
+                <!-- Related Project Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.related_project.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-project-diagram text-blue-600 mr-2 content-center"></i>
+                        {{ form.related_project.label_tag }}
+                        {% if form.related_project.field.required %}
+                            <span class="text-red-500 ml-1">*</span>
+                        {% endif %}
+                    </label>
+                    <select name="{{ form.related_project.name }}" id="{{ form.related_project.id_for_label }}"
+                            class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                   focus:border-blue-500 focus:ring-blue-500 focus:bg-blue-50 dark:focus:bg-blue-900/20
+                                   dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                            {% if form.related_project.field.required %}required{% endif %}>
+                        {% for value, text in form.related_project.field.choices %}
+                            <option value="{{ value }}" {% if success_story.related_project and success_story.related_project.id == value %}selected{% endif %}>{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.related_project.errors %}
+                        <div class="mt-2">
+                            {% for error in form.related_project.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                    <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Select the project this success story is associated with</p>
+                </div>
+
+                <!-- Publication Settings -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Is Published Field -->
+                    <div class="space-y-2">
+                        <label for="{{ form.is_published.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                            <i class="fas fa-eye text-purple-600 mr-2 content-center"></i>
+                            {{ form.is_published.label_tag }}
+                        </label>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" name="{{ form.is_published.name }}" id="{{ form.is_published.id_for_label }}"
+                                   class="h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded transition-colors duration-200"
+                                   {% if form.is_published.value %}checked{% endif %}>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Make this story visible to the public</span>
+                        </div>
+                        {{ form.is_published.errors }}
+                    </div>
+
+                    <!-- Published At Field -->
+                    <div class="space-y-2">
+                        <label for="{{ form.published_at.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                            <i class="fas fa-calendar-alt text-indigo-600 mr-2 content-center"></i>
+                            {{ form.published_at.label_tag }}
+                            {% if form.published_at.field.required %}
+                                <span class="text-red-500 ml-1">*</span>
+                            {% endif %}
+                        </label>
+                        <input type="datetime-local" name="{{ form.published_at.name }}" value="{{ form.published_at.value|date:'Y-m-d\TH:i' }}" id="{{ form.published_at.id_for_label }}"
+                               class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                      focus:border-indigo-500 focus:ring-indigo-500 focus:bg-indigo-50 dark:focus:bg-indigo-900/20
+                                      dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                               {% if form.published_at.field.required %}required{% endif %}>
+                        {% if form.published_at.errors %}
+                            <div class="mt-2">
+                                {% for error in form.published_at.errors %}
+                                    <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">When should this story be published?</p>
+                    </div>
+                </div>
+
+                <!-- Highlight & Featured Options -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Is Hero Highlight -->
+                    <div class="space-y-2">
+                        <label for="{{ form.is_hero_highlight.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                            <i class="fas fa-star text-yellow-600 mr-2 content-center"></i>
+                            {{ form.is_hero_highlight.label_tag }}
+                        </label>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" name="{{ form.is_hero_highlight.name }}" id="{{ form.is_hero_highlight.id_for_label }}"
+                                   class="h-5 w-5 text-yellow-600 focus:ring-yellow-500 border-gray-300 dark:border-gray-600 rounded transition-all duration-200"
+                                   {% if form.is_hero_highlight.value %}checked{% endif %}>
+                            <div class="flex-1">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Feature in hero carousel</span>
+                                {% if form.is_hero_highlight.errors %}
+                                    <div class="mt-1">
+                                        {% for error in form.is_hero_highlight.errors %}
+                                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Display prominently in the carousel</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Is Featured -->
+                    <div class="space-y-2">
+                        <label for="{{ form.is_featured.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                            <i class="fas fa-heart text-rose-600 mr-2 content-center"></i>
+                            {{ form.is_featured.label_tag }}
+                        </label>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" name="{{ form.is_featured.name }}" id="{{ form.is_featured.id_for_label }}"
+                                   class="h-5 w-5 text-rose-600 focus:ring-rose-500 border-gray-300 dark:border-gray-600 rounded transition-all duration-200"
+                                   {% if form.is_featured.value %}checked{% endif %}>
+                            <div class="flex-1">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Mark as featured story</span>
+                                {% if form.is_featured.errors %}
+                                    <div class="mt-1">
+                                        {% for error in form.is_featured.errors %}
+                                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Show in featured section</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-border-light dark:border-border-dark">
+                <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-file-alt text-teal-600 mr-2 content-center"></i>
+                    Story Content
+                </h2>
+            </div>
+
+            <div class="p-6">
+                <!-- Body Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.body.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-align-left text-teal-600 mr-2 content-center"></i>
+                        {{ form.body.label_tag }}
+                        {% if form.body.field.required %}
+                            <span class="text-red-500 ml-1">*</span>
+                        {% endif %}
+                    </label>
+                    <textarea name="{{ form.body.name }}" id="{{ form.body.id_for_label }}" rows="12"
+                              class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                     focus:border-teal-500 focus:ring-teal-500 focus:bg-teal-50 dark:focus:bg-teal-900/20
+                                     dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-base leading-relaxed"
+                              placeholder="Tell the inspiring story... Share the journey, challenges overcome, and the positive impact achieved..."
+                              {% if form.body.field.required %}required{% endif %}>{% if form.body.value %}{{ form.body.value }}{% endif %}</textarea>
+                    {% if form.body.errors %}
+                        <div class="mt-2">
+                            {% for error in form.body.errors %}
+                                <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
+                                    <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Write a compelling narrative that inspires others. Include details about the journey and outcomes.</p>
+                </div>
+            </div>
+
+            <!-- Media Section -->
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-border-light dark:border-border-dark">
+                <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-images text-orange-600 mr-2 content-center"></i>
+                    Media & Visuals
+                </h2>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Cover Image Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.cover_image.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-image text-orange-600 mr-2 content-center"></i>
+                        {{ form.cover_image.label_tag }}
+                    </label>
+                    <input type="file" name="{{ form.cover_image.name }}" id="{{ form.cover_image.id_for_label }}"
+                           class="block w-full px-4 py-3 text-sm text-gray-500 dark:text-gray-400
+                                  file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold
+                                  file:bg-orange-600 file:text-white hover:file:bg-orange-700 dark:file:bg-orange-700 dark:file:hover:bg-orange-600
+                                  cursor-pointer transition-all duration-200 rounded-lg border border-gray-300 dark:border-gray-600">
+                    {% if form.cover_image.value %}
+                        <div id="{{ form.cover_image.id_for_label }}_current" class="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-1 content-center"></i>
+                                Current: <a href="{{ form.cover_image.value.url }}" target="_blank" class="text-orange-600 hover:underline">{{ form.cover_image.value.name }}</a>
+                            </p>
+                        </div>
+                        <button type="button" id="clear-cover-image" class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 dark:bg-orange-900 dark:text-orange-300 dark:hover:bg-orange-800 transition-colors duration-200">
+                            <i class="fas fa-times mr-1 content-center"></i>Clear Image
+                        </button>
+                        <input type="checkbox" name="{{ form.cover_image.name }}-clear" id="{{ form.cover_image.id_for_label }}_clear" style="display:none">
+                    {% endif %}
+                    {{ form.cover_image.errors }}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Upload a compelling cover image (JPG, PNG) that represents this success story</p>
+                </div>
+
+                <!-- Cover Image URL Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.cover_image_url.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-link text-orange-600 mr-2 content-center"></i>
+                        {{ form.cover_image_url.label_tag }}
+                    </label>
+                    <input type="url" name="{{ form.cover_image_url.name }}" id="{{ form.cover_image_url.id_for_label }}"
+                           class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                  focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 dark:focus:bg-orange-900/20
+                                  dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                           value="{% if form.cover_image_url.value %}{{ form.cover_image_url.value }}{% endif %}"
+                           placeholder="https://example.com/cover-image.jpg">
+                    {{ form.cover_image_url.errors }}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Alternatively, provide a URL to an image hosted elsewhere</p>
+                </div>
+
+                <!-- Image File Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.image_file.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-file-image text-orange-600 mr-2 content-center"></i>
+                        {{ form.image_file.label_tag }}
+                    </label>
+                    <input type="file" name="{{ form.image_file.name }}" id="{{ form.image_file.id_for_label }}"
+                           class="block w-full px-4 py-3 text-sm text-gray-500 dark:text-gray-400
+                                  file:mr-4 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold
+                                  file:bg-orange-600 file:text-white hover:file:bg-orange-700 dark:file:bg-orange-700 dark:file:hover:bg-orange-600
+                                  cursor-pointer transition-all duration-200 rounded-lg border border-gray-300 dark:border-gray-600">
+                    {% if form.image_file.value %}
+                        <div id="{{ form.image_file.id_for_label }}_current" class="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-1 content-center"></i>
+                                Current: <a href="{{ form.image_file.value.url }}" target="_blank" class="text-orange-600 hover:underline">{{ form.image_file.value.name }}</a>
+                            </p>
+                        </div>
+                        <button type="button" id="clear-image-file" class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 dark:bg-orange-900 dark:text-orange-300 dark:hover:bg-orange-800 transition-colors duration-200">
+                            <i class="fas fa-times mr-1 content-center"></i>Clear File
+                        </button>
+                        <input type="checkbox" name="{{ form.image_file.name }}-clear" id="{{ form.image_file.id_for_label }}_clear" style="display:none">
+                    {% endif %}
+                    {{ form.image_file.errors }}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Upload additional images related to this success story</p>
+                </div>
+
+                <!-- Image URLs Section -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-images text-orange-600 mr-2 content-center"></i>
+                        Additional Image URLs
+                    </label>
+                    <div id="image-urls-container">
+                        {% if success_story.image_urls %}
+                            {% for image_url in success_story.image_urls %}
+                                <div class="image-url-field mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <div class="flex gap-3">
+                                        <input type="url" name="image_urls[]" id="image_url_{{ forloop.counter0 }}"
+                                               class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                                                      focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 dark:focus:bg-orange-900/20
+                                                      dark:bg-gray-800 dark:text-gray-200 transition-all duration-200"
+                                               value="{{ image_url }}"
+                                               placeholder="https://example.com/image.jpg">
+                                        <button type="button" class="remove-image-url-btn px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 flex-shrink-0">
+                                            <i class="fas fa-trash-alt h-4 w-4 content-center"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="image-url-field mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="flex gap-3">
+                                    <input type="url" name="image_urls[]" id="image_url_0"
+                                           class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                                                  focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 dark:focus:bg-orange-900/20
+                                                  dark:bg-gray-800 dark:text-gray-200 transition-all duration-200"
+                                           value=""
+                                           placeholder="https://example.com/image.jpg">
+                                    <button type="button" class="remove-image-url-btn px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 flex-shrink-0" style="display: none;">
+                                        <i class="fas fa-trash-alt h-4 w-4 content-center"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="button" id="add-image-url-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-300">
+                        <i class="fas fa-plus h-4 w-4 mr-2 content-center"></i>
+                        Add Image URL
+                    </button>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add multiple image URLs to showcase different aspects of this success story</p>
+                </div>
+
+                <!-- Video URLs Section -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                        <i class="fas fa-video text-red-600 mr-2 content-center"></i>
+                        Video URLs
+                    </label>
+                    <div id="video-urls-container">
+                        {% if success_story.video_urls %}
+                            {% for video_url in success_story.video_urls %}
+                                <div class="video-url-field mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <div class="flex gap-3">
+                                        <input type="url" name="video_urls[]" id="video_url_{{ forloop.counter0 }}"
+                                               class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                                                      focus:border-red-500 focus:ring-red-500 focus:bg-red-50 dark:focus:bg-red-900/20
+                                                      dark:bg-gray-800 dark:text-gray-200 transition-all duration-200"
+                                               value="{{ video_url }}"
+                                               placeholder="https://youtube.com/watch?v=...">
+                                        <button type="button" class="remove-video-url-btn px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 flex-shrink-0">
+                                            <i class="fas fa-trash-alt h-4 w-4 content-center"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="video-url-field mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="flex gap-3">
+                                    <input type="url" name="video_urls[]" id="video_url_0"
+                                           class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                                                  focus:border-red-500 focus:ring-red-500 focus:bg-red-50 dark:focus:bg-red-900/20
+                                                  dark:bg-gray-800 dark:text-gray-200 transition-all duration-200"
+                                           value=""
+                                           placeholder="https://youtube.com/watch?v=...">
+                                    <button type="button" class="remove-video-url-btn px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 flex-shrink-0" style="display: none;">
+                                        <i class="fas fa-trash-alt h-4 w-4 content-center"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="button" id="add-video-url-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-300">
+                        <i class="fas fa-plus h-4 w-4 mr-2 content-center"></i>
+                        Add Video URL
+                    </button>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add video links (YouTube, Vimeo, etc.) to bring this success story to life</p>
+                </div>
+            </div>
+
+            <!-- Impact Metrics Section -->
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-border-light dark:border-border-dark">
+                <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
+                    <i class="fas fa-chart-line text-emerald-600 mr-2 content-center"></i>
+                    Impact Metrics
+                </h2>
+            </div>
+
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Beneficiaries Field -->
+                    <div class="space-y-2">
+                        <label for="{{ form.beneficiaries.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                            <i class="fas fa-users text-emerald-600 mr-2 content-center"></i>
+                            {{ form.beneficiaries.label_tag }}
+                        </label>
+                        <input type="text" name="{{ form.beneficiaries.name }}" id="{{ form.beneficiaries.id_for_label }}"
+                               class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                      focus:border-emerald-500 focus:ring-emerald-500 focus:bg-emerald-50 dark:focus:bg-emerald-900/20
+                                      dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                               value="{% if form.beneficiaries.value %}{{ form.beneficiaries.value }}{% endif %}"
+                               placeholder="e.g., 50 families, 200 students">
+                        {{ form.beneficiaries.errors }}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Who benefited from this success story?</p>
+                    </div>
+
+                    <!-- Total Hours Contributed Field -->
+                    <div class="space-y-2">
+                        <label for="{{ form.total_hours_contributed.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
+                            <i class="fas fa-clock text-emerald-600 mr-2 content-center"></i>
+                            {{ form.total_hours_contributed.label_tag }}
+                        </label>
+                        <input type="number" name="{{ form.total_hours_contributed.name }}" id="{{ form.total_hours_contributed.id_for_label }}"
+                               class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
+                                      focus:border-emerald-500 focus:ring-emerald-500 focus:bg-emerald-50 dark:focus:bg-emerald-900/20
+                                      dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
+                               value="{% if form.total_hours_contributed.value %}{{ form.total_hours_contributed.value }}{% endif %}"
+                               placeholder="0"
+                               min="0">
+                        {{ form.total_hours_contributed.errors }}
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total volunteer hours contributed to this success</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                <div class="flex justify-end space-x-3">
+                    <a href="{% url 'success_story_list' %}" class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-300">
+                        <i class="fas fa-arrow-left h-5 w-5 mr-2 content-center"></i>
+                        Cancel
+                    </a>
+                    <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-300">
+                        <i class="fas fa-save h-5 w-5 mr-2 content-center"></i>
+                        {% if success_story.title %}Update Success Story{% else %}Create Success Story{% endif %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize counters based on existing fields
+    let imageUrlCount = document.querySelectorAll('.image-url-field').length;
+    let videoUrlCount = document.querySelectorAll('.video-url-field').length;
+
+    // Add Image URL field
+    document.getElementById('add-image-url-btn').addEventListener('click', function() {
+        const container = document.getElementById('image-urls-container');
+        const fieldDiv = document.createElement('div');
+        fieldDiv.className = 'image-url-field mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700';
+        fieldDiv.innerHTML = `
+            <div class="flex gap-3">
+                <input type="url" name="image_urls[]" id="image_url_${imageUrlCount}"
+                       class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                              focus:border-orange-500 focus:ring-orange-500 focus:bg-orange-50 dark:focus:bg-orange-900/20
+                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200"
+                       placeholder="https://example.com/image.jpg">
+                <button type="button" class="remove-image-url-btn px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 flex-shrink-0">
+                    <i class="fas fa-trash-alt h-4 w-4 content-center"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(fieldDiv);
+        imageUrlCount++;
+
+        // Show remove button for all image URL fields when there are more than one
+        updateRemoveButtons();
+    });
+
+    // Add Video URL field
+    document.getElementById('add-video-url-btn').addEventListener('click', function() {
+        const container = document.getElementById('video-urls-container');
+        const fieldDiv = document.createElement('div');
+        fieldDiv.className = 'video-url-field mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700';
+        fieldDiv.innerHTML = `
+            <div class="flex gap-3">
+                <input type="url" name="video_urls[]" id="video_url_${videoUrlCount}"
+                       class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
+                              focus:border-red-500 focus:ring-red-500 focus:bg-red-50 dark:focus:bg-red-900/20
+                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200"
+                       placeholder="https://youtube.com/watch?v=...">
+                <button type="button" class="remove-video-url-btn px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 flex-shrink-0">
+                    <i class="fas fa-trash-alt h-4 w-4 content-center"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(fieldDiv);
+        videoUrlCount++;
+
+        // Show remove button for all video URL fields when there are more than one
+        updateRemoveButtons();
+    });
+
+    // Remove Image URL field
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-image-url-btn') || e.target.closest('.remove-image-url-btn')) {
+            e.target.closest('.image-url-field').remove();
+            updateRemoveButtons();
+        }
+    });
+
+    // Remove Video URL field
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-video-url-btn') || e.target.closest('.remove-video-url-btn')) {
+            e.target.closest('.video-url-field').remove();
+            updateRemoveButtons();
+        }
+    });
+
+    // Update remove button visibility
+    function updateRemoveButtons() {
+        const imageFields = document.querySelectorAll('.image-url-field');
+        const videoFields = document.querySelectorAll('.video-url-field');
+
+        // Show/hide remove buttons for image URLs
+        imageFields.forEach((field, index) => {
+            const removeBtn = field.querySelector('.remove-image-url-btn');
+            if (imageFields.length > 1) {
+                removeBtn.style.display = 'block';
+            } else {
+                removeBtn.style.display = 'none';
+            }
+        });
+
+        // Show/hide remove buttons for video URLs
+        videoFields.forEach((field, index) => {
+            const removeBtn = field.querySelector('.remove-video-url-btn');
+            if (videoFields.length > 1) {
+                removeBtn.style.display = 'block';
+            } else {
+                removeBtn.style.display = 'none';
+            }
+        });
+    }
+
+    // Initialize remove button visibility on page load
+    updateRemoveButtons();
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const coverImageInput = document.getElementById('{{ form.cover_image.id_for_label }}');
+        const coverImageUrlInput = document.getElementById('{{ form.cover_image_url.id_for_label }}');
+        const clearCoverImageButton = document.getElementById('clear-cover-image');
+
+        // Ensure only one of the fields is filled
+        coverImageInput.addEventListener('change', function() {
+            if (coverImageInput.value) {
+                coverImageUrlInput.value = '';
+            }
+        });
+
+        coverImageUrlInput.addEventListener('input', function() {
+            if (coverImageUrlInput.value) {
+                coverImageInput.value = '';
+            }
+        });
+
+        // Clear the uploaded cover image (if present)
+        if (clearCoverImageButton) {
+            clearCoverImageButton.addEventListener('click', function() {
+                if (coverImageInput) coverImageInput.value = '';
+                const clearCheckbox = document.getElementById('{{ form.cover_image.id_for_label }}_clear');
+                if (clearCheckbox) clearCheckbox.checked = true;
+                clearCoverImageButton.style.display = 'none';
+            });
+        }
+
+        // Clear the additional image file (if present)
+        const clearImageFileButton = document.getElementById('clear-image-file');
+        const imageFileInput = document.getElementById('{{ form.image_file.id_for_label }}');
+        if (clearImageFileButton) {
+            clearImageFileButton.addEventListener('click', function() {
+                if (imageFileInput) imageFileInput.value = '';
+                const clearCheckbox = document.getElementById('{{ form.image_file.id_for_label }}_clear');
+                if (clearCheckbox) clearCheckbox.checked = true;
+                clearImageFileButton.style.display = 'none';
+            });
+        }
+    });
+</script>
+{% endblock %}

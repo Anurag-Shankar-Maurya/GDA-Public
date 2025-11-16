@@ -1,0 +1,957 @@
+{% extends "content_base.html" %}
+{% load i18n %}
+{% load content_filters %}
+
+{% block title %}GDA Success Story: {{ success_story.title }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'content_success_story_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Success Stories" %}</a>
+        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <span class="text-gray-500 dark:text-gray-400">{{ success_story.title }}</span>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2">
+                <article class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl overflow-hidden">
+                    
+                    {# Back button #}
+                    <div class="p-6 pb-0">
+                        <a href="{% url 'content_success_story_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-secondary-gray hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 transition-all duration-300 ease-in-out hover:shadow-lg transform hover:scale-105">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            {% trans "Back to Success Stories" %}
+                        </a>
+                    </div>
+
+                    <!-- Story Header -->
+                    <div class="p-8">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% if success_story.is_published %}
+                                <span class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-check-circle mr-1"></i>{% trans "Published" %}
+                                </span>
+                            {% else %}
+                                <span class="px-3 py-1 bg-gray-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-file-alt mr-1"></i>{% trans "Draft" %}
+                                </span>
+                            {% endif %}
+                            
+                            {% if success_story.related_project %}
+                                <a href="{% url 'content_project_detail' success_story.related_project.pk %}" class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-full transition-colors">
+                                    <i class="fas fa-project-diagram mr-1"></i>{{ success_story.related_project.title|truncatewords:3 }}
+                                </a>
+                            {% endif %}
+                            
+                            {% if success_story.is_hero_highlight %}
+                                <span class="px-3 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-star mr-1"></i>{% trans "Hero Highlight" %}
+                                </span>
+                            {% endif %}
+                            {% if success_story.is_featured %}
+                                <span class="px-3 py-1 bg-rose-500 text-white text-xs font-semibold rounded-full">
+                                    <i class="fas fa-heart mr-1"></i>{% trans "Featured" %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight">
+                            {{ success_story.title }}
+                        </h1>
+                        
+                        <div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-alt mr-2 text-yellow-600"></i>
+                                <span>{{ success_story.published_at|date:"F d, Y H:i" }}</span>
+                            </div>
+                            {% if success_story.related_project %}
+                            <div class="flex items-center">
+                                <i class="fas fa-link mr-2 text-blue-600"></i>
+                                <a href="{% url 'content_project_detail' success_story.related_project.pk %}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 font-semibold">
+                                    {{ success_story.related_project.title }}
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {% if success_story.cover_image_blob or success_story.cover_image or success_story.cover_image_url %}
+                        <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
+                            {% if success_story.cover_image_blob %}
+                                <img src="{% url 'content_serve_blob' 'success_story' success_story.pk 'cover_image_blob' %}" alt="{{ success_story.title }} Cover Image" class="w-full object-cover">
+                            {% elif success_story.cover_image %}
+                                <img src="{{ success_story.cover_image.url }}" alt="{{ success_story.title }} Cover Image" class="w-full object-cover">
+                            {% elif success_story.cover_image_url %}
+                                <img src="{{ success_story.cover_image_url }}" alt="{{ success_story.title }} Cover Image" class="w-full object-cover">
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Story Content -->
+                        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 mb-8">
+                            {{ success_story.body|linebreaks }}
+                        </div>
+
+                        <!-- Impact Metrics -->
+                        {% if success_story.beneficiaries is not None or success_story.total_hours_contributed is not None %}
+                        <div class="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-chart-line text-green-600 mr-2"></i>
+                                {% trans "Impact Metrics" %}
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {% if success_story.beneficiaries is not None %}
+                                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-green-300 dark:border-green-700">
+                                    <div class="text-xs text-green-600 dark:text-green-400 uppercase tracking-wide mb-2">
+                                        <i class="fas fa-users mr-1"></i>{% trans "Beneficiaries Impacted" %}
+                                    </div>
+                                    <div class="text-3xl font-extrabold text-green-700 dark:text-green-300">
+                                        {{ success_story.beneficiaries|floatformat:0 }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if success_story.total_hours_contributed is not None %}
+                                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-green-300 dark:border-green-700">
+                                    <div class="text-xs text-green-600 dark:text-green-400 uppercase tracking-wide mb-2">
+                                        <i class="fas fa-clock mr-1"></i>{% trans "Volunteer Hours" %}
+                                    </div>
+                                    <div class="text-3xl font-extrabold text-green-700 dark:text-green-300">
+                                        {{ success_story.total_hours_contributed|floatformat:0 }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Media Gallery -->
+                        {% if success_story.image_file or success_story.image_urls or success_story.video_urls %}
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-images text-purple-600 mr-2"></i>
+                                {% trans "Media Gallery" %}
+                            </h3>
+                            <style>
+                                .gallery-container {
+                                    column-count: 1;
+                                    column-gap: 8px;
+                                    column-fill: balance;
+                                    width: 100%;
+                                }
+
+                                @media (min-width: 480px) {
+                                    .gallery-container {
+                                        column-count: 2;
+                                        column-gap: 8px;
+                                    }
+                                }
+
+                                @media (min-width: 960px) {
+                                    .gallery-container {
+                                        column-count: 3;
+                                        column-gap: 10px;
+                                    }
+                                }
+
+                                /* @media (min-width: 1280px) {
+                                    .gallery-container {
+                                        column-count: 4;
+                                        column-gap: 10px;
+                                    }
+                                } */
+
+                                .gallery-item {
+                                    break-inside: avoid;
+                                    position: relative;
+                                    overflow: hidden;
+                                    border-radius: 0.5rem;
+                                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                                    transition: all 300ms ease-in-out;
+                                    cursor: pointer;
+                                    background: #f3f4f6;
+                                    margin-bottom: 8px;
+                                    display: block;
+                                    width: 100%;
+                                }
+
+                                .gallery-item:hover {
+                                    transform: scale(1.05);
+                                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+                                    z-index: 10;
+                                }
+
+                                .dark .gallery-item {
+                                    background: #1f2937;
+                                }
+
+                                .gallery-item img {
+                                    width: 100%;
+                                    height: auto;
+                                    display: block;
+                                    object-fit: cover;
+                                    object-position: center;
+                                }
+
+                                .gallery-item video,
+                                .gallery-item iframe {
+                                    width: 100%;
+                                    height: auto;
+                                    display: block;
+                                }
+
+                                .gallery-item.video-container,
+                                .gallery-item.iframe-container {
+                                    aspect-ratio: 16 / 9;
+                                }
+
+                                /* YouTube Shorts aspect ratio */
+                                .gallery-item.iframe-container.shorts {
+                                    aspect-ratio: 9 / 16;
+                                }
+
+                                .gallery-item.video-container video,
+                                .gallery-item.iframe-container iframe {
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                }
+
+                                .gallery-item-placeholder {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    min-height: 150px;
+                                    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+                                }
+
+                                .dark .gallery-item-placeholder {
+                                    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+                                }
+
+                                .gallery-item-placeholder i {
+                                    font-size: 2rem;
+                                    color: #d1d5db;
+                                }
+
+                                .dark .gallery-item-placeholder i {
+                                    color: #4b5563;
+                                }
+
+                                /* Gallery Lightbox Styles */
+                                .gallery-lightbox {
+                                    display: none;
+                                    position: fixed;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    background: rgba(0, 0, 0, 0.9);
+                                    z-index: 9999;
+                                    justify-content: center;
+                                    align-items: center;
+                                    animation: fadeIn 300ms ease-in-out;
+                                }
+
+                                .gallery-lightbox.active {
+                                    display: flex;
+                                }
+
+                                @keyframes fadeIn {
+                                    from {
+                                        opacity: 0;
+                                    }
+                                    to {
+                                        opacity: 1;
+                                    }
+                                }
+
+                                .gallery-lightbox-content {
+                                    position: relative;
+                                    max-width: 95vw;
+                                    max-height: 95vh;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    animation: slideIn 300ms ease-in-out;
+                                }
+
+                                @keyframes slideIn {
+                                    from {
+                                        transform: scale(0.9);
+                                        opacity: 0;
+                                    }
+                                    to {
+                                        transform: scale(1);
+                                        opacity: 1;
+                                    }
+                                }
+
+                                .gallery-lightbox-media {
+                                    max-width: 90vw;
+                                    max-height: 90vh;
+                                    object-fit: contain;
+                                    border-radius: 0.5rem;
+                                }
+
+                                .gallery-lightbox-close {
+                                    position: fixed;
+                                    top: 20px;
+                                    right: 30px;
+                                    font-size: 40px;
+                                    color: white;
+                                    cursor: pointer;
+                                    background: rgba(0, 0, 0, 0.5);
+                                    border: none;
+                                    width: 50px;
+                                    height: 50px;
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    transition: all 300ms ease-in-out;
+                                    z-index: 10001;
+                                }
+
+                                .gallery-lightbox-close:hover {
+                                    background: rgba(0, 0, 0, 0.8);
+                                    transform: scale(1.1);
+                                }
+
+                                .gallery-lightbox-nav {
+                                    position: fixed;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+                                    font-size: 30px;
+                                    color: white;
+                                    cursor: pointer;
+                                    background: rgba(0, 0, 0, 0.5);
+                                    border: none;
+                                    width: 50px;
+                                    height: 50px;
+                                    border-radius: 50%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    transition: all 300ms ease-in-out;
+                                    z-index: 10001;
+                                }
+
+                                .gallery-lightbox-nav:hover {
+                                    background: rgba(0, 0, 0, 0.8);
+                                    transform: translateY(-50%) scale(1.1);
+                                }
+
+                                .gallery-lightbox-nav.prev {
+                                    left: 20px;
+                                }
+
+                                .gallery-lightbox-nav.next {
+                                    right: 20px;
+                                }
+
+                                .gallery-lightbox-nav:disabled {
+                                    opacity: 0.5;
+                                    cursor: not-allowed;
+                                }
+
+                                .gallery-lightbox-counter {
+                                    position: fixed;
+                                    bottom: 20px;
+                                    left: 50%;
+                                    transform: translateX(-50%);
+                                    color: white;
+                                    background: rgba(0, 0, 0, 0.6);
+                                    padding: 10px 20px;
+                                    border-radius: 25px;
+                                    font-size: 14px;
+                                    z-index: 10001;
+                                }
+
+                                @media (max-width: 640px) {
+                                    .gallery-lightbox-nav {
+                                        width: 40px;
+                                        height: 40px;
+                                        font-size: 20px;
+                                    }
+
+                                    .gallery-lightbox-close {
+                                        width: 40px;
+                                        height: 40px;
+                                        font-size: 24px;
+                                        top: 10px;
+                                        right: 10px;
+                                    }
+
+                                    .gallery-lightbox-nav.prev {
+                                        left: 10px;
+                                    }
+
+                                    .gallery-lightbox-nav.next {
+                                        right: 10px;
+                                    }
+                                }
+                            </style>
+
+                            <div class="gallery-container">
+                                {# Display Uploaded Image #}
+                                {% if success_story.image_file_blob %}
+                                    <div class="gallery-item" data-index="0" data-type="image">
+                                        <img src="{% url 'content_serve_blob' 'success_story' success_story.pk 'image_file_blob' %}" 
+                                             alt="{% trans "Success Story - Uploaded Image" %}" 
+                                             loading="lazy" 
+                                             data-src="{% url 'content_serve_blob' 'success_story' success_story.pk 'image_file_blob' %}">
+                                    </div>
+                                {% elif success_story.image_file %}
+                                    <div class="gallery-item" data-index="0" data-type="image">
+                                        <img src="{{ success_story.image_file.url }}" 
+                                             alt="Success Story - Uploaded Image" 
+                                             loading="lazy" 
+                                             data-src="{{ success_story.image_file.url }}">
+                                    </div>
+                                {% endif %}
+
+                                {# Display Multiple Images from URLs #}
+                                {% for image_url in success_story.image_urls %}
+                                    <div class="gallery-item" data-index="{{ forloop.counter }}" data-type="image">
+                                        {% if 'drive.google.com' in image_url %}
+                                            <img src="{{ image_url|google_drive_image_embed }}" 
+                                                 alt="{% blocktrans with num=forloop.counter %}Success Story - Gallery Image {{ num }}{% endblocktrans %}" 
+                                                 loading="lazy" 
+                                                 data-src="{{ image_url|google_drive_image_embed }}">
+                                        {% else %}
+                                            <img src="{{ image_url }}" 
+                                                 alt="{% blocktrans with num=forloop.counter %}Success Story - Gallery Image {{ num }}{% endblocktrans %}" 
+                                                 loading="lazy" 
+                                                 data-src="{{ image_url }}">
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+
+                                {# Display Multiple Videos from URLs #}
+                                {% for video_url in success_story.video_urls %}
+                                    {% if 'youtube.com/shorts' in video_url %}
+                                        <div class="gallery-item iframe-container shorts" data-index="{{ forloop.counter|add:success_story.image_urls|length }}" data-type="video">
+                                    {% else %}
+                                        <div class="gallery-item video-container" data-index="{{ forloop.counter|add:success_story.image_urls|length }}" data-type="video">
+                                    {% endif %}
+                                        {% if 'youtube.com' in video_url or 'youtu.be' in video_url %}
+                                            <iframe id="youtube-player-{{ forloop.counter }}"
+                                                    src="{{ video_url|embed_youtube }}?enablejsapi=1" 
+                                                    frameborder="0" 
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                                    allowfullscreen
+                                                    referrerpolicy="strict-origin-when-cross-origin"
+                                                    title="{% blocktrans with num=forloop.counter %}Success Story - YouTube Video {{ num }}{% endblocktrans %}"
+                                                    loading="lazy"
+                                                    data-video-url="{{ video_url|embed_youtube }}">
+                                            </iframe>
+                                        {% elif 'drive.google.com' in video_url %}
+                                            <iframe src="{{ video_url|google_drive_video_embed }}" 
+                                                    frameborder="0" 
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                    allowfullscreen
+                                                    title="{% blocktrans with num=forloop.counter %}Success Story - Google Drive Video {{ num }}{% endblocktrans %}"
+                                                    loading="lazy"
+                                                    data-video-url="{{ video_url|google_drive_video_embed }}">
+                                            </iframe>
+                                        {% else %}
+                                            <video controls 
+                                                   preload="none"
+                                                   title="{% blocktrans with num=forloop.counter %}Success Story - Video {{ num }}{% endblocktrans %}"
+                                                   poster=""
+                                                   data-video-url="{{ video_url }}">
+                                                <source src="{{ video_url }}" type="video/mp4">
+                                                {% trans "Your browser does not support the video tag." %}
+                                            </video>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Gallery Lightbox Modal -->
+                            <div class="gallery-lightbox" id="galleryLightbox">
+                                <div class="gallery-lightbox-content">
+                                <button class="gallery-lightbox-close" id="closeLightbox" aria-label="{% trans "Close gallery" %}">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                
+                                <button class="gallery-lightbox-nav prev" id="prevBtn" aria-label="{% trans "Previous image" %}">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+
+                                <div id="lightboxMediaContainer" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                                    <!-- Media will be inserted here -->
+                                </div>
+
+                                <button class="gallery-lightbox-nav next" id="nextBtn" aria-label="{% trans "Next image" %}">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>                                    <div class="gallery-lightbox-counter">
+                                        <span id="currentIndex">1</span> / <span id="totalItems">1</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </article>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 space-y-6">
+
+                <!-- Story Info -->
+                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <i class="fas fa-info-circle text-yellow-600 mr-2"></i>
+                        {% trans "Story Details" %}
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                            <div class="text-xs text-yellow-600 dark:text-yellow-400 uppercase tracking-wide mb-1">{% trans "Published" %}</div>
+                            <div class="text-sm font-bold text-yellow-900 dark:text-yellow-300">{{ success_story.published_at|date:"M d, Y H:i" }}</div>
+                        </div>
+                        <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                            <div class="text-xs text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">{% trans "Last Updated" %}</div>
+                            <div class="text-sm font-bold text-purple-900 dark:text-purple-300">{{ success_story.updated_at|date:"M d, Y" }}</div>
+                        </div>
+                    </div>
+                </div>
+                                
+                <!-- Related Project Info -->
+                {% if success_story.related_project %}
+                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-project-diagram text-blue-600 mr-2"></i>
+                        {% trans "Related Project" %}
+                    </h3>
+                    <a href="{% url 'content_project_detail' success_story.related_project.pk %}" class="block group h-full">
+                        <div class="h-full p-4 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-800/30 border border-blue-200 dark:border-blue-700 rounded-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105">
+                            <div class="flex items-start justify-between gap-2 mb-3">
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 bg-blue-500 text-white rounded-full text-xs font-bold flex items-center gap-1">
+                                        <i class="fas fa-map-pin"></i>
+                                        {{ success_story.related_project.country }}
+                                    </span>
+                                    <span class="px-2 py-1 bg-green-500 text-white rounded-full text-xs font-bold flex items-center gap-1">
+                                        <i class="fas fa-tag"></i>
+                                        {{ success_story.related_project.theme }}
+                                    </span>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-gray-900 dark:text-white mb-3 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors line-clamp-3 leading-snug">
+                                {{ success_story.related_project.title }}
+                            </h4>
+                            <div class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 pt-3 border-t border-blue-200 dark:border-blue-700">
+                                <div class="flex items-center gap-2">
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-users"></i>
+                                        {{ success_story.related_project.headcount|default:0 }}/{{ success_story.related_project.total_headcount|default:0 }}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-clock"></i>
+                                        {{ success_story.related_project.duration }}h
+                                    </span>
+                                </div>
+                                <span class="text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform font-semibold">
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{% url 'content_project_list' %}" class="block mt-4 w-full text-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-lg font-semibold transition-all duration-300 hover:shadow-lg">
+                        <i class="fas fa-list mr-2"></i>{% trans "View All Projects" %}
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Related Success Stories -->
+                {% if related_success_stories %}
+                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                        <i class="fas fa-trophy text-yellow-600 mr-2"></i>
+                        {% trans "More Stories" %}
+                    </h3>
+                    <div class="space-y-4">
+                        {% for rel_story in related_success_stories %}
+                        <a href="{% url 'content_success_story_detail' rel_story.pk %}" class="block group h-full">
+                            <div class="h-full p-4 bg-gradient-to-br from-yellow-50 to-orange-100 dark:from-yellow-900/30 dark:to-orange-800/30 border border-yellow-200 dark:border-yellow-700 rounded-xl hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:scale-105">
+                                <div class="flex items-start justify-between mb-3">
+                                    {% if rel_story.related_project %}
+                                    <span class="px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-bold flex items-center gap-1">
+                                        <i class="fas fa-project-diagram"></i>
+                                        {{ rel_story.related_project.title|truncatewords:2 }}
+                                    </span>
+                                    {% else %}
+                                    <span class="px-3 py-1 bg-yellow-500 text-white rounded-full text-xs font-bold flex items-center gap-1">
+                                        <i class="fas fa-star"></i>
+                                        {% trans "Story" %}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <h4 class="font-bold text-gray-900 dark:text-white mb-3 group-hover:text-yellow-700 dark:group-hover:text-yellow-300 transition-colors line-clamp-3 leading-snug">
+                                    {{ rel_story.title }}
+                                </h4>
+                                <div class="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 pt-3 border-t border-yellow-200 dark:border-yellow-700">
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ rel_story.published_at|date:"M d, Y" }}
+                                    </span>
+                                    <span class="text-yellow-600 dark:text-yellow-400 group-hover:translate-x-1 transition-transform font-semibold">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'content_success_story_list' %}" class="block mt-6 w-full text-center px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white rounded-lg font-semibold transition-all duration-300 hover:shadow-lg">
+                        <i class="fas fa-list mr-2"></i>{% trans "View All Success Stories" %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Load YouTube iframe API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        let players = [];
+        let playerStates = {};
+
+        // YouTube API ready callback
+        function onYouTubeIframeAPIReady() {
+            // Find all YouTube iframes in gallery
+            document.querySelectorAll('.gallery-item iframe[src*="youtube.com/embed"]').forEach((iframe, index) => {
+                // Add enablejsapi parameter to iframe src if not present
+                if (!iframe.src.includes('enablejsapi')) {
+                    const separator = iframe.src.includes('?') ? '&' : '?';
+                    iframe.src = iframe.src + separator + 'enablejsapi=1';
+                }
+                
+                // Give iframe an ID if it doesn't have one
+                if (!iframe.id) {
+                    iframe.id = 'youtube-player-' + index;
+                }
+                
+                // Create player
+                const player = new YT.Player(iframe.id, {
+                    events: {
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+                
+                players.push(player);
+                playerStates[iframe.id] = player;
+            });
+        }
+
+        // Handle YouTube player state changes
+        function onPlayerStateChange(event) {
+            // YT.PlayerState.PLAYING = 1
+            if (event.data == YT.PlayerState.PLAYING) {
+                // Pause all other YouTube videos
+                players.forEach(player => {
+                    if (player !== event.target) {
+                        try {
+                            player.pauseVideo();
+                        } catch (e) {
+                            // Player might not be ready
+                        }
+                    }
+                });
+                
+                // Pause all HTML5 videos
+                document.querySelectorAll('.gallery-item video').forEach(video => {
+                    if (!video.paused) {
+                        video.pause();
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gallery Lightbox Functionality
+            const galleryLightbox = document.getElementById('galleryLightbox');
+            const lightboxMediaContainer = document.getElementById('lightboxMediaContainer');
+            const closeLightboxBtn = document.getElementById('closeLightbox');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const currentIndexSpan = document.getElementById('currentIndex');
+            const totalItemsSpan = document.getElementById('totalItems');
+            
+            let galleryItems = [];
+            let currentIndex = 0;
+            let currentlyPlayingVideo = null;
+
+            // Pause all playing videos
+            function pauseAllVideos() {
+                // Pause all YouTube videos using API
+                players.forEach(player => {
+                    try {
+                        if (player.getPlayerState && player.getPlayerState() === YT.PlayerState.PLAYING) {
+                            player.pauseVideo();
+                        }
+                    } catch (e) {
+                        // Player might not be ready
+                    }
+                });
+                
+                // Pause all HTML5 video elements in the gallery
+                document.querySelectorAll('.gallery-item video').forEach(video => {
+                    if (!video.paused) {
+                        video.pause();
+                    }
+                });
+                
+                // Pause all other iframe videos (Google Drive, etc)
+                document.querySelectorAll('.gallery-item iframe:not([src*="youtube.com/embed"])').forEach(iframe => {
+                    const iframeSrc = iframe.src;
+                    if (iframeSrc && iframeSrc.includes('drive.google.com')) {
+                        iframe.src = iframeSrc;
+                    }
+                });
+            }
+
+            // Collect all gallery items
+            function initGallery() {
+                galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+                totalItemsSpan.textContent = galleryItems.length;
+                
+                // Add click handlers to gallery items
+                galleryItems.forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        openLightbox(index);
+                    });
+                });
+                
+                // Add play event listeners to all HTML5 video elements
+                document.querySelectorAll('.gallery-item video').forEach(video => {
+                    video.addEventListener('play', () => {
+                        // Pause all YouTube videos
+                        players.forEach(player => {
+                            try {
+                                if (player.getPlayerState && player.getPlayerState() === YT.PlayerState.PLAYING) {
+                                    player.pauseVideo();
+                                }
+                            } catch (e) {
+                                // Player might not be ready
+                            }
+                        });
+                        
+                        // Pause all other HTML5 videos
+                        document.querySelectorAll('.gallery-item video').forEach(otherVideo => {
+                            if (otherVideo !== video && !otherVideo.paused) {
+                                otherVideo.pause();
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Open lightbox with specific item
+            function openLightbox(index) {
+                currentIndex = index;
+                pauseAllVideos(); // Pause all videos before opening lightbox
+                galleryLightbox.classList.add('active');
+                displayMedia(currentIndex);
+                document.body.style.overflow = 'hidden';
+                updateNavButtons();
+            }
+
+            // Close lightbox
+            function closeLightbox() {
+                pauseAllVideos(); // Pause all videos when closing lightbox
+                galleryLightbox.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                lightboxMediaContainer.innerHTML = '';
+            }
+
+            // Display media in lightbox
+            function displayMedia(index) {
+                const item = galleryItems[index];
+                currentIndexSpan.textContent = index + 1;
+                
+                lightboxMediaContainer.innerHTML = '';
+
+                const itemType = item.getAttribute('data-type');
+                
+                if (itemType === 'image') {
+                    const img = item.querySelector('img');
+                    if (img) {
+                        const fullSrc = img.getAttribute('data-src') || img.getAttribute('src');
+                        const lightboxImg = document.createElement('img');
+                        lightboxImg.src = fullSrc;
+                        lightboxImg.alt = img.alt;
+                        lightboxImg.className = 'gallery-lightbox-media';
+                        lightboxMediaContainer.appendChild(lightboxImg);
+                    }
+                } else if (itemType === 'video') {
+                    const iframe = item.querySelector('iframe');
+                    const video = item.querySelector('video');
+                    
+                    if (iframe) {
+                        const lightboxIframe = document.createElement('iframe');
+                        lightboxIframe.src = iframe.src;
+                        lightboxIframe.frameborder = '0';
+                        lightboxIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                        lightboxIframe.referrerPolicy = 'strict-origin-when-cross-origin';
+                        lightboxIframe.title = iframe.title || 'Video';
+                        lightboxIframe.allowFullscreen = true;
+                        lightboxIframe.loading = 'lazy';
+                        
+                        // Detect if it's a YouTube Shorts video
+                        const isShorts = item.classList.contains('shorts');
+                        
+                        lightboxIframe.style.maxWidth = '100%';
+                        lightboxIframe.style.maxHeight = '100%';
+                        lightboxIframe.style.width = isShorts ? '50vw' : '90vw';
+                        lightboxIframe.style.height = '90vh';
+                        lightboxIframe.style.aspectRatio = isShorts ? '9/16' : '16/9';
+                        lightboxIframe.style.objectFit = 'contain';
+                        lightboxIframe.style.borderRadius = '0.5rem';
+                        lightboxMediaContainer.appendChild(lightboxIframe);
+                    } else if (video) {
+                        const lightboxVideo = document.createElement('video');
+                        lightboxVideo.controls = true;
+                        lightboxVideo.className = 'gallery-lightbox-media';
+                        lightboxVideo.style.maxWidth = '90vw';
+                        lightboxVideo.style.maxHeight = '90vh';
+                        lightboxVideo.style.objectFit = 'contain';
+                        const source = document.createElement('source');
+                        source.src = video.querySelector('source')?.src;
+                        source.type = 'video/mp4';
+                        lightboxVideo.appendChild(source);
+                        
+                        // Add play listener to pause other videos
+                        lightboxVideo.addEventListener('play', () => {
+                            pauseAllVideos();
+                            lightboxVideo.play();
+                        });
+                        
+                        lightboxMediaContainer.appendChild(lightboxVideo);
+                    }
+                }
+            }
+
+            // Update navigation button states
+            function updateNavButtons() {
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === galleryItems.length - 1;
+            }
+
+            // Navigation functions
+            function showPrevious() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    displayMedia(currentIndex);
+                    updateNavButtons();
+                }
+            }
+
+            function showNext() {
+                if (currentIndex < galleryItems.length - 1) {
+                    currentIndex++;
+                    displayMedia(currentIndex);
+                    updateNavButtons();
+                }
+            }
+
+            // Event listeners
+            closeLightboxBtn.addEventListener('click', closeLightbox);
+            prevBtn.addEventListener('click', showPrevious);
+            nextBtn.addEventListener('click', showNext);
+
+            // Close on background click
+            galleryLightbox.addEventListener('click', (e) => {
+                if (e.target === galleryLightbox) {
+                    closeLightbox();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!galleryLightbox.classList.contains('active')) return;
+                
+                if (e.key === 'ArrowLeft') {
+                    showPrevious();
+                } else if (e.key === 'ArrowRight') {
+                    showNext();
+                } else if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            });
+
+            // Initialize Intersection Observer for lazy loading
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        
+                        // Handle images
+                        if (img.tagName === 'IMG') {
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                            }
+                            img.classList.remove('lazy');
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+
+            // Observe all lazy-loaded images
+            document.querySelectorAll('.gallery-item img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+
+            // Add keyboard navigation for gallery (optional enhancement)
+            const galleryItemsForKeyboard = document.querySelectorAll('.gallery-item');
+            galleryItemsForKeyboard.forEach((item, index) => {
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight' && index < galleryItemsForKeyboard.length - 1) {
+                        galleryItemsForKeyboard[index + 1].focus();
+                    } else if (e.key === 'ArrowLeft' && index > 0) {
+                        galleryItemsForKeyboard[index - 1].focus();
+                    }
+                });
+            });
+
+            // Initialize gallery
+            initGallery();
+        });
+
+        // Fallback for browsers without native lazy loading support
+        if (!('loading' in HTMLImageElement.prototype)) {
+            document.addEventListener('scroll', () => {
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    if (img.offsetParent === null) return;
+                    
+                    const rect = img.getBoundingClientRect();
+                    if (rect.top < window.innerHeight + 50 && rect.bottom > -50) {
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+{% endblock %}

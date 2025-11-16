@@ -1,0 +1,239 @@
+{% extends 'users_base.html' %}
+{% load form_filters %}
+{% block content %}
+<div class="flex flex-col items-center">
+    <div class="w-full max-w-2xl">
+        <div class="bg-card-bg-light dark:bg-card-bg-dark rounded-lg shadow-md overflow-hidden border border-border-light dark:border-border-dark">
+            <div class="px-6 py-8">
+                <h2 class="text-2xl font-bold text-center text-text-light dark:text-text-dark mb-8">Create Your Account</h2>
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="rounded-md bg-red-50 p-4 mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-red-800">There were errors with your submission</h3>
+                                    <div class="mt-2 text-sm text-red-700">
+                                        {% for error in form.non_field_errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Username -->
+                        <div>
+                            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.username.label }}
+                            </label>
+                            {{ form.username|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.username.errors %}
+                                {% for error in form.username.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            <p class="mt-1 text-xs text-secondary-gray">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.email.label }}
+                            </label>
+                            {{ form.email|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- First Name -->
+                        <div>
+                            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.first_name.label }}
+                            </label>
+                            {{ form.first_name|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.first_name.errors %}
+                                {% for error in form.first_name.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Last Name -->
+                        <div>
+                            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.last_name.label }}
+                            </label>
+                            {{ form.last_name|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.last_name.errors %}
+                                {% for error in form.last_name.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Date of Birth -->
+                        <div>
+                            <label for="{{ form.date_of_birth.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.date_of_birth.label }}
+                            </label>
+                            {{ form.date_of_birth|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.date_of_birth.errors %}
+                                {% for error in form.date_of_birth.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            <p class="mt-1 text-xs text-secondary-gray">Please select your date of birth using the calendar.</p>
+                        </div>
+                        
+                        <!-- Gender -->
+                        <div>
+                            <label for="{{ form.gender.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.gender.label }}
+                            </label>
+                            {{ form.gender|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.gender.errors %}
+                                {% for error in form.gender.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Blood Group -->
+                        <div>
+                            <label for="{{ form.blood_group.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.blood_group.label }}
+                            </label>
+                            {{ form.blood_group|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.blood_group.errors %}
+                                {% for error in form.blood_group.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Guardian Name -->
+                        <div>
+                            <label for="{{ form.guardian_name.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.guardian_name.label }}
+                            </label>
+                            {{ form.guardian_name|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.guardian_name.errors %}
+                                {% for error in form.guardian_name.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Guardian Relation -->
+                        <div>
+                            <label for="{{ form.guardian_relation.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.guardian_relation.label }}
+                            </label>
+                            {{ form.guardian_relation|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.guardian_relation.errors %}
+                                {% for error in form.guardian_relation.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Contact -->
+                        <div>
+                            <label for="{{ form.contact.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.contact.label }}
+                            </label>
+                            {{ form.contact|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.contact.errors %}
+                                {% for error in form.contact.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Country Code -->
+                        <div>
+                            <label for="{{ form.country_code.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.country_code.label }}
+                            </label>
+                            {{ form.country_code|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.country_code.errors %}
+                                {% for error in form.country_code.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Address - Full Width -->
+                    <div>
+                        <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                            {{ form.address.label }}
+                        </label>
+                        {{ form.address|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                        {% if form.address.errors %}
+                            {% for error in form.address.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Password Fields -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.password1.label }}
+                            </label>
+                            {{ form.password1|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.password1.errors %}
+                                {% for error in form.password1.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            <p class="mt-1 text-xs text-secondary-gray">Your password must be 8+ characters and can't be entirely numeric.</p>
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                                {{ form.password2.label }}
+                            </label>
+                            {{ form.password2|add_class:"w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark" }}
+                            {% if form.password2.errors %}
+                                {% for error in form.password2.errors %}
+                                    <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            <p class="mt-1 text-xs text-secondary-gray">Enter the same password as before, for verification.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+                            Register Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="px-6 py-4 bg-bg-light dark:bg-bg-dark border-t border-border-light dark:border-border-dark">
+                <div class="text-center text-sm">
+                    <span class="text-secondary-gray">Already have an account? </span>
+                    <a href="{% url 'login' %}" class="font-medium text-primary-blue hover:text-accent-blue">
+                        Sign in
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
