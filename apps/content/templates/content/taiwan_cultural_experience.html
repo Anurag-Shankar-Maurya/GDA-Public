@@ -1,0 +1,853 @@
+{% extends "content_base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Taiwan Cultural Experience - GDA{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        </a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'taiwan_cultural_experience' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Taiwan Cultural Experience" %}</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Poster-style hero (replaces the simple header images) -->
+    <section class="poster-hero mb-10">
+        <style>
+            :root {
+                /* Theme-aware poster colors: prefer site theme variables when available,
+                   otherwise fall back to the previous poster color values. */
+                --poster-bg: var(--color-primary, var(--primary, #6f2f2f));
+                --poster-accent: var(--color-accent, var(--accent, #d6c58f));
+                --poster-on-bg: var(--color-on-primary, var(--text-on-primary, #ffffff));
+                /* Backwards compatibility alias */
+                --poster-maroon: var(--poster-bg);
+            }
+
+            .poster-card {
+                box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08)
+            }
+
+            /* Ensure left poster card fills available height when grid stretches */
+            .poster-top-grid {
+                align-items: stretch;
+            }
+
+            .poster-top-grid .left-card {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .poster-hero .img-cover {
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+                height: 100%;
+                display: block;
+                max-width: 100%;
+                max-height: 100%;
+                /* prevent oversized intrinsic images from exceeding their containers */
+                -o-object-fit: cover;
+                image-rendering: auto;
+            }
+
+            /* Fill / Contain helpers */
+            .img-fill-cover {
+                object-fit: cover;
+                object-position: center center;
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+
+            .img-fill-contain {
+                object-fit: contain;
+                object-position: center center;
+                max-width: 100%;
+                max-height: 100%;
+                display: block;
+            }
+
+            .poster-hero .focus-ring:focus {
+                outline: 3px solid rgba(37, 99, 235, 0.18);
+                outline-offset: 2px
+            }
+
+            @media (max-width:768px) {
+                .poster-hero .lg\:col-span-2 {
+                    grid-column: 1/-1
+                }
+            }
+
+            /* Ensure thumbnails and buttons crop correctly and don't overflow */
+            .poster-hero button,
+            .poster-hero figure {
+                overflow: hidden;
+                display: block;
+            }
+
+            .poster-hero button .img-cover,
+            .poster-hero figure .img-cover {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                display: block;
+            }
+
+            /* Small thumbnail helpers */
+            .poster-hero .thumb-sm {
+                height: 5rem; /* matches h-20 */
+            }
+
+            .poster-hero .thumb-md {
+                height: 10rem; /* matches h-40 */
+            }
+
+            /* Modal preview limit */
+            #poster-img-modal-img {
+                max-height: 80vh;
+                width: auto;
+                max-width: 100%;
+                object-fit: contain;
+            }
+
+            /* Poster thumbnail hover & animation */
+            .poster-thumb {
+                /* Use aspect-ratio so thumbnails scale consistently without stretching.
+                   Use a taller ratio so thumbnails show more vertical content. */
+                aspect-ratio: 4 / 3;
+                min-height: 8rem;
+                display: block;
+                overflow: hidden;
+                border-radius: .5rem;
+                transition: transform .28s ease, filter .28s ease;
+                will-change: transform;
+                animation: fadeInUp 420ms ease-out both;
+                box-shadow: 0 1px 6px rgba(16,24,40,0.04);
+            }
+
+            .poster-thumb img {
+                transition: transform .6s cubic-bezier(.2,.8,.2,1);
+                transform-origin: center center;
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            /* Responsive: on small screens make thumbnails taller and show one per row */
+            @media (max-width: 640px) {
+                .poster-thumb {
+                    aspect-ratio: 3 / 2;
+                    min-height: 10rem;
+                }
+
+                /* Force the thumbnail grid to one column on small viewports */
+                .poster-thumbs {
+                    grid-template-columns: 1fr !important;
+                }
+            }
+
+            .poster-thumb:hover {
+                transform: translateY(-6px) scale(1.02);
+                filter: brightness(1.03) saturate(1.05);
+            }
+
+            .poster-thumb:hover img {
+                transform: scale(1.08);
+            }
+
+            /* Staggered delays for the 4 thumbnails */
+            .poster-thumbs .poster-thumb:nth-child(1) { animation-delay: 0ms; }
+            .poster-thumbs .poster-thumb:nth-child(2) { animation-delay: 80ms; }
+            .poster-thumbs .poster-thumb:nth-child(3) { animation-delay: 160ms; }
+            .poster-thumbs .poster-thumb:nth-child(4) { animation-delay: 240ms; }
+
+            /* Text reveal utilities */
+            .animate-on-scroll { opacity: 0; transform: translateY(12px); transition: opacity .52s ease, transform .52s cubic-bezier(.2,.9,.25,1); }
+            .animate-on-scroll.in-view { opacity: 1; transform: none; }
+
+            /* Hero title subtle slide + gradient accent */
+            .poster-title h1 { background: linear-gradient(90deg, rgba(255,255,255,0.98), rgba(255,255,255,0.9)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+            .poster-title h1.in-view { background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0.95)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+            /* Heading underline animation */
+            .fancy-underline { position: relative; display: inline-block; }
+            .fancy-underline::after { content: ''; position: absolute; left: 0; bottom: -6px; height: 3px; width: 0; background: var(--poster-accent); transition: width .46s cubic-bezier(.2,.9,.2,1); border-radius: 2px; }
+            .fancy-underline.in-view::after { width: 56%; }
+
+            /* Slight letter-spacing animation for emphasis */
+            .letter-emph { transition: letter-spacing .42s ease, opacity .42s ease; }
+            .letter-emph.in-view { letter-spacing: .6px; opacity: 1; }
+        </style>
+
+        <div class="max-w-6xl mx-auto p-4">
+            <article
+                class="bg-white poster-card rounded-lg overflow-hidden border border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+                <div style="background:var(--poster-bg);" class="text-[color:var(--poster-on-bg)]">
+                        <div class="max-w-6xl mx-auto px-6 py-8 md:py-10 text-center poster-title">
+                        <h1 class="animate-on-scroll text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-semibold tracking-wide leading-tight text-[color:var(--poster-on-bg)]">
+                            {% trans "Explore Taiwan Rich Cultural Heritage" %}
+                        </h1>
+                    </div>
+                </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 px-6 py-8 items-stretch poster-top-grid">
+                    <div class="lg:col-span-3">
+                        <div style="background:var(--poster-bg);" class="left-card h-full text-[color:var(--poster-on-bg)] rounded-md p-6 lg:p-8 animate-on-scroll" data-stagger="true">
+                            <p class="font-medium mb-4 leading-relaxed">
+                                {% blocktrans %}Our goal is to safeguard these priceless cultures while fostering an
+                                appreciation for Taiwan's extensive history and variety.{% endblocktrans %}
+                            </p>
+
+                            <p class="text-sm mb-6 leading-relaxed opacity-90">
+                                {% blocktrans %}As we travel through the breathtaking landscapes of Taiwan, we simultaneously
+                                immerse ourselves in its diverse and dynamic cultures.{% endblocktrans %}
+                            </p>
+
+                            <div class="space-y-4 mt-3 text-sm">
+                                <div>
+                                    <h3
+                                        class="inline-block font-semibold text-[color:var(--poster-accent)] uppercase tracking-wide">
+                                        Indigenous Culture:</h3>
+                                    <p class="inline-block ml-3 align-middle leading-relaxed text-white/95">{% blocktrans %}
+                                        Dive deep into the rich traditions of Taiwan's indigenous peoples and
+                                        experience their way of life and heritage.{% endblocktrans %}</p>
+                                </div>
+
+                                <div>
+                                    <h3
+                                        class="inline-block font-semibold text-[color:var(--poster-accent)] uppercase tracking-wide">
+                                        Hakka Culture:</h3>
+                                    <p class="inline-block ml-3 align-middle leading-relaxed text-white/95">{% blocktrans %}
+                                        Savor the unique aspects of Taiwanese Hakka culture, taste delicious Hakka
+                                        cuisine, and explore their traditional arts.{% endblocktrans %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <figure class="rounded-md overflow-hidden h-64 lg:h-96 lg:h-[28rem] lg:ml-2 lg:col-span-1 border border-gray-200 dark:border-gray-800">
+                        <img src="{% static 'images/taiwan_cultural_experience/front-image-1.png' %}"
+                            alt="{% trans "Cultural costume" %}" class="img-cover img-fill-cover w-full h-full" loading="lazy">
+                    </figure>
+                </div>
+
+                    <div class="px-6 pb-8">
+                    <!-- Four small thumbnails in 2-per-row layout with hover/animation -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 poster-thumbs">
+                        <button class="poster-thumb rounded-md overflow-hidden focus-ring" data-src="{% static 'images/taiwan_cultural_experience/front-image-3.png' %}">
+                            <img src="{% static 'images/taiwan_cultural_experience/front-image-3.png' %}" alt="{% trans "performer" %}" class="img-cover img-fill-cover w-full h-full">
+                        </button>
+
+                        <button class="poster-thumb rounded-md overflow-hidden focus-ring" data-src="{% static 'images/taiwan_cultural_experience/Chinese Opera Performer.png' %}">
+                            <img src="{% static 'images/taiwan_cultural_experience/Chinese Opera Performer.png' %}" alt="{% trans "opera performer" %}" class="img-cover img-fill-cover w-full h-full">
+                        </button>
+
+                        <button class="poster-thumb rounded-md overflow-hidden focus-ring" data-src="{% static 'images/taiwan_cultural_experience/Baked Goods.png' %}">
+                            <img src="{% static 'images/taiwan_cultural_experience/Baked Goods.png' %}" alt="{% trans "baked goods" %}" class="img-cover img-fill-cover w-full h-full">
+                        </button>
+
+                        <button class="poster-thumb rounded-md overflow-hidden focus-ring" data-src="{% static 'images/taiwan_cultural_experience/Bamboo tree.png' %}">
+                            <img src="{% static 'images/taiwan_cultural_experience/Bamboo tree.png' %}" alt="{% trans "bamboo crafts" %}" class="img-cover img-fill-cover w-full h-full">
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Modal for poster images -->
+            <div id="poster-img-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+                <div class="max-w-4xl w-full p-4">
+                    <div class="bg-white rounded-md overflow-hidden">
+                        <div class="flex justify-end p-2">
+                            <button id="poster-img-modal-close" class="p-2 hover:bg-gray-100 rounded focus-ring"
+                                aria-label="Close preview">✕</button>
+                        </div>
+                        <div class="p-4">
+                            <img id="poster-img-modal-img" src="" alt="{% trans "preview" %}" class="w-full h-auto max-h-[80vh] object-contain">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                (function () {
+                    const buttons = document.querySelectorAll('.poster-hero [data-src]');
+                    const modal = document.getElementById('poster-img-modal');
+                    const img = document.getElementById('poster-img-modal-img');
+                    const close = document.getElementById('poster-img-modal-close');
+
+                    if (!buttons || !modal) return;
+
+                    buttons.forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const src = btn.getAttribute('data-src') || btn.querySelector('img')?.src;
+                            if (!src) return;
+                            img.src = src;
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+                            close.focus();
+                        });
+                    });
+
+                    close.addEventListener('click', () => {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                        img.src = '';
+                    });
+
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                            modal.classList.add('hidden');
+                            modal.classList.remove('flex');
+                            img.src = '';
+                        }
+                    });
+
+                    modal.addEventListener('click', (evt) => {
+                        if (evt.target.id === 'poster-img-modal') {
+                            evt.currentTarget.classList.add('hidden');
+                            evt.currentTarget.classList.remove('flex');
+                            img.src = '';
+                        }
+                    });
+                })();
+                
+                // Small IntersectionObserver to reveal text blocks with an optional stagger
+                (function () {
+                    if (!('IntersectionObserver' in window)) return;
+                    const io = new IntersectionObserver((entries, obs) => {
+                        entries.forEach(entry => {
+                            if (!entry.isIntersecting) return;
+                            const el = entry.target;
+                            // If element wants children staggered
+                            if (el.dataset && el.dataset.stagger === 'true') {
+                                const children = Array.from(el.children).filter(c => c.nodeType === 1);
+                                children.forEach((child, i) => {
+                                    setTimeout(() => child.classList.add('in-view'), i * 90);
+                                });
+                                // also mark the container
+                                el.classList.add('in-view');
+                            } else {
+                                el.classList.add('in-view');
+                            }
+                            obs.unobserve(el);
+                        });
+                    }, { threshold: 0.12 });
+
+                    document.querySelectorAll('.animate-on-scroll').forEach(el => io.observe(el));
+                })();
+            </script>
+        </div>
+    </section>
+
+    <!-- 10 rows, 2 columns each: left = media (image/video placeholder), right = text/about -->
+    <section class="space-y-10 mt-14">
+        {% comment %} Each row is a responsive two-column layout. Replace image/video sources and text as needed. {% endcomment %}
+
+        <!-- Inserted: second-view image -->
+        <div class="max-w-6xl mx-auto px-6 py-6">
+            <figure class="rounded-md overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
+                <img src="{% static 'images/taiwan_cultural_experience/second-view.png' %}" alt="{% trans "Second view" %}" loading="lazy"
+                    class="w-full h-auto object-cover">
+            </figure>
+        </div>
+
+        <!-- Row 1: Aboriginal Dance -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-1">
+                <div class="iframe-container relative" style="padding-top:75%">
+                    <iframe class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/eDUZOh6wsfs?si=RKls5dMINwr1u8Vi"
+                        title="{% trans "Aboriginal dance video" %}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="prose dark:prose-invert px-4 order-1 md:order-2">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Aboriginal dance" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Taitung Senior High School" %}</p>
+                {% blocktrans %}
+                <p class="text-base leading-relaxed text-text-light dark:text-text-dark">Aboriginal songs and dances are not only the inheritance of ethnic culture, but also a part of social communication and celebration activities. Through these artistic performances, the Aboriginal peoples show their awe of the natural environment, their wisdom in life, and their rich artistic creativity. Aboriginal dances usually incorporate elements of nature, such as imitating animals and plants, and performing farming activities. The dances are elegant and vivid, showing the unique dance style of the Aboriginal peoples. Songs are an important form of expression of Aboriginal culture. The lyrics usually reflect themes such as life, nature, and love, and are presented with unique melodies and rhythms. The costumes of Aboriginal dances are diverse, and each ethnic group has different characteristics. Common elements include colorful embroidery, feather decorations, jewelry, etc. These costumes reflect the ethnic identity and cultural symbols.</p>
+                {% endblocktrans %}
+            </div>
+        </div>
+
+        <!-- Row 2: Temple Culture -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div class="prose dark:prose-invert px-4 order-1 md:order-1">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Temple Culture" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Tianhou Temple" %}</p>
+                <p class="text-base leading-relaxed text-text-light dark:text-text-dark">{% blocktrans %}Taitung Tianhou Temple is a temple located in eastern Taiwan. It is dedicated to Mazu and is one of the important religious centers in the area. The temple has a unique architectural style. Common temple elements include painted brackets, exquisite carvings, and dazzling glazed tiles, showing the rich artistic style of Taiwanese religious architecture. The worship culture is also a major feature of the Taitung Tianhou Temple. Believers enthusiastically participate in various religious rituals, including burning incense, praying, and worshipping Mazu. In addition, the temple often holds celebrations and processions, attracting a large number of believers to participate, forming a strong religious atmosphere. Taitung Tianhou Temple has become a symbol of local culture due to its architectural art and religious activities, and is also one of the important attractions for tourists to visit.{% endblocktrans %}</p>
+            </div>
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-2">
+                <div class="iframe-container relative" style="padding-top:75%">
+                    <iframe class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/-sDcO-OLf3Y?si=3n3WefmwOe2WNkLv" title="{% trans "Tianhou Temple video" %}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Natives' Culture -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-1">
+                <div class="iframe-container relative" style="padding-top:75%">
+                    <iframe class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/-TqQfS-YL4w?si=JVG3y2YPzDs8BWk6" title="{% trans "Xiaomi Academy video" %}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="prose dark:prose-invert px-4 order-1 md:order-2">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Natives' culture" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Xiaomi Academy" %}</p>
+                <p class="text-base leading-relaxed text-text-light dark:text-text-dark">{% blocktrans %}At Xiaomi Academy, you have the opportunity to learn more about the rich culture of the aboriginals. The mochi-making experience is an interactive activity that allows you to personally participate in the process of making traditional food. Mochi-making is a traditional snack unique to the aboriginals. The production process incorporates rich cultural elements, including the selection of ingredients and production methods, so that you can enjoy the delicious food while also feeling the uniqueness of the aboriginal culture.{% endblocktrans %}</p>
+            </div>
+        </div>
+
+        <!-- Row 4: Lei Cha + Handmade Black Tea -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div class="prose dark:prose-invert px-4 order-1 md:order-1">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Lei Cha + Handmade Black Tea" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Shuanglin Tea House" %}</p>
+                <p class="text-base leading-relaxed text-text-light dark:text-text-dark">{% blocktrans %}Lei Cha is a special tea drink. During the production process, the tea leaves are ground into powder and then different ingredients such as peanuts, sesame seeds, coconuts, etc. are added to form a unique flavor. At Shuanglin Tea House, you have the opportunity to personally participate in the production of Lei Cha and experience this unique tea craft. In addition, the tea house also focuses on the art of handmade tea making. You can witness with your own eyes the tea makers skillfully stir-fry, knead, ferment and other manual processes of tea leaves, and taste fresh, high-quality tea leaves. Here, you can not only enjoy delicious tea drinks, but also gain an in-depth understanding of the tea production process and experience the multi-layered flavors of tea.{% endblocktrans %}</p>
+            </div>
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-2">
+                <div class="iframe-container relative" style="padding-top:75%">
+                    <iframe class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/kDCMoO6Hl1A?si=hKXYnM0wjmSI2u82"
+                        title="{% trans "Shuanglin Tea House video" %}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 5: Cabin English -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-1">
+                <div class="iframe-container relative" style="padding-top:75%">
+                    <iframe class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/BYAKJEh7t7U?si=USboyPKcCeRugrNB"
+                        title="{% trans "Dayuan Elementary School video" %}" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="prose dark:prose-invert px-4 order-1 md:order-2">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Cabin English" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Dayuan Elementary School" %}</p>
+                <p class="text-base leading-relaxed text-text-light dark:text-text-dark">{% blocktrans %}This volunteer work mainly focuses on simulating cabin conditions, allowing children to learn and deal with English-related situations through role-playing, such as airport boarding, flight services, and dealing with emergencies. The goal of the volunteers is to provide an interactive learning environment so that children can exercise their English speaking and communication skills in real-life situations. Such volunteer activities can not only enrich children's extracurricular learning experience, but also help to cultivate their English skills and enhance their confidence in dealing with international environments in the future. Through the dedication of volunteers, Dayuan Elementary School provides children with a fun and practical English learning opportunity.{% endblocktrans %}</p>
+            </div>
+        </div>
+
+        <!-- Row 6: Ceramic Experience -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div class="prose dark:prose-invert px-4 order-1 md:order-1">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Ceramic Experience" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Yingge Ceramics" %}</p>
+                <p class="text-base leading-relaxed mb-6 text-text-light dark:text-text-dark">{% blocktrans %}Yingge Ceramic DIY Experience is an activity that allows participants to personally participate in ceramic production. In Yingge, you can make ceramic artworks by yourself through this experience and experience the fun of pottery. The activity usually includes steps such as clay shaping and pottery wheel turning. Participants have the opportunity to create their own unique style of ceramic works under professional guidance. This DIY experience not only relaxes people, but also allows them to appreciate the artistic process of pottery making. After completion, you can take your hand-made ceramic work home, which will become a unique handmade art work and leave a wonderful memory. Yingge Ceramics DIY Experience is an interesting activity that combines art, handcraft and culture, suitable for participants of all ages.{% endblocktrans %}</p>
+                <a href="https://academy.ceramics.ntpc.gov.tw/zh-tw/Course/L/2/1/1.htm" target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-block px-6 py-3 bg-primary-blue hover:bg-primary-dark text-white font-medium rounded-lg transition-colors duration-200">
+                    {% trans "Learn More" %}
+                </a>
+            </div>
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-2">
+                <img src="{% static 'images/taiwan_cultural_experience/card-image-1.png' %}"
+                    alt="{% trans "Ceramic Experience" %}" class="w-full h-96 object-cover" loading="lazy">
+            </div>
+        </div>
+
+        <!-- Row 7: Paper Making -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-1">
+                <img src="{% static 'images/taiwan_cultural_experience/Large Paper Rolls.png' %}"
+                    alt="{% trans 'Paper Making' %}" class="w-full h-96 object-cover" loading="lazy">
+            </div>
+            <div class="prose dark:prose-invert px-4 order-1 md:order-2">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Paper Making" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Guangxing Paper Mill" %}</p>
+                <p class="text-base leading-relaxed mb-6 text-text-light dark:text-text-dark">{% blocktrans %}Papermaking is a creative handcrafting activity where participants can personally participate in the process of making paper. This experience usually includes mixing, stirring, and flattening the pulp to finally form a new piece of paper. Such activities allow people to experience the papermaking process firsthand, while being able to use their creativity to add different colors or materials to create a unique handmade paper product. Papermaking not only provides a pleasant handcrafting time, but is also an interesting cultural experience.{% endblocktrans %}</p>
+                <a href="https://www.taiwanpaper.net/diy" target="_blank" rel="noopener noreferrer"
+                    class="inline-block px-6 py-3 bg-primary-blue hover:bg-primary-dark text-white font-medium rounded-lg transition-colors duration-200">
+                    {% trans "Learn More" %}
+                </a>
+            </div>
+        </div>
+
+        <!-- Row 8: Bamboo Rice -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div class="prose dark:prose-invert px-4 order-1 md:order-1">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Bamboo Rice" %}</h3>
+                <p class="text-base leading-relaxed mb-6 text-text-light dark:text-text-dark">{% blocktrans %}DIY bamboo tube rice making is a special handmade experience where participants can personally participate in making traditional bamboo tube rice. This activity usually includes selecting ingredients, putting rice and other ingredients into a bamboo tube, sealing it with a bamboo lid, and finally steaming it. This production process shows the unique charm of traditional cooking, while also allowing participants to experience the unique flavor of bamboo tube cooking. After completion, you can taste the delicious bamboo tube rice made by yourself and feel the charm of traditional food culture. DIY bamboo tube rice making is an activity that combines food experience and handmade fun, suitable for people who like cooking.{% endblocktrans %}</p>
+                <a href="https://www.luckytime.com.tw/bamboorice" target="_blank" rel="noopener noreferrer"
+                    class="inline-block px-6 py-3 bg-primary-blue hover:bg-primary-dark text-white font-medium rounded-lg transition-colors duration-200">
+                    {% trans "Learn More" %}
+                </a>
+            </div>
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-2">
+                <img src="{% static 'images/taiwan_cultural_experience/Bamboo tree.png' %}"
+                    alt="{% trans 'Bamboo Rice' %}" class="w-full h-96 object-cover" loading="lazy">
+            </div>
+        </div>
+
+        <!-- Row 9: Dough Man -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-1">
+                <img src="{% static 'images/taiwan_cultural_experience/Baked Goods.png' %}"
+                    alt="{% trans 'Dough Man' %}" class="w-full h-96 object-cover" loading="lazy">
+            </div>
+            <div class="prose dark:prose-invert px-4 order-1 md:order-2">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Dough Man" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Traditional crafts" %}</p>
+                <p class="text-base leading-relaxed mb-6 text-text-light dark:text-text-dark">{% blocktrans %}Making dough figures is a creative handcraft activity where participants can use dough to make various shapes of people, animals or objects. This craft usually involves kneading, kneading and stretching the dough, and finally forming a small creative work with a unique style. The dough figure making activity not only provides the fun of artistic creation, but also allows participants to give full play to their creativity and make interesting and unique dough works. This is an interesting handcraft experience suitable for people of all ages to participate.{% endblocktrans %}</p>
+                <a href="https://www.flickr.com/photos/dans180/8097381603/in/photostream/" target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-block px-6 py-3 bg-primary-blue hover:bg-primary-dark text-white font-medium rounded-lg transition-colors duration-200">
+                    {% trans "Learn More" %}
+                </a>
+            </div>
+        </div>
+
+        <!-- Row 10: Taiwanese Opera Cultural Experience -->
+        <div class="grid md:grid-cols-2 gap-8 md:py-20 py-10 items-start mb-20 animate-on-scroll">
+            <div class="prose dark:prose-invert px-4 order-1 md:order-1">
+                <h3 class="text-5xl font-semibold mb-2 text-primary-blue dark:text-primary-light animate-on-scroll">{% trans "Taiwanese opera cultural experience" %}</h3>
+                <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "Traditional Performances" %}</p>
+                <p class="text-base leading-relaxed mb-6 text-text-light dark:text-text-dark">{% blocktrans %}Experience the charm of Taiwanese opera. The course content covers multiple aspects, including opera face painting experience, basic body movements, melody playing and singing, and off-campus teaching and watching operas. Multiple five sense stimulations allow students to experience different aspects of the opera course.{% endblocktrans %}</p>
+                <a href="https://1872.arte.gov.tw/ArtEdu/Course_experience_Detail.aspx?r_id=25be3061-5bc7-4155-b0de-83b35d25be92"
+                    target="_blank" rel="noopener noreferrer"
+                    class="inline-block px-6 py-3 bg-primary-blue hover:bg-primary-dark text-white font-medium rounded-lg transition-colors duration-200">
+                    {% trans "Learn More" %}
+                </a>
+            </div>
+            <div
+                class="media-container rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg order-2 md:order-2">
+                <img src="{% static 'images/taiwan_cultural_experience/Chinese Opera Performer.png' %}"
+                    alt="{% trans 'Taiwanese Opera' %}" class="w-full h-96 object-cover" loading="lazy">
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<style>
+    .skeleton-loader {
+        background: linear-gradient(90deg, #e5e7eb 25%, #f9fafb 50%, #e5e7eb 75%) !important;
+        background-size: 200% 100% !important;
+        animation: shimmer 2s infinite;
+    }
+
+    .dark .skeleton-loader {
+        background: linear-gradient(90deg, #334155 25%, #1e293b 50%, #334155 75%) !important;
+        background-size: 200% 100% !important;
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    .iframe-container {
+        position: relative;
+        background: #f9fafb;
+        /* theme light-secondary-bg */
+    }
+
+    .dark .iframe-container {
+        background: #1e293b;
+        /* theme dark-secondary-bg */
+    }
+
+    .iframe-container.loaded {
+        background: transparent;
+    }
+
+    .iframe-container.loaded .skeleton {
+        display: none;
+    }
+
+    .iframe-container iframe {
+        transition: opacity 0.3s ease-in;
+    }
+
+    /* Existing animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 1.2s ease-out;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* --- TIMELINE STYLES --- */
+
+    /* Initial state for scroll animation */
+    .timeline-item,
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+
+    /* State when visible */
+    .is-visible {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+
+    /* Staggered animations for badges and elements */
+    .animate-on-scroll:nth-child(1) {
+        transition-delay: 0.1s;
+    }
+
+    .animate-on-scroll:nth-child(2) {
+        transition-delay: 0.2s;
+    }
+
+    .animate-on-scroll:nth-child(3) {
+        transition-delay: 0.3s;
+    }
+
+    .animate-on-scroll:nth-child(4) {
+        transition-delay: 0.4s;
+    }
+
+    .animate-on-scroll:nth-child(5) {
+        transition-delay: 0.5s;
+    }
+
+    .animate-on-scroll:nth-child(6) {
+        transition-delay: 0.6s;
+    }
+
+    /* Card hover effect */
+    .timeline-item .bg-light-bg,
+    .timeline-item .dark\:bg-dark-secondary-bg,
+    .timeline-item .bg-primary-blue {
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Responsive adjustments for timeline */
+    @media (max-width: 768px) {
+        .timeline-item .ml-12 {
+            margin-left: 0 !important;
+        }
+
+        .timeline-item .order-1 {
+            order: 1 !important;
+        }
+
+        .timeline-item .order-2 {
+            order: 2 !important;
+        }
+
+        .timeline-item .md\:ml-0 {
+            margin-left: 0 !important;
+        }
+
+        .timeline-item .md\:order-1 {
+            order: 1 !important;
+        }
+
+        .timeline-item .md\:order-2 {
+            order: 2 !important;
+        }
+
+        .timeline-item .md\:w-5\/12 {
+            width: 100% !important;
+        }
+
+        .timeline-item .md\:text-right {
+            text-align: left !important;
+        }
+
+        .timeline-item .hidden.md\:block {
+            display: none !important;
+        }
+
+        .timeline-item .absolute.left-4 {
+            left: 0.5rem !important;
+        }
+
+        /* Adjust position */
+        .timeline-item .absolute.md\:left-1\/2 {
+            left: 0.5rem !important;
+            transform: none !important;
+        }
+
+        /* Mobile positioning of node */
+        .timeline-item .absolute.transform.md\:-translate-x-1\/2 {
+            transform: none !important;
+        }
+
+        /* Remove translate on mobile node */
+        .timeline-item .w-10.h-10 {
+            margin-left: 0 !important;
+        }
+
+        /* Center node on mobile */
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add loading state management for iframes
+        const iframeContainers = document.querySelectorAll('.iframe-container');
+
+        iframeContainers.forEach(function (container) {
+            const iframe = container.querySelector('iframe');
+            if (!iframe) return;
+
+            // Show skeleton initially
+            const skeleton = document.createElement('div');
+            skeleton.className = 'skeleton absolute inset-0 rounded-lg';
+            container.appendChild(skeleton);
+
+            // When iframe loads, hide skeleton
+            iframe.addEventListener('load', function () {
+                skeleton.style.display = 'none';
+                container.classList.add('loaded');
+            });
+
+            // Fallback: hide skeleton after 3 seconds anyway
+            setTimeout(function () {
+                if (!container.classList.contains('loaded')) {
+                    skeleton.style.display = 'none';
+                }
+            }, 3000);
+        });
+
+        // FAQ Accordion functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+            const icon = item.querySelector('.faq-icon');
+
+            question.addEventListener('click', () => {
+                const isOpen = answer.style.maxHeight;
+
+                // Close all FAQ items
+                faqItems.forEach(otherItem => {
+                    const otherAnswer = otherItem.querySelector('.faq-answer');
+                    const otherIcon = otherItem.querySelector('.faq-icon');
+
+                    otherAnswer.style.maxHeight = null;
+                    otherIcon.style.transform = 'rotate(0deg)';
+                });
+
+                // Toggle clicked item
+                if (!isOpen) {
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // --- ANIMATION OBSERVER ---
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    // For Project/News/Story Cards
+                    if (entry.target.classList.contains('project-card') ||
+                        entry.target.classList.contains('news-event-card') ||
+                        entry.target.classList.contains('success-story-card')) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+
+                    // For Timeline Items & Headers
+                    if (entry.target.classList.contains('timeline-item') ||
+                        entry.target.classList.contains('animate-on-scroll')) {
+                        entry.target.classList.add('is-visible');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Select elements to animate
+        const targets = document.querySelectorAll(
+            '.project-card, .news-event-card, .success-story-card, .timeline-item, .animate-on-scroll'
+        );
+
+        targets.forEach((target) => {
+            observer.observe(target);
+        });
+    });
+</script>
+
+{% endblock %}

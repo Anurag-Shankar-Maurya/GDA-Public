@@ -1,0 +1,279 @@
+{% extends "content_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "GDA — Taiwan Explore" %}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'green_declaration_2018' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Green Declaration 2018" %}</a>
+    </li>
+{% endblock %}
+
+{% block hero %}
+<section class="relative w-full h-[85vh] mb-12 overflow-hidden">
+  <!-- Background image (use same pattern as other pages) -->
+  <img src="{% static 'images/green_declaration_2018/hero.jpg' %}" alt="{% trans 'Taiwan Hero' %}" class="absolute inset-0 w-full h-full object-cover opacity-90" />
+
+  <!-- Top-to-bottom black gradient overlay for readability -->
+  <div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/80 via-black/50 to-transparent" aria-hidden="true"></div>
+
+  <!-- Subtle bottom white fade to soften lower area -->
+  <div class="absolute left-0 right-0 bottom-0 h-64 bg-gradient-to-b from-transparent to-white dark:from-transparent dark:to-dark-bg pointer-events-none" aria-hidden="true"></div>
+  
+  <div class="absolute inset-0 max-w-7xl mx-auto flex items-center justify-center z-10 px-6">
+    <div class="text-center text-white">
+      <div class="inline-block py-2 px-4 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm text-sm font-medium mb-6 tracking-widest">
+        {% trans "JULY 28, 2018 | GUANGNAN BUILDING, ZHONGLI, TAOYUAN" %}
+      </div>
+
+      <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight drop-shadow-lg">
+        {% trans "2018 World Earth Day: Plastic‑Free Life<br/>Campaign" %}
+      </h1>
+
+      <p class="mt-6 text-3xl md:text-4xl max-w-5xl mx-auto text-white/100">
+        {% trans "A Journey of Courage and Growth for Young Volunteers" %}
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 py-12">
+  <!-- About -->
+  <section id="about" class="grid md:grid-cols-4 gap-8 items-start mb-12">
+    <div class="md:col-span-2">
+        <h2 class="font-serif text-3xl text-accent-blue font-bold">
+          <span class="text-accent-blue dark:text-accent-light relative inline-block">{% trans "About" %}
+          <span class="absolute w-full h-1 -bottom-1 left-0 bg-success/80 dark:bg-success/40"></span>
+        </span>
+        {% trans "the Event" %}</h2>
+      <p class="mt-4 text-muted-foreground">{% trans "On July 28, 2018, the Global Devotion Association held a World Earth Day promotional event at the square on the first floor of Guangnan Building in Zhongli, Taoyuan. Volunteers not only introduced the association\'s philosophy to the public but also actively promoted the 2018 World Earth Day theme—Plastic-Free Life." %}</p>
+      <p class="mt-4 text-muted-foreground">{% trans "This event not only raised environmental awareness among Zhongli residents but also provided participating volunteers with valuable experiences they would not normally encounter. From the nervousness of approaching strangers and the frustration of rejection to the joy of successful communication, each volunteer gained profound personal growth through this process." %}</p>
+      <div class="mt-6 bg-light-bg dark:bg-dark-bg p-6 rounded-lg shadow-md border border-border-light dark:border-border-dark">
+        <h3 class="font-semibold text-foreground">{% trans "Featured Location: Guangnan Building, Zhongli" %}</h3>
+        <p class="text-sm text-muted-foreground mt-2">{% trans "A common hub for outreach and volunteer coordination in Taoyuan." %}</p>
+      </div>
+    </div>
+
+    <aside class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Left: tall image spanning full height -->
+      <img src="{% static 'images/green_declaration_2018/action3.jpg' %}" alt="park volunteers" class="w-full rounded-3xl object-cover shadow-xl h-[500px] hover:scale-105 transition-transform duration-300"/>
+
+      <!-- Right: column with large top image and two smaller images below -->
+      <div class="flex flex-col gap-4">
+        <!-- Large top image -->
+        <img src="{% static 'images/green_declaration_2018/sign1.jpg' %}" alt="volunteers with banner" class="w-full rounded-3xl object-cover shadow-xl h-[280px] hover:scale-105 transition-transform duration-300"/>
+        
+        <!-- Two smaller images side by side -->
+        <div class="grid grid-cols-2 gap-4">
+          <img src="{% static 'images/green_declaration_2018/action1.jpg' %}" alt="volunteer interaction" class="w-full rounded-3xl object-cover shadow-xl h-[200px] hover:scale-105 transition-transform duration-300"/>
+          <img src="{% static 'images/green_declaration_2018/action2.jpg' %}" alt="community engagement" class="w-full rounded-3xl object-cover shadow-xl h-[200px] hover:scale-105 transition-transform duration-300"/>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Map -->
+  <section id="map" class="mb-16">
+    <div class="text-center mb-8">
+      <h2 class="font-serif text-3xl md:text-4xl text-accent-blue dark:text-text-dark font-bold">
+        {% trans "Event Location Map" %}
+      </h2>
+      <p class="text-muted-foreground dark:text-text-muted-dark mt-3 text-lg">{% trans "Guangnan Building, Zhongli, Taoyuan" %}</p>
+    </div>
+    <div class="mt-6 rounded-2xl overflow-hidden border-2 border-border-light dark:border-border-dark shadow-xl">
+      <iframe width="100%" height="450" frameborder="0" style="border:0"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3617.0894479456284!2d121.21746087549938!3d24.961895777893076!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34681e3e8e0b3e3d%3A0x3b3e3e3e3e3e3e3e!2sGuangnan%20Building!5e0!3m2!1sen!2stw!4v1234567890123!5m2!1sen!2stw" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <!-- Highlights Video -->
+  <section id="highlights" class="mb-16">
+    <div class="text-center mb-8">
+      <h2 class="font-serif text-3xl md:text-4xl text-accent-blue dark:text-text-dark font-bold">
+        {% trans "Event Highlights" %}
+      </h2>
+      <p class="text-muted-foreground dark:text-text-muted-dark mt-3 text-lg">{% trans "Relive key moments from our volunteer programs across Taiwan" %}</p>
+    </div>
+
+    <div class="mt-8 rounded-3xl overflow-hidden shadow-xl bg-black border border-border-light dark:border-border-dark">
+      <!-- YouTube Video Embed -->
+      <div class="relative w-full" style="padding-bottom: 56.25%;">
+        <iframe 
+          src="https://www.youtube.com/embed/zZNFKCOBurc" 
+          title="YouTube video player" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+          referrerpolicy="strict-origin-when-cross-origin" 
+          allowfullscreen
+          class="absolute top-0 left-0 w-full h-full"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Moments Grid -->
+  <section id="moments" class="mb-16">
+    <div class="text-center mb-8">
+      <h2 class="font-serif text-3xl md:text-4xl text-accent-blue dark:text-text-dark font-bold">
+        {% trans "Moments of Action" %}
+      </h2>
+      <p class="text-muted-foreground dark:text-text-muted-dark mt-3 text-lg">{% trans "Capturing volunteers in the field" %}</p>
+    </div>
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <img src="{% static 'images/green_declaration_2018/action1.jpg' %}" alt="volunteer interaction" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+      <img src="{% static 'images/green_declaration_2018/action2.jpg' %}" alt="community engagement" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+      <img src="{% static 'images/green_declaration_2018/action3.jpg' %}" alt="park volunteers" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+      <img src="{% static 'images/green_declaration_2018/group1.jpg' %}" alt="group photo" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+      <img src="{% static 'images/green_declaration_2018/sign1.jpg' %}" alt="volunteers with banner" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+      <img src="{% static 'images/green_declaration_2018/banner.jpg' %}" alt="event banner" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+      <img src="{% static 'images/green_declaration_2018/interaction.jpg' %}" alt="volunteer interaction" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+      <img src="{% static 'images/green_declaration_2018/hero.jpg' %}" alt="event overview" class="w-full h-56 object-cover rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 border-2 border-border-light dark:border-border-dark"/>
+    </div>
+  </section>
+
+  <!-- Volunteer Voices -->
+  <section id="voices" class="mb-16">
+    <div class="text-center mb-12">
+      <h2 class="font-serif text-3xl md:text-4xl text-accent-blue dark:text-text-dark font-bold">
+        {% trans "Volunteer Voices" %}
+      </h2>
+      <p class="text-muted-foreground dark:text-text-muted-dark mt-3 text-lg max-w-2xl mx-auto">{% trans "Real stories of challenge, rejection, and growth" %}</p>
+    </div>
+
+    <!-- Stories Grid -->
+    <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Story 1: Lin Zhankai -->
+      <div class="p-8 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 shadow-lg hover:shadow-xl hover:border-emerald-500 dark:hover:border-emerald-500 transition-all duration-300 flex flex-col relative group">
+        <svg class="absolute top-6 right-6 w-8 h-8 text-emerald-500/20 group-hover:text-emerald-500/40 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <div class="mb-4">
+          <h3 class="font-serif text-xl font-bold text-emerald-700 dark:text-emerald-400 mb-2">{% trans "Lin Zhankai" %}</h3>
+          <div class="w-12 h-1 bg-emerald-500 rounded-full group-hover:w-20 transition-all duration-300"></div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-emerald-700 dark:text-emerald-400 font-semibold">{% trans "Personal Growth" %}</span>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-emerald-700 dark:text-emerald-400 font-semibold">{% trans "Communication" %}</span>
+        </div>
+        <p class="text-muted-foreground dark:text-text-muted-dark leading-relaxed italic font-light flex-grow">{% trans "Before the event started, I naively thought that I only needed to prepare the materials well to complete this easy task. However, when it actually began, the harsh reality completely changed my foolish thinking. No matter how well prepared I was, I still felt nervous when talking to strangers." %}</p>
+      </div>
+
+      <!-- Story 2: Zheng Fuxin -->
+      <div class="p-8 rounded-2xl bg-sky-50 dark:bg-sky-900/20 border border-sky-200 dark:border-sky-700 shadow-lg hover:shadow-xl hover:border-sky-500 dark:hover:border-sky-500 transition-all duration-300 flex flex-col relative group">
+        <svg class="absolute top-6 right-6 w-8 h-8 text-sky-500/20 group-hover:text-sky-500/40 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <div class="mb-4">
+          <h3 class="font-serif text-xl font-bold text-sky-700 dark:text-sky-400 mb-2">{% trans "Zheng Fuxin" %}</h3>
+          <div class="w-12 h-1 bg-sky-500 rounded-full group-hover:w-20 transition-all duration-300"></div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-sky-700 dark:text-sky-400 font-semibold">{% trans "Courage" %}</span>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-sky-700 dark:text-sky-400 font-semibold">{% trans "Experience" %}</span>
+        </div>
+        <p class="text-muted-foreground dark:text-text-muted-dark leading-relaxed italic font-light flex-grow">{% trans "Through this activity, I learned a lot of valuable experience. I thought that I just needed to practice what to say before the activity, and I was very confident at first. But when the activity started, I saw passers-by walking by one by one, but I didn't take any action. When I mustered up my courage, most passers-by rejected me again and again." %}</p>
+      </div>
+
+      <!-- Story 3: Yang Yuquan -->
+      <div class="p-8 rounded-2xl bg-pink-50 dark:bg-pink-900/20 border border-pink-200 dark:border-pink-700 shadow-lg hover:shadow-xl hover:border-pink-500 dark:hover:border-pink-500 transition-all duration-300 flex flex-col relative group">
+        <svg class="absolute top-6 right-6 w-8 h-8 text-pink-500/20 group-hover:text-pink-500/40 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <div class="mb-4">
+          <h3 class="font-serif text-xl font-bold text-pink-700 dark:text-pink-400 mb-2">{% trans "Yang Yuquan" %}</h3>
+          <div class="w-12 h-1 bg-pink-500 rounded-full group-hover:w-20 transition-all duration-300"></div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-pink-700 dark:text-pink-400 font-semibold">{% trans "Resilience" %}</span>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-pink-700 dark:text-pink-400 font-semibold">{% trans "Self-Awareness" %}</span>
+        </div>
+        <p class="text-muted-foreground dark:text-text-muted-dark leading-relaxed italic font-light flex-grow">{% trans "Before I joined this event, I thought the task was easy, but when I actually participated, I found it very challenging. Being rejected or looked at strangely was really frustrating. However, through this process, I gradually developed the courage to face setbacks and also realized how inadequate my own abilities were." %}</p>
+      </div>
+
+      <!-- Story 4: Wang Guanda -->
+      <div class="p-8 rounded-2xl bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-300 flex flex-col relative group">
+        <svg class="absolute top-6 right-6 w-8 h-8 text-purple-500/20 group-hover:text-purple-500/40 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <div class="mb-4">
+          <h3 class="font-serif text-xl font-bold text-purple-700 dark:text-purple-400 mb-2">{% trans "Wang Guanda" %}</h3>
+          <div class="w-12 h-1 bg-purple-500 rounded-full group-hover:w-20 transition-all duration-300"></div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-purple-700 dark:text-purple-400 font-semibold">{% trans "Environment" %}</span>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-purple-700 dark:text-purple-400 font-semibold">{% trans "Teamwork" %}</span>
+        </div>
+        <p class="text-muted-foreground dark:text-text-muted-dark leading-relaxed italic font-light flex-grow">{% trans "Through this volunteer activity, I have experienced many things I have never experienced before. Most people rejected us, and some asked if I really wanted to do this volunteer work. The feeling of being rejected is very frustrating, but if we don't stand up and do this today, the environmental protection problems will only get worse." %}</p>
+      </div>
+
+      <!-- Story 5: Lian Weixuan -->
+      <div class="p-8 rounded-2xl bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 shadow-lg hover:shadow-xl hover:border-orange-500 dark:hover:border-orange-500 transition-all duration-300 flex flex-col relative group">
+        <svg class="absolute top-6 right-6 w-8 h-8 text-orange-500/20 group-hover:text-orange-500/40 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <div class="mb-4">
+          <h3 class="font-serif text-xl font-bold text-orange-700 dark:text-orange-400 mb-2">{% trans "Lian Weixuan" %}</h3>
+          <div class="w-12 h-1 bg-orange-500 rounded-full group-hover:w-20 transition-all duration-300"></div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-orange-700 dark:text-orange-400 font-semibold">{% trans "Impact" %}</span>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-orange-700 dark:text-orange-400 font-semibold">{% trans "Gratitude" %}</span>
+        </div>
+        <p class="text-muted-foreground dark:text-text-muted-dark leading-relaxed italic font-light flex-grow">{% trans "This is a great activity that gives us the opportunity to train our speech and convey our ideas to others, and also do our part for the blue planet. Even though we may be just a drop of water, I hope we can stir up more ripples to join us, and eventually the calm water surface will be full of responsive ripples." %}</p>
+      </div>
+
+      <!-- Story 6: Cui Xiangyu -->
+      <div class="p-8 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 shadow-lg hover:shadow-xl hover:border-indigo-500 dark:hover:border-indigo-500 transition-all duration-300 flex flex-col relative group">
+        <svg class="absolute top-6 right-6 w-8 h-8 text-indigo-500/20 group-hover:text-indigo-500/40 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <div class="mb-4">
+          <h3 class="font-serif text-xl font-bold text-indigo-700 dark:text-indigo-400 mb-2">{% trans "Cui Xiangyu" %}</h3>
+          <div class="w-12 h-1 bg-indigo-500 rounded-full group-hover:w-20 transition-all duration-300"></div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-indigo-700 dark:text-indigo-400 font-semibold">{% trans "Understanding" %}</span>
+          <span class="text-[10px] uppercase tracking-wider px-2 py-1 bg-white/50 dark:bg-white/10 rounded-md text-indigo-700 dark:text-indigo-400 font-semibold">{% trans "Service" %}</span>
+        </div>
+        <p class="text-muted-foreground dark:text-text-muted-dark leading-relaxed italic font-light flex-grow">{% trans "This volunteer activity taught me a lot. We thought that publicity was very simple, but we were constantly rejected. The four words 'volunteer service' have become a tool for children to earn hours in the minds of the public. This made me understand one of the original intentions of Global Devotion Volunteer. Protecting the environment starts with you and me!" %}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="mb-16 bg-gradient-to-r from-primary-blue via-accent-blue to-primary-blue dark:from-accent-blue dark:via-primary-blue dark:to-accent-blue text-white py-16 rounded-3xl shadow-2xl relative overflow-hidden">
+    <!-- Decorative elements -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" aria-hidden="true"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" aria-hidden="true"></div>
+    
+    <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+      <h2 class="font-serif text-3xl md:text-4xl font-bold drop-shadow-lg">{% trans "Ready to Explore Taiwan with GDA?" %}</h2>
+      <p class="mt-6 text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">{% trans "Find a program that fits your interests and join our next cohort of passionate volunteers." %}</p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="{% url 'content_project_list' %}" class="inline-flex items-center gap-2 bg-white text-primary-blue font-bold py-4 px-8 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+          {% trans "Find Volunteer Opportunities" %}
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+{% endblock %}
+
+{# Notes:
+   - This template expects these files inside `static/images/green_declaration_2018/`:
+     - hero.jpg, interaction.jpg, sign1.jpg, banner.jpg, action1.jpg, action2.jpg, action3.jpg, group1.jpg
+   - If images differ, update the static paths accordingly.
+   - Colors use project tokens from `content_base.html` (e.g., `primary-blue`, `accent-blue`, `light-bg`, `dark-bg`) so dark-mode and theme tokens remain consistent.
+#}

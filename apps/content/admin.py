@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 from django.utils.html import format_html
 from django.db.models import Count, Q, F, Sum, Avg
 from django.urls import reverse, path
@@ -10,7 +11,8 @@ from django.utils import timezone
 from datetime import timedelta
 import csv
 import json
-from .models import Project, NewsEvent, SuccessStory, FAQ
+import base64
+from .models import Project, NewsEvent, SuccessStory, SuccessStoryGalleryImage, ProjectGalleryImage, NewsEventGalleryImage, FAQ, FAQVote
 
 
 class ExportMixin:
@@ -34,9 +36,51 @@ class ExportMixin:
     export_as_csv.short_description = '📥 Export selected as CSV'
 
 
+class FAQVoteInline(admin.TabularInline):
+    """Inline admin for viewing FAQ votes within FAQ admin"""
+    model = FAQVote
+    extra = 0
+    readonly_fields = ('user', 'vote_type', 'created_at')
+    fields = ('user', 'vote_type', 'created_at')
+    ordering = ('-created_at',)
+    can_delete = False
+    show_change_link = False
+    
+    def has_add_permission(self, request, obj=None):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+class ProjectGalleryImageInline(admin.TabularInline):
+    """Inline admin for managing gallery images within Project admin"""
+    model = ProjectGalleryImage
+    extra = 1
+    fields = ('image_preview', 'caption', 'order')
+    readonly_fields = ('image_preview',)
+    ordering = ['order']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs
+
+    def image_preview(self, obj):
+        if obj.image_blob:
+            encoded_image = base64.b64encode(obj.image_blob).decode('utf-8')
+            return format_html(
+                '<img src="data:{};base64,{}" width="150" />',
+                obj.image_blob_mime,
+                encoded_image
+            )
+        return "No Image / Not Saved Yet"
+    image_preview.short_description = 'Preview'
+
+
 @admin.register(Project)
-class ProjectAdmin(ExportMixin, admin.ModelAdmin):
+class ProjectAdmin(ExportMixin, TranslationAdmin):
     list_display = (
+        'image_preview',
         'project_id', 
         'kicc_project_id', 
         'title', 
@@ -53,19 +97,18 @@ class ProjectAdmin(ExportMixin, admin.ModelAdmin):
         'start_date',
         'end_date',
         'application_deadline',
-        'created_at',
-        'image_preview'
+        'created_at'
     )
     
     readonly_fields = (
         'project_id', 
-        'created_at', 
         'updated_at',
         'enrolled_users_display',
         'success_stories_display',
         'cover_image_blob',
         'cover_image_blob_mime',
-        'cover_image_blob_name'
+        'cover_image_blob_name',
+        'cover_image_preview'
     )
     
     list_filter = (
@@ -105,6 +148,8 @@ class ProjectAdmin(ExportMixin, admin.ModelAdmin):
     # Autocomplete for enrolled users
     autocomplete_fields = ['enrolled_users']
     
+    inlines = [ProjectGalleryImageInline]
+    
     fieldsets = (
         ('Identification', {
             'fields': ('project_id', 'kicc_project_id'),
@@ -127,8 +172,8 @@ class ProjectAdmin(ExportMixin, admin.ModelAdmin):
             'description': 'Manage project enrollments and view enrolled users'
         }),
         ('Media', {
-            'fields': ('cover_image', 'cover_image_url'),
-            'description': 'Upload an image or provide a URL for the cover image'
+            'fields': ('cover_image', 'cover_image_url', 'cover_image_preview', 'video_urls'),
+            'description': 'Upload an image, provide a URL for the cover image, or add video URLs'
         }),
         ('Scheduling & Status', {
             'fields': ('application_deadline', 'start_date', 'end_date', 'is_active', 'is_hero_highlight', 'is_featured'),
@@ -379,10 +424,44 @@ class ProjectAdmin(ExportMixin, admin.ModelAdmin):
         qs = qs.prefetch_related('enrolled_users', 'success_stories')
         return qs
 
+    def cover_image_preview(self, obj):
+        """Show preview of cover image in detail view"""
+        if obj.cover_image:
+            return format_html('<img src="{}" width="200" />', obj.cover_image.url)
+        if obj.cover_image_url:
+            return format_html('<img src="{}" width="200" />', obj.cover_image_url)
+        return "No image provided"
+    cover_image_preview.short_description = 'Cover Preview'
+
+
+class NewsEventGalleryImageInline(admin.TabularInline):
+    """Inline admin for managing gallery images within NewsEvent admin"""
+    model = NewsEventGalleryImage
+    extra = 1
+    fields = ('image_preview', 'caption', 'order')
+    readonly_fields = ('image_preview',)
+    ordering = ['order']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs
+
+    def image_preview(self, obj):
+        if obj.image_blob:
+            encoded_image = base64.b64encode(obj.image_blob).decode('utf-8')
+            return format_html(
+                '<img src="data:{};base64,{}" width="150" />',
+                obj.image_blob_mime,
+                encoded_image
+            )
+        return "No Image / Not Saved Yet"
+    image_preview.short_description = 'Preview'
+
 
 @admin.register(NewsEvent)
-class NewsEventAdmin(ExportMixin, admin.ModelAdmin):
+class NewsEventAdmin(ExportMixin, TranslationAdmin):
     list_display = (
+        'image_preview',
         'news_event_id', 
         'title_preview',
         'content_type', 
@@ -391,17 +470,16 @@ class NewsEventAdmin(ExportMixin, admin.ModelAdmin):
         'is_hero_highlight',
         'is_featured',
         'has_external_link',
-        'image_preview',
         'created_at'
     )
     
     readonly_fields = (
         'news_event_id', 
-        'created_at', 
         'updated_at',
         'cover_image_blob',
         'cover_image_blob_mime',
-        'cover_image_blob_name'
+        'cover_image_blob_name',
+        'cover_image_preview'
     )
     
     list_filter = (
@@ -420,6 +498,8 @@ class NewsEventAdmin(ExportMixin, admin.ModelAdmin):
     save_on_top = True
     
     list_editable = ('is_published', 'is_hero_highlight', 'is_featured')
+    
+    inlines = [NewsEventGalleryImageInline]
     
     actions = [
         'export_as_csv',
@@ -441,8 +521,8 @@ class NewsEventAdmin(ExportMixin, admin.ModelAdmin):
             'description': 'Main content and categorization'
         }),
         ('Media', {
-            'fields': ('cover_image', 'cover_image_url', 'external_link'),
-            'description': 'Images and external resources'
+            'fields': ('cover_image', 'cover_image_url', 'cover_image_preview', 'video_urls', 'external_link'),
+            'description': 'Images, videos, and external resources'
         }),
         ('Publication', {
             'fields': ('publish_date', 'is_published', 'is_hero_highlight', 'is_featured'),
@@ -506,10 +586,178 @@ class NewsEventAdmin(ExportMixin, admin.ModelAdmin):
         self.message_user(request, f'{count} item(s) removed from featured.')
     remove_featured.short_description = 'Remove featured status'
 
+    def cover_image_preview(self, obj):
+        """Show preview of cover image in detail view"""
+        if obj.cover_image:
+            return format_html('<img src="{}" width="200" />', obj.cover_image.url)
+        if obj.cover_image_url:
+            return format_html('<img src="{}" width="200" />', obj.cover_image_url)
+        return "No image provided"
+    cover_image_preview.short_description = 'Cover Preview'
+
+
+@admin.register(ProjectGalleryImage)
+class ProjectGalleryImageAdmin(admin.ModelAdmin):
+    """Admin for managing project gallery images"""
+    list_display = ('id', 'project_link', 'image_preview', 'image_blob_name', 'caption', 'order', 'created_at')
+    list_filter = ('project', 'created_at')
+    search_fields = ('project__title', 'caption', 'image_blob_name')
+    readonly_fields = ('image_preview', 'image_blob', 'image_blob_mime', 'image_blob_name', 'updated_at')
+    ordering = ('project', 'order', 'created_at')
+    
+    fieldsets = (
+        ('Image Association', {
+            'fields': ('project',),
+        }),
+        ('Image Data (Read-only)', {
+            'fields': ('image_preview', 'image_blob_name', 'image_blob_mime'),
+            'description': 'These fields are automatically populated from uploaded images'
+        }),
+        ('Image Details', {
+            'fields': ('caption', 'order'),
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def project_link(self, obj):
+        """Display link to project"""
+        if obj.project:
+            url = reverse('admin:content_project_change', args=[obj.project.pk])
+            return format_html('<a href="{}">{}</a>', url, obj.project.title[:40])
+        return format_html('<span style="color: gray;">No project</span>')
+    project_link.short_description = 'Project'
+
+    def image_preview(self, obj):
+        if obj.image_blob:
+            encoded_image = base64.b64encode(obj.image_blob).decode('utf-8')
+            return format_html(
+                '<img src="data:{};base64,{}" width="150" />',
+                obj.image_blob_mime,
+                encoded_image
+            )
+        return "No Image"
+    image_preview.short_description = 'Preview'
+
+
+@admin.register(NewsEventGalleryImage)
+class NewsEventGalleryImageAdmin(admin.ModelAdmin):
+    """Admin for managing news/event gallery images"""
+    list_display = ('id', 'news_event_link', 'image_preview', 'image_blob_name', 'caption', 'order', 'created_at')
+    list_filter = ('news_event', 'created_at')
+    search_fields = ('news_event__title', 'caption', 'image_blob_name')
+    readonly_fields = ('image_preview', 'image_blob', 'image_blob_mime', 'image_blob_name', 'updated_at')
+    ordering = ('news_event', 'order', 'created_at')
+    
+    fieldsets = (
+        ('Image Association', {
+            'fields': ('news_event',),
+        }),
+        ('Image Data (Read-only)', {
+            'fields': ('image_preview', 'image_blob_name', 'image_blob_mime'),
+            'description': 'These fields are automatically populated from uploaded images'
+        }),
+        ('Image Details', {
+            'fields': ('caption', 'order'),
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def news_event_link(self, obj):
+        """Display link to news/event"""
+        if obj.news_event:
+            url = reverse('admin:content_newsevent_change', args=[obj.news_event.pk])
+            return format_html('<a href="{}">{}</a>', url, obj.news_event.title[:40])
+        return format_html('<span style="color: gray;">No news/event</span>')
+    news_event_link.short_description = 'News/Event'
+
+    def image_preview(self, obj):
+        if obj.image_blob:
+            encoded_image = base64.b64encode(obj.image_blob).decode('utf-8')
+            return format_html(
+                '<img src="data:{};base64,{}" width="150" />',
+                obj.image_blob_mime,
+                encoded_image
+            )
+        return "No Image"
+    image_preview.short_description = 'Preview'
+
+
+@admin.register(SuccessStoryGalleryImage)
+class SuccessStoryGalleryImageAdmin(admin.ModelAdmin):
+    """Admin for managing success story gallery images"""
+    list_display = ('id', 'success_story_link', 'image_preview', 'image_blob_name', 'caption', 'order', 'created_at')
+    list_filter = ('success_story', 'created_at')
+    search_fields = ('success_story__title', 'caption', 'image_blob_name')
+    readonly_fields = ('image_preview', 'image_blob', 'image_blob_mime', 'image_blob_name', 'updated_at')
+    ordering = ('success_story', 'order', 'created_at')
+    
+    fieldsets = (
+        ('Image Association', {
+            'fields': ('success_story',),
+        }),
+        ('Image Data (Read-only)', {
+            'fields': ('image_preview', 'image_blob_name', 'image_blob_mime'),
+            'description': 'These fields are automatically populated from uploaded images'
+        }),
+        ('Image Details', {
+            'fields': ('caption', 'order'),
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def success_story_link(self, obj):
+        """Display link to success story"""
+        if obj.success_story:
+            url = reverse('admin:content_successstory_change', args=[obj.success_story.pk])
+            return format_html('<a href="{}">{}</a>', url, obj.success_story.title[:40])
+        return format_html('<span style="color: gray;">No story</span>')
+    success_story_link.short_description = 'Success Story'
+
+    def image_preview(self, obj):
+        if obj.image_blob:
+            encoded_image = base64.b64encode(obj.image_blob).decode('utf-8')
+            return format_html(
+                '<img src="data:{};base64,{}" width="150" />',
+                obj.image_blob_mime,
+                encoded_image
+            )
+        return "No Image"
+    image_preview.short_description = 'Preview'
+
+
+class SuccessStoryGalleryImageInline(admin.TabularInline):
+    """Inline admin for managing gallery images within SuccessStory admin"""
+    model = SuccessStoryGalleryImage
+    extra = 1
+    fields = ('image_preview', 'caption', 'order')
+    readonly_fields = ('image_preview',)
+    ordering = ['order']
+
+    def image_preview(self, obj):
+        if obj.image_blob:
+            encoded_image = base64.b64encode(obj.image_blob).decode('utf-8')
+            return format_html(
+                '<img src="data:{};base64,{}" width="150" />',
+                obj.image_blob_mime,
+                encoded_image
+            )
+        return "No Image / Not Saved Yet"
+    image_preview.short_description = 'Preview'
+
 
 @admin.register(SuccessStory)
-class SuccessStoryAdmin(ExportMixin, admin.ModelAdmin):
+class SuccessStoryAdmin(ExportMixin, TranslationAdmin):
     list_display = (
+        'image_preview',
         'success_story_id', 
         'title_preview',
         'related_project_link',
@@ -519,20 +767,16 @@ class SuccessStoryAdmin(ExportMixin, admin.ModelAdmin):
         'is_published',
         'is_hero_highlight',
         'is_featured',
-        'published_at',
-        'image_preview'
+        'published_at'
     )
     
     readonly_fields = (
         'success_story_id', 
-        'created_at', 
         'updated_at',
         'cover_image_blob',
         'cover_image_blob_mime',
         'cover_image_blob_name',
-        'image_file_blob',
-        'image_file_blob_mime',
-        'image_file_blob_name'
+        'cover_image_preview'
     )
     
     list_filter = (
@@ -554,6 +798,8 @@ class SuccessStoryAdmin(ExportMixin, admin.ModelAdmin):
     
     autocomplete_fields = ['related_project']  # Requires search_fields in ProjectAdmin
     
+    inlines = [SuccessStoryGalleryImageInline]
+    
     actions = [
         'export_as_csv',
         'publish_stories',
@@ -574,12 +820,12 @@ class SuccessStoryAdmin(ExportMixin, admin.ModelAdmin):
             'description': 'Story content and project relationship'
         }),
         ('Cover Media', {
-            'fields': ('cover_image', 'cover_image_url'),
+            'fields': ('cover_image', 'cover_image_url', 'cover_image_preview'),
             'description': 'Main cover image for the story'
         }),
         ('Media Gallery', {
-            'fields': ('image_file', 'image_urls', 'video_urls'),
-            'description': 'Upload images or provide URLs for media gallery',
+            'fields': ('image_urls', 'video_urls'),
+            'description': 'Gallery images are managed below. Provide URLs for external images and videos here.',
             'classes': ('collapse',)
         }),
         ('Impact Metrics', {
@@ -627,8 +873,9 @@ class SuccessStoryAdmin(ExportMixin, admin.ModelAdmin):
         """Display count of media items"""
         image_count = len(obj.image_urls) if obj.image_urls else 0
         video_count = len(obj.video_urls) if obj.video_urls else 0
-        if obj.image_file:
-            image_count += 1
+        # Add count of gallery images stored as blobs
+        gallery_image_count = obj.gallery_images.count() if hasattr(obj, 'gallery_images') else 0
+        image_count += gallery_image_count
         
         parts = []
         if image_count:
@@ -681,9 +928,20 @@ class SuccessStoryAdmin(ExportMixin, admin.ModelAdmin):
         self.message_user(request, f'{count} story(ies) removed from featured.')
     remove_featured.short_description = 'Remove featured status'
 
+    def cover_image_preview(self, obj):
+        """Show preview of cover image in detail view"""
+        if obj.cover_image:
+            return format_html('<img src="{}" width="200" />', obj.cover_image.url)
+        if obj.cover_image_url:
+            return format_html('<img src="{}" width="200" />', obj.cover_image_url)
+        return "No image provided"
+    cover_image_preview.short_description = 'Cover Preview'
+
 
 @admin.register(FAQ)
-class FAQAdmin(ExportMixin, admin.ModelAdmin):
+class FAQAdmin(ExportMixin, TranslationAdmin):
+    inlines = [FAQVoteInline]
+    
     list_display = (
         'faq_id', 
         'question_preview', 
@@ -696,7 +954,7 @@ class FAQAdmin(ExportMixin, admin.ModelAdmin):
         'created_at'
     )
     
-    readonly_fields = ('faq_id', 'created_at', 'updated_at', 'total_votes', 'helpfulness_ratio')
+    readonly_fields = ('faq_id', 'updated_at', 'total_votes', 'helpfulness_ratio')
     
     list_filter = ('is_schema_ready', 'created_at', 'updated_at')
     search_fields = ('question', 'answer', 'faq_id')
@@ -807,7 +1065,30 @@ class FAQAdmin(ExportMixin, admin.ModelAdmin):
     move_to_bottom.short_description = 'Move to bottom of list'
 
 
+@admin.register(FAQVote)
+class FAQVoteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'faq', 'vote_type', 'created_at')
+    list_filter = ('vote_type', 'created_at', 'faq')
+    search_fields = ('user__username', 'user__email', 'faq__question')
+    readonly_fields = ('created_at',)
+    ordering = ('-created_at',)
+    
+    fieldsets = (
+        ('Vote Details', {
+            'fields': ('user', 'faq', 'vote_type'),
+        }),
+        ('Timestamps', {
+            'fields': ('created_at',),
+            'classes': ('collapse',),
+        }),
+    )
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('user', 'faq')
+
+
 # Customize admin site branding with emojis
-admin.site.site_header = "🌟 Volunteer Platform Administration"
-admin.site.site_title = "Volunteer Admin Portal"
-admin.site.index_title = "Dashboard & Content Management"
+admin.site.site_header = "GDA 🛠️ Admin"
+admin.site.index_title = "GDA"
+admin.site.site_title = "Djanjgo Admin"

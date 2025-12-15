@@ -1,0 +1,231 @@
+{% extends "content_base.html" %}
+{% load i18n %}
+
+{% block title %}Earth Day - Global Devotion Association{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-16 transition-colors duration-300">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header Section -->
+        <div class="text-center max-w-4xl mx-auto mb-20">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-8 tracking-tight">
+                {% trans "Earth Day" %} <span class="text-primary-blue">{% trans "Initiative" %}</span>
+            </h1>
+            <div class="w-32 h-1.5 bg-primary-blue mx-auto mb-10 rounded-full"></div>
+            <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+                {% blocktrans %}Do you remember that in July 2018, we launched an Earth Day event on Zhongli Street? 
+                At that time, our volunteers made some PPTs to introduce Earth Day to Zhongli citizens. 
+                Here, we collect and share these presentations, hoping to spread awareness about Earth Day 
+                and the importance of protecting our planet.{% endblocktrans %}
+            </p>
+        </div>
+
+        <!-- Content List -->
+        <div class="space-y-24 mb-24">
+            
+            <!-- 1. Zhu Liqin, Yuda High School (Left Text, Right Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 space-y-6 order-2 md:order-1">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Zhu Liqin, Yuda High School</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> earth day.pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/147cc0_20944944949e4b2d9fdb3332c013a393.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/147cc0_20944944949e4b2d9fdb3332c013a393~mv2.jpg" alt="Zhu Liqin, Yuda High School" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Wuling High School Wang Yuning & Hong Yuheng (Right Text, Left Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 order-1">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/147cc0_284964a6d1144665b6758297928ac37c~mv2.jpg" alt="Wuling High School Wang Yuning & Hong Yuheng" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 space-y-6 order-2">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Wuling High School Wang Yuning &amp; Hong Yuheng</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> EARTH DAY (1).pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/147cc0_284964a6d1144665b6758297928ac37c.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Liu Pinyu, Zhongli High School (Left Text, Right Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 space-y-6 order-2 md:order-1">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Liu Pinyu, Zhongli High School</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> Earth Day (2).pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/147cc0_75ae56bcc98b43acb10f8ce7c13ef73a.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/147cc0_75ae56bcc98b43acb10f8ce7c13ef73a~mv2.jpg" alt="Liu Pinyu, Zhongli High School" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Ye Taijun, Zhongli High School (Right Text, Left Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 order-1">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/147cc0_c6d14b2f0a914abc81dc8df36d474d42~mv2.jpg" alt="Ye Taijun, Zhongli High School" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 space-y-6 order-2">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Ye Taijun, Zhongli High School</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> Earth day (3).pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/147cc0_c6d14b2f0a914abc81dc8df36d474d42.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Dai Yuxiang from Fudan High School (Left Text, Right Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 space-y-6 order-2 md:order-1">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Dai Yuxiang from Fudan High School</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> D085戴于翔.pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/5150f3_7a523466cedf466ca37c388c62789798.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/5150f3_7a523466cedf466ca37c388c62789798~mv2.jpg" alt="Dai Yuxiang from Fudan High School" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Qiying High School Zheng Fuxin & Gu Boyuan (Right Text, Left Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 order-1">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/5150f3_d88dd564ea2640978e4f512581c80b02~mv2.jpg" alt="Qiying High School Zheng Fuxin & Gu Boyuan" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 space-y-6 order-2">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Qiying High School Zheng Fuxin &amp; Gu Boyuan</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 正負新 古柏園.pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/5150f3_d88dd564ea2640978e4f512581c80b02.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Lin Zhankai from Zhiping High School (Left Text, Right Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 space-y-6 order-2 md:order-1">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Lin Zhankai from Zhiping High School</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 林站凱.pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/5150f3_1b4c93a7bde346169992b9cc0cb2c976.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/5150f3_1b4c93a7bde346169992b9cc0cb2c976~mv2.jpg" alt="Lin Zhankai from Zhiping High School" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Chen Congyu, Fudan High School (Right Text, Left Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 order-1">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/5150f3_1b4ae2008c4f4ee6afce9550a2c6c8ae~mv2.jpg" alt="Chen Congyu, Fudan High School" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 space-y-6 order-2">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Chen Congyu, Fudan High School</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 陳從愈.pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/5150f3_1b4ae2008c4f4ee6afce9550a2c6c8ae.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 9. Lai Yunting from Fudan High School (Left Text, Right Image) -->
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
+                <div class="md:w-1/2 space-y-6 order-2 md:order-1">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Lai Yunting from Fudan High School</h3>
+                    <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                        <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 賴韻婷.pdf
+                    </div>
+                    <div class="pt-4">
+                        <a href="https://en.global-devotion.org/_files/ugd/5150f3_cce6a861418f47498a6e5df2be13353f.pdf" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary-blue hover:bg-blue-600 text-white text-lg font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <i class="fas fa-download mr-3"></i> {% trans "Download PDF" %}
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://static.wixstatic.com/media/5150f3_cce6a861418f47498a6e5df2be13353f~mv2.jpg" alt="Lai Yunting from Fudan High School" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Image -->
+        <div class="max-w-5xl mx-auto mt-24 mb-12">
+            <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
+                <img src="https://static.wixstatic.com/media/99728a_481f145423a045f4bf4126655dd57bd7~mv2.jpg/v1/fill/w_640,h_357,al_c,q_80,enc_avif,quality_auto/pngtree-black-and-white-world-map-illust.jpg" alt="{% trans "World Map" %}" class="w-full h-auto transform group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-8 text-center">
+                    <p class="text-white text-xl font-medium opacity-90 tracking-wide">{% trans "Protecting our planet, one step at a time." %}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

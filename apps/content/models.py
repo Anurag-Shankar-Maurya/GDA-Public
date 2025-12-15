@@ -51,7 +51,7 @@ class Project(models.Model):
             pass
     """
     Core content model for volunteer opportunities.
-    Assumes translation fields are handled by a separate locale library.
+    Translation fields (en, zh_tw) are handled by apps/content/translation.py via django-modeltranslation.
     """
     kicc_project_id = models.CharField(
         max_length=100,
@@ -60,10 +60,10 @@ class Project(models.Model):
         null=True,
         help_text=_("The ID of the project in the External Service API (KICC).")
     )
-    title = models.CharField(max_length=255)  # Multi-locale field assumed
-    teaser = models.TextField()  # Multi-locale field assumed
-    background_objectives = models.TextField()  # Multi-locale field assumed
-    tasks_eligibility = models.TextField()  # Multi-locale field assumed
+    title = models.CharField(max_length=255)
+    teaser = models.TextField()
+    background_objectives = models.TextField()
+    tasks_eligibility = models.TextField()
     
     # Metadata for Filters/Cards
     country = models.CharField(max_length=100, db_index=True)
@@ -79,7 +79,7 @@ class Project(models.Model):
     difficulty = models.CharField(
         max_length=50, 
         db_index=True, 
-        choices=[(_('Easy'), _('Easy')), (_('Medium'), _('Medium')), (_('Hard'), _('Hard'))],
+        choices=[('Easy', _('Easy')), ('Medium', _('Medium')), ('Hard', _('Hard'))],
         help_text=_("Difficulty level of the project.")
     )
     headcount = models.IntegerField(
@@ -108,6 +108,18 @@ class Project(models.Model):
         help_text=_("Or provide a URL for the cover image.")
     )
     
+    # Media Fields - Video URLs support
+    video_urls = models.JSONField(
+        default=list, 
+        blank=True, 
+        help_text=_("List of video URLs (YouTube, Vimeo, etc.) for the media gallery.")
+    )
+    image_urls = models.JSONField(
+        default=list, 
+        blank=True, 
+        help_text=_("List of image URLs for the media gallery.")
+    )
+    
     # Scheduling & Status
     application_deadline = models.DateTimeField(db_index=True)
     start_date = models.DateField(null=True, blank=True, help_text=_("Project start date"))
@@ -125,7 +137,7 @@ class Project(models.Model):
     # Enrolled users
     enrolled_users = models.ManyToManyField('users.CustomUser', blank=True, related_name='enrolled_projects')
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -198,8 +210,9 @@ class NewsEvent(models.Model):
     """
     Model for general news, announcements, and events (as distinct from success stories).
     Covers the 'News & Stories feed' requirement (5.2) for non-success content.
+    Translation fields handled by apps/content/translation.py.
     """
-    title = models.CharField(max_length=255)  # Multi-locale field assumed
+    title = models.CharField(max_length=255)
     body = models.TextField()
     
     # Content type to categorize in the feed
@@ -234,6 +247,18 @@ class NewsEvent(models.Model):
         help_text=_("Optional link if the news is hosted elsewhere.")
     )
     
+    # Media Fields - Video URLs support
+    video_urls = models.JSONField(
+        default=list, 
+        blank=True, 
+        help_text=_("List of video URLs (YouTube, Vimeo, etc.) for the media gallery.")
+    )
+    image_urls = models.JSONField(
+        default=list, 
+        blank=True, 
+        help_text=_("List of image URLs for the media gallery.")
+    )
+    
     # Publication fields
     publish_date = models.DateTimeField(db_index=True, default=timezone.now)
     is_published = models.BooleanField(default=True)
@@ -246,7 +271,7 @@ class NewsEvent(models.Model):
         help_text=_("Featured news/events appear in prominent positions across the site.")
     )
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
@@ -303,20 +328,7 @@ class SuccessStory(models.Model):
         except Exception:
             pass
 
-        try:
-            if self.image_file and hasattr(self.image_file, 'path'):
-                with open(self.image_file.path, 'rb') as f:
-                    data = f.read()
-                mime, _ = mimetypes.guess_type(self.image_file.name)
-                name = os.path.basename(self.image_file.name)
-                SuccessStory.objects.filter(pk=self.pk).update(
-                    image_file_blob=data,
-                    image_file_blob_mime=(mime or ''),
-                    image_file_blob_name=name,
-                )
-                self.refresh_from_db(fields=['image_file_blob', 'image_file_blob_mime', 'image_file_blob_name'])
-        except Exception:
-            pass
+
 
     """Model for video/text stories (5.6)."""
     title = models.CharField(max_length=255)
@@ -357,15 +369,7 @@ class SuccessStory(models.Model):
     )
     
     # Media Fields - Multiple images and videos support
-    image_file = models.ImageField(
-        upload_to='success_story_images/', 
-        null=True, 
-        blank=True, 
-        help_text=_("Upload an image.")
-    )
-    image_file_blob = models.BinaryField(null=True, blank=True, editable=False)
-    image_file_blob_mime = models.CharField(max_length=255, null=True, blank=True, editable=False)
-    image_file_blob_name = models.CharField(max_length=255, null=True, blank=True, editable=False)
+    # Note: Gallery images are now stored in the SuccessStoryGalleryImage model
     image_urls = models.JSONField(
         default=list, 
         blank=True, 
@@ -384,7 +388,7 @@ class SuccessStory(models.Model):
     is_published = models.BooleanField(default=True)
     published_at = models.DateTimeField(db_index=True)
     
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -397,7 +401,157 @@ class SuccessStory(models.Model):
 
 
 # -----------------------------------------------------------------------------
-# 4. FAQ Model
+# 4. Success Story Gallery Image Model (For multiple gallery images as blobs)
+# -----------------------------------------------------------------------------
+
+class SuccessStoryGalleryImage(models.Model):
+    """Model to store multiple gallery images for a success story as blobs."""
+    id = models.AutoField(primary_key=True)
+    success_story = models.ForeignKey(
+        SuccessStory,
+        on_delete=models.CASCADE,
+        related_name='gallery_images',
+        help_text=_("The success story this image belongs to.")
+    )
+    
+    # Blob storage for the uploaded image
+    image_blob = models.BinaryField(help_text=_("Image data stored as binary."))
+    image_blob_mime = models.CharField(
+        max_length=255,
+        help_text=_("MIME type of the image (e.g., image/jpeg, image/png).")
+    )
+    image_blob_name = models.CharField(
+        max_length=255,
+        help_text=_("Original filename of the uploaded image.")
+    )
+    
+    # Optional caption/description for the image
+    caption = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text=_("Optional caption or description for this image.")
+    )
+    
+    # Ordering field
+    order = models.IntegerField(
+        default=0,
+        help_text=_("Display order for the gallery images.")
+    )
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _("Success Story Gallery Image")
+        verbose_name_plural = _("Success Story Gallery Images")
+        ordering = ['order', 'created_at']
+    
+    def __str__(self):
+        return f"{self.success_story.title} - {self.image_blob_name}"
+
+
+# -----------------------------------------------------------------------------
+# 4.1. Project Gallery Image Model (For multiple gallery images as blobs)
+# -----------------------------------------------------------------------------
+
+class ProjectGalleryImage(models.Model):
+    """Model to store multiple gallery images for a project as blobs."""
+    id = models.AutoField(primary_key=True)
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='gallery_images',
+        help_text=_("The project this image belongs to.")
+    )
+    
+    # Blob storage for the uploaded image
+    image_blob = models.BinaryField(help_text=_("Image data stored as binary."))
+    image_blob_mime = models.CharField(
+        max_length=255,
+        help_text=_("MIME type of the image (e.g., image/jpeg, image/png).")
+    )
+    image_blob_name = models.CharField(
+        max_length=255,
+        help_text=_("Original filename of the uploaded image.")
+    )
+    
+    # Optional caption/description for the image
+    caption = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text=_("Optional caption or description for this image.")
+    )
+    
+    # Ordering field
+    order = models.IntegerField(
+        default=0,
+        help_text=_("Display order for the gallery images.")
+    )
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _("Project Gallery Image")
+        verbose_name_plural = _("Project Gallery Images")
+        ordering = ['order', 'created_at']
+    
+    def __str__(self):
+        return f"{self.project.title} - {self.image_blob_name}"
+
+
+# -----------------------------------------------------------------------------
+# 4.2. News Event Gallery Image Model (For multiple gallery images as blobs)
+# -----------------------------------------------------------------------------
+
+class NewsEventGalleryImage(models.Model):
+    """Model to store multiple gallery images for a news/event as blobs."""
+    id = models.AutoField(primary_key=True)
+    news_event = models.ForeignKey(
+        NewsEvent,
+        on_delete=models.CASCADE,
+        related_name='gallery_images',
+        help_text=_("The news/event this image belongs to.")
+    )
+    
+    # Blob storage for the uploaded image
+    image_blob = models.BinaryField(help_text=_("Image data stored as binary."))
+    image_blob_mime = models.CharField(
+        max_length=255,
+        help_text=_("MIME type of the image (e.g., image/jpeg, image/png).")
+    )
+    image_blob_name = models.CharField(
+        max_length=255,
+        help_text=_("Original filename of the uploaded image.")
+    )
+    
+    # Optional caption/description for the image
+    caption = models.CharField(
+        max_length=500,
+        blank=True,
+        help_text=_("Optional caption or description for this image.")
+    )
+    
+    # Ordering field
+    order = models.IntegerField(
+        default=0,
+        help_text=_("Display order for the gallery images.")
+    )
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _("News/Event Gallery Image")
+        verbose_name_plural = _("News/Event Gallery Images")
+        ordering = ['order', 'created_at']
+    
+    def __str__(self):
+        return f"{self.news_event.title} - {self.image_blob_name}"
+
+
+# -----------------------------------------------------------------------------
+# 5. FAQ Model
 # -----------------------------------------------------------------------------
 
 class FAQ(models.Model):
@@ -437,7 +591,7 @@ class FAQ(models.Model):
     thumbs_up = models.PositiveIntegerField(default=0, help_text=_("Number of thumbs up votes"), blank=True)
     thumbs_down = models.PositiveIntegerField(default=0, help_text=_("Number of thumbs down votes"), blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
@@ -459,3 +613,34 @@ class FAQ(models.Model):
     
     def __str__(self):
         return self.question[:50]
+
+
+# ----------------------------------------------------------------------------- 
+# 6. FAQ Vote Model
+# -----------------------------------------------------------------------------
+
+class FAQVote(models.Model):
+    """Model to track individual user votes on FAQs."""
+    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='faq_votes')
+    faq = models.ForeignKey(FAQ, on_delete=models.CASCADE, related_name='votes')
+    
+    class VoteType(models.TextChoices):
+        UP = 'UP', _('Thumbs Up')
+        DOWN = 'DOWN', _('Thumbs Down')
+    
+    vote_type = models.CharField(
+        max_length=4,
+        choices=VoteType.choices,
+        help_text=_("Type of vote: up or down.")
+    )
+    
+    created_at = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        verbose_name = _("FAQ Vote")
+        verbose_name_plural = _("FAQ Votes")
+        unique_together = ('user', 'faq')  # One vote per user per FAQ
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.faq.question[:30]} - {self.get_vote_type_display()}"

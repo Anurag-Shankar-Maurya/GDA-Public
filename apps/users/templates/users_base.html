@@ -18,18 +18,35 @@
             theme: {
                 extend: {
                     colors: {
-                        // Define root color theme based on reference site
-                        'primary-blue': '#007bff', // Primary action color
-                        'secondary-gray': '#6c757d', // Secondary/footer color
-                        'accent-blue': '#0000ff', // Hover/link color
-                        'bg-light': '#ffffff', // White background for light mode
-                        'text-light': '#1f2937', // Dark text for light mode
-                        'bg-dark': '#111827', // Very dark background for dark mode
-                        'text-dark': '#e5e7eb', // Light text for dark mode
-                        'card-bg-light': '#f9fafb', // Light card background
-                        'card-bg-dark': '#1f2937', // Dark card background
-                        'border-light': '#e5e7eb', // Light border color
-                        'border-dark': '#374151', // Dark border color
+                        // PRIMARY COLORS (Main brand identity)
+                        'primary-blue': '#093468',      // Deep navy blue - main brand color
+                        'primary-light': '#1e5a9e',     // Lighter shade of primary for hover states
+                        'primary-dark': '#062347',      // Darker shade for depth
+
+                        // ACCENT COLORS (Call-to-action & highlights)
+                        'accent-blue': '#2563eb',       // Bright blue for links and accents
+                        'accent-light': '#3b82f6',      // Lighter accent for hover effects
+                        'accent-dark': '#1e40af',       // Darker accent for active states
+
+                        // NEUTRAL COLORS - Light Mode
+                        'light-bg': '#ffffff',          // White background
+                        'light-secondary-bg': '#e9eaeb', // Light gray for cards/sections
+                        'text-light': '#1f2937',        // Dark gray text
+                        'text-light-secondary': '#6b7280', // Medium gray for secondary text
+                        'border-light': '#e5e7eb',      // Light borders
+
+                        // NEUTRAL COLORS - Dark Mode
+                        'dark-bg': '#0f172a',           // Very dark blue-gray background
+                        'dark-secondary-bg': '#1e293b', // Slightly lighter for cards
+                        'text-dark': '#f1f5f9',         // Almost white text
+                        'text-dark-secondary': '#94a3b8', // Light gray for secondary text
+                        'border-dark': '#334155',       // Dark borders
+
+                        // SEMANTIC COLORS
+                        'success': '#10b981',           // Green for success states
+                        'warning': '#f59e0b',           // Amber for warnings
+                        'error': '#ef4444',             // Red for errors
+                        'info': '#3b82f6',              // Blue for informational
                     }
                 }
             }
@@ -39,23 +56,13 @@
     {% block extra_head %}
     <style>
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .animate-fade-in {
@@ -65,118 +72,290 @@
         .animate-fade-in-up {
             animation: fadeInUp 0.8s ease-out forwards;
         }
+
+        /* Mobile About Menu Transition */
+        #mobile-about-menu {
+            max-height: 0;
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        #mobile-about-menu:not(.hidden) {
+            opacity: 1;
+        }
+
+        #mobile-about-menu.hidden {
+            opacity: 0;
+        }
+        
+        /* Custom Scrollbar for Cookie Notice */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1; /* text-light-secondary */
+            border-radius: 20px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #475569; /* text-dark-secondary */
+        }
+        
+        /* Only load the flag slice of Noto Color Emoji to avoid messing up text digits/spacing */
+        @font-face {
+          font-family: 'GDAFlagEmoji';
+          font-style: normal;
+          font-weight: 400;
+          src: url(https://fonts.gstatic.com/s/notocoloremoji/v37/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabts6diysYTngZPnMC1MfLd4gw.0.woff2) format('woff2');
+          unicode-range: U+1f1e6-1f1ff;
+        }
+
+        /* Class for emoji support in select inputs */
+        .emoji-font {
+            font-family: 'GDAFlagEmoji', sans-serif;
+        }
     </style>
     {% endblock %}
 </head>
-<body class="pt-20 bg-bg-light text-text-light dark:bg-bg-dark dark:text-text-dark transition-colors duration-300 font-sans antialiased">
-    <!-- Floating Social Media Icons -->
+<body class="pt-20 lg:pt-32 bg-light-bg text-text-light dark:bg-dark-bg dark:text-text-dark transition-colors duration-300 font-sans antialiased">
     <div class="fixed right-4 sm:right-6 top-1/2 transform -translate-y-1/2 z-40 flex flex-col space-y-3 sm:space-y-4">
-        <a href="https://www.facebook.com/globaldevotion/" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-all duration-300 hover:scale-110" title="Facebook" aria-label="Follow us on Facebook">
-            <i class="fab fa-facebook-f text-sm sm:text-base"></i>
-        </a>
-        <a href="https://www.instagram.com/globaldevotionassociation/" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-pink-500 hover:bg-pink-600 text-white shadow-lg transition-all duration-300 hover:scale-110" title="Instagram" aria-label="Follow us on Instagram">
-            <i class="fab fa-instagram text-sm sm:text-base"></i>
-        </a>
-        <a href="https://www.youtube.com/@globaldevotionassociation5751" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg transition-all duration-300 hover:scale-110" title="YouTube" aria-label="Subscribe to our YouTube">
-            <i class="fab fa-youtube text-sm sm:text-base"></i>
-        </a>
-        <a href="https://lin.ee/zJScL7G" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-lg transition-all duration-300 hover:scale-110" title="Line" aria-label="Add us on Line">
-            <i class="fab fa-line text-sm sm:text-base"></i>
-        </a>
+        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-lg p-2 shadow-lg border border-border-light dark:border-border-dark">
+            <a href="https://www.facebook.com/globaldevotion/" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary-blue hover:bg-primary-dark text-text-dark shadow-sm transition-all duration-300 hover:scale-105" title="Facebook" aria-label="Follow us on Facebook">
+                <i class="fab fa-facebook-f text-xs sm:text-sm"></i>
+            </a>
+        </div>
+        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-lg p-2 shadow-lg border border-border-light dark:border-border-dark">
+            <a href="https://www.instagram.com/globaldevotionassociation/" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary-blue hover:bg-primary-dark text-text-dark shadow-sm transition-all duration-300 hover:scale-105" title="Instagram" aria-label="Follow us on Instagram">
+                <i class="fab fa-instagram text-xs sm:text-sm"></i>
+            </a>
+        </div>
+        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-lg p-2 shadow-lg border border-border-light dark:border-border-dark">
+            <a href="https://www.youtube.com/@globaldevotionassociation5751" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary-blue hover:bg-primary-dark text-text-dark shadow-sm transition-all duration-300 hover:scale-105" title="YouTube" aria-label="Subscribe to our YouTube">
+                <i class="fab fa-youtube text-xs sm:text-sm"></i>
+            </a>
+        </div>
+        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-lg p-2 shadow-lg border border-border-light dark:border-border-dark">
+            <a href="https://lin.ee/zJScL7G" target="_blank" rel="noreferrer noopener" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-primary-blue hover:bg-primary-dark text-text-dark shadow-sm transition-all duration-300 hover:scale-105" title="Line" aria-label="Add us on Line">
+                <i class="fab fa-line text-xs sm:text-sm"></i>
+            </a>
+        </div>
     </div>
 
-    <header class="fixed top-0 left-0 right-0 z-50 bg-bg-light dark:bg-gray-800 text-text-light dark:text-text-dark py-4 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <!-- <h1 class="text-2xl font-bold">
-                <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-blue-300 hover:text-accent-blue dark:hover:text-blue-400">GDA Content Website</a>
-            </h1> -->
-            <!-- Logo -->
-            <a href="{% url 'landing_page' %}" class="flex items-center bg-white p-1 rounded">
-                <img src="{% static 'images/logo.png' %}" alt="{% trans "GDA Logo" %}" class="h-12 w-auto rounded">
-            </a>
 
-            <!-- Desktop Navigation -->
-            <nav class="hidden lg:flex lg:items-center lg:space-x-2">
-                <a href="{% url 'landing_page' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Home" %}</a>
-                <a href="{% url 'content_project_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Projects" %}</a>
-                <a href="{% url 'content_news_event_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "News" %}</a>
-                <a href="{% url 'content_success_story_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Success Stories" %}</a>
-                <a href="{% url 'content_faq_list' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "FAQs" %}</a>
-            </nav>
-
-            {% if user.is_authenticated %}
-            <div class="flex items-center ml-6">
-                <a href="{% url 'profile' %}" class="flex items-center space-x-2 text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">
-                    <div class="h-8 w-8 rounded-full bg-primary-blue flex items-center justify-center text-white text-sm font-bold">
-                        {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+    <header class="fixed top-0 left-0 right-0 z-50 bg-light-bg dark:bg-dark-secondary-bg text-text-light dark:text-text-dark shadow-sm border-b border-border-light dark:border-border-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Top Row: Logo and Controls -->
+            <div class="flex items-center justify-between py-1 lg:py-0">
+                <a href="{% url 'landing_page' %}" class="flex items-center rounded">
+                    <div class="flex items-center bg-light-bg p-0.5 rounded">
+                        <img src="{% static 'images/logo.png' %}" alt="{% trans "GDA Logo" %}" class="h-12 w-auto rounded">
                     </div>
-                    <span class="hidden md:inline">{{ user.get_full_name }}</span>
+                    <span class="hidden md:inline lg:inline ml-3 font-bold text-lg text-primary-blue dark:text-text-dark">Global Devotion Association</span>
                 </a>
-            </div>
-            {% else %}
-            <div class="flex items-center ml-6">
-                <a href="{% url 'login' %}" class="nav-link transition-all duration-300 hover:bg-accent-blue hover:text-white dark:hover:text-white rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl">{% trans "Login" %}</a>
-            </div>
-            {% endif %}
 
-            <!-- Language Switch -->
-            <div class="hidden lg:flex lg:items-center ml-6">
-                <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
-                    {% csrf_token %}
-                    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
-                    <button type="submit" name="language" value="en" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">EN</button>
-                    <span class="text-text-light dark:text-text-dark">|</span>
-                    <button type="submit" name="language" value="zh-tw" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">中文</button>
-                </form>
+                <div class="flex items-center">
+                    {% if user.is_authenticated %}
+                    <div class="flex items-center ml-4">
+                        <a href="{% url 'profile' %}" class="flex items-center space-x-2 text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-accent-light transition-colors duration-300">
+                            <div class="h-8 w-8 rounded-full bg-primary-blue flex items-center justify-center text-text-dark text-sm font-bold">
+                                {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                            </div>
+                            <span class="hidden md:inline">{{ user.get_full_name }}</span>
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center ml-4">
+                        <a href="{% url 'login' %}" class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl hover:text-accent-blue">{% trans "Login" %}</a>
+                    </div>
+                    {% endif %}
+
+                    <!-- Language Switch -->
+                    <div class="hidden lg:flex lg:items-center ml-4">
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% if LANGUAGE_CODE|slice:":2" == 'en' %}
+                                <button type="submit" name="language" value="zh-tw" class="hidden md:flex items-center text-sm bg-light-secondary-bg dark:bg-dark-secondary-bg hover:bg-primary-blue dark:hover:bg-primary-light hover:text-text-dark px-4 py-2 rounded-full transition-all duration-300 border border-border-light dark:border-border-dark">
+                                    <i class="fas fa-globe text-lg mr-2"></i>
+                                    <span>中文</span>
+                                </button>
+                            {% else %}
+                                <button type="submit" name="language" value="en" class="hidden md:flex items-center text-sm bg-light-secondary-bg dark:bg-dark-secondary-bg hover:bg-primary-blue dark:hover:bg-primary-light hover:text-text-dark px-4 py-2 rounded-full transition-all duration-300 border border-border-light dark:border-border-dark">
+                                    <i class="fas fa-globe text-lg mr-2"></i>
+                                    <span>EN</span>
+                                </button>
+                            {% endif %}
+                        </form>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="flex lg:hidden ml-2">
+                        <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-accent-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue" aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <i class="fas fa-bars h-6 w-6 block content-center" id="mobile-menu-open-icon"></i>
+                            <i class="fas fa-times h-6 w-6 hidden content-center" id="mobile-menu-close-icon"></i>
+                        </button>
+                    </div>
+
+                    <!-- Desktop Theme Toggle -->
+                    <div class="hidden lg:flex lg:items-center ml-4">
+                        <button id="theme-toggle" type="button" class="p-2 rounded-md text-text-light-secondary dark:text-text-dark-secondary hover:text-text-light dark:hover:text-text-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-blue transition-colors duration-300">
+                            <span class="sr-only">Toggle theme</span>
+                            <i class="fas fa-moon h-6 w-6 content-center" id="theme-toggle-dark-icon"></i>
+                            <i class="fas fa-sun h-6 w-6 content-center" id="theme-toggle-light-icon"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Mobile Menu Button -->
-            <div class="flex lg:hidden">
-                <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue" aria-controls="mobile-menu" aria-expanded="false">
-                    <span class="sr-only">Open main menu</span>
-                    <!-- Icon when menu is closed. -->
-                    <i class="fas fa-bars h-6 w-6 block content-center" id="mobile-menu-open-icon"></i>
-                    <!-- Icon when menu is open. -->
-                    <i class="fas fa-times h-6 w-6 hidden content-center" id="mobile-menu-close-icon"></i>
-                </button>
-            </div>
+            <!-- Bottom Row: Page Navigation (desktop only) -->
+            <div class="hidden lg:flex lg:items-center lg:justify-center border-t border-border-light dark:border-border-dark">
+                <nav class="flex items-center space-x-2 py-0">
+                    <a href="{% url 'landing_page' %}" class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl hover:text-accent-blue">{% trans "Home" %}</a>
+                    <a href="{% url 'content_project_list' %}" class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl hover:text-accent-blue">{% trans "Projects" %}</a>
+                    <a href="{% url 'content_news_event_list' %}" class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl hover:text-accent-blue">{% trans "News" %}</a>
+                    <div class="relative group">
+                        <button class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl flex items-center space-x-1 hover:text-accent-blue">
+                            <span>{% trans "Taiwan" %}</span>
+                            <i class="fas fa-chevron-down text-sm group-hover:rotate-180 transition-transform duration-300"></i>
+                        </button>
+                        <div class="absolute left-0 w-screen max-w-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 -translate-y-2 group-hover:translate-y-0 mt-0">
+                            <div class="mt-1 bg-light-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark rounded-lg shadow-lg">
+                                <div class="p-4 space-y-2">
+                                    <!-- <a href="{% url 'taiwan' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Discover Taiwan" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "An overview of Taiwan's beauty." %}</span>
+                                    </a> -->
+                                    <a href="{% url 'amazing_taiwan' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Amazing Taiwan" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Discover the breathtaking landscapes and vibrant cities of Taiwan." %}</span>
+                                    </a>
+                                    <a href="{% url 'taiwan_cultural_experience' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Cultural Experience" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Engage in unique cultural activities and workshops." %}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Desktop Theme Toggle -->
-            <div class="hidden lg:flex lg:items-center ml-6">
-                <button id="theme-toggle" type="button" class="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-blue transition-colors duration-300">
-                    <span class="sr-only">Toggle theme</span>
-                    <i class="fas fa-moon h-6 w-6 content-center" id="theme-toggle-dark-icon"></i>
-                    <i class="fas fa-sun h-6 w-6 content-center" id="theme-toggle-light-icon"></i>
-                </button>
+                    <div class="relative group">
+                        <button class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl flex items-center space-x-1 hover:text-accent-blue">
+                            <span>{% trans "About" %}</span>
+                            <i class="fas fa-chevron-down text-sm group-hover:rotate-180 transition-transform duration-300"></i>
+                        </button>
+                        <div class="absolute left-0 w-screen max-w-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 -translate-y-2 group-hover:translate-y-0 mt-0">
+                            <div class="mt-1 bg-light-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark rounded-lg shadow-lg">
+                                <div class="p-4 space-y-2">
+                                    <a href="{% url 'founder' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Founder's Philosophy" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Learn about our founder's vision and guiding principles" %}</span>
+                                    </a>
+                                    <a href="{% url 'content_organization' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Organization" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Explore our organizational structure and leadership" %}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <button class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl flex items-center space-x-1 hover:text-accent-blue">
+                            <span>{% trans "GDA School" %}</span>
+                            <i class="fas fa-chevron-down text-sm group-hover:rotate-180 transition-transform duration-300"></i>
+                        </button>
+                        <div class="absolute left-0 w-screen max-w-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 -translate-y-2 group-hover:translate-y-0 mt-0">
+                            <div class="mt-1 bg-light-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark rounded-lg shadow-lg">
+                                <div class="p-4 space-y-2">
+                                    <a href="{% url 'earth_day' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Earth Day" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Learn about our Earth Day activities and volunteer contributions" %}</span>
+                                    </a>
+                                    <a href="{% url 'life_of_gong_school' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Gong School Article List" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Explore educational articles and resources" %}</span>
+                                    </a>
+                                    <a href="{% url 'green_declaration_2018' %}" class="block p-3 rounded-lg text-text-light dark:text-text-dark hover:bg-light-secondary-bg dark:hover:bg-dark-bg transition-colors duration-300">
+                                        <div class="font-semibold">{% trans "Green Declaration 2018" %}</div>
+                                        <span class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Learn about our environmental initiatives and commitments" %}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'content_success_story_list' %}" class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl hover:text-accent-blue">{% trans "Success Stories" %}</a>
+                    <a href="{% url 'content_faq_list' %}" class="nav-link transition-all duration-300 rounded-md px-3 py-2 hover:-translate-y-1 hover:shadow-xl hover:text-accent-blue">{% trans "FAQs" %}</a>
+                </nav>
             </div>
         </div>
 
-        <!-- Mobile Menu (hidden by default) -->
-        <div class="lg:hidden hidden transition-[max-height] duration-300 ease-in-out" id="mobile-menu">
+        <div class="lg:hidden hidden transition-[max-height] duration-300 ease-in-out overflow-y-auto max-h-[80vh] bg-light-bg dark:bg-dark-secondary-bg border-t border-border-light dark:border-border-dark" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="{% url 'landing_page' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Home" %}</a>
-                <a href="{% url 'content_project_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Projects" %}</a>
-                <a href="{% url 'content_news_event_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "News" %}</a>
-                <a href="{% url 'content_success_story_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Success Stories" %}</a>
-                <a href="{% url 'content_faq_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "FAQs" %}</a>
+                <a href="{% url 'landing_page' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue">{% trans "Home" %}</a>
+                <a href="{% url 'content_project_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue">{% trans "Projects" %}</a>
+                <a href="{% url 'content_news_event_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue">{% trans "News" %}</a>
+                <button id="mobile-taiwan-toggle" type="button" class="w-full text-left nav-link block px-3 py-2 rounded-md text-base font-medium flex items-center justify-between transition-all duration-300 hover:text-accent-blue">
+                    <span>{% trans "Taiwan" %}</span>
+                    <i id="mobile-taiwan-chevron" class="fas fa-chevron-down text-sm transition-transform duration-300 ease-in-out"></i>
+                </button>
+                <div id="mobile-taiwan-menu" class="hidden bg-light-secondary-bg dark:bg-dark-bg rounded-md space-y-1 pl-4 transition-all duration-300 ease-in-out overflow-hidden">
+                    <!-- <a href="{% url 'taiwan' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Discover Taiwan" %}</a> -->
+                    <a href="{% url 'amazing_taiwan' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Amazing Taiwan" %}</a>
+                    <a href="{% url 'taiwan_cultural_experience' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Cultural Experience" %}</a>
+                </div>
+                
+                <button id="mobile-about-toggle" type="button" class="w-full text-left nav-link block px-3 py-2 rounded-md text-base font-medium flex items-center justify-between transition-all duration-300 hover:text-accent-blue">
+                    <span>{% trans "About" %}</span>
+                    <i id="mobile-about-chevron" class="fas fa-chevron-down text-sm transition-transform duration-300 ease-in-out"></i>
+                </button>
+                <div id="mobile-about-menu" class="hidden bg-light-secondary-bg dark:bg-dark-bg rounded-md space-y-1 pl-4 transition-all duration-300 ease-in-out overflow-hidden">
+                    <a href="{% url 'founder' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Founder's Philosophy" %}</a>
+                    <a href="{% url 'content_organization' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Organization" %}</a>
+                </div>
+
+                <button id="mobile-gda-school-toggle" type="button" class="w-full text-left nav-link block px-3 py-2 rounded-md text-base font-medium flex items-center justify-between transition-all duration-300 hover:text-accent-blue">
+                    <span>{% trans "GDA School" %}</span>
+                    <i id="mobile-gda-school-chevron" class="fas fa-chevron-down text-sm transition-transform duration-300 ease-in-out"></i>
+                </button>
+                <div id="mobile-gda-school-menu" class="hidden bg-light-secondary-bg dark:bg-dark-bg rounded-md space-y-1 pl-4 transition-all duration-300 ease-in-out overflow-hidden">
+                    <a href="{% url 'earth_day' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Earth Day" %}</a>
+                    <a href="{% url 'life_of_gong_school' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Gong School Article List" %}</a>
+                    <a href="{% url 'green_declaration_2018' %}" class="nav-link block px-3 py-2 rounded-md text-sm transition-colors duration-200 hover:text-accent-blue">{% trans "Green Declaration 2018" %}</a>
+                </div>
+                
+                <a href="{% url 'content_success_story_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue">{% trans "Success Stories" %}</a>
+                <a href="{% url 'content_faq_list' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue">{% trans "FAQs" %}</a>
             </div>
             {% if not user.is_authenticated %}
             <div class="px-2 pt-2 pb-3">
-                <a href="{% url 'login' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-blue hover:text-white">{% trans "Login" %}</a>
+                <a href="{% url 'login' %}" class="nav-link block px-3 py-2 rounded-md text-base font-medium hover:text-accent-blue">{% trans "Login" %}</a>
             </div>
             {% endif %}
             <!-- Language Switch Mobile -->
             <div class="px-2 pt-2 pb-3">
-                <form action="{% url 'set_language' %}" method="post" class="flex items-center space-x-2">
+                <form action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
                     <input name="next" type="hidden" value="{{ request.get_full_path }}" />
-                    <button type="submit" name="language" value="en" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">EN</button>
-                    <span class="text-text-light dark:text-text-dark">|</span>
-                    <button type="submit" name="language" value="zh-tw" class="text-text-light dark:text-text-dark hover:text-accent-blue dark:hover:text-blue-400 transition-colors duration-300">中文</button>
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% if LANGUAGE_CODE|slice:":2" == 'en' %}
+                        <button type="submit" name="language" value="zh-tw" class="flex items-center text-sm bg-light-secondary-bg dark:bg-dark-bg hover:bg-primary-blue dark:hover:bg-primary-light hover:text-text-dark px-4 py-2 rounded-full transition-all duration-300 w-full justify-center border border-border-light dark:border-border-dark">
+                            <i class="fas fa-globe text-lg mr-2"></i>
+                            <span>中文</span>
+                        </button>
+                    {% else %}
+                        <button type="submit" name="language" value="en" class="flex items-center text-sm bg-light-secondary-bg dark:bg-dark-bg hover:bg-primary-blue dark:hover:bg-primary-light hover:text-text-dark px-4 py-2 rounded-full transition-all duration-300 w-full justify-center border border-border-light dark:border-border-dark">
+                            <i class="fas fa-globe text-lg mr-2"></i>
+                            <span>EN</span>
+                        </button>
+                    {% endif %}
                 </form>
             </div>
             <div class="px-2 pb-3 pt-2">
-                <button id="theme-toggle-mobile" type="button" class="w-full text-left p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-blue flex items-center justify-center space-x-2 transition-colors duration-300">
+                <button id="theme-toggle-mobile" type="button" class="w-full text-left p-2 rounded-md text-text-light-secondary hover:text-text-light dark:text-text-dark-secondary dark:hover:text-text-dark focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-blue flex items-center justify-center space-x-2 transition-colors duration-300">
                     <i class="fas fa-moon h-6 w-6 content-center" id="theme-toggle-dark-icon-mobile"></i>
                     <i class="fas fa-sun h-6 w-6 content-center" id="theme-toggle-light-icon-mobile"></i>
                     <span>{% trans "Toggle Theme" %}</span>
@@ -186,18 +365,17 @@
     </header>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-bg-light dark:bg-bg-dark bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center z-50 transition-opacity duration-500">
+    <!-- <div id="loading-overlay" class="fixed inset-0 bg-bg-light dark:bg-bg-dark bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center z-50 transition-opacity duration-500">
         <div class="text-center">
             <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent mb-4"></div>
             <p class="text-text-light dark:text-text-dark font-medium">{% trans "Loading GDA..." %}</p>
         </div>
-    </div>
+    </div> -->
 
     <div class="flex-1 flex flex-col overflow-hidden">
         <main class="flex-1 overflow-x-hidden overflow-y-auto">
-            <div class="container mx-auto px-6 pt-6">
-                <!-- Breadcrumb Navigation -->
-                <nav class="text-sm font-semibold text-gray-500 dark:text-gray-400 max-w-7xl mx-auto" aria-label="Breadcrumb">
+            <div class="container mx-auto px-6">
+                <nav class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary max-w-7xl mx-auto" aria-label="Breadcrumb">
                     <ol class="list-none p-0 flex flex-wrap">
                         <!-- <li class="flex items-center">
                             <a href="{% url 'management_dashboard' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-300 hover:text-accent-blue">Dashboard</a>
@@ -210,22 +388,155 @@
         </main>
     </div>
 
+    {% block hero %}{% endblock %}
+
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {% block content %}
-        <!-- Child template content will go here -->
         {% endblock %}
     </main>
 
-    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-6 sm:py-8 mt-12 w-full overflow-x-hidden">
+    <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 bg-light-bg dark:bg-dark-bg backdrop-blur-sm text-text-light dark:text-text-dark z-50 transform transition-transform duration-500 translate-y-full shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-border-light dark:border-border-dark flex flex-col max-h-[90vh]">
+        <div class="overflow-y-auto custom-scrollbar p-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Summary Section -->
+                <div id="cookie-summary" class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 transition-all duration-300">
+                    <div class="text-sm text-text-light dark:text-text-dark flex-1">
+                        <h3 class="font-bold text-lg mb-2 text-text-light dark:text-text-dark">{% trans "Cookie Notice" %}</h3>
+                        <p class="mb-3 leading-relaxed text-text-light dark:text-text-dark opacity-90">
+                            {% trans "We use cookies to provide the best website experience. In accordance with personal data protection laws, we need your consent to use non-essential cookies." %}
+                        </p>
+                        <p class="text-xs mb-3 text-text-light-secondary dark:text-text-dark-secondary">
+                            {% trans "For details, please refer to our" %} <a href="{% url 'privacy_policy' %}" class="underline hover:text-primary-blue transition-colors">{% trans "Privacy Policy" %}</a> {% trans "and" %} <a href="{% url 'cookies_policy' %}" class="underline hover:text-primary-blue transition-colors">{% trans "Cookies Policy" %}</a>.
+                        </p>
+                        <div class="flex items-center gap-2 text-[10px] sm:text-xs text-text-light-secondary dark:text-text-dark-secondary pt-1 border-t border-border-light dark:border-border-dark w-fit">
+                            <i class="fas fa-globe-asia text-text-light-secondary dark:text-text-dark-secondary"></i>
+                            <span id="detected-region">{% trans "Detected Region: TW | Your rights may vary depending on your jurisdiction" %}</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3 shrink-0 justify-center lg:justify-end w-full lg:w-auto" id="cookie-initial-buttons">
+                        <button id="cookie-customize" class="px-4 py-2.5 text-sm font-medium text-text-light dark:text-text-dark hover:text-primary-blue border border-border-light dark:border-border-dark rounded-lg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg transition-colors focus:outline-none focus:ring-2 focus:ring-text-light-secondary dark:focus:ring-text-dark-secondary">
+                            {% trans "Custom Settings" %}
+                        </button>
+                        <button id="cookie-necessary" class="px-4 py-2.5 text-sm font-medium text-text-light dark:text-text-dark hover:text-primary-blue bg-light-secondary-bg dark:bg-dark-secondary-bg hover:bg-border-light dark:hover:bg-border-dark rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-text-light-secondary dark:focus:ring-text-dark-secondary">
+                            {% trans "Necessary Only" %}
+                        </button>
+                        <button id="cookie-accept-all" class="px-4 py-2.5 text-sm font-medium text-white bg-primary-blue hover:bg-primary-light rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-light">
+                            {% trans "Accept All" %}
+                        </button>
+                    </div>
+                </div>
+
+                <div id="cookie-details" class="hidden mt-8 border-t border-border-light dark:border-border-dark pt-6 animate-fade-in">
+                    <h4 class="text-xl font-bold text-text-light dark:text-text-dark mb-6">{% trans "Cookie Categories" %}</h4>
+                    <div class="grid gap-4">
+                        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-xl p-5 border border-border-light dark:border-border-dark">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <h5 class="font-bold text-text-light dark:text-text-dark text-base">{% trans "Necessary Cookies" %}</h5>
+                                    <span class="text-[10px] uppercase tracking-wider font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-2 py-1 rounded border border-border-light dark:border-border-dark">{% trans "Necessary" %}</span>
+                                </div>
+                                <div class="relative inline-block w-10 h-6 align-middle select-none">
+                                    <input type="checkbox" checked disabled class="opacity-0 w-0 h-0 absolute" />
+                                    <span class="block overflow-hidden h-6 rounded-full bg-primary-blue cursor-not-allowed opacity-50"></span>
+                                    <span class="absolute block w-4 h-4 mt-1 ml-1 bg-white rounded-full shadow inset-y-0 right-0 mr-1 transform translate-x-full"></span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-text-light dark:text-text-dark opacity-80 mb-3 leading-relaxed">
+                                {% trans "These cookies are essential for the website to function properly. They provide core features such as security, network management, and accessibility." %}
+                            </p>
+                            <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary font-mono">{% trans "Examples: session cookies, authentication tokens, CSRF protection" %}</p>
+                        </div>
+
+                        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light-secondary dark:hover:border-text-dark-secondary transition-colors">
+                            <div class="flex items-center justify-between mb-3">
+                                <h5 class="font-bold text-text-light dark:text-text-dark text-base">{% trans "Functional Cookies" %}</h5>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="cookie-cat-functional" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-border-light dark:bg-border-dark peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-blue rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border-light after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-blue"></div>
+                                </label>
+                            </div>
+                            <p class="text-sm text-text-light dark:text-text-dark opacity-80 mb-3 leading-relaxed">
+                                {% trans "These cookies allow the website to provide enhanced features and personalization, such as remembering your preferences." %}
+                            </p>
+                            <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary font-mono">{% trans "Examples: language preferences, theme settings, form data" %}</p>
+                        </div>
+
+                        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light-secondary dark:hover:border-text-dark-secondary transition-colors">
+                            <div class="flex items-center justify-between mb-3">
+                                <h5 class="font-bold text-text-light dark:text-text-dark text-base">{% trans "Analytical Cookies" %}</h5>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="cookie-cat-analytics" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-border-light dark:bg-border-dark peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-blue rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border-light after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-blue"></div>
+                                </label>
+                            </div>
+                            <p class="text-sm text-text-light dark:text-text-dark opacity-80 mb-3 leading-relaxed">
+                                {% trans "These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously." %}
+                            </p>
+                            <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary font-mono">{% trans "Examples: Google Analytics, page visit tracking, user behavior analysis" %}</p>
+                        </div>
+
+                        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light-secondary dark:hover:border-text-dark-secondary transition-colors">
+                            <div class="flex items-center justify-between mb-3">
+                                <h5 class="font-bold text-text-light dark:text-text-dark text-base">{% trans "Marketing Cookies" %}</h5>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="cookie-cat-marketing" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-border-light dark:bg-border-dark peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-blue rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border-light after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-blue"></div>
+                                </label>
+                            </div>
+                            <p class="text-sm text-text-light dark:text-text-dark opacity-80 mb-3 leading-relaxed">
+                                {% trans "These cookies are used to track visitors across websites to display relevant ads and measure the effectiveness of marketing campaigns." %}
+                            </p>
+                            <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary font-mono">{% trans "Examples: Facebook Pixel, Google Ads, remarketing tags" %}</p>
+                        </div>
+
+                        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-xl p-5 border border-border-light dark:border-border-dark hover:border-text-light-secondary dark:hover:border-text-dark-secondary transition-colors">
+                            <div class="flex items-center justify-between mb-3">
+                                <h5 class="font-bold text-text-light dark:text-text-dark text-base">{% trans "Social Media Cookies" %}</h5>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="cookie-cat-social" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-border-light dark:bg-border-dark peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-blue rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border-light after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-blue"></div>
+                                </label>
+                            </div>
+                            <p class="text-sm text-text-light dark:text-text-dark opacity-80 mb-3 leading-relaxed">
+                                {% trans "These cookies enable social media features and allow you to share content from our website on social platforms." %}
+                            </p>
+                            <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary font-mono">{% trans "Examples: Facebook Like button, Twitter Share, LinkedIn plugins" %}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 justify-end mt-8 pt-6 border-t border-border-light dark:border-border-dark sticky bottom-0 bg-light-bg/95 dark:bg-dark-bg/95 backdrop-blur py-2">
+                        <button id="cookie-hide-details" class="px-6 py-2.5 text-sm font-medium text-text-light dark:text-text-dark hover:text-primary-blue hover:underline transition-colors">
+                            {% trans "Hide Details" %}
+                        </button>
+                        <button id="cookie-necessary-expanded" class="px-6 py-2.5 text-sm font-medium text-text-light dark:text-text-dark hover:text-primary-blue bg-light-secondary-bg dark:bg-dark-secondary-bg hover:bg-border-light dark:hover:bg-border-dark rounded-lg transition-colors border border-border-light dark:border-border-dark">
+                            {% trans "Necessary Only" %}
+                        </button>
+                        <button id="cookie-save-prefs" class="px-6 py-2.5 text-sm font-medium text-white bg-success hover:opacity-90 rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-success">
+                            {% trans "Save Preferences" %}
+                        </button>
+                        <button id="cookie-accept-all-expanded" class="px-6 py-2.5 text-sm font-medium text-white bg-primary-blue hover:bg-primary-light rounded-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-light">
+                            {% trans "Accept All" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="back-to-top" class="fixed bottom-4 right-4 bg-primary-blue hover:bg-accent-blue text-text-dark w-12 h-12 flex items-center justify-center rounded-full shadow-lg transition-all duration-300 opacity-0 invisible hover:scale-110 focus:outline-none focus:ring-4 focus:ring-primary-blue focus:ring-opacity-50 z-40" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <footer class="bg-primary-dark dark:bg-dark-bg text-text-dark py-6 sm:py-8 mt-12 w-full overflow-x-hidden border-t border-border-dark">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 sm:gap-8">
             <div class="flex-shrink-0 flex items-center space-x-3 sm:space-x-4 min-w-0">
-                <div class="bg-white p-1 sm:p-2 rounded flex-shrink-0">
-                    <img src="{% static 'images/logo.png' %}" alt="{% trans "Global Devotion Association" %}" class="h-16 sm:h-24 w-auto">
+                <div class="bg-light-bg p-1 sm:p-2 rounded flex-shrink-0">
+                    <img src="{% static 'images/logo.png' %}" alt="Global Devotion Association" class="h-16 sm:h-24 w-auto">
                 </div>
                 <div class="min-w-0 flex-1">
-                    <h3 class="text-base sm:text-xl font-bold text-primary-blue dark:text-blue-300 break-words">Global Devotion Association</h3>
-                    <p class="text-xs sm:text-sm text-gray-300 break-words">桃園市全球貢（共）學志工協會</p>
-                    <p class="text-gray-400 text-xs mt-1 sm:mt-2">{% trans "&copy; 2025 GDA. All rights reserved." %}</p>
+                    <h3 class="text-base sm:text-xl font-bold text-accent-light dark:text-primary-light break-words">Global Devotion Association</h3>
+                    <p class="text-xs sm:text-sm text-text-dark-secondary break-words">桃園市全球貢（共）學志工協會</p>
+                    <p class="text-text-dark-secondary text-xs mt-1 sm:mt-2">{% trans "&copy; 2025 GDA. All rights reserved." %}</p>
                 </div>
             </div>
 
@@ -233,34 +544,38 @@
                 <nav class="flex flex-col min-w-0">
                     <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Quick Links" %}</h4>
                     <ul class="space-y-1 sm:space-y-2 text-sm sm:text-base">
-                        <li><a href="{% url 'landing_page' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Home" %}</a></li>
-                        <li><a href="{% url 'content_project_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Projects" %}</a></li>
-                        <li><a href="{% url 'content_news_event_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "News" %}</a></li>
+                        <li><a href="{% url 'landing_page' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Home" %}</a></li>
+                        <li><a href="{% url 'content_project_list' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Projects" %}</a></li>
+                            <li><a href="{% url 'founder' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Founder's Philosophy" %}</a></li>
+                            <li><a href="{% url 'content_organization' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Organization" %}</a></li>
+                        <li><a href="{% url 'content_news_event_list' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "News" %}</a></li>
                     </ul>
                 </nav>
 
                 <nav class="flex flex-col min-w-0">
                     <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Resources" %}</h4>
                     <ul class="space-y-1 sm:space-y-2 text-sm sm:text-base">
-                        <li><a href="{% url 'content_success_story_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Success Stories" %}</a></li>
-                        <li><a href="{% url 'content_faq_list' %}" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "FAQs" %}</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300 break-words">{% trans "Privacy Policy" %}</a></li>
+                        <li><a href="{% url 'content_success_story_list' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Success Stories" %}</a></li>
+                        <li><a href="{% url 'content_faq_list' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "FAQs" %}</a></li>
+                        <li><a href="{% url 'privacy_policy' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Privacy Policy" %}</a></li>
+                        <li><a href="{% url 'cookies_policy' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Cookies Policy" %}</a></li>
+                        <li><a href="{% url 'terms_of_service' %}" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300 break-words">{% trans "Terms of Service" %}</a></li>
                     </ul>
                 </nav>
 
                 <div class="flex flex-col min-w-0">
                     <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Connect" %}</h4>
                     <div class="flex space-x-3 sm:space-x-4 flex-wrap">
-                        <a href="https://www.facebook.com/globaldevotion/" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/globaldevotionassociation/" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.youtube.com/@globaldevotionassociation5751" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                        <a href="https://lin.ee/zJScL7G" target="_blank" rel="noreferrer noopener" class="text-gray-300 hover:text-primary-blue dark:hover:text-blue-300 transition-colors duration-300" aria-label="Line"><i class="fab fa-line"></i></a>
+                        <a href="https://www.facebook.com/globaldevotion/" target="_blank" rel="noreferrer noopener" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/globaldevotionassociation/" target="_blank" rel="noreferrer noopener" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@globaldevotionassociation5751" target="_blank" rel="noreferrer noopener" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://lin.ee/zJScL7G" target="_blank" rel="noreferrer noopener" class="text-text-dark-secondary hover:text-accent-light transition-colors duration-300" aria-label="Line"><i class="fab fa-line"></i></a>
                     </div>
                 </div>
 
                 <div class="flex flex-col min-w-0">
                     <h4 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{% trans "Contact Us" %}</h4>
-                    <div class="text-gray-300 text-xs sm:text-sm space-y-1 sm:space-y-2">
+                    <div class="text-text-dark-secondary text-xs sm:text-sm space-y-1 sm:space-y-2">
                         <div>
                             <p class="text-xs font-semibold">{% trans "USA Office:" %}</p>
                             <p class="break-words">{% trans "18031 Irvine Blvd Unit 209" %}</p>
@@ -272,9 +587,9 @@
                             <p class="break-words">{% trans "Zhongli Dist., Taoyuan City 320014, Taiwan" %}</p>
                         </div>
                         <div class="pt-1 sm:pt-2 space-y-1">
-                            <p class="break-words"><i class="fas fa-phone text-primary-blue mr-2"></i><a href="tel:+886342551" class="hover:text-primary-blue transition-colors">(03)4255189</a></p>
-                            <p class="break-words"><i class="fas fa-phone text-primary-blue mr-2"></i><a href="tel:+886342810857" class="hover:text-primary-blue transition-colors">(03)2810857</a></p>
-                            <p class="break-words"><i class="fas fa-envelope text-primary-blue mr-2"></i><a href="mailto:globaldevotion2017@gmail.com" class="hover:text-primary-blue transition-colors">globaldevotion2017@gmail.com</a></p>
+                            <p class="break-words"><i class="fas fa-phone text-accent-light mr-2"></i><a href="tel:+886342551" class="hover:text-accent-light transition-colors">(03)4255189</a></p>
+                            <p class="break-words"><i class="fas fa-phone text-accent-light mr-2"></i><a href="tel:+886342810857" class="hover:text-accent-light transition-colors">(03)2810857</a></p>
+                            <p class="break-words"><i class="fas fa-envelope text-accent-light mr-2"></i><a href="mailto:globaldevotion2017@gmail.com" class="hover:text-accent-light transition-colors">globaldevotion2017@gmail.com</a></p>
                         </div>
                     </div>
                 </div>
@@ -284,6 +599,28 @@
 
     {% block extra_footer %}
     <script>
+        // Set Detected Region dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            var regionSpan = document.getElementById('detected-region');
+            if (regionSpan) {
+                let region = 'TW';
+                let language = navigator.language || navigator.userLanguage;
+                // Try to extract region from language (e.g., en-US, zh-TW)
+                if (language && language.includes('-')) {
+                    region = language.split('-')[1].toUpperCase();
+                }
+                // Try to use Intl API for more accurate region if available
+                if (window.Intl && Intl.DateTimeFormat) {
+                    try {
+                        const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+                        if (locale && locale.includes('-')) {
+                            region = locale.split('-')[1].toUpperCase();
+                        }
+                    } catch (e) {}
+                }
+                regionSpan.textContent = `{% trans "Detected Region:" %} ${region} {% trans "| Your rights may vary depending on your jurisdiction" %}`;
+            }
+        });
         // Theme Toggle Logic
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
@@ -361,6 +698,99 @@
             mobileMenuCloseIcon.classList.toggle('hidden');
         });
 
+        // Mobile About Menu Toggle
+        const mobileAboutToggle = document.getElementById('mobile-about-toggle');
+        const mobileAboutMenu = document.getElementById('mobile-about-menu');
+        const mobileAboutChevron = document.getElementById('mobile-about-chevron');
+
+        if (mobileAboutToggle) {
+            mobileAboutToggle.addEventListener('click', () => {
+                const isHidden = mobileAboutMenu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    // Opening the menu
+                    mobileAboutMenu.classList.remove('hidden');
+                    mobileAboutChevron.classList.add('rotate-180');
+                    
+                    // Set max-height to content height after a brief delay to allow transition
+                    setTimeout(() => {
+                        mobileAboutMenu.style.maxHeight = mobileAboutMenu.scrollHeight + 'px';
+                    }, 10);
+                } else {
+                    // Closing the menu
+                    mobileAboutChevron.classList.remove('rotate-180');
+                    mobileAboutMenu.style.maxHeight = '0px';
+                    
+                    // Hide after transition completes
+                    setTimeout(() => {
+                        mobileAboutMenu.classList.add('hidden');
+                    }, 300);
+                }
+            });
+        }
+
+        // Mobile Taiwan Menu Toggle
+        const mobileTaiwanToggle = document.getElementById('mobile-taiwan-toggle');
+        const mobileTaiwanMenu = document.getElementById('mobile-taiwan-menu');
+        const mobileTaiwanChevron = document.getElementById('mobile-taiwan-chevron');
+
+        if (mobileTaiwanToggle) {
+            mobileTaiwanToggle.addEventListener('click', () => {
+                const isHidden = mobileTaiwanMenu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    // Opening the menu
+                    mobileTaiwanMenu.classList.remove('hidden');
+                    mobileTaiwanChevron.classList.add('rotate-180');
+                    
+                    // Set max-height to content height after a brief delay to allow transition
+                    setTimeout(() => {
+                        mobileTaiwanMenu.style.maxHeight = mobileTaiwanMenu.scrollHeight + 'px';
+                    }, 10);
+                } else {
+                    // Closing the menu
+                    mobileTaiwanChevron.classList.remove('rotate-180');
+                    mobileTaiwanMenu.style.maxHeight = '0px';
+                    
+                    // Hide after transition completes
+                    setTimeout(() => {
+                        mobileTaiwanMenu.classList.add('hidden');
+                    }, 300);
+                }
+            });
+        }
+
+        // Mobile GDA School Menu Toggle
+        const mobileGdaSchoolToggle = document.getElementById('mobile-gda-school-toggle');
+        const mobileGdaSchoolMenu = document.getElementById('mobile-gda-school-menu');
+        const mobileGdaSchoolChevron = document.getElementById('mobile-gda-school-chevron');
+
+        if (mobileGdaSchoolToggle) {
+            mobileGdaSchoolToggle.addEventListener('click', () => {
+                const isHidden = mobileGdaSchoolMenu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    // Opening the menu
+                    mobileGdaSchoolMenu.classList.remove('hidden');
+                    mobileGdaSchoolChevron.classList.add('rotate-180');
+                    
+                    // Set max-height to content height after a brief delay to allow transition
+                    setTimeout(() => {
+                        mobileGdaSchoolMenu.style.maxHeight = mobileGdaSchoolMenu.scrollHeight + 'px';
+                    }, 10);
+                } else {
+                    // Closing the menu
+                    mobileGdaSchoolChevron.classList.remove('rotate-180');
+                    mobileGdaSchoolMenu.style.maxHeight = '0px';
+                    
+                    // Hide after transition completes
+                    setTimeout(() => {
+                        mobileGdaSchoolMenu.classList.add('hidden');
+                    }, 300);
+                }
+            });
+        }
+
         // Ensure theme toggle icons are synced on load
         document.addEventListener('DOMContentLoaded', () => {
             if (document.documentElement.classList.contains('dark')) {
@@ -386,21 +816,116 @@
                 // Special handling for the root '/content' to match exactly
                 if (link.getAttribute('href') === currentPath ||
                     (link.getAttribute('href') === '/content' && currentPath === '/content/')) {
-                    link.classList.add('bg-primary-blue', 'text-white');
-                    // Remove hover states so the active link remains styled
-                    link.classList.remove('hover:text-accent-blue', 'dark:hover:text-blue-400', 'hover:bg-primary-blue', 'hover:text-white', 'dark:hover:text-white');
+                    // Use theme color for active state
+                    link.style.color = '#2563eb'; // accent-blue
+                    link.classList.add('font-bold');
+                    link.removeAttribute('onmouseover');
+                    link.removeAttribute('onmouseout');
                 }
             });
 
             // Hide loading overlay with animation
-            const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) {
+            // const loadingOverlay = document.getElementById('loading-overlay');
+            // if (loadingOverlay) {
+            //     setTimeout(() => {
+            //         loadingOverlay.style.opacity = '0';
+            //         setTimeout(() => {
+            //             loadingOverlay.style.display = 'none';
+            //         }, 500);
+            //     }, 800);
+            // }
+
+            // Back to Top Button Logic
+            const backToTopButton = document.getElementById('back-to-top');
+            if (backToTopButton) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTopButton.classList.remove('opacity-0', 'invisible');
+                        backToTopButton.classList.add('opacity-100', 'visible');
+                    } else {
+                        backToTopButton.classList.remove('opacity-100', 'visible');
+                        backToTopButton.classList.add('opacity-0', 'invisible');
+                    }
+                });
+
+                backToTopButton.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // Cookie Consent Logic
+            const cookieConsent = document.getElementById('cookie-consent');
+            const cookieDetails = document.getElementById('cookie-details');
+            const cookieInitialButtons = document.getElementById('cookie-initial-buttons');
+            
+            const cookieAcceptAllBtn = document.getElementById('cookie-accept-all');
+            const cookieNecessaryBtn = document.getElementById('cookie-necessary');
+            const cookieCustomizeBtn = document.getElementById('cookie-customize');
+            
+            const cookieHideDetailsBtn = document.getElementById('cookie-hide-details');
+            const cookieNecessaryExpandedBtn = document.getElementById('cookie-necessary-expanded');
+            const cookieSavePrefsBtn = document.getElementById('cookie-save-prefs');
+            const cookieAcceptAllExpandedBtn = document.getElementById('cookie-accept-all-expanded');
+
+            // Check if user has already made a choice
+            if (!localStorage.getItem('cookieConsent')) {
+                // Show the banner after a small delay
                 setTimeout(() => {
-                    loadingOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingOverlay.style.display = 'none';
-                    }, 500);
-                }, 800);
+                    if (cookieConsent) {
+                        cookieConsent.classList.remove('translate-y-full');
+                    }
+                }, 1500);
+            }
+
+            function closeBanner(type) {
+                localStorage.setItem('cookieConsent', type);
+                if (cookieConsent) {
+                    cookieConsent.classList.add('translate-y-full');
+                }
+            }
+
+            if (cookieConsent) {
+                // Initial Buttons
+                if (cookieAcceptAllBtn) cookieAcceptAllBtn.addEventListener('click', () => closeBanner('all'));
+                if (cookieNecessaryBtn) cookieNecessaryBtn.addEventListener('click', () => closeBanner('necessary'));
+                
+                if (cookieCustomizeBtn) {
+                    cookieCustomizeBtn.addEventListener('click', () => {
+                        if (cookieDetails) {
+                            cookieDetails.classList.remove('hidden');
+                            if (cookieInitialButtons) cookieInitialButtons.classList.add('hidden');
+                        }
+                    });
+                }
+
+                // Expanded Buttons
+                if (cookieHideDetailsBtn) {
+                    cookieHideDetailsBtn.addEventListener('click', () => {
+                        if (cookieDetails) {
+                            cookieDetails.classList.add('hidden');
+                            if (cookieInitialButtons) cookieInitialButtons.classList.remove('hidden');
+                        }
+                    });
+                }
+
+                if (cookieNecessaryExpandedBtn) cookieNecessaryExpandedBtn.addEventListener('click', () => closeBanner('necessary'));
+                if (cookieAcceptAllExpandedBtn) cookieAcceptAllExpandedBtn.addEventListener('click', () => closeBanner('all'));
+
+                if (cookieSavePrefsBtn) {
+                    cookieSavePrefsBtn.addEventListener('click', () => {
+                        const prefs = {
+                            functional: document.getElementById('cookie-cat-functional')?.checked || false,
+                            analytics: document.getElementById('cookie-cat-analytics')?.checked || false,
+                            marketing: document.getElementById('cookie-cat-marketing')?.checked || false,
+                            social: document.getElementById('cookie-cat-social')?.checked || false
+                        };
+                        localStorage.setItem('cookiePreferences', JSON.stringify(prefs));
+                        closeBanner('custom');
+                    });
+                }
             }
         });
     </script>

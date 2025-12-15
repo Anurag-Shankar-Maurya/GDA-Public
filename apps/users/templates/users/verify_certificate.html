@@ -1,0 +1,108 @@
+{% extends 'users_base.html' %}
+{% load i18n %}
+{% block content %}
+<div class="flex flex-col items-center">
+    <div class="w-full max-w-md">
+        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-lg shadow-md overflow-hidden border border-border-light dark:border-border-dark">
+            <div class="px-6 py-8">
+                <h2 class="text-2xl font-bold text-center text-text-light dark:text-text-dark mb-8">{% trans "Verify Certificate" %}</h2>
+
+                {% if error_message %}
+                    <div class="mb-4 rounded-md bg-error-bg border border-error p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-error">{{ error_message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if certificate %}
+                    <div class="mb-6 rounded-md bg-success-bg border border-success p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-success" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-success">Certificate Verified</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-light-bg dark:bg-dark-bg rounded-lg p-6 border border-border-light dark:border-border-dark">
+                        <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4">Certificate Details</h3>
+
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">Certificate ID</label>
+                                <p class="text-sm text-text-light dark:text-text-dark font-mono">{{ certificate.certificate_id }}</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">Recipient</label>
+                                <p class="text-sm text-text-light dark:text-text-dark">{{ certificate.user.get_full_name }}</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">Project</label>
+                                <p class="text-sm text-text-light dark:text-text-dark">{{ certificate.project.title }}</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">Project Duration</label>
+                                <p class="text-sm text-text-light dark:text-text-dark">
+                                    {% if certificate.project.start_date and certificate.project.end_date %}
+                                        {{ certificate.project.start_date|date:"M d, Y" }} - {{ certificate.project.end_date|date:"M d, Y" }}
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">Issued Date</label>
+                                <p class="text-sm text-text-light dark:text-text-dark">{{ certificate.issued_at|date:"M d, Y" }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">
+                            This certificate is valid and issued by Global Devotion Association.
+                        </p>
+                    </div>
+                {% endif %}
+
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+
+                    <div>
+                        <label for="certificate_id" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">
+                            Certificate ID
+                        </label>
+                        <input type="text"
+                               name="certificate_id"
+                               id="certificate_id"
+                               class="w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-text-light-secondary dark:placeholder-text-dark-secondary focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-light-bg dark:bg-dark-bg text-text-light dark:text-text-dark"
+                               placeholder="Enter certificate ID (e.g., GDA2024-ABC123)"
+                               required>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+                            Verify Certificate
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

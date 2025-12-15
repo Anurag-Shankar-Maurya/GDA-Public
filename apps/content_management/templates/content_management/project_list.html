@@ -1,640 +1,381 @@
 {% extends "content_management_base.html" %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Managed Projects{% endblock %}
+{% block title %}{% trans "Managed Projects" %}{% endblock %}
 
 {% block breadcrumb %}
 <li class="flex items-center">
-    <a href="{% url 'project_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">Projects</a>
+    <a href="{% url 'project_list' %}" class="text-primary-blue hover:text-accent-blue transition-colors">{% trans "Projects" %}</a>
 </li>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Projects Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg overflow-hidden mb-8">
-        <div class="px-6 py-8 text-white">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 mr-4">
-                        <i class="fas fa-project-diagram text-4xl text-blue-200 content-center"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-bold mb-2">Project Management</h1>
-                        <p class="text-blue-100">Manage and oversee volunteer projects across different countries and themes</p>
-                    </div>
-                </div>
-                <a href="{% url 'project_create' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300">
-                    <i class="fas fa-plus h-5 w-5 mr-2 content-center"></i>
-                    Add New Project
-                </a>
-            </div>
+<div class="max-w-7xl mx-auto">
+    
+    <!-- Sticky Header -->
+    <div class="sticky top-0 z-30 bg-gray-100 dark:bg-gray-900 -mx-6 px-6 py-4 mb-6 border-b border-gray-200 dark:border-gray-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-200">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                <i class="fas fa-project-diagram text-primary-blue mr-3"></i>
+                {% trans "Project Management" %}
+            </h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {% trans "Manage and oversee volunteer projects across different countries and themes" %}
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline-block" id="last-updated">
+                {% trans "Updated:" %} <span id="update-time">{% trans "Just now" %}</span>
+            </span>
+            <a href="{% url 'project_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all">
+                <i class="fas fa-plus mr-2"></i>
+                {% trans "Add New" %}
+            </a>
         </div>
     </div>
 
-    <!-- Search and Filters Section -->
-    <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6 mb-6">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 mb-6">
-            <div class="flex items-center space-x-4">
-                <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-filter text-blue-600 mr-2 content-center"></i>
-                    Filters & Search
-                </h2>
-                <div class="flex items-center space-x-2">
-                    <button id="auto-refresh-toggle" class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-xs font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
-                        <i class="fas fa-sync-alt mr-1.5 content-center" id="refresh-icon"></i>
-                        <span id="refresh-status">Auto Refresh: ON</span>
-                    </button>
-                    <button id="manual-refresh" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                        <i class="fas fa-redo mr-1.5 content-center"></i>
-                        Refresh Now
-                    </button>
+    <!-- Filters & Search -->
+    <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+        <form method="GET" id="filter-form" class="flex flex-col lg:flex-row gap-4">
+            <!-- Search -->
+            <div class="flex-1 relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
                 </div>
-            </div>
-            <div class="text-sm text-gray-600 dark:text-gray-400" id="last-updated">
-                <i class="fas fa-clock mr-1 content-center"></i>
-                Last updated: <span id="update-time">Just now</span>
-            </div>
-        </div>
-
-        <form method="GET" class="space-y-4" id="filter-form">
-            <div class="flex flex-col sm:flex-row gap-4">
-                <!-- Search Input -->
-                <div class="flex-1">
-                    <label for="search" class="block text-sm font-semibold text-text-light dark:text-text-dark mb-2 flex items-center">
-                        <i class="fas fa-search text-green-600 mr-2 content-center"></i>
-                        Search Projects
-                    </label>
-                    <div class="relative">
-                        <input type="text" name="search" id="search" value="{{ search_query }}"
-                               class="block w-full px-4 py-3 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                                      focus:border-green-500 focus:ring-green-500 focus:bg-green-50 dark:focus:bg-green-900/20
-                                      dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
-                               placeholder="Search by title, country, theme, or content...">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-search text-gray-400 content-center"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sort Dropdown -->
-                <div class="sm:w-64">
-                    <label for="sort" class="block text-sm font-semibold text-text-light dark:text-text-dark mb-2 flex items-center">
-                        <i class="fas fa-sort text-indigo-600 mr-2 content-center"></i>
-                        Sort By
-                    </label>
-                    <select name="sort" id="sort"
-                            class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                                   focus:ring-blue-500 focus:border-blue-500
-                                   dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg">
-                        <option value="-created_at" {% if current_sort == '-created_at' %}selected{% endif %}>Newest First</option>
-                        <option value="created_at" {% if current_sort == 'created_at' %}selected{% endif %}>Oldest First</option>
-                        <option value="title" {% if current_sort == 'title' %}selected{% endif %}>Title (A-Z)</option>
-                        <option value="-title" {% if current_sort == '-title' %}selected{% endif %}>Title (Z-A)</option>
-                        <option value="country" {% if current_sort == 'country' %}selected{% endif %}>Country (A-Z)</option>
-                        <option value="-country" {% if current_sort == '-country' %}selected{% endif %}>Country (Z-A)</option>
-                        <option value="theme" {% if current_sort == 'theme' %}selected{% endif %}>Theme (A-Z)</option>
-                        <option value="-theme" {% if current_sort == '-theme' %}selected{% endif %}>Theme (Z-A)</option>
-                        <option value="-headcount" {% if current_sort == '-headcount' %}selected{% endif %}>Most Enrolled</option>
-                        <option value="headcount" {% if current_sort == 'headcount' %}selected{% endif %}>Least Enrolled</option>
-                        <option value="-is_active" {% if current_sort == '-is_active' %}selected{% endif %}>Active First</option>
-                        <option value="is_active" {% if current_sort == 'is_active' %}selected{% endif %}>Inactive First</option>
-                    </select>
-                </div>
+                <input type="text" name="search" id="search" value="{{ search_query }}"
+                       class="block w-full pl-10 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm py-2"
+                       placeholder="{% trans 'Search title, country, theme...' %}">
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-3">
-                <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300">
-                    <i class="fas fa-search h-5 w-5 mr-2 content-center"></i>
-                    Search & Filter
+            <!-- Sort -->
+            <div class="w-full lg:w-48">
+                <select name="sort" id="sort"
+                        class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm py-2">
+                    <option value="-created_at" {% if current_sort == '-created_at' %}selected{% endif %}>{% trans "Newest First" %}</option>
+                    <option value="created_at" {% if current_sort == 'created_at' %}selected{% endif %}>{% trans "Oldest First" %}</option>
+                    <option value="title" {% if current_sort == 'title' %}selected{% endif %}>{% trans "Title (A-Z)" %}</option>
+                    <option value="-title" {% if current_sort == '-title' %}selected{% endif %}>{% trans "Title (Z-A)" %}</option>
+                    <option value="country" {% if current_sort == 'country' %}selected{% endif %}>{% trans "Country (A-Z)" %}</option>
+                    <option value="-country" {% if current_sort == '-country' %}selected{% endif %}>{% trans "Country (Z-A)" %}</option>
+                    <option value="-headcount" {% if current_sort == '-headcount' %}selected{% endif %}>{% trans "Most Enrolled" %}</option>
+                    <option value="headcount" {% if current_sort == 'headcount' %}selected{% endif %}>{% trans "Least Enrolled" %}</option>
+                    <option value="-is_active" {% if current_sort == '-is_active' %}selected{% endif %}>{% trans "Active First" %}</option>
+                    <option value="is_active" {% if current_sort == 'is_active' %}selected{% endif %}>{% trans "Inactive First" %}</option>
+                </select>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex gap-2">
+                <button type="submit" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
+                    {% trans "Filter" %}
+                </button>
+                <button type="button" id="auto-refresh-toggle" class="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm" title="{% trans "Toggle Auto-Refresh" %}">
+                    <i class="fas fa-sync-alt" id="refresh-icon"></i>
                 </button>
                 {% if search_query or current_sort != '-created_at' %}
-                    <a href="{% url 'project_list' %}" class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-300">
-                        <i class="fas fa-times h-5 w-5 mr-2 content-center"></i>
-                        Clear Filters
+                    <a href="{% url 'project_list' %}" class="px-3 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors text-sm" title="{% trans "Clear Filters" %}">
+                        <i class="fas fa-times"></i>
                     </a>
                 {% endif %}
             </div>
         </form>
     </div>
 
-    <!-- Results Summary -->
-    {% if search_query %}
-        <div class="mb-6">
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-                <i class="fas fa-info-circle mr-1 content-center"></i>
-                Showing results for "<strong>{{ search_query }}</strong>"
-                {% if projects|length == 0 %}
-                    - No projects found
-                {% else %}
-                    - Found {{ paginator.count }} project{{ paginator.count|pluralize }}
-                {% endif %}
-            </p>
-        </div>
-    {% endif %}
-
+    <!-- Results Table -->
     {% if projects %}
-        <!-- Projects Table -->
-        <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark overflow-hidden">
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-border-light dark:divide-border-dark">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-800">
                         <tr>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                <div class="flex items-center">
-                                    <i class="fas fa-image text-blue-600 mr-2 content-center"></i>
-                                    Cover
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-20">{% trans "Cover" %}</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 group transition-colors" onclick="toggleSort('title')">
+                                <div class="flex items-center gap-2">
+                                    {% trans "Title & Details" %}
+                                    <span class="text-gray-400">
+                                        {% if current_sort == 'title' %}<i class="fas fa-sort-alpha-down text-primary-blue"></i>{% elif current_sort == '-title' %}<i class="fas fa-sort-alpha-up text-primary-blue"></i>{% else %}<i class="fas fa-sort opacity-0 group-hover:opacity-100 transition-opacity"></i>{% endif %}
+                                    </span>
                                 </div>
                             </th>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == 'title' %}-title{% else %}title{% endif %}{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'search' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                                   class="flex items-center hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 group">
-                                    <i class="fas fa-heading text-blue-600 mr-2 content-center"></i>
-                                    Title & Details
-                                    {% if current_sort == 'title' %}
-                                        <i class="fas fa-sort-up ml-1 text-blue-600 content-center"></i>
-                                    {% elif current_sort == '-title' %}
-                                        <i class="fas fa-sort-down ml-1 text-blue-600 content-center"></i>
-                                    {% else %}
-                                        <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-blue-600 content-center"></i>
-                                    {% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == 'country' %}-country{% else %}country{% endif %}{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'search' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                                   class="flex items-center hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 group">
-                                    <i class="fas fa-globe text-indigo-600 mr-2 content-center"></i>
-                                    Country
-                                    {% if current_sort == 'country' %}
-                                        <i class="fas fa-sort-up ml-1 text-indigo-600 content-center"></i>
-                                    {% elif current_sort == '-country' %}
-                                        <i class="fas fa-sort-down ml-1 text-indigo-600 content-center"></i>
-                                    {% else %}
-                                        <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-indigo-600 content-center"></i>
-                                    {% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == 'theme' %}-theme{% else %}theme{% endif %}{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'search' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                                   class="flex items-center hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-200 group">
-                                    <i class="fas fa-tags text-purple-600 mr-2 content-center"></i>
-                                    Theme
-                                    {% if current_sort == 'theme' %}
-                                        <i class="fas fa-sort-up ml-1 text-purple-600 content-center"></i>
-                                    {% elif current_sort == '-theme' %}
-                                        <i class="fas fa-sort-down ml-1 text-purple-600 content-center"></i>
-                                    {% else %}
-                                        <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-purple-600 content-center"></i>
-                                    {% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == '-headcount' %}headcount{% else %}-headcount{% endif %}{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'search' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                                   class="flex items-center hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200 group">
-                                    <i class="fas fa-users text-emerald-600 mr-2 content-center"></i>
-                                    Enrollment
-                                    {% if current_sort == '-headcount' %}
-                                        <i class="fas fa-sort-up ml-1 text-emerald-600 content-center"></i>
-                                    {% elif current_sort == 'headcount' %}
-                                        <i class="fas fa-sort-down ml-1 text-emerald-600 content-center"></i>
-                                    {% else %}
-                                        <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-emerald-600 content-center"></i>
-                                    {% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort={% if current_sort == '-is_active' %}is_active{% else %}-is_active{% endif %}{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'search' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                                   class="flex items-center hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200 group">
-                                    <i class="fas fa-toggle-on text-green-600 mr-2 content-center"></i>
-                                    Status
-                                    {% if current_sort == '-is_active' %}
-                                        <i class="fas fa-sort-up ml-1 text-green-600 content-center"></i>
-                                    {% elif current_sort == 'is_active' %}
-                                        <i class="fas fa-sort-down ml-1 text-green-600 content-center"></i>
-                                    {% else %}
-                                        <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-green-600 content-center"></i>
-                                    {% endif %}
-                                </a>
-                            </th>
-                            <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                                <div class="flex items-center">
-                                    <i class="fas fa-cogs text-gray-600 mr-2 content-center"></i>
-                                    Actions
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 group transition-colors" onclick="toggleSort('country')">
+                                <div class="flex items-center gap-2">
+                                    {% trans "Country" %}
+                                    <span class="text-gray-400">
+                                        {% if current_sort == 'country' %}<i class="fas fa-sort-alpha-down text-primary-blue"></i>{% elif current_sort == '-country' %}<i class="fas fa-sort-alpha-up text-primary-blue"></i>{% else %}<i class="fas fa-sort opacity-0 group-hover:opacity-100 transition-opacity"></i>{% endif %}
+                                    </span>
                                 </div>
                             </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">{% trans "Theme" %}</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 group transition-colors" onclick="toggleSort('-headcount')">
+                                <div class="flex items-center gap-2">
+                                    {% trans "Enrollment" %}
+                                    <span class="text-gray-400">
+                                        {% if current_sort == '-headcount' %}<i class="fas fa-sort-numeric-down text-primary-blue"></i>{% elif current_sort == 'headcount' %}<i class="fas fa-sort-numeric-up text-primary-blue"></i>{% else %}<i class="fas fa-sort opacity-0 group-hover:opacity-100 transition-opacity"></i>{% endif %}
+                                    </span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 group transition-colors" onclick="toggleSort('-is_active')">
+                                <div class="flex items-center gap-2">
+                                    {% trans "Status" %}
+                                    <span class="text-gray-400">
+                                        {% if current_sort == '-is_active' %}<i class="fas fa-check-circle text-primary-blue"></i>{% elif current_sort == 'is_active' %}<i class="fas fa-times-circle text-primary-blue"></i>{% else %}<i class="fas fa-sort opacity-0 group-hover:opacity-100 transition-opacity"></i>{% endif %}
+                                    </span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 group transition-colors" onclick="toggleSort('-created_at')">
+                                <div class="flex items-center gap-2">
+                                    {% trans "Published" %}
+                                    <span class="text-gray-400">
+                                        {% if current_sort == '-created_at' %}<i class="fas fa-sort-numeric-down text-primary-blue"></i>{% elif current_sort == 'created_at' %}<i class="fas fa-sort-numeric-up text-primary-blue"></i>{% else %}<i class="fas fa-sort opacity-0 group-hover:opacity-100 transition-opacity"></i>{% endif %}
+                                    </span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">{% trans "Actions" %}</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-border-light dark:divide-border-dark">
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         {% for project in projects %}
-                        <tr class="{% cycle 'bg-card-bg-light dark:bg-card-bg-dark' 'bg-gray-50 dark:bg-gray-800' %} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer" onclick="window.location.href='{% url 'project_detail' project.pk %}'">
                             <!-- Cover Image -->
                             <td class="px-6 py-4 whitespace-nowrap">
-                                {% if project.cover_image_blob %}
-                                    <img src="{% url 'content_serve_blob' 'project' project.pk 'cover_image_blob' %}" alt="{{ project.title }} cover" class="w-16 h-16 object-cover rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                                {% elif project.cover_image %}
-                                    <img src="{{ project.cover_image.url }}" alt="{{ project.title }} cover" class="w-16 h-16 object-cover rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                                {% elif project.cover_image_url %}
-                                    <img src="{{ project.cover_image_url }}" alt="{{ project.title }} cover" class="w-16 h-16 object-cover rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                                {% else %}
-                                    <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-image text-gray-400 text-xl content-center"></i>
-                                    </div>
-                                {% endif %}
+                                <div class="h-12 w-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden border border-gray-200 dark:border-gray-600">
+                                    {% if project.cover_image_blob %}
+                                        <img src="{% url 'content_serve_blob' 'project' project.pk 'cover_image_blob' %}" alt="" class="h-full w-full object-cover" loading="lazy">
+                                    {% elif project.cover_image %}
+                                        <img src="{{ project.cover_image.url }}" alt="" class="h-full w-full object-cover" loading="lazy">
+                                    {% elif project.cover_image_url %}
+                                        <img src="{{ project.cover_image_url }}" alt="" class="h-full w-full object-cover" loading="lazy">
+                                    {% else %}
+                                        <i class="fas fa-image text-gray-400 text-lg"></i>
+                                    {% endif %}
+                                </div>
                             </td>
 
                             <!-- Title & Details -->
                             <td class="px-6 py-4">
-                                <div class="space-y-1">
-                                    <div class="text-sm font-semibold text-text-light dark:text-text-dark line-clamp-2">{{ project.title }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{{ project.description|truncatechars:100 }}</div>
-                                    {% if project.start_date %}
-                                        <div class="flex items-center text-xs text-blue-600 dark:text-blue-400 mt-1">
-                                            <i class="fas fa-calendar mr-1 content-center"></i>
-                                            Started {{ project.start_date|date:"M j, Y" }}
-                                        </div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white line-clamp-1" title="{{ project.title }}">{{ project.title }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{{ project.teaser|striptags }}</div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    {% if project.is_featured %}
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">Featured</span>
                                     {% endif %}
-                                    {% if project.end_date %}
-                                        <div class="flex items-center text-xs text-red-600 dark:text-red-400 mt-1">
-                                            <i class="fas fa-calendar-check mr-1 content-center"></i>
-                                            Ends {{ project.end_date|date:"M j, Y" }}
-                                        </div>
+                                    {% if project.is_hero_highlight %}
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">Hero</span>
                                     {% endif %}
                                 </div>
                             </td>
 
                             <!-- Country -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <i class="fas fa-globe text-gray-400 mr-2 content-center"></i>
-                                    <span class="text-sm font-medium text-text-light dark:text-text-dark">{{ project.country }}</span>
-                                </div>
+                            <td class="px-6 py-4">
+                                <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
+                                    <i class="fas fa-globe text-gray-400 mr-2 text-xs"></i> {{ project.country }}
+                                </span>
                             </td>
 
                             <!-- Theme -->
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-text-light dark:text-text-dark">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300">
                                     {{ project.theme }}
                                 </span>
                             </td>
 
                             <!-- Enrollment -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="space-y-1">
-                                    <div class="flex items-center text-xs text-emerald-600 dark:text-emerald-400">
-                                        <i class="fas fa-users mr-1 content-center"></i>
-                                        {{ project.headcount }} enrolled
-                                    </div>
-                                    <div class="flex items-center text-xs text-blue-600 dark:text-blue-400">
-                                        <i class="fas fa-user-plus mr-1 content-center"></i>
-                                        {{ project.total_headcount }} capacity
-                                    </div>
+                            <td class="px-6 py-4">
+                                <div class="text-xs text-gray-600 dark:text-gray-300">
+                                    <span class="font-medium text-emerald-600 dark:text-emerald-400">{{ project.headcount }}</span> / {{ project.total_headcount }}
+                                </div>
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-1">
+                                    <div class="bg-blue-600 h-1.5 rounded-full" style="width: {% widthratio project.headcount project.total_headcount 100 %}%"></div>
                                 </div>
                             </td>
 
                             <!-- Status -->
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex flex-col gap-1">
-                                    {% if project.is_active %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100">
-                                            <i class="fas fa-check-circle mr-1 content-center"></i>
-                                            Active
-                                        </span>
-                                    {% else %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100">
-                                            <i class="fas fa-pause-circle mr-1 content-center"></i>
-                                            Inactive
-                                        </span>
-                                    {% endif %}
-                                    {% if project.is_hero_highlight %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100">
-                                            <i class="fas fa-star mr-1 content-center"></i>
-                                            Hero
-                                        </span>
-                                    {% endif %}
-                                    {% if project.is_featured %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800 dark:bg-rose-700 dark:text-rose-100">
-                                            <i class="fas fa-heart mr-1 content-center"></i>
-                                            Featured
-                                        </span>
-                                    {% endif %}
-                                </div>
+                            <td class="px-6 py-4">
+                                {% if project.is_active %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                        <i class="fas fa-check-circle mr-1 text-[10px]"></i> {% trans "Active" %}
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                        <i class="fas fa-pause-circle mr-1 text-[10px]"></i> {% trans "Inactive" %}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Published Date -->
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                                {{ project.created_at|date:"M j, Y" }}
                             </td>
 
                             <!-- Actions -->
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex flex-col space-y-2">
-                                    <a href="{% url 'project_detail' project.pk %}" class="inline-flex items-center justify-center w-24 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                                        <i class="fas fa-eye h-4 w-4 mr-1 content-center"></i>
-                                        View
-                                    </a>
-                                    <a href="{% url 'project_update' project.pk %}" class="inline-flex items-center justify-center w-24 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200">
-                                        <i class="fas fa-edit h-4 w-4 mr-1 content-center"></i>
-                                        Edit
-                                    </a>
-                                    <a href="{% url 'project_delete' project.pk %}" class="inline-flex items-center justify-center w-24 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
-                                        <i class="fas fa-trash-alt h-4 w-4 mr-1 content-center"></i>
-                                        Delete
-                                    </a>
-                                </div>
+                            <td class="px-6 py-4 text-right space-x-2 whitespace-nowrap" onclick="event.stopPropagation()">
+                                <a href="{% url 'project_update' project.pk %}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300 transition-colors">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'project_delete' project.pk %}" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 transition-colors">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- Enhanced Pagination -->
-        {% if is_paginated %}
-            <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark mt-6 p-6">
-                <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                    <!-- Page Info -->
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                        <i class="fas fa-info-circle mr-1 content-center"></i>
-                        Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ paginator.count }} projects
-                    </div>
-
-                    <!-- Pagination Controls -->
-                    <div class="flex items-center space-x-1">
-                        <!-- Previous Button -->
-                        {% if page_obj.has_previous %}
-                            <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                                <i class="fas fa-angle-left content-center"></i>
-                            </a>
-                        {% else %}
-                            <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
-                                <i class="fas fa-angle-left content-center"></i>
-                            </span>
-                        {% endif %}
-
-                        <!-- First Page -->
-                        <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == 1 %}bg-blue-700 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
-                            1
-                        </a>
-
-                        <!-- Left Dots (if current page is far from first) -->
-                        {% if page_obj.number > 3 %}
-                            <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
-                        {% endif %}
-
-                        <!-- Before Previous Adjacent Page -->
-                        {% if page_obj.number > 3 %}
-                            <a href="?page={{ page_obj.number|add:'-2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
-                                {{ page_obj.number|add:'-2' }}
-                            </a>
-                        {% endif %}
-
-                        <!-- Previous Adjacent Page -->
-                        {% if page_obj.number > 2 %}
-                            <a href="?page={{ page_obj.number|add:'-1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
-                                {{ page_obj.number|add:'-1' }}
-                            </a>
-                        {% endif %}
-
-                        <!-- Current Page (only if not first or last) -->
-                        {% if page_obj.number != 1 and page_obj.number != paginator.num_pages %}
-                            <a href="?page={{ page_obj.number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-blue-700 text-white rounded-lg transition-colors duration-200">
-                                {{ page_obj.number }}
-                            </a>
-                        {% endif %}
-
-                        <!-- Next Adjacent Page -->
-                        {% if page_obj.number < paginator.num_pages|add:'-1' %}
-                            <a href="?page={{ page_obj.number|add:'1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
-                                {{ page_obj.number|add:'1' }}
-                            </a>
-                        {% endif %}
-
-                        <!-- Second Next Adjacent Page -->
-                        {% if page_obj.number < paginator.num_pages|add:'-2' %}
-                            <a href="?page={{ page_obj.number|add:'2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
-                                {{ page_obj.number|add:'2' }}
-                            </a>
-                        {% endif %}
-
-                        <!-- Right Dots (if current page is far from last) -->
-                        {% if page_obj.number < paginator.num_pages|add:'-2' %}
-                            <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
-                        {% endif %}
-
-                        <!-- Last Page (only if more than 1 page) -->
-                        {% if paginator.num_pages > 1 %}
-                            <a href="?page={{ paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == paginator.num_pages %}bg-blue-700 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
-                                {{ paginator.num_pages }}
-                            </a>
-                        {% endif %}
-
-                        <!-- Next Button -->
-                        {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-                            class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                                <i class="fas fa-angle-right content-center"></i>
-                            </a>
-                        {% else %}
-                            <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
-                                <i class="fas fa-angle-right content-center"></i>
-                            </span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% else %}
-        <!-- Empty State -->
-        <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-12 text-center">
-            <div class="max-w-md mx-auto">
-                <div class="mx-auto h-24 w-24 text-gray-400 mb-6">
-                    <i class="fas fa-project-diagram text-6xl content-center"></i>
-                </div>
-                <h3 class="text-lg font-medium text-text-light dark:text-text-dark mb-2">No Projects Found</h3>
-                <p class="text-gray-500 dark:text-gray-400 mb-6">
-                    {% if search_query %}
-                        No projects match your search criteria. Try adjusting your search terms or filters.
+            
+            <!-- Pagination -->
+            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
+                <div class="text-sm text-gray-700 dark:text-gray-300">
+                    {% if is_paginated %}
+                        {% trans "Showing" %} <span class="font-semibold text-gray-900 dark:text-white">{{ page_obj.start_index }}</span> {% trans "to" %} <span class="font-semibold text-gray-900 dark:text-white">{{ page_obj.end_index }}</span> {% trans "of" %} <span class="font-semibold text-gray-900 dark:text-white">{{ paginator.count }}</span> {% trans "results" %}
                     {% else %}
-                        Get started by creating your first project to showcase volunteer opportunities.
+                        {% trans "Total" %} <span class="font-semibold text-gray-900 dark:text-white">{{ projects|length }}</span> {% trans "results" %}
                     {% endif %}
-                </p>
-                <div class="space-y-3">
-                    {% if search_query %}
-                        <a href="{% url 'project_list' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-300">
-                            <i class="fas fa-times mr-2 content-center"></i>
-                            Clear Search
-                        </a>
-                    {% endif %}
-                    <a href="{% url 'project_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300">
-                        <i class="fas fa-plus mr-2 content-center"></i>
-                        Add New Project
-                    </a>
                 </div>
+                
+                {% if is_paginated %}
+                <div class="flex items-center space-x-2">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-chevron-left mr-1"></i> {% trans "Previous" %}
+                        </a>
+                    {% else %}
+                        <span class="inline-flex items-center px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-md text-sm font-medium text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800/50 cursor-not-allowed">
+                            <i class="fas fa-chevron-left mr-1"></i> {% trans "Previous" %}
+                        </span>
+                    {% endif %}
+
+                    <span class="text-sm text-gray-600 dark:text-gray-400 hidden sm:inline-block">
+                        {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            {% trans "Next" %} <i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                    {% else %}
+                        <span class="inline-flex items-center px-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-md text-sm font-medium text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-800/50 cursor-not-allowed">
+                            {% trans "Next" %} <i class="fas fa-chevron-right ml-1"></i>
+                        </span>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
+        </div>
+    {% else %}
+        <div class="text-center py-12 bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+                <i class="fas fa-project-diagram text-gray-400 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{% trans "No Projects found" %}</h3>
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{% trans "Try adjusting your search or add a new project." %}</p>
         </div>
     {% endif %}
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-refresh functionality
     let autoRefreshEnabled = localStorage.getItem('projects_auto_refresh') !== 'false';
     let refreshInterval;
-    const REFRESH_INTERVAL = 30000; // 30 seconds
+    const REFRESH_INTERVAL = 30000;
 
     const refreshIcon = document.getElementById('refresh-icon');
-    const refreshStatus = document.getElementById('refresh-status');
-    const updateTimeElement = document.getElementById('update-time');
     const autoRefreshToggle = document.getElementById('auto-refresh-toggle');
-    const manualRefreshBtn = document.getElementById('manual-refresh');
+    const updateTimeElement = document.getElementById('update-time');
 
-    // Initialize auto-refresh state
     updateRefreshUI();
 
-    // Toggle auto-refresh
-    autoRefreshToggle.addEventListener('click', function() {
-        autoRefreshEnabled = !autoRefreshEnabled;
-        localStorage.setItem('projects_auto_refresh', autoRefreshEnabled);
-        updateRefreshUI();
-
-        if (autoRefreshEnabled) {
-            startAutoRefresh();
-        } else {
-            stopAutoRefresh();
-        }
-    });
-
-    // Manual refresh
-    manualRefreshBtn.addEventListener('click', function() {
-        refreshData();
-    });
-
-    // Real-time search (debounced)
-    let searchTimeout;
-    const searchInput = document.getElementById('search');
-    const sortSelect = document.getElementById('sort');
-
-    function debounceSearch() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            document.getElementById('filter-form').submit();
-        }, 500); // 500ms delay
+    if (autoRefreshToggle) {
+        autoRefreshToggle.addEventListener('click', function() {
+            autoRefreshEnabled = !autoRefreshEnabled;
+            localStorage.setItem('projects_auto_refresh', autoRefreshEnabled);
+            updateRefreshUI();
+            if (autoRefreshEnabled) startAutoRefresh();
+            else stopAutoRefresh();
+        });
     }
-
-    searchInput.addEventListener('input', debounceSearch);
-    sortSelect.addEventListener('change', function() {
-        document.getElementById('filter-form').submit();
-    });
 
     function updateRefreshUI() {
         if (autoRefreshEnabled) {
-            refreshStatus.textContent = 'Auto Refresh: ON';
-            refreshIcon.classList.add('fa-spin');
-            autoRefreshToggle.classList.remove('bg-gray-100', 'dark:bg-gray-800');
-            autoRefreshToggle.classList.add('bg-green-100', 'dark:bg-green-800', 'text-green-700', 'dark:text-green-300');
+            refreshIcon.classList.add('fa-spin', 'text-green-500');
         } else {
-            refreshStatus.textContent = 'Auto Refresh: OFF';
-            refreshIcon.classList.remove('fa-spin');
-            autoRefreshToggle.classList.remove('bg-green-100', 'dark:bg-green-800', 'text-green-700', 'dark:text-green-300');
-            autoRefreshToggle.classList.add('bg-gray-100', 'dark:bg-gray-800');
+            refreshIcon.classList.remove('fa-spin', 'text-green-500');
         }
     }
 
     function startAutoRefresh() {
         if (refreshInterval) clearInterval(refreshInterval);
-        refreshInterval = setInterval(refreshData, REFRESH_INTERVAL);
+        refreshInterval = setInterval(() => {
+            window.location.reload(); 
+        }, REFRESH_INTERVAL);
     }
 
     function stopAutoRefresh() {
-        if (refreshInterval) {
-            clearInterval(refreshInterval);
-            refreshInterval = null;
+        if (refreshInterval) clearInterval(refreshInterval);
+    }
+
+    if (autoRefreshEnabled) startAutoRefresh();
+    
+    // Search input
+    const searchInput = document.getElementById('search');
+    // Removed debounce auto-submit to allow search on Enter or button click only
+    
+    const sortSelect = document.getElementById('sort');
+    if(sortSelect) {
+        sortSelect.addEventListener('change', () => document.getElementById('filter-form').submit());
+    }
+});
+
+function toggleSort(field) {
+    const sortSelect = document.getElementById('sort');
+    if (!sortSelect) return;
+    
+    const currentSort = sortSelect.value;
+    let newSort = field;
+    
+    if (currentSort === field) {
+        newSort = '-' + field;
+    } else if (currentSort === '-' + field) {
+        newSort = field;
+    }
+    
+    let optionExists = false;
+    for (let i = 0; i < sortSelect.options.length; i++) {
+        if (sortSelect.options[i].value === newSort) {
+            optionExists = true;
+            break;
         }
     }
-
-    function refreshData() {
-        // Show loading state
-        refreshIcon.classList.add('fa-spin');
-        manualRefreshBtn.disabled = true;
-        manualRefreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1.5 content-center"></i>Refreshing...';
-
-        // Get current URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // Make AJAX request to refresh data
-        fetch(window.location.pathname + '?' + urlParams.toString(), {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value
+    
+    if (!optionExists) {
+        if (newSort.startsWith('-')) {
+             newSort = newSort.substring(1);
+        } else {
+             newSort = '-' + newSort;
+        }
+        for (let i = 0; i < sortSelect.options.length; i++) {
+            if (sortSelect.options[i].value === newSort) {
+                optionExists = true;
+                break;
             }
-        })
-        .then(response => response.text())
-        .then(html => {
-            // Parse the HTML and update the table content
-            const parser = new DOMParser();
-            const newDoc = parser.parseFromString(html, 'text/html');
-
-            // Update the table
-            const newTable = newDoc.querySelector('.bg-card-bg-light.dark\\:bg-card-bg-dark.shadow-lg.rounded-lg.border table');
-            const currentTable = document.querySelector('.bg-card-bg-light.dark\\:bg-card-bg-dark.shadow-lg.rounded-lg.border table');
-            if (newTable && currentTable) {
-                currentTable.innerHTML = newTable.innerHTML;
-            }
-
-            // Update pagination
-            const newPagination = newDoc.querySelector('.bg-card-bg-light.dark\\:bg-card-bg-dark.shadow-lg.rounded-lg.border .flex.items-center.justify-between');
-            const currentPagination = document.querySelector('.bg-card-bg-light.dark\\:bg-card-bg-dark.shadow-lg.rounded-lg.border .flex.items-center.justify-between');
-            if (newPagination && currentPagination) {
-                currentPagination.innerHTML = newPagination.innerHTML;
-            }
-
-            // Update results summary
-            const newSummary = newDoc.querySelector('.mb-6 p.text-sm');
-            const currentSummary = document.querySelector('.mb-6 p.text-sm');
-            if (newSummary && currentSummary) {
-                currentSummary.innerHTML = newSummary.innerHTML;
-            }
-
-            // Update timestamp
-            updateTimeElement.textContent = 'Just now';
-        })
-        .catch(error => {
-            console.error('Refresh failed:', error);
-            updateTimeElement.textContent = 'Refresh failed';
-        })
-        .finally(() => {
-            // Reset loading state
-            if (autoRefreshEnabled) {
-                refreshIcon.classList.add('fa-spin');
-            } else {
-                refreshIcon.classList.remove('fa-spin');
-            }
-            manualRefreshBtn.disabled = false;
-            manualRefreshBtn.innerHTML = '<i class="fas fa-redo mr-1.5 content-center"></i>Refresh Now';
-        });
+        }
     }
-
-    function updateTimestamp() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString();
-        updateTimeElement.textContent = timeString;
+    
+    if (optionExists) {
+        sortSelect.value = newSort;
+        document.getElementById('filter-form').submit();
     }
-
-    // Start auto-refresh if enabled
-    if (autoRefreshEnabled) {
-        startAutoRefresh();
-    }
-
-    // Update timestamp every minute
-    setInterval(updateTimestamp, 60000);
-
-    // Initial timestamp update
-    updateTimestamp();
-});
+}
 </script>
 {% endblock %}
+
+</final_file_content>
+
+IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
+
+
+
+New problems detected after saving the file:
+apps/content_management/templates/content_management/project_list.html
+- [css Error] Line 146: at-rule or selector expected
+- [css Error] Line 146: property value expected

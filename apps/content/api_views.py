@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Project, NewsEvent, SuccessStory
-from .serializers import ProjectSerializer, NewsEventSerializer, SuccessStorySerializer
+from .models import Project, NewsEvent, SuccessStory, FAQ
+from .serializers import ProjectSerializer, NewsEventSerializer, SuccessStorySerializer, FAQSerializer
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
@@ -20,5 +20,12 @@ class SuccessStoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint for Success Stories
     """
-    queryset = SuccessStory.objects.all().order_by('-created_at')
+    queryset = SuccessStory.objects.all().order_by('-published_at')
     serializer_class = SuccessStorySerializer
+
+class FAQViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for FAQs
+    """
+    queryset = FAQ.objects.all().order_by('order')
+    serializer_class = FAQSerializer

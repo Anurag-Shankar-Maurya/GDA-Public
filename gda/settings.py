@@ -39,11 +39,12 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Get allowed hosts from environment or use defaults
-ALLOWED_HOSTS = ['127.0.0.1','localhost','gda-oy5s.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','gda-oy5s.onrender.com', 'gda-dev.onrender.com']
 
 # CSRF trusted origins for POST requests
 CSRF_TRUSTED_ORIGINS = [
-    'https://gda-oy5s.onrender.com',
+    'https://gda-oy5s.onrender.com', # Production instance
+    'https://gda-dev.onrender.com/', # Development instance
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
@@ -51,17 +52,25 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'drf_yasg',
+    'django.contrib.sites',
     'apps.content',
     'apps.content_management',
     'apps.users',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.github',
+    'rest_framework',
+    'drf_yasg',
 ]
 
 # REST Framework settings
@@ -83,6 +92,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'apps.users.middleware.OnboardingMiddleware',
 ]
 
 ROOT_URLCONF = 'gda.urls'
@@ -113,12 +124,12 @@ if os.environ.get('USE_POSTGRES', 'False') == 'True':
     # Using PostgreSQL as the database
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', 'your-db-name'),
-            'USER': os.environ.get('DB_USER', 'your-db-user'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'your-db-password'),
-            'HOST': os.environ.get('DB_HOST', 'your-db-host'),
-            'PORT': os.environ.get('DB_PORT', '5432'), 
+            'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
+            'NAME': os.environ.get('DB_NAME', 'fallback_db_name'),
+            'USER': os.environ.get('DB_USER', 'fallback_db_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'fallback_db_password'),
+            'HOST': os.environ.get('DB_HOST', 'fallback_db_host'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
 else:
@@ -132,6 +143,76 @@ else:
 
 # Custom user model
 AUTH_USER_MODEL = 'users.CustomUser'
+
+# Django Allauth settings
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Allauth account settings
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # Allow login with either username or email
+ACCOUNT_USERNAME_REQUIRED = False # Allow users to sign up without providing a username (one will be generated)
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+ACCOUNT_RATE_LIMITS = {
+    'login_failed': '5/300s',  # 5 attempts per 5 minutes
+}
+ACCOUNT_ADAPTER = 'apps.users.adapters.CustomAccountAdapter'
+ACCOUNT_FORMS = {
+    'login': 'apps.users.forms.CustomAuthenticationForm',
+}
+
+# Login/Logout redirect URLs
+LOGIN_REDIRECT_URL = '/profile/'
+LOGOUT_REDIRECT_URL = '/login/'
+
+# Social account settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
+        }
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'name',
+            'name_format',
+            'picture',
+            'short_name'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v13.0',
+        'APP': {
+            'client_id': os.environ.get('FACEBOOK_CLIENT_ID', ''),
+            'secret': os.environ.get('FACEBOOK_CLIENT_SECRET', ''),
+        }
+    },
+    'github': {
+        'SCOPE': ['user', 'repo', 'read:org'],
+        'APP': {
+            'client_id': os.environ.get('GITHUB_CLIENT_ID', ''),
+            'secret': os.environ.get('GITHUB_CLIENT_SECRET', ''),
+        }
+    }
+}
 
 
 # Password validation
@@ -203,7 +284,12 @@ CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False') == 'True'
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', 0))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True'
 SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', 'False') == 'True'
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') if os.environ.get('SECURE_PROXY_SSL_HEADER') else None
+# If the app is deployed behind a proxy (e.g. Render, Heroku, nginx), the proxy
+# usually sets the X-Forwarded-Proto header. In production (DEBUG=False) we
+# should trust that header so Django knows requests are secure and builds
+# https:// redirect URIs. This prevents redirect_uri_mismatch errors with
+# OAuth providers when they expect https:// callbacks.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') if not DEBUG else None
 
 # Media files
 MEDIA_URL = '/media/'

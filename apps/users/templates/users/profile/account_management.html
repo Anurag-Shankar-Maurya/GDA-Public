@@ -1,0 +1,180 @@
+{% load i18n %}
+{% load socialaccount %}
+
+<div class="animate-fadeIn">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-2">{% trans "Account Management" %}</h1>
+        <p class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Manage your connected accounts and email settings" %}</p>
+    </div>
+
+    <!-- Email Account -->
+    <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 border border-border-light dark:border-border-dark mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center">
+                <div class="h-12 w-12 rounded-full bg-primary-blue bg-opacity-10 flex items-center justify-center mr-4">
+                    <i class="fas fa-envelope text-primary-blue text-xl content-center"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-text-light dark:text-text-dark">{% trans "Email Account" %}</h2>
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Your primary email address" %}</p>
+                </div>
+            </div>
+            {% if user.email_verified %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success bg-opacity-10 text-success">
+                <i class="fas fa-check-circle mr-2"></i>{% trans "Verified" %}
+            </span>
+            {% else %}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-warning bg-opacity-10 text-warning">
+                <i class="fas fa-exclamation-triangle mr-2"></i>{% trans "Unverified" %}
+            </span>
+            {% endif %}
+        </div>
+
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark">
+            <div class="flex items-center justify-between">
+                <div>
+                    {% if user.email %}
+                    <p class="font-medium text-text-light dark:text-text-dark">{{ user.email }}</p>
+                    {% else %}
+                    <p class="font-medium text-text-light-secondary dark:text-text-dark-secondary italic">{% trans "No email address linked" %}</p>
+                    {% endif %}
+                    
+                    {% if user.login_method != 'email' %}
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">
+                        {% trans "Registered via" %} {{ user.get_login_method_display }}
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="flex space-x-3">
+                    {% if user.email %}
+                        {% if not user.email_verified %}
+                        <a href="{% url 'resend_verification' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300">
+                            <i class="fas fa-envelope mr-2"></i>{% trans "Verify Email" %}
+                        </a>
+                        {% endif %}
+                        <a href="/accounts/email/" class="inline-flex items-center px-4 py-2 border border-border-light dark:border-border-dark text-sm font-medium rounded-md text-text-light dark:text-text-dark bg-light-bg dark:bg-dark-bg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300">
+                            <i class="fas fa-edit mr-2"></i>{% trans "Change Email" %}
+                        </a>
+                    {% else %}
+                        <a href="/accounts/email/" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300">
+                            <i class="fas fa-plus mr-2"></i>{% trans "Add Email" %}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connected Social Accounts -->
+    <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 border border-border-light dark:border-border-dark mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center">
+                <div class="h-12 w-12 rounded-full bg-accent-blue bg-opacity-10 flex items-center justify-center mr-4">
+                    <i class="fas fa-link text-accent-blue text-xl content-center"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-text-light dark:text-text-dark">{% trans "Connected Accounts" %}</h2>
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Social accounts linked to your profile" %}</p>
+                </div>
+            </div>
+            <div class="flex space-x-3">
+                {% if 'google' in connected_providers %}
+                    <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-400 cursor-not-allowed" disabled>
+                        <i class="fab fa-google mr-2"></i>{% trans "Connected" %}
+                    </button>
+                {% else %}
+                    <a href="{% provider_login_url 'google' process='connect' next=request.get_full_path %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300">
+                        <i class="fab fa-google mr-2"></i>{% trans "Add Google" %}
+                    </a>
+                {% endif %}
+
+                {% if 'facebook' in connected_providers %}
+                    <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-400 cursor-not-allowed" disabled>
+                        <i class="fab fa-facebook-f mr-2"></i>{% trans "Connected" %}
+                    </button>
+                {% else %}
+                    <a href="{% provider_login_url 'facebook' process='connect' next=request.get_full_path %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300">
+                        <i class="fab fa-facebook-f mr-2"></i>{% trans "Add Facebook" %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if social_accounts %}
+        <div class="space-y-4">
+            {% for account in social_accounts %}
+            <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        {% if account.provider == 'google' %}
+                        <div class="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
+                            <i class="fab fa-google text-red-600 text-lg"></i>
+                        </div>
+                        {% elif account.provider == 'facebook' %}
+                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                            <i class="fab fa-facebook-f text-blue-600 text-lg"></i>
+                        </div>
+                        {% elif account.provider == 'github' %}
+                        <div class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mr-3">
+                            <i class="fab fa-github text-gray-800 text-lg"></i>
+                        </div>
+                        {% else %}
+                        <div class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mr-3">
+                            <i class="fas fa-user-circle text-gray-600 text-lg"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <p class="font-medium text-text-light dark:text-text-dark">{{ account.get_provider_display }}</p>
+                            <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{{ account.uid }}</p>
+                        </div>
+                    </div>
+                    <form method="post" action="{% url 'socialaccount_connections' %}" class="inline-block">
+                        {% csrf_token %}
+                        <input type="hidden" name="account" value="{{ account.id }}">
+                        <button type="submit" class="inline-flex items-center px-3 py-2 border border-error text-sm font-medium rounded-md text-error bg-light-bg dark:bg-dark-bg hover:bg-error hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-error transition-all duration-300" onclick="return confirm('{% trans "Are you sure you want to disconnect this account?"|escapejs %}');">
+                            <i class="fas fa-unlink mr-2"></i>{% trans "Disconnect" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-8">
+            <i class="fas fa-link text-text-light-secondary dark:text-text-dark-secondary text-4xl mb-4"></i>
+            <p class="text-text-light-secondary dark:text-text-dark-secondary mb-4">{% trans "No social accounts connected yet." %}</p>
+            <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Connect your social accounts for easier login and account recovery." %}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Account Actions -->
+    <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 border border-border-light dark:border-border-dark">
+        <div class="flex items-center mb-6">
+            <div class="h-12 w-12 rounded-full bg-error bg-opacity-10 flex items-center justify-center mr-4">
+                <i class="fas fa-exclamation-triangle text-error text-xl content-center"></i>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-text-light dark:text-text-dark">{% trans "Account Actions" %}</h2>
+                <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Manage your account settings" %}</p>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <a href="{% url 'delete_account' %}" class="block bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="h-10 w-10 rounded-full bg-error bg-opacity-10 flex items-center justify-center mr-3">
+                            <i class="fas fa-user-times text-error"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-text-light dark:text-text-dark">{% trans "Delete Account" %}</p>
+                            <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Permanently deactivate your account" %}</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-text-light-secondary dark:text-text-dark-secondary"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

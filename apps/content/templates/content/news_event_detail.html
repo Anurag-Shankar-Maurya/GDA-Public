@@ -1,19 +1,20 @@
 {% extends "content_base.html" %}
 {% load i18n %}
+{% load content_filters %}
 
-{% block title %}GDA News: {{ news_event.title }}{% endblock %}
+{% block title %}{% trans "GDA News" %}: {{ news_event.title }}{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">
-        <a href="{% url 'landing_page' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Home" %}</a>
-        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
     </li>
     <li class="flex items-center">
-        <a href="{% url 'content_news_event_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "News & Events" %}</a>
-        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+        <a href="{% url 'content_news_event_list' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "News & Events" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
     </li>
     <li class="flex items-center">
-        <span class="text-gray-500 dark:text-gray-400">{{ news_event.title }}</span>
+        <a href="{% url 'content_news_event_detail' news_event.pk %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{{ news_event.title }}</a>
     </li>
 {% endblock %}
 
@@ -22,11 +23,11 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Content -->
             <div class="lg:col-span-2">
-                <article class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl overflow-hidden">
+                <article class="bg-gradient-to-b from-white to-gray-50 dark:from-dark-secondary-bg dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl overflow-hidden">
                     
                     {# Back button #}
                     <div class="p-6 pb-0">
-                        <a href="{% url 'content_news_event_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-secondary-gray hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 transition-all duration-300 ease-in-out hover:shadow-lg transform hover:scale-105">
+                        <a href="{% url 'content_news_event_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-md text-white bg-primary-blue hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 transition-all duration-300 ease-in-out hover:shadow-lg transform hover:scale-105">
                             <i class="fas fa-arrow-left mr-2"></i>
                             {% trans "Back to News & Events" %}
                         </a>
@@ -89,9 +90,11 @@
                         </div>
                         {% endif %}
 
-                        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 mb-8">
+                        <div class="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 mb-8" id="content-container">
                             {{ news_event.body|linebreaks }}
                         </div>
+
+                        <button id="read-more-btn" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 hidden">{% trans "Read More" %}</button>
 
                         {% if news_event.external_link %}
                         <div class="mt-8 p-6 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
@@ -116,7 +119,7 @@
             <!-- Sidebar -->
             <div class="lg:col-span-1 space-y-6">
                 <!-- Article Info -->
-                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
+                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-dark-secondary-bg dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                         <i class="fas fa-info-circle text-blue-600 mr-2"></i>
                         {% trans "Article Info" %}
@@ -139,7 +142,7 @@
 
                 <!-- Related News & Events -->
                 {% if related_news_events %}
-                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
+                <div class="bg-gradient-to-b from-white to-gray-50 dark:from-dark-secondary-bg dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl shadow-xl p-6">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
                         <i class="fas fa-newspaper text-blue-600 mr-2"></i>
                         {% trans "Related Articles" %}
@@ -178,5 +181,784 @@
             </div>
         </div>
     </section>
+
+    <!-- Media Gallery -->
+    {% if news_event.gallery_images.all or news_event.image_urls or news_event.video_urls %}
+    <div class="mb-8">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
+            <i class="fas fa-images text-purple-600 mr-2"></i>
+            {% trans "Media Gallery" %}
+        </h3>
+        <style>
+            .gallery-container {
+                column-count: 1;
+                column-gap: 8px;
+                column-fill: balance;
+                width: 100%;
+            }
+
+            @media (min-width: 480px) {
+                .gallery-container {
+                    column-count: 2;
+                    column-gap: 8px;
+                }
+            }
+
+            @media (min-width: 960px) {
+                .gallery-container {
+                    column-count: 3;
+                    column-gap: 10px;
+                }
+            }
+
+            /* @media (min-width: 1280px) {
+                .gallery-container {
+                    column-count: 4;
+                    column-gap: 10px;
+                }
+            } */
+
+            .gallery-item {
+                break-inside: avoid;
+                position: relative;
+                overflow: hidden;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                transition: all 300ms ease-in-out;
+                cursor: pointer;
+                background: #f3f4f6;
+                margin-bottom: 8px;
+                display: block;
+                width: 100%;
+            }
+
+            .gallery-item:hover {
+                transform: scale(1.05);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+                z-index: 10;
+            }
+
+            .dark .gallery-item {
+                background: #1f2937;
+            }
+
+            .gallery-item img {
+                width: 100%;
+                height: auto;
+                display: block;
+                object-fit: cover;
+                object-position: center;
+            }
+
+            .gallery-item video,
+            .gallery-item iframe {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            .gallery-item.video-container,
+            .gallery-item.iframe-container {
+                aspect-ratio: 16 / 9;
+            }
+
+            /* YouTube Shorts aspect ratio */
+            .gallery-item.iframe-container.shorts {
+                aspect-ratio: 9 / 16;
+            }
+
+            .gallery-item.video-container video,
+            .gallery-item.iframe-container iframe {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .gallery-item-placeholder {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 150px;
+                background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            }
+
+            .dark .gallery-item-placeholder {
+                background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            }
+
+            .gallery-item-placeholder i {
+                font-size: 2rem;
+                color: #d1d5db;
+            }
+
+            .dark .gallery-item-placeholder i {
+                color: #4b5563;
+            }
+
+            /* Gallery Lightbox Styles */
+            .gallery-lightbox {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 9999;
+                justify-content: center;
+                align-items: center;
+                animation: fadeIn 300ms ease-in-out;
+            }
+
+            .gallery-lightbox.active {
+                display: flex;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .gallery-lightbox-content {
+                position: relative;
+                max-width: 95vw;
+                max-height: 95vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: slideIn 300ms ease-in-out;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: scale(0.9);
+                    opacity: 0;
+                }
+                to {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+
+            .gallery-lightbox-media {
+                max-width: 90vw;
+                max-height: 90vh;
+                object-fit: contain;
+                border-radius: 0.5rem;
+            }
+
+            .gallery-lightbox-close {
+                position: fixed;
+                top: 20px;
+                right: 30px;
+                font-size: 40px;
+                color: white;
+                cursor: pointer;
+                background: rgba(0, 0, 0, 0.5);
+                border: none;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 300ms ease-in-out;
+                z-index: 10001;
+            }
+
+            .gallery-lightbox-close:hover {
+                background: rgba(0, 0, 0, 0.8);
+                transform: scale(1.1);
+            }
+
+            .gallery-lightbox-nav {
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 30px;
+                color: white;
+                cursor: pointer;
+                background: rgba(0, 0, 0, 0.5);
+                border: none;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 300ms ease-in-out;
+                z-index: 10001;
+            }
+
+            .gallery-lightbox-nav:hover {
+                background: rgba(0, 0, 0, 0.8);
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            .gallery-lightbox-nav.prev {
+                left: 20px;
+            }
+
+            .gallery-lightbox-nav.next {
+                right: 20px;
+            }
+
+            .gallery-lightbox-nav:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .gallery-lightbox-counter {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: white;
+                background: rgba(0, 0, 0, 0.6);
+                padding: 10px 20px;
+                border-radius: 25px;
+                font-size: 14px;
+                z-index: 10001;
+            }
+
+            @media (max-width: 640px) {
+                .gallery-lightbox-nav {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 20px;
+                }
+
+                .gallery-lightbox-close {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 24px;
+                    top: 10px;
+                    right: 10px;
+                }
+
+                .gallery-lightbox-nav.prev {
+                    left: 10px;
+                }
+
+                .gallery-lightbox-nav.next {
+                    right: 10px;
+                }
+            }
+        </style>
+
+        <div class="gallery-container">
+            {% for item in gallery_items %}
+                {% if item.type == 'blob_image' %}
+                    <div class="gallery-item" data-index="{{ item.index }}" data-type="image">
+                        <img src="{% url 'content_serve_blob' 'news_event_gallery_image' item.object.pk 'image_blob' %}" 
+                                alt="{% if item.caption %}{{ item.caption }}{% else %}{% trans "News/Event - Gallery Image" %} {{ forloop.counter }}{% endif %}" 
+                                loading="lazy" 
+                                data-src="{% url 'content_serve_blob' 'news_event_gallery_image' item.object.pk 'image_blob' %}">
+                    </div>
+                {% elif item.type == 'image_url' %}
+                    <div class="gallery-item" data-index="{{ item.index }}" data-type="image">
+                        {% if 'drive.google.com' in item.url %}
+                            <img src="{{ item.url|google_drive_image_embed }}" 
+                                    alt="{% blocktrans with num=forloop.counter %}News/Event - Gallery Image {{ num }}{% endblocktrans %}" 
+                                    loading="lazy" 
+                                    data-src="{{ item.url|google_drive_image_embed }}">
+                        {% else %}
+                            <img src="{{ item.url }}" 
+                                    alt="{% blocktrans with num=forloop.counter %}News/Event - Gallery Image {{ num }}{% endblocktrans %}" 
+                                    loading="lazy" 
+                                    data-src="{{ item.url }}">
+                        {% endif %}
+                    </div>
+                {% elif item.type == 'video_url' %}
+                    {% if 'youtube.com/shorts' in item.url %}
+                        <div class="gallery-item iframe-container shorts" data-index="{{ item.index }}" data-type="video">
+                    {% else %}
+                        <div class="gallery-item video-container" data-index="{{ item.index }}" data-type="video">
+                    {% endif %}
+                        {% if 'youtube.com' in item.url or 'youtu.be' in item.url %}
+                            <iframe id="youtube-player-{{ forloop.counter }}"
+                                    src="{{ item.url|embed_youtube }}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    title="{% blocktrans with num=forloop.counter %}News/Event - YouTube Video {{ num }}{% endblocktrans %}"
+                                    loading="lazy"
+                                    data-video-url="{{ item.url|embed_youtube }}">
+                            </iframe>
+                        {% elif 'drive.google.com' in item.url %}
+                            <iframe src="{{ item.url|google_drive_video_embed }}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen
+                                    title="{% blocktrans with num=forloop.counter %}News/Event - Google Drive Video {{ num }}{% endblocktrans %}"
+                                    loading="lazy"
+                                    data-video-url="{{ item.url|google_drive_video_embed }}">
+                            </iframe>
+                        {% else %}
+                            <video controls 
+                                    preload="none"
+                                    title="{% blocktrans with num=forloop.counter %}News/Event - Video {{ num }}{% endblocktrans %}"
+                                    poster=""
+                                    data-video-url="{{ item.url }}">
+                                <source src="{{ item.url }}" type="video/mp4">
+                                {% trans "Your browser does not support the video tag." %}
+                            </video>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {# Gallery Pagination #}
+        {% if gallery_items.has_other_pages %}
+        <div class="flex justify-center mt-8 mb-8">
+            <nav class="flex items-center space-x-2" aria-label="Gallery pagination">
+                {% if gallery_items.has_previous %}
+                    <a href="?{% if request.GET.gallery_page %}gallery_page={{ gallery_items.previous_page_number }}{% else %}gallery_page=1{% endif %}"
+                       class="px-4 py-2 text-sm font-medium text-primary-blue bg-white border border-border-light rounded-lg hover:bg-primary-blue hover:text-white transition-colors duration-200">
+                        {% trans "Previous" %}
+                    </a>
+                {% endif %}
+                
+                <span class="px-4 py-2 text-sm text-text-light-secondary">
+                    {% blocktrans with current=gallery_items.number total=gallery_paginator.num_pages %}
+                        Page {{ current }} of {{ total }}
+                    {% endblocktrans %}
+                </span>
+                
+                {% if gallery_items.has_next %}
+                    <a href="?gallery_page={{ gallery_items.next_page_number }}"
+                       class="px-4 py-2 text-sm font-medium text-primary-blue bg-white border border-border-light rounded-lg hover:bg-primary-blue hover:text-white transition-colors duration-200">
+                        {% trans "Next" %}
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+
+        <!-- Gallery Lightbox Modal -->
+        <div class="gallery-lightbox" id="galleryLightbox">
+            <div class="gallery-lightbox-content">
+            <button class="gallery-lightbox-close" id="closeLightbox" aria-label="{% trans "Close gallery" %}">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <button class="gallery-lightbox-nav prev" id="prevBtn" aria-label="{% trans "Previous image" %}">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div id="lightboxMediaContainer" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                <!-- Media will be inserted here -->
+            </div>
+
+            <button class="gallery-lightbox-nav next" id="nextBtn" aria-label="{% trans "Next image" %}">
+                <i class="fas fa-chevron-right"></i>
+            </button>                                    <div class="gallery-lightbox-counter">
+                    <span id="currentIndex">1</span> / <span id="totalItems">1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        // Load YouTube iframe API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        let players = [];
+        let playerStates = {};
+
+        // YouTube API ready callback
+        function onYouTubeIframeAPIReady() {
+            // Find all YouTube iframes in gallery
+            document.querySelectorAll('.gallery-item iframe[src*="youtube.com/embed"]').forEach((iframe, index) => {
+                // Add enablejsapi parameter to iframe src if not present
+                if (!iframe.src.includes('enablejsapi')) {
+                    const separator = iframe.src.includes('?') ? '&' : '?';
+                    iframe.src = iframe.src + separator + 'enablejsapi=1';
+                }
+                
+                // Give iframe an ID if it doesn't have one
+                if (!iframe.id) {
+                    iframe.id = 'youtube-player-' + index;
+                }
+                
+                // Create player
+                const player = new YT.Player(iframe.id, {
+                    events: {
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+                
+                players.push(player);
+                playerStates[iframe.id] = player;
+            });
+        }
+
+        // Handle YouTube player state changes
+        function onPlayerStateChange(event) {
+            // YT.PlayerState.PLAYING = 1
+            if (event.data == YT.PlayerState.PLAYING) {
+                // Pause all other YouTube videos
+                players.forEach(player => {
+                    if (player !== event.target) {
+                        try {
+                            player.pauseVideo();
+                        } catch (e) {
+                            // Player might not be ready
+                        }
+                    }
+                });
+                
+                // Pause all HTML5 videos
+                document.querySelectorAll('.gallery-item video').forEach(video => {
+                    if (!video.paused) {
+                        video.pause();
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gallery Lightbox Functionality
+            const galleryLightbox = document.getElementById('galleryLightbox');
+            const lightboxMediaContainer = document.getElementById('lightboxMediaContainer');
+            const closeLightboxBtn = document.getElementById('closeLightbox');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const currentIndexSpan = document.getElementById('currentIndex');
+            const totalItemsSpan = document.getElementById('totalItems');
+            
+            let galleryItems = [];
+            let currentIndex = 0;
+            let currentlyPlayingVideo = null;
+
+            // Pause all playing videos
+            function pauseAllVideos() {
+                // Pause all YouTube videos using API
+                players.forEach(player => {
+                    try {
+                        if (player.getPlayerState && player.getPlayerState() === YT.PlayerState.PLAYING) {
+                            player.pauseVideo();
+                        }
+                    } catch (e) {
+                        // Player might not be ready
+                    }
+                });
+                
+                // Pause all HTML5 video elements in the gallery
+                document.querySelectorAll('.gallery-item video').forEach(video => {
+                    if (!video.paused) {
+                        video.pause();
+                    }
+                });
+                
+                // Pause all other iframe videos (Google Drive, etc)
+                document.querySelectorAll('.gallery-item iframe:not([src*="youtube.com/embed"])').forEach(iframe => {
+                    const iframeSrc = iframe.src;
+                    if (iframeSrc && iframeSrc.includes('drive.google.com')) {
+                        iframe.src = iframeSrc;
+                    }
+                });
+            }
+
+            // Collect all gallery items
+            function initGallery() {
+                galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+                totalItemsSpan.textContent = galleryItems.length;
+                
+                // Add click handlers to gallery items
+                galleryItems.forEach((item, index) => {
+                    item.addEventListener('click', () => {
+                        openLightbox(index);
+                    });
+                });
+                
+                // Add play event listeners to all HTML5 video elements
+                document.querySelectorAll('.gallery-item video').forEach(video => {
+                    video.addEventListener('play', () => {
+                        // Pause all YouTube videos
+                        players.forEach(player => {
+                            try {
+                                if (player.getPlayerState && player.getPlayerState() === YT.PlayerState.PLAYING) {
+                                    player.pauseVideo();
+                                }
+                            } catch (e) {
+                                // Player might not be ready
+                            }
+                        });
+                        
+                        // Pause all other HTML5 videos
+                        document.querySelectorAll('.gallery-item video').forEach(otherVideo => {
+                            if (otherVideo !== video && !otherVideo.paused) {
+                                otherVideo.pause();
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Open lightbox with specific item
+            function openLightbox(index) {
+                currentIndex = index;
+                pauseAllVideos(); // Pause all videos before opening lightbox
+                galleryLightbox.classList.add('active');
+                displayMedia(currentIndex);
+                document.body.style.overflow = 'hidden';
+                updateNavButtons();
+            }
+
+            // Close lightbox
+            function closeLightbox() {
+                pauseAllVideos(); // Pause all videos when closing lightbox
+                galleryLightbox.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                lightboxMediaContainer.innerHTML = '';
+            }
+
+            // Display media in lightbox
+            function displayMedia(index) {
+                const item = galleryItems[index];
+                currentIndexSpan.textContent = index + 1;
+                
+                lightboxMediaContainer.innerHTML = '';
+
+                const itemType = item.getAttribute('data-type');
+                
+                if (itemType === 'image') {
+                    const img = item.querySelector('img');
+                    if (img) {
+                        const fullSrc = img.getAttribute('data-src') || img.getAttribute('src');
+                        const lightboxImg = document.createElement('img');
+                        lightboxImg.src = fullSrc;
+                        lightboxImg.alt = img.alt;
+                        lightboxImg.className = 'gallery-lightbox-media';
+                        lightboxMediaContainer.appendChild(lightboxImg);
+                    }
+                } else if (itemType === 'video') {
+                    const iframe = item.querySelector('iframe');
+                    const video = item.querySelector('video');
+                    
+                    if (iframe) {
+                        const lightboxIframe = document.createElement('iframe');
+                        lightboxIframe.src = iframe.src;
+                        lightboxIframe.frameborder = '0';
+                        lightboxIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                        lightboxIframe.referrerPolicy = 'strict-origin-when-cross-origin';
+                        lightboxIframe.title = iframe.title || 'Video';
+                        lightboxIframe.allowFullscreen = true;
+                        lightboxIframe.loading = 'lazy';
+                        
+                        // Detect if it's a YouTube Shorts video
+                        const isShorts = item.classList.contains('shorts');
+                        
+                        lightboxIframe.style.maxWidth = '100%';
+                        lightboxIframe.style.maxHeight = '100%';
+                        lightboxIframe.style.width = isShorts ? '50vw' : '90vw';
+                        lightboxIframe.style.height = '90vh';
+                        lightboxIframe.style.aspectRatio = isShorts ? '9/16' : '16/9';
+                        lightboxIframe.style.objectFit = 'contain';
+                        lightboxIframe.style.borderRadius = '0.5rem';
+                        lightboxMediaContainer.appendChild(lightboxIframe);
+                    } else if (video) {
+                        const lightboxVideo = document.createElement('video');
+                        lightboxVideo.controls = true;
+                        lightboxVideo.className = 'gallery-lightbox-media';
+                        lightboxVideo.style.maxWidth = '90vw';
+                        lightboxVideo.style.maxHeight = '90vh';
+                        lightboxVideo.style.objectFit = 'contain';
+                        const source = document.createElement('source');
+                        source.src = video.querySelector('source')?.src;
+                        source.type = 'video/mp4';
+                        lightboxVideo.appendChild(source);
+                        
+                        // Add play listener to pause other videos
+                        lightboxVideo.addEventListener('play', () => {
+                            pauseAllVideos();
+                            lightboxVideo.play();
+                        });
+                        
+                        lightboxMediaContainer.appendChild(lightboxVideo);
+                    }
+                }
+            }
+
+            // Update navigation button states
+            function updateNavButtons() {
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === galleryItems.length - 1;
+            }
+
+            // Navigation functions
+            function showPrevious() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    displayMedia(currentIndex);
+                    updateNavButtons();
+                }
+            }
+
+            function showNext() {
+                if (currentIndex < galleryItems.length - 1) {
+                    currentIndex++;
+                    displayMedia(currentIndex);
+                    updateNavButtons();
+                }
+            }
+
+            // Event listeners
+            closeLightboxBtn.addEventListener('click', closeLightbox);
+            prevBtn.addEventListener('click', showPrevious);
+            nextBtn.addEventListener('click', showNext);
+
+            // Close on background click
+            galleryLightbox.addEventListener('click', (e) => {
+                if (e.target === galleryLightbox) {
+                    closeLightbox();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!galleryLightbox.classList.contains('active')) return;
+                
+                if (e.key === 'ArrowLeft') {
+                    showPrevious();
+                } else if (e.key === 'ArrowRight') {
+                    showNext();
+                } else if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            });
+
+            // Initialize Intersection Observer for lazy loading
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        
+                        // Handle images
+                        if (img.tagName === 'IMG') {
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                            }
+                            img.classList.remove('lazy');
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+
+            // Observe all lazy-loaded images
+            document.querySelectorAll('.gallery-item img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+
+            // Add keyboard navigation for gallery (optional enhancement)
+            const galleryItemsForKeyboard = document.querySelectorAll('.gallery-item');
+            galleryItemsForKeyboard.forEach((item, index) => {
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight' && index < galleryItemsForKeyboard.length - 1) {
+                        galleryItemsForKeyboard[index + 1].focus();
+                    } else if (e.key === 'ArrowLeft' && index > 0) {
+                        galleryItemsForKeyboard[index - 1].focus();
+                    }
+                });
+            });
+
+            // Initialize gallery
+            initGallery();
+
+            // Auto-scroll to gallery if gallery_page parameter is present in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('gallery_page')) {
+                // Small delay to ensure page is fully loaded
+                setTimeout(() => {
+                    const galleryContainer = document.querySelector('.gallery-container');
+                    if (galleryContainer) {
+                        galleryContainer.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }, 500);
+            }
+
+            // Add scroll-to-gallery functionality for pagination links
+            const paginationLinks = document.querySelectorAll('a[href*="gallery_page"]');
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Small delay to allow page to load before scrolling
+                    setTimeout(() => {
+                        const galleryContainer = document.querySelector('.gallery-container');
+                        if (galleryContainer) {
+                            galleryContainer.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }, 100);
+                });
+            });
+        });
+
+        // Fallback for browsers without native lazy loading support
+        if (!('loading' in HTMLImageElement.prototype)) {
+            document.addEventListener('scroll', () => {
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    if (img.offsetParent === null) return;
+                    
+                    const rect = img.getBoundingClientRect();
+                    if (rect.top < window.innerHeight + 50 && rect.bottom > -50) {
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const content = document.getElementById('content-container');
+            const btn = document.getElementById('read-more-btn');
+            
+            // Assuming line height is about 1.5em, 10 lines = 15em
+            const maxHeight = '15em';
+            
+            // Check if content exceeds max height
+            if (content.scrollHeight > parseFloat(maxHeight) * 16) { // rough conversion to px
+                content.style.maxHeight = maxHeight;
+                content.style.overflow = 'hidden';
+                btn.classList.remove('hidden');
+            }
+            
+            btn.addEventListener('click', function() {
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = '';
+                    content.style.overflow = '';
+                    btn.textContent = 'Read Less';
+                } else {
+                    content.style.maxHeight = maxHeight;
+                    content.style.overflow = 'hidden';
+                    btn.textContent = 'Read More';
+                }
+            });
+        });
+    </script>
 
 {% endblock %}

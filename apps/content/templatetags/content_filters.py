@@ -10,19 +10,44 @@ def embed_youtube(url):
         return ""
 
     # Check if already an embed URL
-    if 'youtube.com/embed/' in url:
+    if 'youtube.com/embed/' in url or 'youtube-nocookie.com/embed/' in url:
         return url
 
     # Extract video ID from various YouTube URL formats
     # Handles: https://www.youtube.com/watch?v=VIDEO_ID, https://youtu.be/VIDEO_ID, and https://www.youtube.com/shorts/VIDEO_ID
-    patterns = [
-        r"(?:youtube\.com/(?:watch\?v=|shorts/)|youtu\.be/)([a-zA-Z0-9_-]{11})",
-    ]
     
-    for pattern in patterns:
-        match = re.search(pattern, url)
+    # For youtu.be format
+    if 'youtu.be/' in url:
+        match = re.search(r'youtu\.be/([a-zA-Z0-9_-]+)', url)
         if match:
-            return f"https://www.youtube.com/embed/{match.group(1)}"
+            video_id = match.group(1).split('?')[0].split('&')[0]
+            # YouTube video IDs are always 11 characters, take only first 11
+            if len(video_id) > 11:
+                video_id = video_id[:11]
+            # Use youtube-nocookie.com for better privacy and fewer restrictions
+            return f"https://www.youtube-nocookie.com/embed/{video_id}"
+    
+    # For youtube.com/watch format
+    if 'youtube.com/watch' in url:
+        match = re.search(r'[?&]v=([a-zA-Z0-9_-]+)', url)
+        if match:
+            video_id = match.group(1).split('&')[0]
+            # YouTube video IDs are always 11 characters, take only first 11
+            if len(video_id) > 11:
+                video_id = video_id[:11]
+            # Use youtube-nocookie.com for better privacy and fewer restrictions
+            return f"https://www.youtube-nocookie.com/embed/{video_id}"
+    
+    # For youtube.com/shorts format
+    if 'youtube.com/shorts/' in url:
+        match = re.search(r'shorts/([a-zA-Z0-9_-]+)', url)
+        if match:
+            video_id = match.group(1).split('?')[0].split('&')[0]
+            # YouTube video IDs are always 11 characters, take only first 11
+            if len(video_id) > 11:
+                video_id = video_id[:11]
+            # Use youtube-nocookie.com for better privacy and fewer restrictions
+            return f"https://www.youtube-nocookie.com/embed/{video_id}"
 
     return url  # Return original URL if no match is found
 

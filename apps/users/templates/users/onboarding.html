@@ -1,0 +1,262 @@
+{% extends 'users_base.html' %}
+{% load form_filters %}
+{% load i18n %}
+
+{% block breadcrumb %}
+<li class="flex items-center">
+    <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-blue hover:text-accent-blue dark:hover:text-primary-blue">{% trans "Home" %}</a>
+    <i class="fas fa-chevron-right h-5 w-5 content-center text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
+</li>
+<li class="flex items-center">
+    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Complete Your Profile" %}</span>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-2xl">
+        {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                    <div class="rounded-md p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                {% if message.tags == 'error' %}
+                                    <svg class="h-5 w-5 text-error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                {% elif message.tags == 'success' %}
+                                    <svg class="h-5 w-5 text-success" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                {% elif message.tags == 'warning' %}
+                                    <svg class="h-5 w-5 text-warning" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.487 0L14.81 10.5c.765 1.36-.217 3-1.743 3H6.933c-1.526 0-2.508-1.64-1.743-3L8.257 3.099zM10 13a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                    </svg>
+                                {% else %}
+                                    <svg class="h-5 w-5 text-info" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                    </svg>
+                                {% endif %}
+                            </div>
+                            <div class="ml-3 flex-1 md:flex md:justify-between">
+                                <p class="text-sm {% if message.tags == 'error' %}text-error{% elif message.tags == 'success' %}text-success{% elif message.tags == 'warning' %}text-warning{% else %}text-info{% endif %}">{{ message|safe }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Welcome Header -->
+        <div class="text-center mb-8">
+            <div class="mx-auto h-24 w-24 bg-gradient-to-r from-primary-blue to-accent-blue rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-user-plus text-3xl text-white"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-2">{% trans "Welcome to GDA!" %}</h1>
+            <p class="text-lg text-text-light-secondary dark:text-text-dark-secondary">{% trans "Please complete your profile to get started" %}</p>
+        </div>
+
+        <!-- Onboarding Form -->
+        <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-xl p-8 border border-border-light dark:border-border-dark">
+            <form method="post" class="space-y-6" id="onboarding-form">
+                {% csrf_token %}
+
+                <!-- Personal Information Section -->
+                <div class="space-y-6">
+                    <div class="border-b border-border-light dark:border-border-dark pb-4">
+                        <h3 class="text-xl font-semibold text-text-light dark:text-text-dark mb-2">{% trans "Personal Information" %}</h3>
+                        <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Tell us a bit about yourself" %}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- First Name -->
+                        <div>
+                            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "First Name" %} <span class="text-error">*</span>
+                            </label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                {% for error in form.first_name.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Last Name -->
+                        <div>
+                            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Last Name" %} <span class="text-error">*</span>
+                            </label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                {% for error in form.last_name.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Date of Birth -->
+                        <div>
+                            <label for="{{ form.date_of_birth.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Date of Birth" %} <span class="text-error">*</span>
+                            </label>
+                            {{ form.date_of_birth }}
+                            {% if form.date_of_birth.errors %}
+                                {% for error in form.date_of_birth.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <label for="{{ form.gender.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Gender" %}
+                            </label>
+                            {{ form.gender }}
+                            {% if form.gender.errors %}
+                                {% for error in form.gender.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Blood Group -->
+                        <div>
+                            <label for="{{ form.blood_group.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Blood Group" %}
+                            </label>
+                            {{ form.blood_group }}
+                            {% if form.blood_group.errors %}
+                                {% for error in form.blood_group.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guardian Information Section -->
+                <div class="space-y-6">
+                    <div class="border-b border-border-light dark:border-border-dark pb-4">
+                        <h3 class="text-xl font-semibold text-text-light dark:text-text-dark mb-2">{% trans "Guardian Information" %}</h3>
+                        <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Emergency contact details" %}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Guardian Name -->
+                        <div>
+                            <label for="{{ form.guardian_name.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Guardian Name" %} <span class="text-error">*</span>
+                            </label>
+                            {{ form.guardian_name }}
+                            {% if form.guardian_name.errors %}
+                                {% for error in form.guardian_name.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Guardian Relation -->
+                        <div>
+                            <label for="{{ form.guardian_relation.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Relationship" %} <span class="text-error">*</span>
+                            </label>
+                            {{ form.guardian_relation }}
+                            {% if form.guardian_relation.errors %}
+                                {% for error in form.guardian_relation.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="space-y-6">
+                    <div class="border-b border-border-light dark:border-border-dark pb-4">
+                        <h3 class="text-xl font-semibold text-text-light dark:text-text-dark mb-2">{% trans "Contact Information" %}</h3>
+                        <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "How can we reach you?" %}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Country Code -->
+                        <div>
+                            <label for="{{ form.country_code.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Country Code" %} <span class="text-error">*</span>
+                            </label>
+                            {{ form.country_code }}
+                            {% if form.country_code.errors %}
+                                {% for error in form.country_code.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <!-- Contact Number -->
+                        <div>
+                            <label for="{{ form.contact.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                                {% trans "Phone Number" %} <span class="text-error">*</span>
+                            </label>
+                            {{ form.contact }}
+                            {% if form.contact.errors %}
+                                {% for error in form.contact.errors %}
+                                    <p class="mt-1 text-sm text-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div>
+                        <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
+                            {% trans "Address" %} <span class="text-error">*</span>
+                        </label>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                            {% for error in form.address.errors %}
+                                <p class="mt-1 text-sm text-error">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-6">
+                    <button type="submit" id="submit-button" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-gradient-to-r from-primary-blue to-accent-blue hover:from-accent-blue hover:to-primary-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <i class="fas fa-check mr-2 content-center"></i>
+                        {% trans "Complete Profile" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('onboarding-form');
+    const submitButton = document.getElementById('submit-button');
+    
+    const requiredFields = [
+        document.getElementById('{{ form.first_name.id_for_label }}'),
+        document.getElementById('{{ form.last_name.id_for_label }}'),
+        document.getElementById('{{ form.date_of_birth.id_for_label }}'),
+        document.getElementById('{{ form.guardian_name.id_for_label }}'),
+        document.getElementById('{{ form.guardian_relation.id_for_label }}'),
+        document.getElementById('{{ form.address.id_for_label }}'),
+        document.getElementById('{{ form.contact.id_for_label }}'),
+        document.getElementById('{{ form.country_code.id_for_label }}'),
+    ].filter(Boolean);
+
+    function validateForm() {
+        const allValid = requiredFields.every(field => field.value.trim() !== '');
+        submitButton.disabled = !allValid;
+    }
+
+    validateForm();
+
+    form.addEventListener('input', validateForm);
+});
+</script>
+{% endblock %}

@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,13 +176,13 @@
         </div>
         
         <div class="email-footer">
-            <p>© 2025 GDA (Global Development Association). All rights reserved.</p>
+            <p>{% trans "© 2025 GDA (Global Development Association). All rights reserved." %}</p>
             <p>
-                <a href="{{ protocol }}://{{ domain }}{% url 'landing_page' %}">Visit Website</a> | 
-                <a href="{{ protocol }}://{{ domain }}{% url 'landing_page' %}#contact">Contact Us</a>
+                <a href="{{ protocol }}://{{ domain }}{% url 'landing_page' %}">{% trans "Visit Website" %}</a> | 
+                <a href="{{ protocol }}://{{ domain }}{% url 'landing_page' %}#contact">{% trans "Contact Us" %}</a>
             </p>
             <p style="margin-top: 15px; font-size: 11px; color: #999;">
-                You're receiving this email because you have an account with us.
+                {% trans "You're receiving this email because you have an account with us." %}
             </p>
         </div>
     </div>

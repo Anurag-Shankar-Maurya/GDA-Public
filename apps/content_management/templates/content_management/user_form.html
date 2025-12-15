@@ -1,276 +1,310 @@
 {% extends "content_management_base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
 {% if viewed_user.email %}
-Update User: {{ viewed_user.email }}
+{% blocktrans with email=viewed_user.email %}Update User: {{ email }}{% endblocktrans %}
 {% else %}
-New User
+{% trans "New User" %}
 {% endif %}
 {% endblock %}
 
 {% block breadcrumb %}
 <li class="flex items-center">
-    <a href="{% url 'user_analytics' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">User Analytics</a>
+    <a href="{% url 'user_analytics' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "User Analytics" %}</a>
     <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
 </li>
 <li class="flex items-center">
     {% if viewed_user.email %}
     <span class="text-gray-500 dark:text-gray-400">{{ viewed_user.email }}</span>
     {% else %}
-    <span class="text-gray-500 dark:text-gray-400">New User</span>
+    <span class="text-gray-500 dark:text-gray-400">{% trans "New User" %}</span>
     {% endif %}
 </li>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- User Form Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg overflow-hidden mb-8">
-        <div class="px-6 py-8 text-white">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 mr-4">
-                    {% if viewed_user.email %}
-                    <i class="fas fa-user-edit text-4xl text-blue-200 content-center"></i>
-                    {% else %}
-                    <i class="fas fa-user-plus text-4xl text-blue-200 content-center"></i>
-                    {% endif %}
-                </div>
-                <div>
-                    {% if viewed_user.email %}
-                    <h1 class="text-3xl font-bold mb-2">Update User</h1>
-                    <p class="text-blue-100">{{ viewed_user.email }}</p>
-                    {% else %}
-                    <h1 class="text-3xl font-bold mb-2">Create New User</h1>
-                    <p class="text-blue-100">Add a new user account</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <form method="post" enctype="multipart/form-data" class="bg-card-bg-light dark:bg-card-bg-dark shadow overflow-hidden rounded-lg border border-border-light dark:border-border-dark p-6 space-y-6">
+<div class="max-w-7xl mx-auto">
+    <form method="post" enctype="multipart/form-data" id="user-form">
         {% csrf_token %}
-
-        {# Basic Information Section #}
-        <div class="border-b border-border-light dark:border-border-dark pb-6 mb-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Basic Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.username.label }}</label>
-                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.username.value %}{{ form.username.value }}{% endif %}"
-                           {% if form.username.field.required %}required{% endif %}>
-                    {% if form.username.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.username.errors|join:", " }}</p>
+        
+        <!-- Header Actions -->
+        <div class="sticky top-0 z-30 bg-gray-100 dark:bg-gray-900 -mx-6 px-6 py-4 mb-8 border-b border-gray-200 dark:border-gray-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-200">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+                    {% if viewed_user.email %}
+                    <i class="fas fa-user-edit text-primary-blue mr-3"></i>
+                    {% trans "Update User" %}
+                    {% else %}
+                    <i class="fas fa-user-plus text-primary-blue mr-3"></i>
+                    {% trans "Create New User" %}
                     {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.email.label }}</label>
-                    <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.email.value %}{{ form.email.value }}{% endif %}"
-                           {% if form.email.field.required %}required{% endif %}>
-                    {% if form.email.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.email.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.first_name.label }}</label>
-                    <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
-                    {% if form.first_name.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.first_name.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.last_name.label }}</label>
-                    <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
-                    {% if form.last_name.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.last_name.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
+                </h1>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    {% trans "Manage user account details and permissions." %}
+                </p>
+            </div>
+            <div class="flex space-x-3 w-full sm:w-auto">
+                <a href="{% url 'user_analytics' %}" class="flex-1 sm:flex-none justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue">
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="flex-1 sm:flex-none justify-center items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all transform hover:scale-105">
+                    <i class="fas fa-save mr-2"></i>
+                    {% if viewed_user.email %}{% trans "Update User" %}{% else %}{% trans "Create User" %}{% endif %}
+                </button>
             </div>
         </div>
 
-        {# Personal Information Section #}
-        <div class="border-b border-border-light dark:border-border-dark pb-6 mb-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Personal Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="{{ form.date_of_birth.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.date_of_birth.label }}</label>
-                    <input type="date" name="{{ form.date_of_birth.name }}" id="{{ form.date_of_birth.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.date_of_birth.value %}{{ form.date_of_birth.value|date:'Y-m-d' }}{% endif %}">
-                    {% if form.date_of_birth.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.date_of_birth.errors|join:", " }}</p>
-                    {% endif %}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Basic Information Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-user text-primary-blue"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Basic Information" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    {{ form.username.label }}
+                                    {% if form.username.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                </label>
+                                <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.username.value %}{{ form.username.value }}{% endif %}"
+                                       {% if form.username.field.required %}required{% endif %}>
+                                {% if form.username.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.username.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    {{ form.email.label }}
+                                    {% if form.email.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                </label>
+                                <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.email.value %}{{ form.email.value }}{% endif %}"
+                                       {% if form.email.field.required %}required{% endif %}>
+                                {% if form.email.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.email.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.first_name.label }}</label>
+                                <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}">
+                                {% if form.first_name.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.first_name.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.last_name.label }}</label>
+                                <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}">
+                                {% if form.last_name.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.last_name.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="{{ form.gender.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.gender.label }}</label>
-                    <select name="{{ form.gender.name }}" id="{{ form.gender.id_for_label }}"
-                            class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                   focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                   dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
-                        {% for choice_value, choice_label in form.gender.field.choices %}
-                        <option value="{{ choice_value }}" {% if form.gender.value == choice_value %}selected{% endif %}>{{ choice_label }}</option>
-                        {% endfor %}
-                    </select>
-                    {% if form.gender.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.gender.errors|join:", " }}</p>
-                    {% endif %}
+                <!-- Personal Information Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-teal-50 dark:bg-teal-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-id-card text-teal-600 dark:text-teal-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Personal Information" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="{{ form.date_of_birth.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.date_of_birth.label }}</label>
+                                <input type="date" name="{{ form.date_of_birth.name }}" id="{{ form.date_of_birth.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.date_of_birth.value %}{{ form.date_of_birth.value|date:'Y-m-d' }}{% endif %}">
+                                {% if form.date_of_birth.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.date_of_birth.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.gender.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.gender.label }}</label>
+                                <select name="{{ form.gender.name }}" id="{{ form.gender.id_for_label }}"
+                                        class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3">
+                                    {% for choice_value, choice_label in form.gender.field.choices %}
+                                    <option value="{{ choice_value }}" {% if form.gender.value == choice_value %}selected{% endif %}>{{ choice_label }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.gender.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.gender.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.blood_group.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.blood_group.label }}</label>
+                                <select name="{{ form.blood_group.name }}" id="{{ form.blood_group.id_for_label }}"
+                                        class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3">
+                                    {% for choice_value, choice_label in form.blood_group.field.choices %}
+                                    <option value="{{ choice_value }}" {% if form.blood_group.value == choice_value %}selected{% endif %}>{{ choice_label }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.blood_group.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.blood_group.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.contact.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.contact.label }}</label>
+                                <input type="text" name="{{ form.contact.name }}" id="{{ form.contact.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.contact.value %}{{ form.contact.value }}{% endif %}"
+                                       maxlength="15">
+                                {% if form.contact.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.contact.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="{{ form.blood_group.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.blood_group.label }}</label>
-                    <select name="{{ form.blood_group.name }}" id="{{ form.blood_group.id_for_label }}"
-                            class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                   focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                   dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
-                        {% for choice_value, choice_label in form.blood_group.field.choices %}
-                        <option value="{{ choice_value }}" {% if form.blood_group.value == choice_value %}selected{% endif %}>{{ choice_label }}</option>
-                        {% endfor %}
-                    </select>
-                    {% if form.blood_group.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.blood_group.errors|join:", " }}</p>
-                    {% endif %}
+                <!-- Guardian Information Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-purple-50 dark:bg-purple-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-users text-purple-600 dark:text-purple-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Guardian Information" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="{{ form.guardian_name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.guardian_name.label }}</label>
+                                <input type="text" name="{{ form.guardian_name.name }}" id="{{ form.guardian_name.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.guardian_name.value %}{{ form.guardian_name.value }}{% endif %}">
+                                {% if form.guardian_name.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.guardian_name.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.guardian_relation.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.guardian_relation.label }}</label>
+                                <input type="text" name="{{ form.guardian_relation.name }}" id="{{ form.guardian_relation.id_for_label }}"
+                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                       value="{% if form.guardian_relation.value %}{{ form.guardian_relation.value }}{% endif %}">
+                                {% if form.guardian_relation.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.guardian_relation.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="{{ form.contact.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.contact.label }}</label>
-                    <input type="text" name="{{ form.contact.name }}" id="{{ form.contact.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.contact.value %}{{ form.contact.value }}{% endif %}"
-                           maxlength="15">
-                    {% if form.contact.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.contact.errors|join:", " }}</p>
-                    {% endif %}
+                <!-- Address & Location Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-orange-50 dark:bg-orange-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-map-marker-alt text-orange-600 dark:text-orange-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Address & Location" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="md:col-span-2">
+                            <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.address.label }}</label>
+                            <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}" rows="4"
+                                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors p-3"
+                                      >{% if form.address.value %}{{ form.address.value }}{% endif %}</textarea>
+                            {% if form.address.errors %}
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.address.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label for="{{ form.country_code.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.country_code.label }}</label>
+                            <input type="text" name="{{ form.country_code.name }}" id="{{ form.country_code.id_for_label }}"
+                                   class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                   value="{% if form.country_code.value %}{{ form.country_code.value }}{% endif %}"
+                                   maxlength="5">
+                            {% if form.country_code.errors %}
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.country_code.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+
             </div>
-        </div>
 
-        {# Guardian Information Section #}
-        <div class="border-b border-border-light dark:border-border-dark pb-6 mb-6">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Guardian Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label for="{{ form.guardian_name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.guardian_name.label }}</label>
-                    <input type="text" name="{{ form.guardian_name.name }}" id="{{ form.guardian_name.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.guardian_name.value %}{{ form.guardian_name.value }}{% endif %}">
-                    {% if form.guardian_name.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.guardian_name.errors|join:", " }}</p>
-                    {% endif %}
+            <!-- Right Column: Settings & Meta -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Account Status Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-green-50 dark:bg-green-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-shield-alt text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Account Status" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="{{ form.is_active.name }}" id="{{ form.is_active.id_for_label }}"
+                                       class="h-4 w-4 text-primary-blue focus:ring-primary-blue border-gray-300 rounded"
+                                       {% if form.is_active.value %}checked{% endif %}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="{{ form.is_active.id_for_label }}" class="font-medium text-gray-700 dark:text-gray-300">
+                                    {{ form.is_active.label }}
+                                </label>
+                                <p class="text-gray-500 dark:text-gray-400">{% trans "Allow this user to sign in" %}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="{{ form.is_staff.name }}" id="{{ form.is_staff.id_for_label }}"
+                                       class="h-4 w-4 text-primary-blue focus:ring-primary-blue border-gray-300 rounded"
+                                       {% if form.is_staff.value %}checked{% endif %}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="{{ form.is_staff.id_for_label }}" class="font-medium text-gray-700 dark:text-gray-300">
+                                    {{ form.is_staff.label }}
+                                </label>
+                                <p class="text-gray-500 dark:text-gray-400">{% trans "Allow access to admin site" %}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="{{ form.is_superuser.name }}" id="{{ form.is_superuser.id_for_label }}"
+                                       class="h-4 w-4 text-primary-blue focus:ring-primary-blue border-gray-300 rounded"
+                                       {% if form.is_superuser.value %}checked{% endif %}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="{{ form.is_superuser.id_for_label }}" class="font-medium text-gray-700 dark:text-gray-300">
+                                    {{ form.is_superuser.label }}
+                                </label>
+                                <p class="text-gray-500 dark:text-gray-400">{% trans "Full access to all permissions" %}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="{{ form.guardian_relation.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.guardian_relation.label }}</label>
-                    <input type="text" name="{{ form.guardian_relation.name }}" id="{{ form.guardian_relation.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.guardian_relation.value %}{{ form.guardian_relation.value }}{% endif %}">
-                    {% if form.guardian_relation.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.guardian_relation.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
             </div>
-        </div>
-
-        {# Address & Location Section #}
-        <!-- <div class="border-b border-border-light dark:border-border-dark pb-6 mb-6"> -->
-        <div class="border-border-light dark:border-border-dark pb-6 mb-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Address & Location</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="md:col-span-2">
-                    <label for="{{ form.address.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.address.label }}</label>
-                    <textarea name="{{ form.address.name }}" id="{{ form.address.id_for_label }}" rows="4"
-                              class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                     focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                     dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                              >{% if form.address.value %}{{ form.address.value }}{% endif %}</textarea>
-                    {% if form.address.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.address.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.country_code.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ form.country_code.label }}</label>
-                    <input type="text" name="{{ form.country_code.name }}" id="{{ form.country_code.id_for_label }}"
-                           class="p-3 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200"
-                           value="{% if form.country_code.value %}{{ form.country_code.value }}{% endif %}"
-                           maxlength="5">
-                    {% if form.country_code.errors %}
-                    <p class="text-sm text-red-600 dark:text-red-400 mt-1">{{ form.country_code.errors|join:", " }}</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- {# Account Status Section #}
-        <div class="pb-6 border-t border-border-light dark:border-border-dark">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Account Status</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="flex items-center">
-                    <input type="checkbox" name="{{ form.is_active.name }}" id="{{ form.is_active.id_for_label }}"
-                           class="h-4 w-4 text-primary-blue focus:ring-primary-blue border-gray-300 rounded"
-                           {% if form.is_active.value %}checked{% endif %}>
-                    <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                        {{ form.is_active.label }}
-                    </label>
-                </div>
-
-                <div class="flex items-center">
-                    <input type="checkbox" name="{{ form.is_staff.name }}" id="{{ form.is_staff.id_for_label }}"
-                           class="h-4 w-4 text-primary-blue focus:ring-primary-blue border-gray-300 rounded"
-                           {% if form.is_staff.value %}checked{% endif %}>
-                    <label for="{{ form.is_staff.id_for_label }}" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                        {{ form.is_staff.label }}
-                    </label>
-                </div>
-
-                <div class="flex items-center">
-                    <input type="checkbox" name="{{ form.is_superuser.name }}" id="{{ form.is_superuser.id_for_label }}"
-                           class="h-4 w-4 text-primary-blue focus:ring-primary-blue border-gray-300 rounded"
-                           {% if form.is_superuser.value %}checked{% endif %}>
-                    <label for="{{ form.is_superuser.id_for_label }}" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                        {{ form.is_superuser.label }}
-                    </label>
-                </div>
-            </div>
-        </div> -->
-
-        <div class="flex justify-end space-x-4 pt-6 border-t border-border-light dark:border-border-dark">
-            <a href="{% url 'user_analytics' %}" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-200">
-                <i class="fas fa-times mr-2 content-center"></i>Cancel
-            </a>
-            <button type="submit" class="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-200">
-                <i class="fas fa-save mr-2 content-center"></i>{% if viewed_user.email %}Update User{% else %}Create User{% endif %}
-            </button>
         </div>
     </form>
 </div>

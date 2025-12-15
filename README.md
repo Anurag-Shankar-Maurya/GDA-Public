@@ -240,6 +240,88 @@ You can now access the application:
 *   **Management Dashboard:** [http://127.0.0.1:8000/management/](http://127.0.0.1:8000/management/)
 
 
+## 📖 Usage Guide
+
+### Database Seeding
+
+The project provides two seeding commands for populating the database:
+
+#### Production Data Seeding
+
+To populate the database with production data from CSV files:
+
+```bash
+# Seed production data from CSV files
+python manage.py seed_production
+
+# Clear existing data and reseed production data
+python manage.py seed_production --clear
+```
+
+This command reads data from CSV files located in `apps/content/data/` and creates:
+- **42 Projects** - Volunteer opportunities with complete details
+- **28 NewsEvents** - News articles and event announcements
+- **52 SuccessStories** - Volunteer reflections and impact stories
+- **8 FAQs** - Frequently asked questions with voting data
+
+**Note:** The `--clear` option will delete all existing content data before seeding.
+
+#### Development Sample Data
+
+To populate the database with sample data for development and testing:
+
+```bash
+python manage.py seed
+```
+
+This command creates:
+- Sample user accounts (with default password: `password123`)
+- Example volunteer projects across different themes and countries
+- News articles and events
+- Success stories linked to projects
+- Frequently asked questions
+
+**Note:** Both seed commands use `get_or_create` to avoid duplicating data, so they're safe to run multiple times.
+
+### Admin Panel Access
+
+After running migrations and creating a superuser, you can access the Django admin panel at:
+- **Admin Panel:** [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+Use the superuser credentials you created during setup.
+
+### API Documentation
+
+The project includes auto-generated API documentation using DRF-YASG:
+- **Swagger UI:** [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
+- **ReDoc:** [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
+
+### Internationalization
+
+To update translation files:
+
+```bash
+# Generate translation files for Chinese (Taiwan)
+python manage.py makemessages -l zh_TW --ignore venv
+
+# Compile translation files
+python manage.py compilemessages
+```
+
+### Key Application Features
+
+#### For Volunteers
+- Browse and apply for volunteer projects
+- View project details, requirements, and timelines
+- Track application status and enrolled projects
+- Access success stories and impact metrics
+
+#### For Administrators
+- Manage projects, users, and content through the admin panel
+- Monitor volunteer engagement and project progress
+- Publish news, events, and announcements
+- Generate reports and analytics
+
 ## 🧪 Testing Guidelines
 
 This project includes a small test suite and follows standard Django test discovery rules. Below are recommended workflows and tips for running and structuring tests locally and in CI.
@@ -319,7 +401,9 @@ The `DATABASE_URL` is already configured in `docker-compose.yml` to connect to t
 #### 2. Build and Run the Containers
 
 ```bash
-docker-compose up -d --build
+docker-compose build # Build the Docker images
+
+docker-compose up -d --build # Build and start the containers in detached mode
 ```
 
 This command will build the Docker image for the web service, and start the `web`, `db` (PostgreSQL), and `nginx` services in detached mode.

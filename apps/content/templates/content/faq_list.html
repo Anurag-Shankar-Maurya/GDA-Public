@@ -1,38 +1,42 @@
 {% extends "content_base.html" %}
 {% load i18n %}
 
-{% block title %}GDA: FAQs{% endblock %}
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+{% block title %}{% trans "GDA: FAQs" %}{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">
-        <a href="{% url 'landing_page' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Home" %}</a>
-        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
     </li>
     <li class="flex items-center">
-        <a href="{% url 'content_faq_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "FAQs" %}</a>
+        <a href="{% url 'content_faq_list' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "FAQs" %}</a>
     </li>
 {% endblock %}
 
 {% block content %}
-    <!-- Hero Section -->
-    <section class="relative max-w-7xl h-[60vh] mx-auto px-4 py-32 text-center bg-gradient-to-br from-primary-blue via-accent-blue to-blue-600 dark:from-blue-800 dark:via-blue-700 dark:to-blue-900 text-white rounded-2xl shadow-2xl mb-16 hero-section overflow-hidden flex flex-col items-center justify-center">
+
+{% comment %}
+    <!-- Hero Section (Commented out as per previous code, updated classes for reference if enabled) -->
+    <section class="relative max-w-7xl h-[60vh] mx-auto px-4 py-32 text-center bg-gradient-to-br from-primary-blue via-accent-blue to-primary-dark dark:from-primary-dark dark:via-primary-blue dark:to-dark-bg text-text-dark rounded-2xl shadow-2xl mb-16 hero-section overflow-hidden flex flex-col items-center justify-center">
         <!-- Background Pattern -->
         <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-pulse"></div>
-            <div class="absolute top-40 right-20 w-24 h-24 bg-white rounded-full animate-pulse" style="animation-delay: 1s;"></div>
-            <div class="absolute bottom-20 left-1/4 w-16 h-16 bg-white rounded-full animate-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute top-10 left-10 w-32 h-32 bg-light-bg rounded-full animate-pulse"></div>
+            <div class="absolute top-40 right-20 w-24 h-24 bg-light-bg rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-20 left-1/4 w-16 h-16 bg-light-bg rounded-full animate-pulse" style="animation-delay: 2s;"></div>
         </div>
         
         <div class="relative z-10">
-            <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 animate-fade-in-up bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100 line-clamp-2 ellipsis-title">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 animate-fade-in-up bg-clip-text text-transparent bg-gradient-to-r from-light-bg to-border-light line-clamp-2 ellipsis-title">
                 {% trans "Frequently Asked" %}<br>
-                <span class="text-yellow-300">{% trans "Questions" %}</span>
+                <span class="text-warning">{% trans "Questions" %}</span>
             </h1>
-            <p class="text-lg md:text-xl lg:text-2xl mb-10 leading-relaxed opacity-95 animate-fade-in max-w-3xl mx-auto line-clamp-2 ellipsis-subtitle">
+            <p class="text-lg md:text-xl lg:text-2xl mb-10 leading-relaxed opacity-95 animate-fade-in max-w-3xl mx-auto line-clamp-2 ellipsis-subtitle text-text-dark">
                 {% trans "Find answers to common questions about our volunteer programs and community initiatives." %}
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="#faq-section" class="group inline-flex items-center bg-white text-primary-blue font-bold py-4 px-8 rounded-full shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
+                <a href="#faq-section" class="group inline-flex items-center bg-light-bg text-primary-blue font-bold py-4 px-8 rounded-full shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-light-bg focus:ring-opacity-50">
                     <i class="fas fa-arrow-down animate-pulse content-center"></i>
                 </a>
                 <!-- <a href="#" class="group inline-flex items-center bg-transparent border-2 border-white text-white font-bold py-4 px-8 rounded-full hover:bg-white hover:text-primary-blue transition-all duration-300 ease-in-out transform hover:scale-105">
@@ -42,46 +46,57 @@
             </div>
         </div>
     </section>
+{% endcomment %}
 
     <section id="faq-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 class="text-4xl font-bold text-center mb-12 text-text-light dark:text-text-dark">{% trans "Frequently Asked Questions" %}</h1>
+        
+        <!-- Updated Title Section to match Landing Page style -->
+        <div class="text-center mb-16 animate-on-scroll">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-text-light dark:text-text-dark mb-4">
+                {% trans "Frequently Asked Questions" %}
+            </h1>
+            <div class="w-24 h-1.5 bg-accent-blue mx-auto rounded-full mb-6"></div>
+            <p class="text-xl text-text-light-secondary dark:text-text-dark-secondary max-w-2xl mx-auto leading-relaxed">
+                {% trans "Find answers to common questions about our volunteer programs and community initiatives." %}
+            </p>
+        </div>
 
         <!-- Search and Sort Form -->
-        <form method="get" class="bg-card-bg-light dark:bg-card-bg-dark p-6 rounded-lg shadow-md border border-border-light dark:border-border-dark mb-10">
+        <form method="get" class="bg-light-secondary-bg dark:bg-dark-secondary-bg p-8 rounded-2xl shadow-xl border border-border-light dark:border-border-dark mb-12 backdrop-blur-sm transition-colors duration-300 animate-on-scroll">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                 <!-- Search -->
                 <div class="md:col-span-1">
-                    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{% trans "Search:" %}</label>
+                    <label for="search" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">{% trans "Search:" %}</label>
                     <input type="text" id="search" name="search" placeholder="{% trans "Search FAQs..." %}" value="{{ request.GET.search }}"
-                           class="p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
+                           class="p-2.5 block w-full rounded-lg border border-border-light dark:border-border-dark shadow-sm
+                                  focus:border-primary-blue focus:ring-primary-blue bg-light-bg dark:bg-dark-bg 
+                                  text-text-light dark:text-text-dark placeholder-text-light-secondary dark:placeholder-text-dark-secondary transition-colors duration-200">
                 </div>
 
                 <!-- Sort -->
                 <div class="md:col-span-1">
-                    <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{% trans "Sort By:" %}</label>
+                    <label for="sort" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">{% trans "Sort By:" %}</label>
                     <select id="sort" name="sort"
-                            class="p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                   focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                   dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
+                            class="p-2.5 block w-full rounded-lg border border-border-light dark:border-border-dark shadow-sm
+                                   focus:border-primary-blue focus:ring-primary-blue bg-light-bg dark:bg-dark-bg 
+                                   text-text-light dark:text-text-dark transition-colors duration-200">
                         {% for option in sort_options %}
                             <option value="{{ option.value }}" {% if request.GET.sort == option.value %}selected{% endif %}>{{ option.label }}</option>
                         {% endfor %}
                     </select>
                 </div>
 
-                <!-- Spacer div for alignment on larger screens if needed, otherwise removed for simplicity in this case -->
+                <!-- Spacer div for alignment on larger screens -->
                 <div class="hidden md:block"></div>
 
                 <!-- Submit and Clear Buttons -->
                 <div class="md:col-span-3 flex flex-col md:flex-row justify-center items-center space-y-3 md:space-y-0 md:space-x-4 pt-4">
-                    <button type="submit" class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300 ease-in-out transform hover:scale-105">
-                        <i class="fas fa-filter h-5 w-5 content-center"></i>
+                    <button type="submit" class="group inline-flex items-center px-8 py-3 border border-transparent text-sm font-medium rounded-full shadow-lg text-text-dark bg-primary-blue hover:bg-primary-light focus:outline-none focus:ring-4 focus:ring-primary-blue focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-filter mr-2 group-hover:animate-pulse"></i>
                         {% trans "Apply Filters" %}
                     </button>
-                    <button type="button" class="clear-filters-btn inline-flex items-center px-6 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-300">
-                         <i class="fas fa-times h-5 w-5 content-center"></i>
+                    <button type="button" class="clear-filters-btn group inline-flex items-center px-8 py-3 border border-border-light dark:border-border-dark text-sm font-medium rounded-full shadow-lg text-text-light dark:text-text-dark bg-light-bg dark:bg-dark-bg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg focus:outline-none focus:ring-4 focus:ring-text-light-secondary focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
+                         <i class="fas fa-times mr-2 group-hover:animate-pulse"></i>
                         {% trans "Clear Filters" %}
                     </button>
                 </div>
@@ -97,17 +112,46 @@
         {% if faqs %}
             <div class="max-w-4xl mx-auto space-y-4">
                 {% for faq in faqs %}
-                    <div class="faq-item bg-card-bg-light dark:bg-card-bg-dark border border-border-light dark:border-border-dark rounded-xl overflow-hidden transition-all duration-300">
-                        <button class="faq-question w-full px-6 py-4 text-left flex items-center justify-between cursor-pointer group hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
-                            <h3 class="text-lg font-semibold text-primary-blue dark:text-blue-400 group-hover:text-accent-blue transition-colors duration-200">{{ faq.question }}</h3>
-                            <svg class="faq-icon w-6 h-6 text-primary-blue dark:text-blue-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="faq-item bg-light-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark rounded-xl overflow-hidden transition-all duration-300 animate-on-scroll shadow-sm hover:shadow-md">
+                        <button class="faq-question w-full px-6 py-4 text-left flex items-center justify-between cursor-pointer group hover:bg-light-secondary-bg dark:hover:bg-dark-bg/50 transition-colors duration-200">
+                            <h3 class="text-lg font-bold text-primary-blue dark:text-accent-light group-hover:text-accent-dark dark:group-hover:text-accent-blue transition-colors duration-200">{{ faq.question }}</h3>
+                            <svg class="faq-icon w-6 h-6 text-primary-blue dark:text-accent-light transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
-                        <div class="faq-answer px-6 overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
-                            <p class="text-gray-700 dark:text-gray-300 text-base pb-6">
+                        <div class="faq-answer px-6 overflow-hidden max-h-0 transition-all duration-300 ease-in-out bg-light-bg dark:bg-dark-secondary-bg">
+                            <p class="text-text-light-secondary dark:text-text-dark-secondary text-base pb-4 pt-2 leading-relaxed">
                                 {{ faq.answer }}
                             </p>
+                            <!-- Voting Section -->
+                            <div class="flex items-center justify-between pb-6">
+                                <div class="flex items-center space-x-4">
+                                    {% if user.is_authenticated %}
+                                        <button class="vote-btn flex items-center space-x-1 {% if faq.user_vote == 'UP' %}text-success{% else %}text-gray-400 hover:text-success{% endif %} transition-colors duration-200" data-faq-id="{{ faq.id }}" data-vote="up">
+                                            <i class="fas fa-thumbs-up"></i>
+                                            <span class="thumbs-up-count">{{ faq.thumbs_up }}</span>
+                                        </button>
+                                        <button class="vote-btn flex items-center space-x-1 {% if faq.user_vote == 'DOWN' %}text-error{% else %}text-gray-400 hover:text-error{% endif %} transition-colors duration-200" data-faq-id="{{ faq.id }}" data-vote="down">
+                                            <i class="fas fa-thumbs-down"></i>
+                                            <span class="thumbs-down-count">{{ faq.thumbs_down }}</span>
+                                        </button>
+                                    {% else %}
+                                        <div class="flex items-center space-x-4 text-text-light-secondary dark:text-text-dark-secondary">
+                                            <span class="flex items-center space-x-1">
+                                                <i class="fas fa-thumbs-up"></i>
+                                                <span>{{ faq.thumbs_up }}</span>
+                                            </span>
+                                            <span class="flex items-center space-x-1">
+                                                <i class="fas fa-thumbs-down"></i>
+                                                <span>{{ faq.thumbs_down }}</span>
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">
+                                            <a href="{% url 'login' %}" class="text-primary-blue hover:text-accent-blue">{% trans "Login to vote" %}</a>
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -115,34 +159,34 @@
 
             <!-- Pagination Controls -->
             {% if is_paginated %}
-                <div class="flex justify-center mt-8 space-x-1 sm:space-x-2 overflow-x-auto">
+                <div class="flex justify-center mt-12 space-x-1 sm:space-x-2 overflow-x-auto pb-4">
                     <!-- Previous Button -->
                     {% if page_obj.has_previous %}
                         <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light dark:text-text-dark border border-border-light dark:border-border-dark rounded-lg hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue transition-colors duration-200">
                             <i class="fas fa-angle-left"></i>
                         </a>
                     {% else %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                        <span class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light-secondary dark:text-text-dark-secondary border border-border-light dark:border-border-dark rounded-lg cursor-not-allowed opacity-50">
                             <i class="fas fa-angle-left"></i>
                         </span>
                     {% endif %}
 
                     <!-- First Page -->
                     <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                    class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == 1 %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                    class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base border {% if page_obj.number == 1 %}bg-accent-blue border-accent-blue text-text-dark{% else %}bg-light-secondary-bg dark:bg-dark-secondary-bg border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue{% endif %} rounded-lg transition-colors duration-200">
                         1
                     </a>
 
-                    <!-- Left Dots (if current page is far from first) -->
+                    <!-- Left Dots -->
                     {% if page_obj.number > 3 %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+                        <span class="px-2 py-2 text-text-light-secondary dark:text-text-dark-secondary">...</span>
                     {% endif %}
 
-                    <!-- Before Previous Adjacent Page -->
+                    <!-- Adjacent Pages -->
                     {% if page_obj.number > 3 %}
                         <a href="?page={{ page_obj.number|add:'-2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'-2' }}
                         </a>
                     {% endif %}
@@ -150,23 +194,23 @@
                     <!-- Previous Adjacent Page -->
                     {% if page_obj.number > 2 %}
                         <a href="?page={{ page_obj.number|add:'-1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'-1' }}
                         </a>
                     {% endif %}
 
-                    <!-- Current Page (only if not first or last) -->
+                    <!-- Current Page (if not first/last) -->
                     {% if page_obj.number != 1 and page_obj.number != paginator.num_pages %}
                         <a href="?page={{ page_obj.number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-accent-blue text-white rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-accent-blue border border-accent-blue text-text-dark rounded-lg transition-colors duration-200">
                             {{ page_obj.number }}
                         </a>
                     {% endif %}
 
-                    <!-- Next Adjacent Page -->
+                    <!-- Next Adjacent Pages -->
                     {% if page_obj.number < paginator.num_pages|add:'-1' %}
                         <a href="?page={{ page_obj.number|add:'1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'1' }}
                         </a>
                     {% endif %}
@@ -174,20 +218,20 @@
                     <!-- Second Next Adjacent Page -->
                     {% if page_obj.number < paginator.num_pages|add:'-2' %}
                         <a href="?page={{ page_obj.number|add:'2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'2' }}
                         </a>
                     {% endif %}
 
-                    <!-- Right Dots (if current page is far from last) -->
+                    <!-- Right Dots -->
                     {% if page_obj.number < paginator.num_pages|add:'-2' %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+                        <span class="px-2 py-2 text-text-light-secondary dark:text-text-dark-secondary">...</span>
                     {% endif %}
 
-                    <!-- Last Page (only if more than 1 page) -->
+                    <!-- Last Page -->
                     {% if paginator.num_pages > 1 %}
                         <a href="?page={{ paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == paginator.num_pages %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base border {% if page_obj.number == paginator.num_pages %}bg-accent-blue border-accent-blue text-text-dark{% else %}bg-light-secondary-bg dark:bg-dark-secondary-bg border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue{% endif %} rounded-lg transition-colors duration-200">
                             {{ paginator.num_pages }}
                         </a>
                     {% endif %}
@@ -195,29 +239,29 @@
                     <!-- Next Button -->
                     {% if page_obj.has_next %}
                         <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light dark:text-text-dark border border-border-light dark:border-border-dark rounded-lg hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue transition-colors duration-200">
                             <i class="fas fa-angle-right"></i>
                         </a>
                     {% else %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                        <span class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light-secondary dark:text-text-dark-secondary border border-border-light dark:border-border-dark rounded-lg cursor-not-allowed opacity-50">
                             <i class="fas fa-angle-right"></i>
                         </span>
                     {% endif %}
                 </div>
 
                 <!-- Page Info -->
-                <div class="text-center mt-4 text-gray-600 text-sm">
+                <div class="text-center mt-4 text-text-light-secondary dark:text-text-dark-secondary text-sm">
                     {% blocktrans with page_number=page_obj.number total_pages=paginator.num_pages %}Page {{ page_number }} of {{ total_pages }}{% endblocktrans %}
                 </div>
                 
             {% endif %}
         {% else %}
-            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-xl overflow-hidden rounded-2xl p-12 text-center border border-border-light dark:border-border-dark">
+            <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg shadow-xl overflow-hidden rounded-2xl p-12 text-center border border-border-light dark:border-border-dark animate-on-scroll">
                 <div class="mb-6">
-                    <i class="fas fa-search text-6xl text-gray-300 dark:text-gray-600"></i>
+                    <i class="fas fa-search text-6xl text-border-light dark:text-border-dark"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{% trans "No FAQs Yet" %}</h3>
-                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                <h3 class="text-2xl font-bold text-text-light dark:text-text-dark mb-4">{% trans "No FAQs Yet" %}</h3>
+                <p class="text-lg text-text-light-secondary dark:text-text-dark-secondary mb-8 max-w-md mx-auto">
                     {% trans "There are currently no FAQs available. Please check back later or contact us for more information." %}
                 </p>
             </div>
@@ -250,6 +294,27 @@
             text-overflow: ellipsis;
             white-space: normal;
         }
+
+        /* Initial state for scroll animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* State when visible */
+        .is-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Staggered animations for elements */
+        .animate-on-scroll:nth-child(1) { transition-delay: 0.1s; }
+        .animate-on-scroll:nth-child(2) { transition-delay: 0.2s; }
+        .animate-on-scroll:nth-child(3) { transition-delay: 0.3s; }
+        .animate-on-scroll:nth-child(4) { transition-delay: 0.4s; }
+        .animate-on-scroll:nth-child(5) { transition-delay: 0.5s; }
+        .animate-on-scroll:nth-child(6) { transition-delay: 0.6s; }
     </style>
 
     <script>
@@ -332,11 +397,78 @@
                 });
             }
 
+            // Handle FAQ voting
+            const voteButtons = document.querySelectorAll('.vote-btn');
+            voteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const faqId = this.getAttribute('data-faq-id');
+                    const voteType = this.getAttribute('data-vote');
+                    
+                    // Send AJAX request
+                    fetch(`{% url 'vote_faq' 0 %}`.replace('0', faqId), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        },
+                        body: `vote_type=${voteType}`
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data === 'OK' || data === 'Already voted') {
+                            // Reload the page to update counts and button states
+                            location.reload();
+                        } else {
+                            alert('Error voting. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error voting. Please try again.');
+                    });
+                });
+            });
+
             // Check if we need to scroll after returning from clear filters
             if (sessionStorage.getItem('scrollToFaq') === 'true') {
                 sessionStorage.removeItem('scrollToFaq');
                 scrollToFaqSection();
             }
+
+            // --- ANIMATION OBSERVER ---
+            const observerOptions = {
+                threshold: 0.1, 
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('animate-on-scroll')) {
+                            entry.target.classList.add('is-visible');
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Select elements to animate
+            const targets = document.querySelectorAll('.animate-on-scroll');
+            
+            targets.forEach((target) => {
+                observer.observe(target);
+            });
+            
+            // Enhanced form interactions
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('transform', 'scale-105', 'transition-transform', 'duration-300');
+                });
+                
+                input.addEventListener('blur', () => {
+                    input.parentElement.classList.remove('transform', 'scale-105', 'transition-transform', 'duration-300');
+                });
+            });
         });
 
         // Also scroll on page show (handles back/forward navigation)

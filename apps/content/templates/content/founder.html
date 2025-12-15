@@ -1,0 +1,182 @@
+{% extends "content_base.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "About the Association" %}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'founder' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "About the Association" %}</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white dark:bg-dark-secondary-bg rounded-2xl shadow-md p-6 md:p-10">
+    <div class="max-w-4xl mx-auto">
+        <!-- Main Content: Full about text -->
+        <section class="prose max-w-none dark:prose-invert text-gray-700 dark:text-gray-200">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2">{% trans "About the Association" %}</h1>
+
+            <p>{% trans "The Global Devotion Association (GDA Taiwan) was founded in 2017 by Qingyu Chen, who graduated from the University of Southern California in 2025. It has been committed to cultural conservation and hopes to provide volunteer opportunities for Taiwanese students to carry out meaningful actions - giving back to society and cultural experiences through exchanges and helping minority groups." %}</p>
+
+            <h2 class="mt-6">{% trans "Motivation and Mission" %}</h2>
+            <p>{% trans "We encourage young volunteers to experience and participate in different cultures and lifestyles, and to understand Taiwan's history and differences, hoping to cultivate students' interest and appreciation for Taiwan's diversity and uniqueness. We connect students with volunteers from different cultural and social communities, and establish long-term relationships in various parts of Taiwan, allowing students to give back to the community while learning. We introduce and promote Taiwan's diverse indigenous groups to the world, hoping to preserve these precious cultures through volunteer services and cultural exchange activities by young volunteers." %}</p>
+
+        </section>
+        
+        <!-- Extra spacing before founder section -->
+        <div class="h-8"></div>
+
+        <!-- Founder Card -->
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-purple-200 dark:border-purple-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-star text-xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Meet Our Founder" %}</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Founder Image -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+                            <img src="{% static 'images/founder.jpg' %}" alt="{% trans "Chen Qingyu - Founder" %}" class="w-full h-80 object-cover">
+                        </div>
+                    </div>
+                    <div class="text-center mt-6">
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">{% trans "Chen Qingyu" %}</h3>
+                        <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 rounded-full">
+                            <i class="fas fa-graduation-cap text-purple-600 dark:text-purple-400 mr-2"></i>
+                            <span class="text-purple-700 dark:text-purple-300 font-medium">{% trans "Founder & Visionary" %}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Founder Story -->
+                <div class="lg:col-span-2">
+                    <div class="space-y-6">
+                        <div class="bg-white/50 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "My name is Chen Qingyu. I am currently studying at a private high school in Berkeley, USA. My parents taught me since I was young that life is like a bank account book. As I experience different people and things in my life, I will deposit different resources into my life bank. At the right time, I should withdraw, integrate and use these resources to maximize their effectiveness. I am 16 years old this year, and I think I should start to integrate and use my life experience account book." %}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/50 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "Currently, with the help of my father Chen Zhengzhe, I founded a website called 'Global Contribution Program' in 2017, and connected all the teachers, friends, and classmates I know to build a global network. I hope to bring foreign friends to visit me in person or communicate via video, shoot videos, and use the platform to allow students across Taiwan to share resources, become a powerful resource for Taiwan's international education, and let the world better understand Taiwan's multi-ethnic culture." %}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/50 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm">
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "Here I would like to express my special thanks to Ms. Rao Qingling, Chairperson of the Taitung County Council, for her full support. I will continue to work hard to make this global contribution (co-)learning program move forward in the direction I envisioned." %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Background Card -->
+        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-yellow-200 dark:border-yellow-800/30">
+            <div class="flex items-center mb-6">
+                <div class="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-graduation-cap text-xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Academic Journey" %}</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30">
+                        <div class="flex items-center mb-2">
+                            <span class="bg-yellow-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">📍</span>
+                            <span class="font-semibold text-gray-800 dark:text-white">2016</span>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">{% trans "Began her educational journey in the United States independently as a 10th-grade international student." %}</p>
+                    </div>
+                    
+                    <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30">
+                        <div class="flex items-center mb-2">
+                            <span class="bg-yellow-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">🎓</span>
+                            <span class="font-semibold text-gray-800 dark:text-white">2023</span>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">{% trans "Bachelor of Science in Business Administration, Marshall School of Business, University of Southern California (USA)" %}</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30">
+                        <div class="flex items-center mb-2">
+                            <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">✨</span>
+                            <span class="font-semibold text-gray-800 dark:text-white">{% trans "Focus" %}</span>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">{% trans "Passionate about interdisciplinary learning and social impact, with a focus on bridging business and social innovation." %}</p>
+                    </div>
+                    
+                    <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30">
+                        <div class="flex items-center mb-2">
+                            <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">🎓</span>
+                            <span class="font-semibold text-gray-800 dark:text-white">{% trans "Expected 2025" %}</span>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">{% trans "Master of Social Entrepreneurship & Master of Accounting, University of Southern California (USA)" %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Vision Card -->
+        <div class="bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-indigo-900/20 dark:to-cyan-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-indigo-200 dark:border-indigo-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-indigo-500 to-cyan-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-eye text-xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Founder's Vision" %}</h2>
+            </div>
+            
+            <div class="bg-white/60 dark:bg-gray-800/40 rounded-2xl p-8 backdrop-blur-sm border border-indigo-200/50 dark:border-indigo-800/30">
+                <div class="prose prose-lg max-w-none dark:prose-invert">
+                    <blockquote class="border-l-4 border-indigo-500 pl-6 italic text-gray-700 dark:text-gray-300">
+                        "{% trans "I, Ching-Yu Chen With desire and determination in my eyes I know that I am to accomplish all of my goals. I know where I'm going, but never forget where I come from. I am the daughter of a proud and positive couple, always caring and inspiring. They have placed me in a great environment." %}"
+                    </blockquote>
+                    
+                    <p class="mt-6 text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {% trans "Their love for me is a sky of countless twinkling stars in my heart. A gust of wind gently touching me on the cheek. Without it, I have no idea where I would be. I am but a child, full of infinite vitality, getting gradually sensible, more responsible, beginning to study more seriously instead of complaining." %}
+                    </p>
+                    
+                    <p class="mt-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {% trans "I've learned to view pressure as the driving force. I've learned that life is complicated. It is a learning process. My life is a gift. I can't and won't take it for granted. I hope to be somebody one day - Someone unique, Someone blessed, Someone powerful, Someone succeeded." %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Call to Action Card -->
+        <div class="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-3xl shadow-xl p-8 md:p-12 border border-rose-200 dark:border-rose-800/30">
+            <div class="text-center">
+                <div class="bg-gradient-to-r from-rose-500 to-pink-600 text-white rounded-full p-4 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                    <i class="fas fa-hands-helping text-2xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-6">{% trans "Join Our Mission" %}</h2>
+                <p class="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    {% trans "I sincerely invite all elders, teachers, friends, and classmates who know Professor Chen Zhengzhe, Professor Lin Jin, and Chen Qingyu to participate in and support this 'Global Contribution (Co-) Learning Program'. With your support and guidance, our activities will be more vivid and colorful, and we look forward to your participation." %}
+                </p>
+                
+                <div class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-pink-600 hover:to-rose-500 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-envelope mr-3"></i>
+                    <a href="mailto:{{ contact_email }}" class="text-white no-underline">{% trans "Get in Touch" %}</a>
+                </div>
+                
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-6">
+                    {% trans "Have questions? Send us an email and let's make a difference together!" %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

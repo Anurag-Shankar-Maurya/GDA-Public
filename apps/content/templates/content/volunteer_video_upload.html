@@ -1,0 +1,60 @@
+{% extends "content_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Volunteer Video Upload - Global Devotion Association" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{% trans "Taoyuan City Global Contribution Student Volunteer Video Upload" %}</h1>
+    <form method="post" class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label for="name" class="form-label">{% trans "Name" %}: *</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="col-md-6">
+            <label for="line_id" class="form-label">{% trans "LINE ID" %}:</label>
+            <input type="text" class="form-control" id="line_id" name="line_id">
+        </div>
+        <div class="col-12">
+            <label for="title" class="form-label">{% trans "Title" %}: *</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="col-12">
+            <label for="expected_results" class="form-label">{% trans "Expected results" %}:</label>
+            <textarea class="form-control" id="expected_results" name="expected_results" rows="3"></textarea>
+        </div>
+        <div class="col-md-6">
+            <label for="date" class="form-label">{% trans "Date" %}:</label>
+            <input type="date" class="form-control" id="date" name="date">
+        </div>
+        <div class="col-md-6">
+            <label for="email" class="form-label">{% trans "E-Mail" %}:</label>
+            <input type="email" class="form-control" id="email" name="email">
+        </div>
+        <div class="col-md-6">
+            <label for="facebook" class="form-label">{% trans "Facebook" %}:</label>
+            <input type="text" class="form-control" id="facebook" name="facebook">
+        </div>
+        <div class="col-md-6">
+            <label for="about" class="form-label">{% trans "About" %}:</label>
+            <input type="text" class="form-control" id="about" name="about">
+        </div>
+        <div class="col-md-6">
+            <label for="location" class="form-label">{% trans "Location" %}:</label>
+            <input type="text" class="form-control" id="location" name="location">
+        </div>
+        <div class="col-md-6">
+            <label for="study_sheet" class="form-label">{% trans "Study Sheet" %}:</label>
+            <input type="text" class="form-control" id="study_sheet" name="study_sheet">
+        </div>
+        <div class="col-12">
+            <label for="video_link" class="form-label">{% trans "Video link" %}: ({% trans "Please enter Youtube URL" %}) *</label>
+            <input type="url" class="form-control" id="video_link" name="video_link" required>
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

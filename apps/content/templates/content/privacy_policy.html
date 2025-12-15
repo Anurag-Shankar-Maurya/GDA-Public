@@ -1,0 +1,211 @@
+{% extends "content_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Privacy Policy" %} - GDA{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-8 text-center">{% trans "Privacy Policy" %}</h1>
+    
+    <div class="text-center mb-10">
+        <p class="text-gray-600 dark:text-gray-400">
+            {% trans "Last Updated:" %} {% now "F j, Y" %}
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Navigation Sidebar -->
+        <aside class="md:col-span-1 h-fit sticky top-24">
+            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700">
+                <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">{% trans "On this page:" %}</h2>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#introduction" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Introduction" %}</a></li>
+                    <li><a href="#information-collection" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Information We Collect" %}</a></li>
+                    <li><a href="#how-we-use-information" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "How We Use Your Information" %}</a></li>
+                    <li><a href="#disclosure" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Disclosure of Information" %}</a></li>
+                    <li><a href="#data-security" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Data Security" %}</a></li>
+                    <li><a href="#your-rights" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Your Rights" %}</a></li>
+                    <li><a href="#childrens-privacy" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Children's Privacy" %}</a></li>
+                    <li><a href="#changes" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Changes to Policy" %}</a></li>
+                    <li><a href="#contact-us" class="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:underline font-medium transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>{% trans "Contact Us" %}</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="md:col-span-2 space-y-8">
+            <!-- Introduction -->
+            <section id="introduction" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-info-circle mr-3 text-blue-500"></i>
+                    {% trans "Introduction" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {% trans "Welcome to the Global Devotion Association (GDA) Privacy Policy. GDA ('we', 'us', or 'our') is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services, including our volunteer management platform. Please read this policy carefully to understand our practices regarding your personal data." %}
+                </p>
+            </section>
+
+            <!-- Information We Collect -->
+            <section id="information-collection" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-database mr-3 text-blue-500"></i>
+                    {% trans "Information We Collect" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                    {% trans "We collect information that identifies, relates to, describes, references, is capable of being associated with, or could reasonably be linked, directly or indirectly, with a particular consumer or device." %}
+                </p>
+                <div class="space-y-4">
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-md">
+                        <h3 class="font-medium text-gray-800 dark:text-gray-200 mb-2">{% trans "A. Personal Information You Provide" %}</h3>
+                        <ul class="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-2">
+                            <li><strong>{% trans "Registration Data:" %}</strong> {% trans "Name, email address, password, date of birth, gender, and blood group." %}</li>
+                            <li><strong>{% trans "Contact Information:" %}</strong> {% trans "Phone number, physical address, and country code." %}</li>
+                            <li><strong>{% trans "Guardian Information:" %}</strong> {% trans "Name and relationship of guardian (for users requiring guardian supervision)." %}</li>
+                            <li><strong>{% trans "Profile Data:" %}</strong> {% trans "Information you provide in your user profile and volunteer applications." %}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-md">
+                        <h3 class="font-medium text-gray-800 dark:text-gray-200 mb-2">{% trans "B. Information Collected Automatically" %}</h3>
+                        <ul class="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 ml-2">
+                            <li><strong>{% trans "Log Data:" %}</strong> {% trans "IP address, browser type, operating system, referring URLs, access times, and pages viewed." %}</li>
+                            <li><strong>{% trans "Device Information:" %}</strong> {% trans "Information about the device you use to access our services." %}</li>
+                            <li><strong>{% trans "Cookies:" %}</strong> {% trans "We use cookies to maintain your session and preferences. You can manage your cookie preferences through our Cookie Consent tool." %}</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-md">
+                        <h3 class="font-medium text-gray-800 dark:text-gray-200 mb-2">{% trans "C. Information from Third Parties" %}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 ml-2">{% trans "If you choose to link your account with third-party providers (Google, Facebook, GitHub), we may receive information about you from those third parties in accordance with their privacy policies." %}</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How We Use Your Information -->
+            <section id="how-we-use-information" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-clipboard-list mr-3 text-blue-500"></i>
+                    {% trans "How We Use Your Information" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                    {% trans "We use the information we collect for various purposes, including:" %}
+                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-300 leading-relaxed space-y-2 ml-2">
+                    <li>{% trans "To provide, operate, and maintain our volunteer management services." %}</li>
+                    <li>{% trans "To manage your account and registration as a volunteer." %}</li>
+                    <li>{% trans "To communicate with you regarding project updates, newsletters, and administrative information." %}</li>
+                    <li>{% trans "To process volunteer applications and match you with suitable projects." %}</li>
+                    <li>{% trans "To improve our website, services, and user experience." %}</li>
+                    <li>{% trans "To monitor and analyze usage trends to improve our Services." %}</li>
+                    <li>{% trans "To comply with legal obligations and enforce our policies." %}</li>
+                </ul>
+            </section>
+
+            <!-- Disclosure of Information -->
+            <section id="disclosure" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-share-alt mr-3 text-blue-500"></i>
+                    {% trans "Disclosure of Information" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                    {% trans "We may share information we have collected about you in certain situations:" %}
+                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-300 leading-relaxed space-y-2 ml-2">
+                    <li><strong>{% trans "By Law or to Protect Rights:" %}</strong> {% trans "If necessary to respond to legal process or to protect the rights, property, and safety of others." %}</li>
+                    <li><strong>{% trans "Service Providers:" %}</strong> {% trans "With third-party vendors who perform services for us (e.g., data hosting, email delivery)." %}</li>
+                    <li><strong>{% trans "Affiliates:" %}</strong> {% trans "With our affiliates, in which case we will require them to honor this Privacy Policy." %}</li>
+                </ul>
+            </section>
+
+            <!-- Data Security -->
+            <section id="data-security" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-lock mr-3 text-blue-500"></i>
+                    {% trans "Data Security" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {% trans "We implement appropriate technical and organizational measures to protect your personal information from unauthorized access, use, disclosure, alteration, or destruction. However, no method of transmission over the internet or electronic storage is completely secure, so we cannot guarantee absolute security." %}
+                </p>
+            </section>
+
+            <!-- Your Rights -->
+            <section id="your-rights" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-user-shield mr-3 text-blue-500"></i>
+                    {% trans "Your Rights" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+                    {% trans "Depending on your jurisdiction, you may have certain rights regarding your personal information, including:" %}
+                </p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-300 leading-relaxed space-y-2 ml-2">
+                    <li>{% trans "The right to access and request copies of your personal data." %}</li>
+                    <li>{% trans "The right to correct inaccurate or incomplete information." %}</li>
+                    <li>{% trans "The right to request deletion of your personal data." %}</li>
+                    <li>{% trans "The right to restrict or object to processing of your data." %}</li>
+                    <li>{% trans "The right to data portability." %}</li>
+                </ul>
+            </section>
+
+            <!-- Children's Privacy -->
+            <section id="childrens-privacy" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-child mr-3 text-blue-500"></i>
+                    {% trans "Children's Privacy" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {% trans "For users under the age of majority in their jurisdiction, we may require guardian information and consent. We do not knowingly collect personal information from children without parental or guardian consent. If we learn we have collected such information without verification of consent, we will delete it." %}
+                </p>
+            </section>
+
+            <!-- Changes to Policy -->
+            <section id="changes" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-history mr-3 text-blue-500"></i>
+                    {% trans "Changes to This Policy" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {% trans "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the 'Last Updated' date at the top of this page. You are advised to review this Privacy Policy periodically for any changes." %}
+                </p>
+            </section>
+
+            <!-- Contact Us -->
+            <section id="contact-us" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 scroll-mt-24">
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                    <i class="fas fa-envelope mr-3 text-blue-500"></i>
+                    {% trans "Contact Us" %}
+                </h2>
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                    {% trans "If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:" %}
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                        <p class="text-gray-700 dark:text-gray-200 font-bold mb-2">Global Devotion Association</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1"><i class="fas fa-map-marker-alt w-5 text-center mr-2 text-blue-500"></i>{% trans "1F., No.238, Sec. 2, Linghang N. Rd., Zhongli Dist., Taoyuan City 320014, Taiwan" %}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1"><i class="fas fa-map-marker-alt w-5 text-center mr-2 text-blue-500"></i>{% trans "18031 Irvine Blvd Unit 209, Tustin, CA 92780, USA" %}</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                        <p class="text-gray-700 dark:text-gray-200 font-bold mb-2">{% trans "Get in Touch" %}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                            <i class="fas fa-envelope w-5 text-center mr-2 text-blue-500"></i>
+                            <a href="mailto:globaldevotion2017@gmail.com" class="text-blue-600 dark:text-blue-400 hover:underline">globaldevotion2017@gmail.com</a>
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                            <i class="fas fa-phone w-5 text-center mr-2 text-blue-500"></i>
+                            <a href="tel:+886342551" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">(03)4255189</a>
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+{% endblock %}
