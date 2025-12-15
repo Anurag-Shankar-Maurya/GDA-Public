@@ -1,17 +1,16 @@
 {
   "version": 2,
-  "pythonVersion": "3.12",
-  "functions": {
-    "gda/wsgi.py": {
-      "runtime": "python3.12",
-      "maxDuration": 30,
-      "maxLambdaSize": "15mb"
+  "builds": [
+    {
+      "src": "gda/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb" }
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/gda/wsgi.py"
+      "dest": "gda/wsgi.py"
     }
   ]
 }
