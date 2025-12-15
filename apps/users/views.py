@@ -560,6 +560,9 @@ def onboarding(request):
 			user = form.save(commit=False)
 			user.onboarding_complete = True
 			user.is_active = True
+			# Mark email verified for social login users upon successful onboarding
+			if user.login_method in ['google', 'facebook', 'github']:
+				user.email_verified = True
 			user.save()
 			messages.success(request, 'Welcome! Your profile has been set up successfully.')
 
@@ -665,12 +668,11 @@ def social_account_added_handler(request, sociallogin, **kwargs):
 	else:
 		user.login_method = 'email'  # fallback
 
-	# For social logins, email is verified by the provider
-	user.email_verified = True
+	# For social logins, email verification will be set after successful onboarding
 	user.is_active = True
 
 	user.save()
-	logger.info(f"Set login_method to {user.login_method} and email_verified=True for user {user.username}")
+	logger.info(f"Set login_method to {user.login_method} for user {user.username}")
 
 	# Check if onboarding is needed
 	if not user.onboarding_complete:

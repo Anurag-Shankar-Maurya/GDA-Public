@@ -80,6 +80,27 @@
         
         // Save preference
         localStorage.setItem('activeProfileTab', tabName);
+
+        // Close sidebar on mobile if open (use max-height animation to collapse)
+        const sidebarContent = document.getElementById('sidebar-content');
+        const sidebarIcon = document.querySelector('#sidebar-toggle-icon i');
+        if (sidebarContent && window.innerWidth < 1024) {
+            if (!sidebarContent.classList.contains('hidden')) {
+                // collapse smoothly by setting maxHeight to 0
+                sidebarContent.style.maxHeight = '0px';
+                sidebarContent.style.marginTop = '0';
+                if (sidebarIcon) {
+                    sidebarIcon.classList.remove('fa-chevron-up', 'rotate-180');
+                    sidebarIcon.classList.add('fa-chevron-down');
+                }
+                // add hidden after animation completes
+                setTimeout(() => {
+                    if (sidebarContent.style.maxHeight === '0px') {
+                        sidebarContent.classList.add('hidden');
+                    }
+                }, 500);
+            }
+        }
     }
 
     // Check for saved tab or default to overview
