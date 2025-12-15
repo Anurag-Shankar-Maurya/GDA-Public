@@ -1,19 +1,21 @@
 {% extends "content_base.html" %}
 {% load i18n %}
 
-{% block title %}GDA: Success Stories{% endblock %}
+{% block title %}{% trans "GDA: Success Stories" %}{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">
-        <a href="{% url 'landing_page' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Home" %}</a>
-        <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
     </li>
     <li class="flex items-center">
-        <a href="{% url 'content_success_story_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Success Stories" %}</a>
+        <a href="{% url 'content_success_story_list' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Success Stories" %}</a>
     </li>
 {% endblock %}
 
 {% block content %}
+
+{% comment %}
     <!-- Hero Carousel Section -->
     <div class="relative max-w-7xl mx-auto px-4 mb-8">
         <div class="hero-carousel-container relative">
@@ -130,38 +132,41 @@
         {% endif %}
         </div>
     </div>
+{% endcomment %}
 
     <!-- Featured Success Stories Section -->
     {% if featured_success_stories %}
-    <section class="max-w-7xl mx-auto px-4 mb-12">
-        <div class="text-center mb-8">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
-                <i class="fas fa-star text-yellow-500 mr-2"></i>
+    <section class="max-w-7xl mx-auto px-4 mb-16 animate-on-scroll">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-text-light dark:text-text-dark mb-4">
                 {% trans "Featured Success Stories" %}
             </h2>
-            <p class="text-lg text-gray-600 dark:text-gray-400">{% trans "Inspiring stories of transformation and impact" %}</p>
+            <div class="w-24 h-1.5 bg-accent-blue mx-auto rounded-full mb-6"></div>
+            <p class="text-xl text-text-light-secondary dark:text-text-dark-secondary">
+                {% trans "Inspiring stories of transformation and impact" %}
+            </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for story in featured_success_stories %}
-            <a href="{% url 'content_success_story_detail' story.pk %}" class="block group bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border-2 border-yellow-400 dark:border-yellow-500 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] relative cursor-pointer">
+            <a href="{% url 'content_success_story_detail' story.pk %}" class="flex flex-col h-full block group bg-light-bg dark:bg-dark-secondary-bg border-2 border-warning dark:border-warning rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] relative cursor-pointer">
                 <!-- Featured Badge -->
                 <div class="absolute top-0 left-0 right-0 z-10 flex justify-center">
-                    <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-6 py-2 rounded-b-xl shadow-lg font-bold text-sm">
+                    <div class="bg-gradient-to-r from-warning to-yellow-600 text-white px-6 py-2 rounded-b-xl shadow-lg font-bold text-sm">
                         <i class="fas fa-star mr-1"></i>
                         {% trans "FEATURED" %}
                     </div>
                 </div>
                 
-                <div class="relative overflow-hidden pt-8">
+                <div class="relative overflow-hidden pt-8 bg-light-secondary-bg dark:bg-dark-bg">
                     {% if story.cover_image_blob %}
-                        <img src="{% url 'content_serve_blob' 'success_story' story.pk 'cover_image_blob' %}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <img src="{% url 'content_serve_blob' 'success_story' story.pk 'cover_image_blob' %}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy">
                     {% elif story.cover_image %}
-                        <img src="{{ story.cover_image.url }}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <img src="{{ story.cover_image.url }}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy">
                     {% elif story.cover_image_url %}
-                        <img src="{{ story.cover_image_url }}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <img src="{{ story.cover_image_url }}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy">
                     {% else %}
-                        <div class="w-full h-56 bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                        <div class="w-full h-56 bg-gradient-to-br from-warning to-yellow-600 flex items-center justify-center">
                             <div class="text-center text-white">
                                 <i class="fas fa-trophy text-4xl mb-2"></i>
                                 <p class="text-sm font-semibold">{% trans "Featured Story" %}</p>
@@ -171,7 +176,7 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     {% if story.related_project %}
                     <div class="absolute top-12 right-4">
-                        <span class="px-3 py-1 text-xs font-medium bg-white/90 backdrop-blur-sm text-gray-800 rounded-full">
+                        <span class="px-3 py-1 text-xs font-medium bg-light-bg/90 backdrop-blur-sm text-text-light dark:text-text-dark rounded-full">
                             <i class="fas fa-link mr-1"></i>{{ story.related_project.title|truncatewords:3 }}
                         </span>
                     </div>
@@ -179,44 +184,17 @@
                 </div>
                 
                 <div class="p-6 flex-grow flex flex-col">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors duration-300">
+                    <h3 class="text-xl font-bold text-text-light dark:text-text-dark mb-3 leading-tight group-hover:text-warning transition-colors duration-300">
                         {{ story.title }}
                     </h3>
                     
-                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+                    <p class="text-text-light-secondary dark:text-text-dark-secondary text-sm mb-4 line-clamp-3 flex-grow">
                         {{ story.body|truncatewords:30 }}
                     </p>
                     
-                    <!-- Impact Metrics -->
-                    {% if story.beneficiaries or story.total_hours_contributed %}
-                    <div class="grid grid-cols-2 gap-3 mb-4">
-                        {% if story.beneficiaries %}
-                        <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 text-center border border-yellow-200 dark:border-yellow-800">
-                            <div class="text-lg font-bold text-yellow-600 dark:text-yellow-400">{{ story.beneficiaries }}</div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide">{% trans "Beneficiaries" %}</div>
-                        </div>
-                        {% endif %}
-                        {% if story.total_hours_contributed %}
-                        <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 text-center border border-yellow-200 dark:border-yellow-800">
-                            <div class="text-lg font-bold text-yellow-600 dark:text-yellow-400">{{ story.total_hours_contributed }}</div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide">{% trans "Hours" %}</div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Publication Date -->
-                    <div class="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                        <div class="flex items-center text-sm">
-                            <i class="fas fa-calendar-alt text-yellow-600 dark:text-yellow-400 mr-2"></i>
-                            <span class="text-yellow-800 dark:text-yellow-200 font-medium">{% trans "Published:" %}</span>
-                            <span class="text-yellow-700 dark:text-yellow-300 ml-1">{{ story.published_at|date:"M d, Y" }}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-end pt-4 border-t border-yellow-200 dark:border-yellow-800">
-                        <span class="group/btn inline-flex items-center bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                            <span class="mr-2">{% trans "Read Story" %}</span>
+                    <div class="flex items-center justify-end pt-4 border-t border-border-light dark:border-border-dark">
+                        <span class="group/btn inline-flex items-center text-primary-blue dark:text-accent-light font-semibold py-2.5 px-6 hover:underline transition-all duration-300 transform hover:scale-105">
+                            <span class="mr-2">{% trans "Read More" %}</span>
                             <i class="fas fa-arrow-right group-hover/btn:translate-x-1 transition-transform duration-300"></i>
                         </span>
                     </div>
@@ -229,24 +207,24 @@
 
     <section id="success-stories-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Filter and Search Form -->
-        <form method="GET" class="bg-gradient-to-r from-card-bg-light to-gray-50 dark:from-card-bg-dark dark:to-gray-800 p-8 rounded-2xl shadow-xl border border-border-light dark:border-border-dark mb-12 backdrop-blur-sm">
+        <form method="GET" class="bg-light-secondary-bg dark:bg-dark-secondary-bg p-8 rounded-2xl shadow-xl border border-border-light dark:border-border-dark mb-16 backdrop-blur-sm transition-colors duration-300 animate-on-scroll">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                 <!-- Search -->
                 <div>
-                    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{% trans "Search:" %}</label>
+                    <label for="search" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">{% trans "Search:" %}</label>
                     <input type="text" id="search" name="search" value="{{ request.GET.search }}" placeholder="{% trans "Search success stories..." %}"
-                           class="p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                  focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                  dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
+                           class="p-2.5 block w-full rounded-lg border border-border-light dark:border-border-dark shadow-sm
+                                  focus:border-primary-blue focus:ring-primary-blue bg-light-bg dark:bg-dark-bg 
+                                  text-text-light dark:text-text-dark placeholder-text-light-secondary dark:placeholder-text-dark-secondary transition-colors duration-200">
                 </div>
 
                 <!-- Related Project Filter -->
                 <div>
-                    <label for="related_project" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{% trans "Related Project:" %}</label>
+                    <label for="related_project" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">{% trans "Related Project:" %}</label>
                     <select id="related_project" name="related_project"
-                            class="p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                   focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                   dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
+                            class="p-2.5 block w-full rounded-lg border border-border-light dark:border-border-dark shadow-sm
+                                   focus:border-primary-blue focus:ring-primary-blue bg-light-bg dark:bg-dark-bg 
+                                   text-text-light dark:text-text-dark transition-colors duration-200">
                         <option value="">{% trans "All Projects" %}</option>
                         {% for project in projects %}
                             <option value="{{ project.pk }}" {% if request.GET.related_project == project.pk|stringformat:"s" %}selected{% endif %}>{{ project.title }}</option>
@@ -256,11 +234,11 @@
 
                 <!-- Sort Select -->
                 <div>
-                    <label for="sort" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{% trans "Sort By:" %}</label>
+                    <label for="sort" class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">{% trans "Sort By:" %}</label>
                     <select id="sort" name="sort"
-                            class="p-2 block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm
-                                   focus:border-primary-blue focus:ring-primary-blue focus:bg-gray-100 dark:focus:bg-gray-700
-                                   dark:bg-gray-800 dark:text-gray-200 transition-colors duration-200">
+                            class="p-2.5 block w-full rounded-lg border border-border-light dark:border-border-dark shadow-sm
+                                   focus:border-primary-blue focus:ring-primary-blue bg-light-bg dark:bg-dark-bg 
+                                   text-text-light dark:text-text-dark transition-colors duration-200">
                         {% for option in sort_options %}
                             <option value="{{ option.value }}" {% if request.GET.sort == option.value %}selected{% endif %}>{{ option.label }}</option>
                         {% endfor %}
@@ -269,11 +247,11 @@
 
                 <!-- Submit and Clear Buttons -->
                 <div class="md:col-span-3 flex flex-col md:flex-row justify-center items-center space-y-3 md:space-y-0 md:space-x-4 pt-6">
-                    <button type="submit" class="group inline-flex items-center px-8 py-3 border border-transparent text-sm font-medium rounded-xl shadow-lg text-white bg-gradient-to-r from-primary-blue to-accent-blue hover:from-accent-blue hover:to-primary-blue focus:outline-none focus:ring-4 focus:ring-primary-blue focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
+                    <button type="submit" class="group inline-flex items-center px-8 py-3 border border-transparent text-sm font-medium rounded-full shadow-lg text-text-dark bg-primary-blue hover:bg-primary-light focus:outline-none focus:ring-4 focus:ring-primary-blue focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
                         <i class="fas fa-filter mr-2 group-hover:animate-pulse"></i>
                         {% trans "Apply Filters" %}
                     </button>
-                    <button type="button" class="clear-filters-btn group inline-flex items-center px-8 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-xl shadow-lg text-gray-700 dark:text-gray-300 bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
+                    <button type="button" class="clear-filters-btn group inline-flex items-center px-8 py-3 border border-border-light dark:border-border-dark text-sm font-medium rounded-full shadow-lg text-text-light dark:text-text-dark bg-light-bg dark:bg-dark-bg hover:bg-light-secondary-bg dark:hover:bg-dark-secondary-bg focus:outline-none focus:ring-4 focus:ring-text-light-secondary focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105">
                         <i class="fas fa-times mr-2 group-hover:animate-pulse"></i>
                         {% trans "Clear Filters" %}
                     </button>
@@ -289,28 +267,32 @@
         </form>
 
         <!-- All Success Stories Section -->
-        <div class="text-center mb-8">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
-                <i class="fas fa-trophy text-primary-blue mr-2"></i>
+        <div class="text-center mb-12 animate-on-scroll">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-text-light dark:text-text-dark mb-4">
                 {% trans "All Success Stories" %}
             </h2>
-            <p class="text-lg text-gray-600 dark:text-gray-400">{% trans "Celebrate the impact and achievements of our community" %}</p>
+            <div class="w-24 h-1.5 bg-accent-blue mx-auto rounded-full mb-6"></div>
+            <p class="text-lg text-text-light-secondary dark:text-text-dark-secondary">
+                {% trans "Celebrate the impact and achievements of our community" %}
+            </p>
         </div>
 
         {% if success_stories %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {% for story in success_stories %}
-                    <a href="{% url 'content_success_story_detail' story.pk %}" class="block group bg-gradient-to-b from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 border border-border-light dark:border-border-dark rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 ease-in-out transform hover:-translate-y-2 hover:scale-[1.02] success-story-card cursor-pointer">
-                        <div class="relative overflow-hidden">
+                    <a href="{% url 'content_success_story_detail' story.pk %}" class="flex flex-col h-full block group bg-light-bg dark:bg-dark-secondary-bg
+                           border border-border-light dark:border-border-dark rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out transform hover:-translate-y-2
+                           hover:scale-[1.02] success-story-card cursor-pointer animate-on-scroll">
+                        <div class="relative overflow-hidden h-56 bg-light-secondary-bg dark:bg-dark-bg">
                         {% if story.cover_image_blob %}
-                            <img src="{% url 'content_serve_blob' 'success_story' story.pk 'cover_image_blob' %}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <img src="{% url 'content_serve_blob' 'success_story' story.pk 'cover_image_blob' %}" alt="{{ story.title }} cover" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy">
                         {% elif story.cover_image %}
-                            <img src="{{ story.cover_image.url }}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <img src="{{ story.cover_image.url }}" alt="{{ story.title }} cover" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy">
                         {% elif story.cover_image_url %}
-                            <img src="{{ story.cover_image_url }}" alt="{{ story.title }} cover" class="w-full h-56 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                            <img src="{{ story.cover_image_url }}" alt="{{ story.title }} cover" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" loading="lazy">
                         {% else %}
-                            <div class="w-full h-56 bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center">
-                                <div class="text-center text-white">
+                            <div class="w-full h-full bg-gradient-to-br from-primary-blue to-accent-blue flex items-center justify-center">
+                                <div class="text-center text-text-dark">
                                     <i class="fas fa-trophy text-4xl mb-2 opacity-50"></i>
                                     <p class="text-sm opacity-75">{% trans "No Image Available" %}</p>
                                 </div>
@@ -319,58 +301,31 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div class="absolute top-4 right-4 flex flex-col gap-2">
                             {% if story.is_featured %}
-                            <div class="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-primary-blue">
+                            <div class="bg-light-bg/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-accent-blue shadow-sm animate-on-scroll">
                                 <i class="fas fa-heart mr-1"></i>
                                 {% trans "Featured" %}
                             </div>
                             {% endif %}
                             {% if story.related_project %}
-                            <span class="px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
-                                <i class="fas fa-link mr-1"></i>{{ story.related_project.title|truncatewords:2 }}
+                            <span class="px-3 py-1 text-xs font-medium bg-success/10 text-success rounded-full shadow-sm animate-on-scroll max-w-[150px] truncate">
+                                <i class="fas fa-link mr-1"></i>{{ story.related_project.title }}
                             </span>
                             {% endif %}
                         </div>
                         </div>
                         
                         <div class="p-6 flex-grow flex flex-col">
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-primary-blue transition-colors duration-300">
+                            <h3 class="text-xl font-bold text-text-light dark:text-text-dark mb-3 leading-tight group-hover:text-accent-blue transition-colors duration-300 animate-on-scroll">
                                 {{ story.title }}
                             </h3>
                             
-                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+                            <p class="text-text-light-secondary dark:text-text-dark-secondary text-sm mb-4 line-clamp-3 flex-grow animate-on-scroll">
                                 {{ story.body|truncatewords:30 }}
                             </p>
                             
-                            <!-- Impact Stats Grid -->
-                            {% if story.beneficiaries or story.total_hours_contributed %}
-                            <div class="grid grid-cols-2 gap-3 mb-4">
-                                {% if story.beneficiaries %}
-                                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
-                                    <div class="text-lg font-bold text-green-600 dark:text-green-400">{{ story.beneficiaries }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">{% trans "Beneficiaries" %}</div>
-                                </div>
-                                {% endif %}
-                                {% if story.total_hours_contributed %}
-                                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 text-center">
-                                    <div class="text-lg font-bold text-primary-blue dark:text-blue-400">{{ story.total_hours_contributed }}</div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">{% trans "Hours" %}</div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-                            
-                            <!-- Publication Date -->
-                            <div class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                                <div class="flex items-center text-sm">
-                                    <i class="fas fa-calendar-alt text-blue-600 dark:text-blue-400 mr-2"></i>
-                                    <span class="text-blue-800 dark:text-blue-200 font-medium">{% trans "Published:" %}</span>
-                                    <span class="text-blue-700 dark:text-blue-300 ml-1">{{ story.published_at|date:"M d, Y" }}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-end pt-4 border-t border-gray-100 dark:border-gray-700">
-                                <span class="group/btn inline-flex items-center bg-gradient-to-r from-primary-blue to-accent-blue hover:from-accent-blue hover:to-primary-blue text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                                    <span class="mr-2">{% trans "Read Story" %}</span>
+                            <div class="flex items-center justify-end pt-4 border-t border-border-light dark:border-border-dark animate-on-scroll">
+                                <span class="group/btn inline-flex items-center text-accent-blue dark:text-accent-light font-semibold py-2 px-4 hover:bg-accent-blue/5 rounded-lg transition-all duration-300">
+                                    <span class="mr-2">{% trans "Read More" %}</span>
                                     <i class="fas fa-arrow-right group-hover/btn:translate-x-1 transition-transform duration-300"></i>
                                 </span>
                             </div>
@@ -381,34 +336,34 @@
 
             <!-- Pagination Controls -->
             {% if is_paginated %}
-                <div class="flex justify-center mt-8 space-x-1 sm:space-x-2 overflow-x-auto">
+                <div class="flex justify-center mt-12 space-x-1 sm:space-x-2 overflow-x-auto pb-4">
                     <!-- Previous Button -->
                     {% if page_obj.has_previous %}
                         <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light dark:text-text-dark border border-border-light dark:border-border-dark rounded-lg hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue transition-colors duration-200">
                             <i class="fas fa-angle-left"></i>
                         </a>
                     {% else %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                        <span class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light-secondary dark:text-text-dark-secondary border border-border-light dark:border-border-dark rounded-lg cursor-not-allowed opacity-50">
                             <i class="fas fa-angle-left"></i>
                         </span>
                     {% endif %}
 
                     <!-- First Page -->
                     <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                    class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == 1 %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                    class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base border {% if page_obj.number == 1 %}bg-accent-blue border-accent-blue text-text-dark{% else %}bg-light-secondary-bg dark:bg-dark-secondary-bg border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue{% endif %} rounded-lg transition-colors duration-200">
                         1
                     </a>
 
-                    <!-- Left Dots (if current page is far from first) -->
+                    <!-- Left Dots -->
                     {% if page_obj.number > 3 %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+                        <span class="px-2 py-2 text-text-light-secondary dark:text-text-dark-secondary">...</span>
                     {% endif %}
 
-                    <!-- Before Previous Adjacent Page -->
+                    <!-- Adjacent Pages -->
                     {% if page_obj.number > 3 %}
                         <a href="?page={{ page_obj.number|add:'-2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'-2' }}
                         </a>
                     {% endif %}
@@ -416,15 +371,15 @@
                     <!-- Previous Adjacent Page -->
                     {% if page_obj.number > 2 %}
                         <a href="?page={{ page_obj.number|add:'-1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'-1' }}
                         </a>
                     {% endif %}
 
-                    <!-- Current Page (only if not first or last) -->
+                    <!-- Current Page -->
                     {% if page_obj.number != 1 and page_obj.number != paginator.num_pages %}
                         <a href="?page={{ page_obj.number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-accent-blue text-white rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-accent-blue border border-accent-blue text-text-dark rounded-lg transition-colors duration-200">
                             {{ page_obj.number }}
                         </a>
                     {% endif %}
@@ -432,7 +387,7 @@
                     <!-- Next Adjacent Page -->
                     {% if page_obj.number < paginator.num_pages|add:'-1' %}
                         <a href="?page={{ page_obj.number|add:'1' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'1' }}
                         </a>
                     {% endif %}
@@ -440,20 +395,20 @@
                     <!-- Second Next Adjacent Page -->
                     {% if page_obj.number < paginator.num_pages|add:'-2' %}
                         <a href="?page={{ page_obj.number|add:'2' }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue rounded-lg transition-colors duration-200">
                             {{ page_obj.number|add:'2' }}
                         </a>
                     {% endif %}
 
-                    <!-- Right Dots (if current page is far from last) -->
+                    <!-- Right Dots -->
                     {% if page_obj.number < paginator.num_pages|add:'-2' %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base text-gray-700">...</span>
+                        <span class="px-2 py-2 text-text-light-secondary dark:text-text-dark-secondary">...</span>
                     {% endif %}
 
-                    <!-- Last Page (only if more than 1 page) -->
+                    <!-- Last Page -->
                     {% if paginator.num_pages > 1 %}
                         <a href="?page={{ paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base {% if page_obj.number == paginator.num_pages %}bg-accent-blue text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-lg transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base border {% if page_obj.number == paginator.num_pages %}bg-accent-blue border-accent-blue text-text-dark{% else %}bg-light-secondary-bg dark:bg-dark-secondary-bg border-border-light dark:border-border-dark text-text-light dark:text-text-dark hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue{% endif %} rounded-lg transition-colors duration-200">
                             {{ paginator.num_pages }}
                         </a>
                     {% endif %}
@@ -461,29 +416,29 @@
                     <!-- Next Button -->
                     {% if page_obj.has_next %}
                         <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" 
-                        class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-primary-blue text-white rounded-lg hover:bg-accent-blue transition-colors duration-200">
+                        class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light dark:text-text-dark border border-border-light dark:border-border-dark rounded-lg hover:bg-accent-blue hover:text-text-dark hover:border-accent-blue transition-colors duration-200">
                             <i class="fas fa-angle-right"></i>
                         </a>
                     {% else %}
-                        <span class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-base bg-gray-300 text-gray-700 rounded-lg cursor-not-allowed opacity-50">
+                        <span class="px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-base bg-light-secondary-bg dark:bg-dark-secondary-bg text-text-light-secondary dark:text-text-dark-secondary border border-border-light dark:border-border-dark rounded-lg cursor-not-allowed opacity-50">
                             <i class="fas fa-angle-right"></i>
                         </span>
                     {% endif %}
                 </div>
 
                 <!-- Page Info -->
-                <div class="text-center mt-4 text-gray-600 text-sm">
+                <div class="text-center mt-4 text-text-light-secondary dark:text-text-dark-secondary text-sm">
                     {% blocktrans with page_number=page_obj.number total_pages=paginator.num_pages %}Page {{ page_number }} of {{ total_pages }}{% endblocktrans %}
                 </div>
     
             {% endif %}
         {% else %}
-            <div class="bg-gradient-to-br from-white to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-xl overflow-hidden rounded-2xl p-12 text-center border border-border-light dark:border-border-dark">
+            <div class="bg-light-secondary-bg dark:bg-dark-secondary-bg shadow-xl overflow-hidden rounded-2xl p-12 text-center border border-border-light dark:border-border-dark animate-on-scroll">
                 <div class="mb-6">
-                    <i class="fas fa-search text-6xl text-gray-300 dark:text-gray-600"></i>
+                    <i class="fas fa-search text-6xl text-border-light dark:text-border-dark"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{% trans "No Success Stories Yet" %}</h3>
-                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                <h3 class="text-2xl font-bold text-text-light dark:text-text-dark mb-4">{% trans "No Success Stories Yet" %}</h3>
+                <p class="text-lg text-text-light-secondary dark:text-text-dark-secondary mb-8 max-w-md mx-auto">
                     {% trans "There are currently no success stories available. Please check back later or contact us for more information." %}
                 </p>
             </div>
@@ -600,6 +555,19 @@
             animation: fadeIn 1.2s ease-out;
         }
         
+        /* Initial state for scroll animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* State when visible */
+        .is-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        
         .line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -641,7 +609,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Hero Carousel functionality
+            // Hero Carousel functionality with enhanced controls and touch support
             const carouselContainer = document.querySelector('.hero-carousel-container');
             const carousel = document.querySelector('.hero-carousel');
             
@@ -877,24 +845,6 @@
                 scrollToSuccessStoriesSection();
             }
             
-            // Add intersection observer for cards animation
-            const cards = document.querySelectorAll('.success-story-card');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-            
-            cards.forEach((card) => {
-                observer.observe(card);
-            });
-
             // Also scroll on page show (handles back/forward navigation)
             window.addEventListener('pageshow', () => {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -904,6 +854,45 @@
                     sessionStorage.removeItem('scrollToSuccessStories');
                     scrollToSuccessStoriesSection();
                 }
+            });
+
+            // --- ANIMATION OBSERVER ---
+            const observerOptions = {
+                threshold: 0.1, 
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('animate-on-scroll')) {
+                            entry.target.classList.add('is-visible');
+                        }
+                        if (entry.target.classList.contains('success-story-card')) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Select elements to animate
+            const targets = document.querySelectorAll('.animate-on-scroll, .success-story-card');
+            
+            targets.forEach((target) => {
+                observer.observe(target);
+            });
+            
+            // Enhanced form interactions
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('transform', 'scale-105');
+                });
+                
+                input.addEventListener('blur', () => {
+                    input.parentElement.classList.remove('transform', 'scale-105');
+                });
             });
         });
     </script>

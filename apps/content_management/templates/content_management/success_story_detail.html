@@ -1,12 +1,13 @@
 {% extends "content_management_base.html" %}
 {% load static %}
+{% load i18n %}
 {% load content_filters %}
 
-{% block title %}Success Story Detail: {{ success_story.title }}{% endblock %}
+{% block title %}{% blocktrans with title=success_story.title %}Success Story Detail: {{ title }}{% endblocktrans %}{% endblock %}
 
 {% block breadcrumb %}
 <li class="flex items-center">
-    <a href="{% url 'success_story_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">Success Stories</a>
+    <a href="{% url 'success_story_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Success Stories" %}</a>
     <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
 </li>
 <li class="flex items-center">
@@ -24,20 +25,20 @@
                     <h1 class="text-4xl font-bold mb-2">{{ success_story.title }}</h1>
                     <div class="flex flex-wrap gap-2">
                         {% if success_story.is_published %}
-                            <span class="px-3 py-1 bg-green-500 text-white text-sm font-medium rounded-full">Published</span>
+                            <span class="px-3 py-1 bg-green-500 text-white text-sm font-medium rounded-full">{% trans "Published" %}</span>
                         {% else %}
-                            <span class="px-3 py-1 bg-gray-500 text-white text-sm font-medium rounded-full">Draft</span>
+                            <span class="px-3 py-1 bg-gray-500 text-white text-sm font-medium rounded-full">{% trans "Draft" %}</span>
                         {% endif %}
                         {% if success_story.related_project %}
                             <a href="{% url 'project_detail' success_story.related_project.pk %}" class="px-3 py-1 bg-blue-500 text-white text-sm font-medium rounded-full hover:bg-blue-600 transition-colors duration-200 inline-block">
-                                Project: {{ success_story.related_project.title }}
+                                {% blocktrans with project_title=success_story.related_project.title %}Project: {{ project_title }}{% endblocktrans %}
                             </a>
                         {% endif %}
                         {% if success_story.is_hero_highlight %}
-                            <span class="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full"><i class="fas fa-star mr-1"></i>Hero Highlight</span>
+                            <span class="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full"><i class="fas fa-star mr-1"></i>{% trans "Hero Highlight" %}</span>
                         {% endif %}
                         {% if success_story.is_featured %}
-                            <span class="px-3 py-1 bg-rose-500 text-white text-sm font-medium rounded-full"><i class="fas fa-heart mr-1"></i>Featured</span>
+                            <span class="px-3 py-1 bg-rose-500 text-white text-sm font-medium rounded-full"><i class="fas fa-heart mr-1"></i>{% trans "Featured" %}</span>
                         {% endif %}
                     </div>
                 </div>
@@ -76,7 +77,7 @@
             <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
                 <h2 class="text-2xl font-bold text-text-light dark:text-text-dark mb-4 flex items-center">
                     <i class="fas fa-book-open text-primary-blue mr-2 content-center"></i>
-                    Story Content
+                    {% trans "Story Content" %}
                 </h2>
                 <div class="prose dark:prose-invert max-w-none bg-gray-50 dark:bg-gray-800 p-6 rounded-lg leading-relaxed">
                     {{ success_story.body|linebreaks }}
@@ -84,11 +85,11 @@
             </div>
 
             <!-- Media Gallery -->
-            {% if success_story.image_file or success_story.image_urls or success_story.video_urls %}
+            {% if success_story.gallery_images.all or success_story.image_urls or success_story.video_urls %}
             <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
                 <h2 class="text-2xl font-bold text-text-light dark:text-text-dark mb-4 flex items-center">
                     <i class="fas fa-images text-primary-blue mr-2 content-center"></i>
-                    Media Gallery
+                    {% trans "Media Gallery" %}
                 </h2>
                 <style>
                     .gallery-container {
@@ -343,94 +344,109 @@
                 </style>
 
                 <div class="gallery-container">
-                    {% if success_story.image_file_blob %}
-                        <div class="gallery-item" data-index="0" data-type="image">
-                            <img src="{% url 'content_serve_blob' 'success_story' success_story.pk 'image_file_blob' %}" 
-                                 alt="Success Story - Uploaded Image" 
-                                 loading="lazy" 
-                                 data-src="{% url 'content_serve_blob' 'success_story' success_story.pk 'image_file_blob' %}">
-                            <div class="gallery-item-label">
-                                <i class="fas fa-image mr-1"></i>Uploaded Image
-                            </div>
-                        </div>
-                    {% elif success_story.image_file %}
-                        <div class="gallery-item" data-index="0" data-type="image">
-                            <img src="{{ success_story.image_file.url }}" 
-                                 alt="Success Story - Uploaded Image" 
-                                 loading="lazy" 
-                                 data-src="{{ success_story.image_file.url }}">
-                            <div class="gallery-item-label">
-                                <i class="fas fa-image mr-1"></i>Uploaded Image
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    {% for image_url in success_story.image_urls %}
-                        <div class="gallery-item" data-index="{{ forloop.counter }}" data-type="image">
-                            {% if 'drive.google.com' in image_url %}
-                                <img src="{{ image_url|google_drive_image_embed }}" 
-                                     alt="Success Story - Gallery Image {{ forloop.counter }}" 
+                    {% for item in gallery_items %}
+                        {% if item.type == 'blob_image' %}
+                            <div class="gallery-item" data-index="{{ item.index }}" data-type="image">
+                                <img src="{% url 'content_serve_blob' 'success_story_gallery_image' item.object.pk 'image_blob' %}" 
+                                     alt="{% if item.caption %}{{ item.caption }}{% else %}{% blocktrans with counter=forloop.counter %}Success Story - Gallery Image {{ counter }}{% endblocktrans %}{% endif %}" 
                                      loading="lazy" 
-                                     data-src="{{ image_url|google_drive_image_embed }}">
+                                     data-src="{% url 'content_serve_blob' 'success_story_gallery_image' item.object.pk 'image_blob' %}">
+                                <div class="gallery-item-label">
+                                    <i class="fas fa-database mr-1"></i>{% if item.object.caption %}{{ item.object.caption|truncatechars:20 }}{% else %}{% trans "Gallery Image" %}{% endif %}
+                                </div>
+                            </div>
+                        {% elif item.type == 'image_url' %}
+                            <div class="gallery-item" data-index="{{ item.index }}" data-type="image">
+                                {% if 'drive.google.com' in item.url %}
+                                    <img src="{{ item.url|google_drive_image_embed }}" 
+                                         alt="{% blocktrans with counter=forloop.counter %}Success Story - Gallery Image {{ counter }}{% endblocktrans %}" 
+                                         loading="lazy" 
+                                         data-src="{{ item.url|google_drive_image_embed }}">
+                                {% else %}
+                                    <img src="{{ item.url }}" 
+                                         alt="{% blocktrans with counter=forloop.counter %}Success Story - Gallery Image {{ counter }}{% endblocktrans %}" 
+                                         loading="lazy" 
+                                         data-src="{{ item.url }}">
+                                {% endif %}
+                                <div class="gallery-item-label">
+                                    <i class="fas fa-link mr-1"></i>{% trans "External Image" %}
+                                </div>
+                            </div>
+                        {% elif item.type == 'video_url' %}
+                            {% if 'youtube.com/shorts' in item.url %}
+                                <div class="gallery-item iframe-container shorts" data-index="{{ item.index }}" data-type="video">
                             {% else %}
-                                <img src="{{ image_url }}" 
-                                     alt="Success Story - Gallery Image {{ forloop.counter }}" 
-                                     loading="lazy" 
-                                     data-src="{{ image_url }}">
+                                <div class="gallery-item iframe-container" data-index="{{ item.index }}" data-type="video">
                             {% endif %}
-                            <div class="gallery-item-label">
-                                <i class="fas fa-link mr-1"></i>External Image
+                                    {% if 'youtube.com' in item.url or 'youtu.be' in item.url %}
+                                        <iframe id="youtube-player-{{ forloop.counter }}"
+                                            src="{{ item.url|embed_youtube }}" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                            allowfullscreen
+                                            referrerpolicy="strict-origin-when-cross-origin"
+                                            title="Success Story Video {{ forloop.counter }}"
+                                            loading="lazy"
+                                            data-video-url="{{ item.url|embed_youtube }}">
+                                        </iframe>
+                                <div class="gallery-item-label">
+                                    <i class="fab fa-youtube mr-1"></i>{% trans "YouTube Video" %}
+                                </div>
+                                    {% elif 'drive.google.com' in item.url %}
+                                    <iframe src="{{ item.url|google_drive_video_embed }}" 
+                                            frameborder="0" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen
+                                            title="Success Story - Google Drive Video {{ forloop.counter }}"
+                                            loading="lazy"
+                                            data-video-url="{{ item.url|google_drive_video_embed }}">
+                                    </iframe>
+                                <div class="gallery-item-label">
+                                    <i class="fab fa-google-drive mr-1"></i>{% trans "Google Drive Video" %}
+                                </div>
+                                    {% else %}
+                                    <video controls 
+                                           preload="none"
+                                           title="{% blocktrans with counter=forloop.counter %}Success Story - Video {{ counter }}{% endblocktrans %}"
+                                           data-video-url="{{ item.url }}">
+                                        <source src="{{ item.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                <div class="gallery-item-label">
+                                    <i class="fas fa-video mr-1"></i>{% trans "External Video" %}
+                                </div>
+                                    {% endif %}
                             </div>
-                        </div>
-                    {% endfor %}
-
-                    {% for video_url in success_story.video_urls %}
-                        {% if 'youtube.com/shorts' in video_url %}
-                            <div class="gallery-item iframe-container shorts" data-index="{{ forloop.counter|add:success_story.image_urls|length }}" data-type="video">
-                        {% else %}
-                            <div class="gallery-item iframe-container" data-index="{{ forloop.counter|add:success_story.image_urls|length }}" data-type="video">
                         {% endif %}
-                            {% if 'youtube.com' in video_url or 'youtu.be' in video_url %}
-                                <iframe id="youtube-player-{{ forloop.counter }}"
-                                        src="{{ video_url|embed_youtube }}?enablejsapi=1" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                        allowfullscreen
-                                        referrerpolicy="strict-origin-when-cross-origin"
-                                        title="Success Story - YouTube Video {{ forloop.counter }}"
-                                        loading="lazy"
-                                        data-video-url="{{ video_url|embed_youtube }}">
-                                </iframe>
-                                <div class="gallery-item-label">
-                                    <i class="fab fa-youtube mr-1"></i>YouTube Video
-                                </div>
-                            {% elif 'drive.google.com' in video_url %}
-                                <iframe src="{{ video_url|google_drive_video_embed }}" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                        allowfullscreen
-                                        title="Success Story - Google Drive Video {{ forloop.counter }}"
-                                        loading="lazy"
-                                        data-video-url="{{ video_url|google_drive_video_embed }}">
-                                </iframe>
-                                <div class="gallery-item-label">
-                                    <i class="fab fa-google-drive mr-1"></i>Google Drive Video
-                                </div>
-                            {% else %}
-                                <video controls 
-                                       preload="none"
-                                       title="Success Story - Video {{ forloop.counter }}"
-                                       data-video-url="{{ video_url }}">
-                                    <source src="{{ video_url }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                                <div class="gallery-item-label">
-                                    <i class="fas fa-video mr-1"></i>External Video
-                                </div>
-                            {% endif %}
-                        </div>
                     {% endfor %}
                 </div>
+
+                {# Gallery Pagination #}
+                {% if gallery_items.has_other_pages %}
+                <div class="flex justify-center mt-8 mb-8">
+                    <nav class="flex items-center space-x-2" aria-label="Gallery pagination">
+                        {% if gallery_items.has_previous %}
+                            <a href="?{% if request.GET.gallery_page %}gallery_page={{ gallery_items.previous_page_number }}{% else %}gallery_page=1{% endif %}"
+                               class="px-4 py-2 text-sm font-medium text-primary-blue bg-white border border-border-light rounded-lg hover:bg-primary-blue hover:text-white transition-colors duration-200">
+                                {% trans "Previous" %}
+                            </a>
+                        {% endif %}
+                        
+                        <span class="px-4 py-2 text-sm text-text-light-secondary">
+                            {% blocktrans with current=gallery_items.number total=gallery_paginator.num_pages %}
+                                Page {{ current }} of {{ total }}
+                            {% endblocktrans %}
+                        </span>
+                        
+                        {% if gallery_items.has_next %}
+                            <a href="?gallery_page={{ gallery_items.next_page_number }}"
+                               class="px-4 py-2 text-sm font-medium text-primary-blue bg-white border border-border-light rounded-lg hover:bg-primary-blue hover:text-white transition-colors duration-200">
+                                {% trans "Next" %}
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
+                {% endif %}
 
                 <!-- Gallery Lightbox Modal -->
                 <div class="gallery-lightbox" id="galleryLightbox">
@@ -466,19 +482,19 @@
             <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
                 <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
                     <i class="fas fa-chart-line text-green-600 mr-2 content-center"></i>
-                    Impact Metrics
+                    {% trans "Impact Metrics" %}
                 </h3>
                 <div class="space-y-4">
                     {% if success_story.beneficiaries %}
                     <div class="text-center p-4 bg-green-50 dark:bg-green-900 rounded-lg">
                         <div class="text-3xl font-bold text-green-600 dark:text-green-400">{{ success_story.beneficiaries }}</div>
-                        <div class="text-sm text-green-700 dark:text-green-300">Beneficiaries</div>
+                        <div class="text-sm text-green-700 dark:text-green-300">{% trans "Beneficiaries" %}</div>
                     </div>
                     {% endif %}
                     {% if success_story.total_hours_contributed %}
                     <div class="text-center p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
                         <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ success_story.total_hours_contributed }}</div>
-                        <div class="text-sm text-blue-700 dark:text-blue-300">Hours Contributed</div>
+                        <div class="text-sm text-blue-700 dark:text-blue-300">{% trans "Hours Contributed" %}</div>
                     </div>
                     {% endif %}
                 </div>
@@ -488,14 +504,14 @@
             <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
                 <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
                     <i class="fas fa-info-circle text-primary-blue mr-2 content-center"></i>
-                    Story Details
+                    {% trans "Story Details" %}
                 </h3>
                 <div class="space-y-3">
                     {% if success_story.related_project %}
                     <div class="flex items-start">
                         <i class="fas fa-project-diagram text-gray-500 mr-3 mt-1 content-center"></i>
                         <div>
-                            <p class="text-sm text-gray-500">Related Project</p>
+                            <p class="text-sm text-gray-500">{% trans "Related Project" %}</p>
                             <p class="font-semibold">{{ success_story.related_project.title }}</p>
                         </div>
                     </div>
@@ -503,19 +519,19 @@
                     <div class="flex items-start">
                         <i class="fas fa-calendar-check text-gray-500 mr-3 mt-1 content-center"></i>
                         <div>
-                            <p class="text-sm text-gray-500">Published At</p>
+                            <p class="text-sm text-gray-500">{% trans "Published At" %}</p>
                             <p class="font-semibold">{{ success_story.published_at|date:"M d, Y H:i" }}</p>
                         </div>
                     </div>
                     <div class="flex items-start">
                         <i class="fas fa-eye text-gray-500 mr-3 mt-1 content-center"></i>
                         <div>
-                            <p class="text-sm text-gray-500">Status</p>
+                            <p class="text-sm text-gray-500">{% trans "Status" %}</p>
                             <p class="font-semibold">
                                 {% if success_story.is_published %}
-                                    <span class="text-green-600">Published</span>
+                                    <span class="text-green-600">{% trans "Published" %}</span>
                                 {% else %}
-                                    <span class="text-gray-600">Draft</span>
+                                    <span class="text-gray-600">{% trans "Draft" %}</span>
                                 {% endif %}
                             </p>
                         </div>
@@ -548,20 +564,20 @@
             <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
                 <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
                     <i class="fas fa-history text-primary-blue mr-2 content-center"></i>
-                    Timeline
+                    {% trans "Timeline" %}
                 </h3>
                 <div class="space-y-3">
                     <div class="flex items-center">
                         <i class="fas fa-plus-circle text-green-500 mr-3 content-center"></i>
                         <div>
-                            <p class="text-sm text-gray-500">Created</p>
+                            <p class="text-sm text-gray-500">{% trans "Created" %}</p>
                             <p class="font-semibold">{{ success_story.created_at|date:"M d, Y H:i" }}</p>
                         </div>
                     </div>
                     <div class="flex items-center">
                         <i class="fas fa-edit text-blue-500 mr-3 content-center"></i>
                         <div>
-                            <p class="text-sm text-gray-500">Last Updated</p>
+                            <p class="text-sm text-gray-500">{% trans "Last Updated" %}</p>
                             <p class="font-semibold">{{ success_story.updated_at|date:"M d, Y H:i" }}</p>
                         </div>
                     </div>
@@ -572,20 +588,20 @@
             <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark p-6">
                 <h3 class="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
                     <i class="fas fa-cogs text-primary-blue mr-2 content-center"></i>
-                    Actions
+                    {% trans "Actions" %}
                 </h3>
                 <div class="space-y-3">
                     <a href="{% url 'success_story_update' success_story.pk %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-all duration-300 transform hover:scale-105">
                         <i class="fas fa-edit mr-2 content-center"></i>
-                        Edit Story
+                        {% trans "Edit Story" %}
                     </a>
                     <a href="{% url 'success_story_delete' success_story.pk %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-300 transform hover:scale-105">
                         <i class="fas fa-trash-alt mr-2 content-center"></i>
-                        Delete Story
+                        {% trans "Delete Story" %}
                     </a>
                     <a href="{% url 'success_story_list' %}" class="w-full inline-flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg shadow-sm text-text-light dark:text-text-dark bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-gray transition-all duration-300 transform hover:scale-105">
                         <i class="fas fa-arrow-left mr-2 content-center"></i>
-                        Back to List
+                        {% trans "Back to List" %}
                     </a>
                 </div>
             </div>
@@ -907,6 +923,38 @@
 
         // Initialize gallery
         initGallery();
+
+        // Auto-scroll to gallery if gallery_page parameter is present in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('gallery_page')) {
+            // Small delay to ensure page is fully loaded
+            setTimeout(() => {
+                const galleryContainer = document.querySelector('.gallery-container');
+                if (galleryContainer) {
+                    galleryContainer.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 500);
+        }
+
+        // Add scroll-to-gallery functionality for pagination links
+        const paginationLinks = document.querySelectorAll('a[href*="gallery_page"]');
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // Small delay to allow page to load before scrolling
+                setTimeout(() => {
+                    const galleryContainer = document.querySelector('.gallery-container');
+                    if (galleryContainer) {
+                        galleryContainer.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }, 100);
+            });
+        });
     });
 
     // Fallback for browsers without native lazy loading support

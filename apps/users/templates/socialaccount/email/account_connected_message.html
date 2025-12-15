@@ -1,0 +1,22 @@
+{% extends "users/emails/email_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans "Social Account Connected" %}</h2>
+
+<p>{% blocktrans %}Hi {{ user.get_full_name|default:user.username }},{% endblocktrans %}</p>
+
+<p>{% blocktrans with site_name=current_site.name provider_name=socialaccount.get_provider.name %}Your {{ site_name }} account has been successfully connected to your {{ provider_name }} account.{% endblocktrans %}</p>
+
+<div class="highlight-box">
+    <p><strong>{% trans "Connected Account:" %}</strong> {{ socialaccount }}</p>
+</div>
+
+<p>{% trans "You can now use this social account to sign in to your account." %}</p>
+
+<div class="warning-box">
+    <p><strong>⚠️ {% trans "Security Note:" %}</strong> {% trans "If you didn't connect this account, please contact support immediately." %}</p>
+</div>
+
+<p>{% trans "Best regards," %}<br><strong>{% trans "The GDA Team" %}</strong></p>
+{% endblock %}

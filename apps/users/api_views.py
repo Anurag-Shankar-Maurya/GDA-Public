@@ -5,9 +5,16 @@ from django.contrib.auth import get_user_model
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
-    PasswordChangeSerializer
+    PasswordChangeSerializer,
+    CertificateSerializer,
+    SocialAccountSerializer
 )
+from .sync_utils import sync_user_after_registration
+from .models import Certificate
+from allauth.socialaccount.models import SocialAccount
+import logging
 
+logger = logging.getLogger(__name__)
 User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -27,6 +34,28 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
+
+    def create(self, request, *args, **kwargs):
+        """Create a new user and sync to KICC"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        # Create the user
+        user = serializer.save()
+        
+        # Sync user to KICC in background (non-blocking)
+        try:
+            sync_user_after_registration(user)
+        except Exception as e:
+            logger.warning(f"User sync to KICC failed for {user.email}: {str(e)}")
+            # Don't fail the registration if sync fails
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
 
     def get_queryset(self):
         # Regular users can only see their own profile
@@ -62,3 +91,28 @@ class UserViewSet(viewsets.ModelViewSet):
         """Get current user's profile"""
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
+class CertificateViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for user certificates
+    """
+    queryset = Certificate.objects.all()
+    serializer_class = CertificateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Users can only see their own certificates, staff can see all
+        if not self.request.user.is_staff:
+            return Certificate.objects.filter(user=self.request.user)
+        return Certificate.objects.all()
+
+class SocialAccountViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint for user social accounts (read-only)
+    """
+    serializer_class = SocialAccountSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Users can only see their own social accounts
+        return SocialAccount.objects.filter(user=self.request.user)

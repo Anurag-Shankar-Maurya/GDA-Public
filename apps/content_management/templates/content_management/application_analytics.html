@@ -1,15 +1,16 @@
 {% extends 'content_management_base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Application Analytics{% endblock %}
+{% block title %}{% trans "Application Analytics" %}{% endblock %}
 
 {% block breadcrumb %}
 <li class="flex items-center">
-    <a href="{% url 'management_dashboard' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">Dashboard</a>
+    <a href="{% url 'management_dashboard' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "Dashboard" %}</a>
     <span class="mx-2 text-gray-400">/</span>
 </li>
 <li class="flex items-center">
-    <span class="text-gray-500 dark:text-gray-400">Application Analytics</span>
+    <span class="text-gray-500 dark:text-gray-400">{% trans "Application Analytics" %}</span>
 </li>
 {% endblock %}
 
@@ -19,96 +20,69 @@
 {% endblock %}
 
 {% block content %}
-<!-- Modern Gradient Header Section -->
-<div class="bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 rounded-xl shadow-2xl p-8 mb-8 text-white relative overflow-hidden">
-    <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-    <div class="relative z-10">
-        <div class="flex items-center justify-between flex-wrap gap-4">
-            <div>
-                <h1 class="text-4xl md:text-5xl font-extrabold mb-2 flex items-center">
-                    <i class="fas fa-chart-pie mr-4 text-cyan-300"></i>
-                    Application Analytics
-                </h1>
-                <p class="text-teal-100 text-lg md:text-xl">Comprehensive insights into project applications and enrollments</p>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="text-right">
-                    <p class="text-sm text-teal-200">Analytics Overview</p>
-                    <p class="text-lg font-semibold">{{ last_updated|default:"Live Data" }}</p>
-                </div>
-                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-clipboard-list text-2xl text-white"></i>
-                </div>
-            </div>
+<div class="max-w-7xl mx-auto">
+    
+    <!-- Sticky Header -->
+    <div class="sticky top-0 z-30 bg-gray-100 dark:bg-gray-900 -mx-6 px-6 py-4 mb-6 border-b border-gray-200 dark:border-gray-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-200">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                <i class="fas fa-chart-pie text-primary-blue mr-3"></i>
+                {% trans "Application Analytics" %}
+            </h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {% trans "Comprehensive insights into project applications and enrollments" %}
+            </p>
         </div>
-
-        <!-- Quick Stats Row -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white border-opacity-20">
-            <div class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-cyan-300">{{ total_enrollments }}</div>
-                <div class="text-sm text-teal-200">Total Enrollments</div>
-            </div>
-            <div class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-yellow-300">{{ projects_with_enrollments }}</div>
-                <div class="text-sm text-teal-200">Active Projects</div>
-            </div>
-            <div class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-green-300">{{ avg_enrollments_per_project|default:0 }}</div>
-                <div class="text-sm text-teal-200">Avg per Project</div>
-            </div>
-            <div class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-pink-300">{{ completion_rate|default:0 }}%</div>
-                <div class="text-sm text-teal-200">Completion Rate</div>
-            </div>
+        <div class="flex items-center gap-3">
+            <span class="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline-block" id="last-updated">
+                {% trans "Updated:" %} <span id="update-time">{{ last_updated|default_if_none:_("Live Data") }}</span>
+            </span>
         </div>
     </div>
-</div>
 
-<div class="container max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-
-    <!-- Enhanced Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-medium mb-1">Total Enrollments</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_enrollments }}</p>
-                <p class="text-sm opacity-80 mt-1">All applications</p>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Total Enrollments" %}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ total_enrollments }}</p>
+                <p class="text-xs text-gray-500 mt-1">{% trans "All applications" %}</p>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-user-plus"></i>
+            <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <i class="fas fa-user-plus text-blue-600 dark:text-blue-400 text-xl"></i>
             </div>
         </div>
 
-        <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-medium mb-1">Active Projects</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ projects_with_enrollments }}</p>
-                <p class="text-sm opacity-80 mt-1">With enrollments</p>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Active Projects" %}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ projects_with_enrollments }}</p>
+                <p class="text-xs text-gray-500 mt-1">{% trans "With enrollments" %}</p>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-project-diagram"></i>
+            <div class="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <i class="fas fa-project-diagram text-green-600 dark:text-green-400 text-xl"></i>
             </div>
         </div>
 
-        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-medium mb-1">Avg per Project</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ avg_enrollments_per_project|default:0 }}</p>
-                <p class="text-sm opacity-80 mt-1">Enrollments average</p>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Avg per Project" %}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ avg_enrollments_per_project|default:0 }}</p>
+                <p class="text-xs text-gray-500 mt-1">{% trans "Enrollments average" %}</p>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-chart-bar"></i>
+            <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <i class="fas fa-chart-bar text-purple-600 dark:text-purple-400 text-xl"></i>
             </div>
         </div>
 
-        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 flex items-center justify-between">
             <div>
-                <h3 class="text-lg font-medium mb-1">Completion Rate</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ completion_rate|default:0 }}%</p>
-                <p class="text-sm opacity-80 mt-1">Project completion</p>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Completion Rate" %}</p>
+                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ completion_rate|default:0 }}%</p>
+                <p class="text-xs text-gray-500 mt-1">{% trans "Project completion" %}</p>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-trophy"></i>
+            <div class="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                <i class="fas fa-trophy text-orange-600 dark:text-orange-400 text-xl"></i>
             </div>
         </div>
     </div>
@@ -139,33 +113,33 @@
     </div> -->
 
     <!-- Popular Projects -->
-    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 mb-12">
-        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-6">Popular Projects by Enrollment</h3>
+    <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Popular Projects by Enrollment" %}</h3>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Project Title</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Theme</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Country</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Enrollments</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Capacity</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Project Title" %}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Theme" %}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Country" %}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Enrollments" %}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Capacity" %}</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody class="bg-white dark:bg-card-bg-dark divide-y divide-gray-200 dark:divide-gray-700">
                     {% for project in popular_projects %}
-                    <tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                            <a href="{% url 'project_detail' pk=project.pk %}" class="text-blue-600 dark:text-blue-400 hover:underline">{{ project.title }}</a>
+                            <a href="{% url 'project_detail' pk=project.pk %}" class="text-primary-blue hover:underline">{{ project.title }}</a>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ project.theme }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ project.country }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ project.headcount }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ project.total_headcount }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ project.theme }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ project.country }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ project.headcount }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ project.total_headcount }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">No projects with enrollments found.</td>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">{% trans "No projects with enrollments found." %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -174,54 +148,54 @@
     </div>
 
     <!-- Project Capacity Utilization -->
-    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 mb-12">
-        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-6">Project Capacity Utilization</h3>
+    <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Project Capacity Utilization" %}</h3>
         <div class="space-y-4">
             {% for project in capacity_data %}
             <div class="flex items-center justify-between">
                 <div class="flex-1">
-                    <a href="{% url 'project_detail' pk=project.pk %}" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">{{ project.title }}</a>
-                    <div class="text-sm text-gray-500 dark:text-gray-300">{{ project.enrolled }} / {{ project.capacity }} enrolled</div>
+                    <a href="{% url 'project_detail' pk=project.pk %}" class="text-primary-blue hover:underline font-medium">{{ project.title }}</a>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ project.enrolled }} / {{ project.capacity }} {% trans "enrolled" %}</div>
                 </div>
                 <div class="flex-1 ml-4">
                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ project.utilization }}%"></div>
+                        <div class="bg-primary-blue h-2.5 rounded-full" style="width: {{ project.utilization }}%"></div>
                     </div>
-                    <div class="text-xs text-gray-500 dark:text-gray-300 mt-1">{{ project.utilization|floatformat:1 }}% full</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ project.utilization|floatformat:1 }}% {% trans "full" %}</div>
                 </div>
             </div>
             {% empty %}
-            <p class="text-gray-500 dark:text-gray-400">No project capacity data available.</p>
+            <p class="text-gray-500 dark:text-gray-400">{% trans "No project capacity data available." %}</p>
             {% endfor %}
         </div>
     </div>
 
     <!-- Recent Enrollment Activity -->
-    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8">
-        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-6">Recent Enrollment Activity</h3>
+    <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Recent Enrollment Activity" %}</h3>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Project Title</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Theme</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Enrollments</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Last Updated</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Project Title" %}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Theme" %}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Enrollments" %}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{% trans "Last Updated" %}</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                     {% for project in recent_enrollments %}
-                    <tr>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                            <a href="{% url 'project_detail' pk=project.pk %}" class="text-blue-600 dark:text-blue-400 hover:underline">{{ project.title }}</a>
+                            <a href="{% url 'project_detail' pk=project.pk %}" class="text-primary-blue hover:underline">{{ project.title }}</a>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ project.theme }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ project.headcount }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{{ project.updated_at|date:"M d, Y H:i" }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ project.theme }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ project.headcount }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ project.updated_at|date:"M d, Y H:i" }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">No recent enrollment activity.</td>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">{% trans "No recent enrollment activity." %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -236,6 +210,10 @@ Chart.defaults.font.family = "'Inter', 'Segoe UI', 'Roboto', sans-serif";
 Chart.defaults.font.size = 12;
 Chart.defaults.color = '#6B7280';
 
+// Define translated strings for JS
+const transTotalEnrollments = "{% trans 'Total Enrollments' %}";
+const transEnrollments = "{% trans 'Enrollments' %}";
+
 // Theme Chart with Enhanced Styling
 const themeData = {{ enrollments_by_theme|safe }};
 const themeLabels = themeData.map(item => item.theme);
@@ -246,7 +224,7 @@ const themeChart = new Chart(document.getElementById('themeChart'), {
     data: {
         labels: themeLabels,
         datasets: [{
-            label: 'Total Enrollments',
+            label: transTotalEnrollments,
             data: themeCounts,
             backgroundColor: [
                 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -287,7 +265,7 @@ const themeChart = new Chart(document.getElementById('themeChart'), {
                         return context[0].label;
                     },
                     label: function(context) {
-                        return `Enrollments: ${context.parsed.y}`;
+                        return `${transEnrollments}: ${context.parsed.y}`;
                     }
                 }
             }
@@ -392,7 +370,7 @@ const countryEnrollChart = new Chart(document.getElementById('countryEnrollChart
                     label: function(context) {
                         const total = context.dataset.data.reduce((a, b) => a + b, 0);
                         const percentage = ((context.parsed / total) * 100).toFixed(1);
-                        return `${context.parsed} enrollments (${percentage}%)`;
+                        return `${context.parsed} ${transEnrollments.toLowerCase()} (${percentage}%)`;
                     }
                 }
             }

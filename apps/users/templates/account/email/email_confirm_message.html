@@ -1,0 +1,28 @@
+{% extends "users/emails/email_base.html" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans "Email Address Confirmation" %}</h2>
+
+<p>{% blocktrans %}Hi {{ user.get_full_name|default:user.username }},{% endblocktrans %}</p>
+
+<p>{% blocktrans with email=email %}You have added {{ email }} as an email address for your account.{% endblocktrans %}</p>
+
+<p>{% trans "To confirm this is correct, please click the button below:" %}</p>
+
+<div style="text-align: center;">
+    <a href="{{ activate_url }}" class="cta-button">{% trans "Confirm Email Address" %}</a>
+</div>
+
+<div class="highlight-box">
+    <p><strong>{% trans "Or copy and paste this link in your browser:" %}</strong></p>
+    <p style="word-break: break-all; font-size: 12px; margin-top: 10px;">{{ activate_url }}</p>
+</div>
+
+<div class="warning-box">
+    <p><strong>⚠️ {% trans "Security Note:" %}</strong> {% trans "If you didn't add this email address, please ignore this email." %}</p>
+</div>
+
+<p>{% trans "Best regards," %}<br><strong>{% trans "The GDA Team" %}</strong></p>
+{% endblock %}

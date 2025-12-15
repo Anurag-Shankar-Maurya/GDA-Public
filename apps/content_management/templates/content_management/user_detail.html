@@ -1,11 +1,12 @@
 {% extends "content_management_base.html" %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}User Detail: {{ viewed_user.first_name }} {{ viewed_user.last_name }}{% endblock %}
+{% block title %}{% blocktrans with first=viewed_user.first_name last=viewed_user.last_name %}User Detail: {{ first }} {{ last }}{% endblocktrans %}{% endblock %}
 
 {% block breadcrumb %}
 <li class="flex items-center">
-    <a href="{% url 'user_analytics' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">User Analytics</a>
+    <a href="{% url 'user_analytics' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "User Analytics" %}</a>
     <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
 </li>
 <li class="flex items-center">
@@ -32,21 +33,21 @@
                 <div class="flex flex-wrap justify-center md:justify-start gap-2">
                     {% if viewed_user.is_active %}
                         <span class="px-3 py-1 bg-green-500 text-white text-sm font-medium rounded-full">
-                            <i class="fas fa-check-circle mr-1 content-center"></i>Active
+                            <i class="fas fa-check-circle mr-1 content-center"></i>{% trans "Active" %}
                         </span>
                     {% else %}
                         <span class="px-3 py-1 bg-red-500 text-white text-sm font-medium rounded-full">
-                            <i class="fas fa-times-circle mr-1 content-center"></i>Inactive
+                            <i class="fas fa-times-circle mr-1 content-center"></i>{% trans "Inactive" %}
                         </span>
                     {% endif %}
                     {% if viewed_user.is_staff %}
                         <span class="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-full">
-                            <i class="fas fa-user-shield mr-1 content-center"></i>Staff
+                            <i class="fas fa-user-shield mr-1 content-center"></i>{% trans "Staff" %}
                         </span>
                     {% endif %}
                     {% if viewed_user.is_superuser %}
                         <span class="px-3 py-1 bg-purple-500 text-white text-sm font-medium rounded-full">
-                            <i class="fas fa-crown mr-1 content-center"></i>Superuser
+                            <i class="fas fa-crown mr-1 content-center"></i>{% trans "Superuser" %}
                         </span>
                     {% endif %}
                 </div>
@@ -56,15 +57,15 @@
             <div class="flex flex-col space-y-2">
                 <a href="{% url 'user_analytics' %}" class="inline-flex items-center px-4 py-2 border border-white border-opacity-30 text-sm font-medium rounded-md shadow-sm text-white bg-white bg-opacity-10 hover:bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-200">
                     <i class="fas fa-arrow-left h-4 w-4 mr-2 content-center"></i>
-                    Back to List
+                    {% trans "Back to List" %}
                 </a>
                 <a href="{% url 'user_update' viewed_user.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-blue-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-200">
                     <i class="fas fa-edit h-4 w-4 mr-2 content-center"></i>
-                    Edit User
+                    {% trans "Edit User" %}
                 </a>
                 <a href="{% url 'user_delete' viewed_user.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-red-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-colors duration-200">
                     <i class="fas fa-trash-alt h-4 w-4 mr-2 content-center"></i>
-                    Delete User
+                    {% trans "Delete User" %}
                 </a>
             </div>
         </div>
@@ -80,7 +81,7 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Member Since</h3>
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Member Since" %}</h3>
                     <p class="text-lg font-semibold text-text-light dark:text-text-dark">{{ viewed_user.date_joined|date:"M d, Y" }}</p>
                 </div>
             </div>
@@ -94,12 +95,12 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Login</h3>
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Last Login" %}</h3>
                     <p class="text-lg font-semibold text-text-light dark:text-text-dark">
                         {% if viewed_user.last_login %}
                             {{ viewed_user.last_login|date:"M d, Y" }}
                         {% else %}
-                            Never
+                            {% trans "Never" %}
                         {% endif %}
                     </p>
                 </div>
@@ -114,12 +115,12 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Email Status</h3>
+                    <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Email Status" %}</h3>
                     <p class="text-lg font-semibold text-text-light dark:text-text-dark">
                         {% if viewed_user.email %}
-                            Verified
+                            {% trans "Verified" %}
                         {% else %}
-                            Not Set
+                            {% trans "Not Set" %}
                         {% endif %}
                     </p>
                 </div>
@@ -134,43 +135,43 @@
             <div class="px-6 py-4 border-b border-border-light dark:border-border-dark">
                 <h3 class="text-lg font-semibold text-primary-blue flex items-center content-center">
                     <i class="fas fa-user mr-2"></i>
-                    Personal Information
+                    {% trans "Personal Information" %}
                 </h3>
             </div>
             <div class="p-6 space-y-4">
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Username</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Username" %}</span>
                     <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.username }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">First Name</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.first_name|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "First Name" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.first_name|default:_("Not provided") }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Name</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.last_name|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Last Name" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.last_name|default:_("Not provided") }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.email|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Email" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.email|default:_("Not provided") }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Date of Birth</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Date of Birth" %}</span>
                     <span class="text-sm text-text-light dark:text-text-dark">
                         {% if viewed_user.date_of_birth %}
                             {{ viewed_user.date_of_birth|date:"M d, Y" }}
                         {% else %}
-                            Not provided
+                            {% trans "Not provided" %}
                         {% endif %}
                     </span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Gender</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.get_gender_display|default:"Not specified" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Gender" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.get_gender_display|default:_("Not specified") }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Blood Group</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.blood_group|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Blood Group" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.blood_group|default:_("Not provided") }}</span>
                 </div>
             </div>
         </div>
@@ -180,29 +181,29 @@
             <div class="px-6 py-4 border-b border-border-light dark:border-border-dark">
                 <h3 class="text-lg font-semibold text-primary-blue flex items-center">
                     <i class="fas fa-address-book mr-2 content-center"></i>
-                    Contact & Location
+                    {% trans "Contact & Location" %}
                 </h3>
             </div>
             <div class="p-6 space-y-4">
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Guardian Name</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.guardian_name|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Guardian Name" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.guardian_name|default:_("Not provided") }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Guardian Relation</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.guardian_relation|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Guardian Relation" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.guardian_relation|default:_("Not provided") }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Contact</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.contact|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Contact" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.contact|default:_("Not provided") }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Country Code</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.country_code|default:"Not provided" }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{% trans "Country Code" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.country_code|default:_("Not provided") }}</span>
                 </div>
                 <div class="py-2">
-                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-2">Address</span>
-                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.address|default:"Not provided"|linebreaks }}</span>
+                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400 block mb-2">{% trans "Address" %}</span>
+                    <span class="text-sm text-text-light dark:text-text-dark">{{ viewed_user.address|default:_("Not provided")|linebreaks }}</span>
                 </div>
             </div>
         </div>
@@ -213,7 +214,7 @@
         <div class="px-6 py-4 border-b border-border-light dark:border-border-dark">
             <h3 class="text-lg font-semibold text-primary-blue flex items-center">
                 <i class="fas fa-shield-alt mr-2 content-center"></i>
-                Account Status & Permissions
+                {% trans "Account Status & Permissions" %}
             </h3>
         </div>
         <div class="p-6">
@@ -226,9 +227,9 @@
                             <i class="fas fa-times-circle text-red-600 dark:text-red-400 text-2xl content-center"></i>
                         {% endif %}
                     </div>
-                    <h4 class="font-semibold text-text-light dark:text-text-dark">Account Status</h4>
+                    <h4 class="font-semibold text-text-light dark:text-text-dark">{% trans "Account Status" %}</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {% if viewed_user.is_active %}Active{% else %}Inactive{% endif %}
+                        {% if viewed_user.is_active %}{% trans "Active" %}{% else %}{% trans "Inactive" %}{% endif %}
                     </p>
                 </div>
 
@@ -240,9 +241,9 @@
                             <i class="fas fa-user text-gray-600 dark:text-gray-400 text-2xl content-center"></i>
                         {% endif %}
                     </div>
-                    <h4 class="font-semibold text-text-light dark:text-text-dark">Staff Status</h4>
+                    <h4 class="font-semibold text-text-light dark:text-text-dark">{% trans "Staff Status" %}</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {% if viewed_user.is_staff %}Staff Member{% else %}Regular User{% endif %}
+                        {% if viewed_user.is_staff %}{% trans "Staff Member" %}{% else %}{% trans "Regular User" %}{% endif %}
                     </p>
                 </div>
 
@@ -254,9 +255,9 @@
                             <i class="fas fa-user text-gray-600 dark:text-gray-400 text-2xl content-center"></i>
                         {% endif %}
                     </div>
-                    <h4 class="font-semibold text-text-light dark:text-text-dark">Superuser Status</h4>
+                    <h4 class="font-semibold text-text-light dark:text-text-dark">{% trans "Superuser Status" %}</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {% if viewed_user.is_superuser %}Administrator{% else %}Standard User{% endif %}
+                        {% if viewed_user.is_superuser %}{% trans "Administrator" %}{% else %}{% trans "Standard User" %}{% endif %}
                     </p>
                 </div>
             </div>

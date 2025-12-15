@@ -1,0 +1,79 @@
+{% extends "users_base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="flex flex-col items-center">
+    <div class="w-full max-w-2xl">
+        <div class="bg-light-bg dark:bg-dark-bg rounded-lg shadow-md overflow-hidden border border-border-light dark:border-border-dark">
+            <div class="px-6 py-8">
+                <h2 class="text-2xl font-bold text-center text-light dark:text-dark mb-8">{% trans "Email Addresses" %}</h2>
+
+                {% if emailaddresses %}
+                    <p class="text-light-secondary dark:text-dark-secondary mb-6">{% trans "The following email addresses are associated with your account:" %}</p>
+                    
+                    <form method="post" action="{% url 'account_email' %}" class="space-y-4">
+                        {% csrf_token %}
+                        
+                        <div class="space-y-3">
+                            {% for emailaddress in emailaddresses %}
+                                <div class="flex items-center justify-between p-4 border border-border-light dark:border-border-dark rounded-md">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="email" id="email_radio_{{ forloop.counter }}" value="{{ emailaddress.email }}" {% if emailaddress.primary %}checked{% endif %} class="h-4 w-4 text-primary-blue focus:ring-primary-blue border-border-light dark:border-border-dark">
+                                        <label for="email_radio_{{ forloop.counter }}" class="ml-3">
+                                            <span class="text-light dark:text-dark font-medium">{{ emailaddress.email }}</span>
+                                            {% if emailaddress.verified %}
+                                                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success text-text-dark">
+                                                    {% trans "Verified" %}
+                                                </span>
+                                            {% else %}
+                                                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning text-text-dark">
+                                                    {% trans "Unverified" %}
+                                                </span>
+                                            {% endif %}
+                                            {% if emailaddress.primary %}
+                                                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-info text-text-dark">
+                                                    {% trans "Primary" %}
+                                                </span>
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="flex flex-wrap gap-3 mt-6">
+                            <button type="submit" name="action_primary" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+                                {% trans "Make Primary" %}
+                            </button>
+                            <button type="submit" name="action_send" class="inline-flex justify-center py-2 px-4 border border-border-light dark:border-border-dark rounded-md shadow-sm text-sm font-medium text-light dark:text-dark bg-light-bg dark:bg-dark-bg hover:bg-accent-blue dark:hover:bg-dark-bg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+                                {% trans "Re-send Verification" %}
+                            </button>
+                            <button type="submit" name="action_remove" class="inline-flex justify-center py-2 px-4 border border-error rounded-md shadow-sm text-sm font-medium text-error bg-light-bg dark:bg-dark-bg hover:bg-accent-blue dark:hover:bg-dark-bg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-error transition-colors">
+                                {% trans "Remove" %}
+                            </button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p class="text-center text-light-secondary dark:text-dark-secondary mb-6">{% trans "You currently do not have any email addresses set up. You should really add an email address so you can receive notifications, reset your password, etc." %}</p>
+                {% endif %}
+
+                <div class="mt-8 pt-8 border-t border-border-light dark:border-border-dark">
+                    <h3 class="text-lg font-semibold text-light dark:text-dark mb-4">{% trans "Add Email Address" %}</h3>
+                    <form method="post" action="{% url 'account_email' %}" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label for="id_email" class="block text-sm font-medium text-light dark:text-dark mb-1">
+                                {% trans "Email" %}
+                            </label>
+                            <input type="email" name="email" id="id_email" required class="w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-md shadow-sm placeholder-text-light-secondary dark:placeholder-text-dark-secondary focus:outline-none focus:ring-primary-blue focus:border-primary-blue bg-light-bg dark:bg-dark-bg text-light dark:text-dark">
+                        </div>
+                        <button type="submit" name="action_add" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+                            {% trans "Add Email" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

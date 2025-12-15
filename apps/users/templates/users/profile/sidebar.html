@@ -1,0 +1,43 @@
+{% load i18n %}
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-6 animate-fadeIn border border-border-light dark:border-border-dark sticky top-24">
+    <nav class="space-y-2 mb-8">
+        <button onclick="switchTab('overview')" id="tab-overview" class="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 bg-primary-blue text-white shadow-md group">
+            <i class="fas fa-tachometer-alt w-6 text-center mr-3 group-hover:scale-110 transition-transform"></i>
+            <span class="font-medium">{% trans "Dashboard" %}</span>
+        </button>
+        <button onclick="switchTab('personal-info')" id="tab-personal-info" class="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-text-light dark:text-text-dark hover:bg-light-bg dark:hover:bg-dark-bg hover:text-primary-blue group">
+            <i class="fas fa-user w-6 text-center mr-3 group-hover:scale-110 transition-transform"></i>
+            <span class="font-medium">{% trans "Personal Info" %}</span>
+        </button>
+        <button onclick="switchTab('projects')" id="tab-projects" class="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-text-light dark:text-text-dark hover:bg-light-bg dark:hover:bg-dark-bg hover:text-primary-blue group">
+            <i class="fas fa-project-diagram w-6 text-center mr-3 group-hover:scale-110 transition-transform"></i>
+            <span class="font-medium">{% trans "My Projects" %}</span>
+        </button>
+        <button onclick="switchTab('certificates')" id="tab-certificates" class="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-text-light dark:text-text-dark hover:bg-light-bg dark:hover:bg-dark-bg hover:text-primary-blue group">
+            <i class="fas fa-award w-6 text-center mr-3 group-hover:scale-110 transition-transform"></i>
+            <span class="font-medium">{% trans "Certificates" %}</span>
+        </button>
+        <button onclick="switchTab('account-management')" id="tab-account-management" class="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-text-light dark:text-text-dark hover:bg-light-bg dark:hover:bg-dark-bg hover:text-primary-blue group">
+            <i class="fas fa-cog w-6 text-center mr-3 group-hover:scale-110 transition-transform"></i>
+            <span class="font-medium">{% trans "Account" %}</span>
+        </button>
+        <button onclick="switchTab('edit-profile')" id="tab-edit-profile" class="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-text-light dark:text-text-dark hover:bg-light-bg dark:hover:bg-dark-bg hover:text-primary-blue group">
+            <i class="fas fa-edit w-6 text-center mr-3 group-hover:scale-110 transition-transform"></i>
+            <span class="font-medium">{% trans "Edit Profile" %}</span>
+        </button>
+    </nav>
+
+    <div class="border-t border-border-light dark:border-border-dark pt-6">
+        <h3 class="text-xs font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider mb-4 px-2">{% trans "Quick Actions" %}</h3>
+        <div class="space-y-3">
+            <button onclick="switchTab('edit-profile')" class="w-full flex items-center px-4 py-2 rounded-xl text-sm font-medium text-text-light dark:text-text-dark hover:bg-light-bg dark:hover:bg-dark-bg transition-colors group text-left">
+                <i class="fas fa-edit w-6 text-center mr-3 text-primary-blue group-hover:scale-110 transition-transform"></i>
+                {% trans "Edit Profile" %}
+            </button>
+            <a href="{% url 'logout' %}" class="w-full flex items-center px-4 py-2 rounded-xl text-sm font-medium text-error hover:bg-error hover:bg-opacity-10 transition-colors group">
+                <i class="fas fa-sign-out-alt w-6 text-center mr-3 group-hover:scale-110 transition-transform"></i>
+                {% trans "Logout" %}
+            </a>
+        </div>
+    </div>
+</div>

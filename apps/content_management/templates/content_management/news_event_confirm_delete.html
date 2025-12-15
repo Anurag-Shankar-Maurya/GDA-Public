@@ -1,11 +1,12 @@
 {% extends "content_management_base.html" %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Confirm Delete News/Event{% endblock %}
+{% block title %}{% trans "Confirm Delete News/Event" %}{% endblock %}
 
 {% block breadcrumb %}
 <li class="flex items-center">
-    <a href="{% url 'news_event_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">News & Events</a>
+    <a href="{% url 'news_event_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">{% trans "News & Events" %}</a>
     <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
 </li>
 <li class="flex items-center">
@@ -13,24 +14,24 @@
     <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
 </li>
 <li class="flex items-center">
-    <span class="text-gray-500 dark:text-gray-400">Delete</span>
+    <span class="text-gray-500 dark:text-gray-400">{% trans "Delete" %}</span>
 </li>
 {% endblock %}
 
 {% block content %}
 <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">Confirm Deletion</h1>
+    <h1 class="text-3xl font-bold text-text-light dark:text-text-dark mb-4">{% trans "Confirm Deletion" %}</h1>
     <div class="bg-card-bg-light dark:bg-card-bg-dark shadow overflow-hidden rounded-lg border border-border-light dark:border-border-dark p-6">
-        <p class="text-lg text-text-light dark:text-text-dark mb-6">Are you sure you want to delete the news/event "<span class="font-semibold text-primary-blue">{{ news_event.title }}</span>"? This action cannot be undone.</p>
+        <p class="text-lg text-text-light dark:text-text-dark mb-6">{% blocktrans %}Are you sure you want to delete the news/event "<span class="font-semibold text-primary-blue">{{ news_event.title }}</span>"? This action cannot be undone.{% endblocktrans %}</p>
         <form method="post" class="flex gap-3">
             {% csrf_token %}
             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-300">
                 <i class="fas fa-trash-alt h-5 w-5 content-center"></i>
-                Yes, delete
+                {% trans "Yes, delete" %}
             </button>
             <a href="{% url 'news_event_detail' news_event.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-text-light dark:text-text-dark bg-secondary-gray hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-gray transition-colors duration-300">
                 <i class="fas fa-times h-5 w-5 content-center"></i>
-                Cancel
+                {% trans "Cancel" %}
             </a>
         </form>
     </div>

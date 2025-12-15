@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.tokens import default_token_generator
@@ -9,12 +9,14 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from .forms import CustomUserRegistrationForm, CustomAuthenticationForm, CustomPasswordResetForm, CustomSetPasswordForm, ResendVerificationForm, CustomUserProfileForm
+from .forms import CustomUserRegistrationForm, CustomAuthenticationForm, CustomPasswordResetForm, CustomSetPasswordForm, ResendVerificationForm, CustomUserProfileForm, CustomUserOnboardingForm
 from .email_utils import send_verification_email as send_verification_email_html, send_password_reset_email
+from .models import Certificate
 import logging
 from django.utils.safestring import mark_safe
 from datetime import date
-from apps.content.models import Project
+from apps.content.models import Project, NewsEvent, SuccessStory, FAQ, FAQVote
+from django.db.models import Sum
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -83,6 +85,7 @@ def verify_email(request, uidb64, token):
 		user = None
 	
 	if user and default_token_generator.check_token(user, token):
+		user.email_verified = True
 		user.is_active = True
 		user.save()
 		logger.info(f"Email verified successfully for user: {user.email}")
@@ -148,16 +151,25 @@ def login_view(request):
 		form = CustomAuthenticationForm(request, data=request.POST)
 		if form.is_valid():
 			user = form.get_user()
-			if not user.is_active:
-				logger.warning(f"Login attempt with unverified email: {user.email}")
-				# Modified message for unverified email
-				messages.error(request,	mark_safe(f'Your email address is not verified. Please verify it to log in. <a href="{reverse("resend_verification")}" class="alert-link text-blue-500">Resend Verification Email</a>'))
-				return render(request, 'users/login.html', {'form': form})
-			else:
-				login(request, user)
-				logger.info(f"User logged in successfully: {user.email}")
-				messages.success(request, f'Welcome back, {user.username}!')
-				return redirect('profile')
+			login(request, user)
+			logger.info(f"User logged in successfully: {user.email}")
+			messages.success(request, f'Welcome back, {user.username}!')
+			
+			# Check if user needs onboarding
+			needs_onboarding = (
+				not getattr(user, 'onboarding_complete', False) or
+				not user.date_of_birth or
+				not user.guardian_name or
+				not user.guardian_relation or
+				not user.address or
+				not user.contact or
+				not user.country_code
+			)
+			
+			if needs_onboarding:
+				return redirect('onboarding')
+			
+			return redirect('profile')
 		else:
 			# If form is not valid, it means authentication failed.
 			# We need to check if the user exists and if their email is verified
@@ -172,7 +184,7 @@ def login_view(request):
 					user = None
 
 			if user:
-				if not user.is_active:
+				if not user.email_verified:
 					logger.warning(f"Login attempt with unverified email: {user.email}")
 					# Modified message for unverified email (consistent with the above block)
 					messages.error(request,	mark_safe(f'Your email address is not verified. Please verify it to log in. <a href="{reverse("resend_verification")}" class="alert-link text-blue-500">Resend Verification Email</a>'))
@@ -211,7 +223,7 @@ def forgot_password(request):
 				logger.info(f"User found: {user.username} for email: {email}")
 				
 				# Check if user's email is verified
-				if not user.is_active:
+				if not user.email_verified:
 					logger.warning(f"Password reset attempted for unverified email: {email}")
 					messages.error(
 						request,
@@ -288,6 +300,11 @@ def password_reset_confirm(request, uidb64, token):
 
 from django.contrib.auth.decorators import login_required
 
+# Social login signals
+from allauth.socialaccount.signals import social_account_added, social_account_updated, pre_social_login
+from django.contrib.auth.signals import user_logged_in
+from django.dispatch import receiver
+
 @login_required
 def profile(request):
 	if not request.user.is_authenticated:
@@ -309,14 +326,195 @@ def profile(request):
 			current_projects.append(project)
 		else:
 			past_projects.append(project)
+            
+	# Certificates Logic
+	certificates = Certificate.objects.filter(user=request.user)
+	certificate_map = {cert.project_id: cert for cert in certificates}
 	
+	eligible_projects = []
+	for project in past_projects:
+		if project.id in certificate_map:
+			project.user_certificate = certificate_map[project.id]
+		else:
+			project.user_certificate = None
+			eligible_projects.append(project)
+	
+	# Additional data for dashboard
+	recent_news_events = NewsEvent.objects.filter(is_published=True).order_by('-publish_date')[:5]
+	success_stories = SuccessStory.objects.filter(is_published=True, related_project__in=enrolled_projects).order_by('-published_at')[:5]
+	faqs = FAQ.objects.all().order_by('order')[:10]
+	
+	# Get user's votes for FAQs
+	user_faq_votes = {vote.faq_id: vote.vote_type for vote in FAQVote.objects.filter(user=request.user, faq__in=faqs)}
+	for faq in faqs:
+		faq.user_vote = user_faq_votes.get(faq.id, None)
+	
+	# User impact metrics
+	impact_data = SuccessStory.objects.filter(
+		related_project__in=past_projects, 
+		is_published=True
+	).aggregate(
+		total_beneficiaries=Sum('beneficiaries'),
+		total_hours=Sum('total_hours_contributed')
+	)
+	total_beneficiaries = impact_data['total_beneficiaries'] or 0
+	total_hours = impact_data['total_hours'] or 0
+	
+	# Form for Edit Profile tab
+	form = CustomUserProfileForm(instance=request.user)
+
+    # Social accounts for Account Management tab
+	from allauth.socialaccount.models import SocialAccount
+	social_accounts = SocialAccount.objects.filter(user=request.user)
+	connected_providers = [account.provider for account in social_accounts]
+
 	context = {
 		'user': request.user,
 		'upcoming_projects': upcoming_projects,
 		'current_projects': current_projects,
 		'past_projects': past_projects,
+		'certificates': certificates,
+		'eligible_projects': eligible_projects,
+		'recent_news_events': recent_news_events,
+		'success_stories': success_stories,
+		'faqs': faqs,
+		'total_beneficiaries': total_beneficiaries,
+		'total_hours': total_hours,
+		'form': form,
+		'social_accounts': social_accounts,
+		'connected_providers': connected_providers,
 	}
 	return render(request, 'users/profile.html', context)
+
+
+@login_required
+def generate_certificate(request, project_id):
+	if request.method != 'POST':
+		return redirect('profile')
+		
+	project = get_object_or_404(Project, pk=project_id)
+	
+	# Verify user enrolled and project ended
+	if not project.enrolled_users.filter(id=request.user.id).exists():
+		messages.error(request, "You are not enrolled in this project.")
+		return redirect('profile')
+		
+	today = date.today()
+	if not project.end_date or project.end_date > today:
+		messages.error(request, "This project has not ended yet.")
+		return redirect('profile')
+		
+	# Check if certificate already exists
+	certificate, created = Certificate.objects.get_or_create(
+		user=request.user,
+		project=project
+	)
+	
+	if created:
+		messages.success(request, f"Certificate generated for {project.title}!")
+	else:
+		messages.info(request, f"Certificate for {project.title} already exists.")
+		
+	return redirect('profile')
+
+
+@login_required
+def view_certificate(request, certificate_id):
+	certificate = get_object_or_404(Certificate, certificate_id=certificate_id)
+
+	# Check permission
+	if certificate.user != request.user and not request.user.is_staff:
+		messages.error(request, "You do not have permission to view this certificate.")
+		return redirect('profile')
+
+	context = {
+		'user': certificate.user,
+		'project': certificate.project,
+		'certificate_id': certificate.certificate_id,
+		'issued_at': certificate.issued_at,
+	}
+	return render(request, 'users/certificate.html', context)
+
+
+def verify_certificate(request):
+	"""
+	Public view to verify certificate by ID
+	Anyone can access this page to check certificate validity
+	"""
+	certificate = None
+	error_message = None
+
+	if request.method == 'POST':
+		certificate_id = request.POST.get('certificate_id', '').strip()
+		if certificate_id:
+			try:
+				certificate = Certificate.objects.select_related('user', 'project').get(certificate_id=certificate_id)
+			except Certificate.DoesNotExist:
+				error_message = "Invalid certificate ID. Please check and try again."
+		else:
+			error_message = "Please enter a certificate ID."
+
+	context = {
+		'certificate': certificate,
+		'error_message': error_message,
+	}
+	return render(request, 'users/verify_certificate.html', context)
+
+
+def certificate_verification_url(request, certificate_id):
+	"""
+	Direct URL verification
+	"""
+	certificate = None
+	error_message = None
+	
+	try:
+		certificate = Certificate.objects.select_related('user', 'project').get(certificate_id=certificate_id)
+	except Certificate.DoesNotExist:
+		error_message = "Invalid certificate ID. Please check and try again."
+		
+	context = {
+		'certificate': certificate,
+		'error_message': error_message,
+	}
+	return render(request, 'users/verify_certificate.html', context)
+
+
+@login_required
+def account_management(request):
+	"""
+	View for managing connected accounts and email
+	"""
+	from allauth.socialaccount.models import SocialAccount
+
+	social_accounts = SocialAccount.objects.filter(user=request.user)
+	context = {
+		'user': request.user,
+		'social_accounts': social_accounts,
+	}
+	return render(request, 'users/account_management.html', context)
+
+
+@login_required
+def delete_account(request):
+	"""
+	View for account deletion
+	"""
+	if request.method == 'POST':
+		# Check if user confirmed deletion
+		confirmation = request.POST.get('confirm_delete', '')
+		if confirmation == request.user.username:
+			# Deactivate user instead of deleting (better for data integrity)
+			user = request.user
+			user.is_active = False
+			user.save()
+			logout(request)
+			messages.success(request, 'Your account has been deactivated successfully.')
+			return redirect('login')
+		else:
+			messages.error(request, 'Confirmation username does not match. Account not deleted.')
+
+	return render(request, 'users/delete_account.html')
 
 
 @login_required
@@ -330,3 +528,169 @@ def profile_edit(request):
 	else:
 		form = CustomUserProfileForm(instance=request.user)
 	return render(request, 'users/profile_edit.html', {'form': form})
+
+
+@login_required
+def onboarding(request):
+	"""
+	Onboarding view for collecting additional user details after social login
+	"""
+	# Check if user actually needs onboarding
+	user = request.user
+	needs_onboarding = (
+		not getattr(user, 'onboarding_complete', False) or
+		not user.date_of_birth or
+		not user.guardian_name or
+		not user.guardian_relation or
+		not user.address or
+		not user.contact or
+		not user.country_code
+	)
+	
+	# If user doesn't need onboarding, logout the user
+	if not needs_onboarding:
+		return redirect('profile')
+
+	# Set a session flag to indicate the user has visited the onboarding page
+	request.session['onboarding_visited'] = True
+	
+	if request.method == 'POST':
+		form = CustomUserOnboardingForm(request.POST, instance=request.user)
+		if form.is_valid():
+			user = form.save(commit=False)
+			user.onboarding_complete = True
+			user.is_active = True
+			user.save()
+			messages.success(request, 'Welcome! Your profile has been set up successfully.')
+
+			# Clear the session flag once onboarding is complete
+			if 'onboarding_visited' in request.session:
+				del request.session['onboarding_visited']
+
+			return redirect('profile')
+	else:
+		form = CustomUserOnboardingForm(instance=request.user)
+	
+	return render(request, 'users/onboarding.html', {'form': form})
+
+
+@receiver(user_logged_in)
+def user_logged_in_handler(sender, request, user, **kwargs):
+    """
+    Handle user login - check if onboarding is needed and redirect accordingly
+    """
+    logger.info(f"User logged in: {user.username}")
+    
+    # Check if user needs onboarding
+    needs_onboarding = (
+        not getattr(user, 'onboarding_complete', False) or
+        not user.date_of_birth or
+        not user.guardian_name or
+        not user.guardian_relation or
+        not user.address or
+        not user.contact or
+        not user.country_code
+    )
+    
+    if needs_onboarding:
+        logger.info(f"Redirecting {user.username} to onboarding")
+        from django.shortcuts import redirect
+        from django.urls import reverse
+        request.session['_onboarding_redirect'] = True
+        # We'll handle the redirect in middleware or by overriding the response
+
+
+@receiver(pre_social_login)
+def pre_social_login_handler(request, sociallogin, **kwargs):
+	"""
+	Run before social login is processed. Ensure the login_method and onboarding
+	session flags are available immediately for the redirect flow.
+	"""
+	try:
+		provider = sociallogin.account.provider
+	except Exception:
+		provider = None
+
+	# Determine method value
+	method = 'email'
+	if provider in ('google', 'facebook', 'github'):
+		method = provider
+
+	# Set session value so the very next request (redirect) can read it
+	try:
+		request.session['login_method'] = method
+		logger.info(f"pre_social_login: set session login_method={method}")
+	except Exception:
+		logger.debug("pre_social_login: could not set session login_method")
+
+	# If the sociallogin provides a user instance, mark needs_onboarding if incomplete
+	user = getattr(sociallogin, 'user', None)
+	needs_onboarding = False
+	if user is not None:
+		needs_onboarding = (
+			not getattr(user, 'onboarding_complete', False) or
+			not getattr(user, 'date_of_birth', None) or
+			not getattr(user, 'guardian_name', None) or
+			not getattr(user, 'guardian_relation', None) or
+			not getattr(user, 'address', None) or
+			not getattr(user, 'contact', None) or
+			not getattr(user, 'country_code', None)
+		)
+
+	if needs_onboarding:
+		try:
+			request.session['needs_onboarding'] = True
+			logger.info("pre_social_login: set session needs_onboarding=True")
+		except Exception:
+			logger.debug("pre_social_login: could not set session needs_onboarding")
+
+
+# Social login signal handlers
+@receiver(social_account_added)
+def social_account_added_handler(request, sociallogin, **kwargs):
+	"""
+	Handle social account addition - set login method and check onboarding
+	"""
+	user = sociallogin.user
+	logger.info(f"Social account added signal: user={user.username}, provider={sociallogin.account.provider}")
+
+	# Set login method based on provider
+	provider = sociallogin.account.provider
+	if provider == 'google':
+		user.login_method = 'google'
+	elif provider == 'facebook':
+		user.login_method = 'facebook'
+	elif provider == 'github':
+		user.login_method = 'github'
+	else:
+		user.login_method = 'email'  # fallback
+
+	# For social logins, email is verified by the provider
+	user.email_verified = True
+	user.is_active = True
+
+	user.save()
+	logger.info(f"Set login_method to {user.login_method} and email_verified=True for user {user.username}")
+
+	# Check if onboarding is needed
+	if not user.onboarding_complete:
+		# Store that we need to redirect to onboarding after login
+		request.session['needs_onboarding'] = True
+		logger.info(f"Set needs_onboarding session flag for user {user.username}")
+
+	# Also set the login method in the session so it is available immediately
+	try:
+		request.session['login_method'] = user.login_method
+		logger.info(f"Set session login_method={user.login_method} for user {user.username}")
+	except Exception:
+		# If session is not available for some reason, continue silently
+		logger.debug("Could not set session login_method")
+
+
+@receiver(social_account_updated)
+def social_account_updated_handler(request, sociallogin, **kwargs):
+	"""
+	Handle social account updates
+	"""
+	# Similar logic as above
+	social_account_added_handler(request, sociallogin, **kwargs)

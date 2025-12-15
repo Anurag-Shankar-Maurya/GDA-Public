@@ -1,0 +1,183 @@
+{% load i18n %}
+
+<!-- Personal Information -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.1s">
+    <div class="flex items-center mb-6">
+        <div class="h-10 w-10 rounded-full bg-primary-blue bg-opacity-10 flex items-center justify-center mr-4">
+            <i class="fas fa-user text-primary-blue content-center"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Personal Information" %}</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-at text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Username" %}</div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">{{ user.username }}</div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-envelope text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Email" %}</div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {{ user.email }}
+                {% if user.email_verified %}
+                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                    <i class="fas fa-check-circle mr-1"></i>{% trans "Verified" %}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-birthday-cake text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Date of Birth" %}
+                </div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.date_of_birth %}
+                    {{ user.date_of_birth|date:"M d, Y" }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Not provided" %}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-venus-mars text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Gender" %}</div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.gender %}
+                    {{ user.gender }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Not provided" %}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-tint text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Blood Group" %}
+                </div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.blood_group %}
+                    {{ user.blood_group }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Not provided" %}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-phone text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Contact" %}</div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.contact %}
+                    {{ user.country_code }} {{ user.contact }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Not provided" %}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-calendar-plus text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Member Since" %}</div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.date_joined %}
+                    {{ user.date_joined|date:"M d, Y" }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">-</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-clock text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Last Login" %}</div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.last_login %}
+                    {{ user.last_login|date:"M d, Y H:i" }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Never" %}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Guardian Information -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.2s">
+    <div class="flex items-center mb-6">
+        <div class="h-10 w-10 rounded-full bg-primary-blue bg-opacity-10 flex items-center justify-center mr-4">
+            <i class="fas fa-users text-primary-blue content-center"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Guardian Information" %}</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-user-shield text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Guardian Name" %}
+                </div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.guardian_name %}
+                    {{ user.guardian_name }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Not provided" %}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-link text-primary-blue mr-3 content-center"></i>
+                <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Guardian" %}
+                    {% trans "Relation" %}</div>
+            </div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg break-words">
+                {% if user.guardian_relation %}
+                    {{ user.guardian_relation }}
+                {% else %}
+                    <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Not provided" %}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Address -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.3s">
+    <div class="flex items-center mb-6">
+        <div class="h-10 w-10 rounded-full bg-primary-blue bg-opacity-10 flex items-center justify-center mr-4">
+            <i class="fas fa-map-marker-alt text-primary-blue content-center"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Address" %}</h2>
+    </div>
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark">
+        <div class="text-text-light dark:text-text-dark font-medium text-lg leading-relaxed break-words">
+            {% if user.address %}
+                {{ user.address }}
+            {% else %}
+                <span class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "Not provided" %}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,10 +1,12 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en" class="dark"> <!-- Added 'dark' class for initial dark mode, will be toggled by JS -->
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}" class="dark"> <!-- Added 'dark' class for initial dark mode, will be toggled by JS -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Site{% endblock %}</title>
+    <title>{% block title %}{% trans "GDA Content Management" %}{% endblock %}</title>
     <!-- favicon -->
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <!-- Tailwind CSS CDN -->
@@ -188,80 +190,88 @@
     <aside class="w-64 bg-gradient-to-b from-card-bg-light to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-xl transition-all duration-300 hidden lg:flex flex-col border-r border-border-light dark:border-border-dark">
         <div class="py-6 px-6 border-b border-border-light dark:border-border-dark">
             <a class="flex items-center space-x-3 text-xl font-extrabold bg-gradient-to-r from-primary-blue to-accent-blue bg-clip-text text-transparent hover:from-accent-blue hover:to-primary-blue transition-all duration-300 transform hover:scale-105" href="{% url 'management_dashboard' %}">
-                <img src="{% static 'images/logo.png' %}" alt="GDA Logo" class="h-12 w-auto rounded">
-                <span>GDA Content Management</span>
+                <img src="{% static 'images/logo.png' %}" alt="{% trans "GDA Logo" %}" class="h-12 w-auto rounded">
+                <span>{% trans "GDA Content Management" %}</span>
             </a>
         </div>
         <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
             <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'management_dashboard' %}">
                 <i class="fas fa-tachometer-alt mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
-                <span>Dashboard</span>
+                <span>{% trans "Dashboard" %}</span>
                 <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
             </a>
             <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'project_list' %}">
                 <i class="fas fa-folder mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
-                <span>Projects</span>
+                <span>{% trans "Projects" %}</span>
                 <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
             </a>
             <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'news_event_list' %}">
                 <i class="fas fa-newspaper mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
-                <span>News & Events</span>
+                <span>{% trans "News & Events" %}</span>
                 <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
             </a>
             <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'success_story_list' %}">
                 <i class="fas fa-star mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
-                <span>Success Stories</span>
+                <span>{% trans "Success Stories" %}</span>
                 <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
             </a>
             <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'faq_list' %}">
                 <i class="fas fa-question-circle mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
-                <span>FAQs</span>
+                <span>{% trans "FAQs" %}</span>
                 <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
             </a>
             <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'user_analytics' %}">
                 <i class="fas fa-chart-bar mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
-                <span>User Analytics</span>
+                <span>{% trans "User Analytics" %}</span>
                 <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
             </a>
             <a class="nav-link group flex items-center text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-1 hover:shadow-md" href="{% url 'application_analytics' %}">
                 <i class="fas fa-chart-pie mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
-                <span>Application Analytics</span>
+                <span>{% trans "Application Analytics" %}</span>
                 <i class="fas fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200"></i>
             </a>
         </nav>
-        <div class="px-4 py-6 border-t border-border-light dark:border-border-dark bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-card-bg-dark">
+        <div class="px-4 py-4 border-t border-border-light dark:border-border-dark bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-card-bg-dark">
             {% if user.is_authenticated and user.is_staff %}
-            <div class="mb-4">
-                <a href="{% url 'profile' %}" class="group flex items-center px-4 py-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
+            <div class="mb-2">
+                <a href="{% url 'profile' %}" class="group flex items-center px-2 py-2 rounded-xl hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer">
                     <div class="flex-shrink-0 mr-3">
-                        <div class="w-10 h-10 bg-gradient-to-r from-primary-blue to-accent-blue rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-xl transition-all duration-300">
+                        <div class="w-10 h-10 bg-gradient-to-r from-primary-blue to-accent-blue rounded-full group-hover:bg-none group-hover:bg-white group-hover:text-primary-blue flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-xl transition-all duration-300">
                             {{ user.first_name|first|default:user.username|first|upper }}
                         </div>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold text-text-light dark:text-text-dark group-hover:text-white truncate">{{ user.get_full_name|default:user.username }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-100 truncate">{{ user.email }}</p>
-                        <div class="flex items-center mt-1">
-                            <div class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                            <span class="text-xs text-green-600 dark:text-green-400 font-medium">Online</span>
-                        </div>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all duration-300"></i>
                 </a>
             </div>
             {% else %}
-            <div class="mb-4">
+            <div class="mb-2">
                 <a href="{% url 'login' %}" class="group flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-primary-blue to-accent-blue text-white hover:from-accent-blue hover:to-primary-blue transition-all duration-300 transform hover:scale-105 hover:shadow-lg font-medium">
                     <i class="fas fa-sign-in-alt mr-2 group-hover:rotate-12 transition-transform duration-300"></i>
-                    <span>Login</span>
+                    <span>{% trans "Login" %}</span>
                 </a>
             </div>
             {% endif %}
-            <button id="theme-toggle" type="button" class="w-full group flex items-center justify-center px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition-all duration-300 transform hover:scale-105">
-                <i class="fas fa-moon h-5 w-5 mr-3 group-hover:rotate-180 transition-transform duration-500" id="theme-toggle-dark-icon"></i>
-                <i class="fas fa-sun h-5 w-5 mr-3 group-hover:rotate-180 transition-transform duration-500" id="theme-toggle-light-icon"></i>
-                <span class="font-medium">Toggle Theme</span>
-                <i class="fas fa-palette ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+            
+            <!-- Language Switcher -->
+            <form action="{% url 'set_language' %}" method="post" class="mb-2">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                <button type="submit" name="language" value="{% if LANGUAGE_CODE|slice:':2' == 'en' %}zh-tw{% else %}en{% endif %}" class="w-full group flex items-center justify-center px-4 py-3 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-globe h-5 w-5 mr-3 group-hover:rotate-12 content-center transition-transform duration-300"></i>
+                    <span class="font-medium">{% if LANGUAGE_CODE|slice:':2' == 'en' %}中文{% else %}English{% endif %}</span>
+                    <i class="fas fa-exchange-alt ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                </button>
+            </form>
+
+            <button id="theme-toggle" type="button" class="w-full group flex items-center justify-center px-4 py-3 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition-all duration-300 transform hover:scale-105">
+                <i class="fas fa-moon h-5 w-5 mr-3 content-center group-hover:rotate-180 transition-transform duration-500" id="theme-toggle-dark-icon"></i>
+                <i class="fas fa-sun h-5 w-5 mr-3 content-center group-hover:rotate-180 transition-transform duration-500" id="theme-toggle-light-icon"></i>
+                <span class="font-medium">{% trans "Toggle Theme" %}</span>
+                <i class="fas fa-palette ml-auto opacity-0 content-center group-hover:opacity-100 transition-opacity duration-300"></i>
             </button>
         </div>
     </aside>
@@ -269,19 +279,19 @@
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col overflow-hidden">
         <!-- Loading Overlay -->
-        <div id="loading-overlay" class="fixed inset-0 bg-bg-light dark:bg-bg-dark bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center z-50 transition-opacity duration-500">
+        <!-- <div id="loading-overlay" class="fixed inset-0 bg-bg-light dark:bg-bg-dark bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center z-50 transition-opacity duration-500">
             <div class="text-center">
                 <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent mb-4"></div>
-                <p class="text-text-light dark:text-text-dark font-medium">Loading GDA Content...</p>
+                <p class="text-text-light dark:text-text-dark font-medium">{% trans "Loading GDA Content..." %}</p>
             </div>
-        </div>
+        </div> -->
 
         <!-- Top Bar for Mobile and Breadcrumbs/Quick Actions -->
         <header class="bg-gradient-to-r from-card-bg-light to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-xl py-6 transition-all duration-300 lg:hidden border-b border-border-light dark:border-border-dark">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                 <a class="text-2xl font-extrabold bg-gradient-to-r from-primary-blue to-accent-blue bg-clip-text text-transparent hover:from-accent-blue hover:to-primary-blue transition-all duration-300 transform hover:scale-105" href="{% url 'management_dashboard' %}">
                     <i class="fas fa-crown mr-2 text-yellow-500"></i>
-                    GDA Content
+                    {% trans "GDA Content" %}
                 </a>
 
                 <!-- Mobile Menu Button -->
@@ -301,37 +311,37 @@
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gradient-to-b from-card-bg-light to-gray-50 dark:from-card-bg-dark dark:to-gray-800 shadow-2xl border-t border-border-light dark:border-border-dark transform transition-all duration-500 ease-in-out" id="mobile-menu-content">
                     <a href="{% url 'management_dashboard' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
                         <i class="fas fa-tachometer-alt mr-3 text-lg group-hover:animate-pulse"></i>
-                        Dashboard
+                        {% trans "Dashboard" %}
                         <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <a href="{% url 'project_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
                         <i class="fas fa-folder mr-3 text-lg group-hover:animate-pulse"></i>
-                        Projects
+                        {% trans "Projects" %}
                         <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <a href="{% url 'news_event_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
                         <i class="fas fa-newspaper mr-3 text-lg group-hover:animate-pulse"></i>
-                        News & Events
+                        {% trans "News & Events" %}
                         <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <a href="{% url 'success_story_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
                         <i class="fas fa-star mr-3 text-lg group-hover:animate-pulse"></i>
-                        Success Stories
+                        {% trans "Success Stories" %}
                         <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <a href="{% url 'faq_list' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
                         <i class="fas fa-question-circle mr-3 text-lg group-hover:animate-pulse"></i>
-                        FAQs
+                        {% trans "FAQs" %}
                         <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <a href="{% url 'user_analytics' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
                         <i class="fas fa-chart-bar mr-3 text-lg group-hover:animate-pulse"></i>
-                        User Analytics
+                        {% trans "User Analytics" %}
                         <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <a href="{% url 'application_analytics' %}" class="nav-link group flex items-center px-4 py-3 text-base font-medium text-text-light dark:text-text-dark hover:bg-gradient-to-r hover:from-primary-blue hover:to-accent-blue hover:text-white rounded-xl transition-all duration-300 transform hover:translate-x-2 hover:shadow-lg">
                         <i class="fas fa-chart-pie mr-3 text-lg group-hover:animate-pulse"></i>
-                        Application Analytics
+                        {% trans "Application Analytics" %}
                         <i class="fas fa-chevron-right ml-auto text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <!-- Add other navigation links if needed -->
@@ -353,16 +363,29 @@
                     {% else %}
                     <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
                         <a href="{% url 'login' %}" class="block w-full px-3 py-2 rounded-md text-base text-text-light dark:text-text-dark hover:bg-primary-blue hover:text-white transition-colors duration-300 text-center">
-                            <i class="fas fa-sign-in-alt mr-2 content-center"></i> Login
+                            <i class="fas fa-sign-in-alt mr-2 content-center"></i> {% trans "Login" %}
                         </a>
                     </div>
                     {% endif %}
+                    
+                    <!-- Language Switcher Mobile -->
+                    <div class="px-2 pb-3 pt-2">
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                            <button type="submit" name="language" value="{% if LANGUAGE_CODE|slice:':2' == 'en' %}zh-tw{% else %}en{% endif %}" class="w-full text-left p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-blue flex items-center justify-center space-x-2 transition-colors duration-300">
+                                <i class="fas fa-globe h-6 w-6 content-center"></i>
+                                <span>{% if LANGUAGE_CODE|slice:':2' == 'en' %}Switch to 中文{% else %}Switch to English{% endif %}</span>
+                            </button>
+                        </form>
+                    </div>
+
                     <!-- theme toggle -->
                     <div class="px-2 pb-3 pt-2">
                         <button id="theme-toggle-mobile" type="button" class="w-full text-left p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-blue flex items-center justify-center space-x-2 transition-colors duration-300">
                             <i class="fas fa-moon h-6 w-6 content-center" id="theme-toggle-dark-icon-mobile"></i>
                             <i class="fas fa-sun h-6 w-6 content-center" id="theme-toggle-light-icon-mobile"></i>
-                            <span>Toggle Theme</span>
+                            <span>{% trans "Toggle Theme" %}</span>
                         </button>
                     </div>
                 </div>
@@ -382,7 +405,7 @@
                 <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-lg p-4 mb-4">
                     <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
                         <i class="fas fa-bolt mr-3 text-yellow-500"></i>
-                        Quick Actions
+                        {% trans "Quick Actions" %}
                     </h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                         <a href="{% url 'project_create' %}" class="group flex items-center p-2 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
@@ -390,8 +413,8 @@
                                 <i class="fas fa-plus text-white"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">New Project</h3>
-                                <p class="text-xs text-gray-600 dark:text-gray-300">Create a new project</p>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{% trans "New Project" %}</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">{% trans "Create a new project" %}</p>
                             </div>
                         </a>
 
@@ -400,8 +423,8 @@
                                 <i class="fas fa-bullhorn text-white"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">Add News</h3>
-                                <p class="text-xs text-gray-600 dark:text-gray-300">Publish news or event</p>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{% trans "Add News" %}</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">{% trans "Publish news or event" %}</p>
                             </div>
                         </a>
 
@@ -410,8 +433,8 @@
                                 <i class="fas fa-star text-white"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">Success Story</h3>
-                                <p class="text-xs text-gray-600 dark:text-gray-300">Share an impact story</p>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{% trans "Success Story" %}</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">{% trans "Share an impact story" %}</p>
                             </div>
                         </a>
 
@@ -420,8 +443,8 @@
                                 <i class="fas fa-question-circle text-white"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">Add FAQ</h3>
-                                <p class="text-xs text-gray-600 dark:text-gray-300">Create help content</p>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{% trans "Add FAQ" %}</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">{% trans "Create help content" %}</p>
                             </div>
                         </a>
 
@@ -430,8 +453,8 @@
                                 <i class="fas fa-user-plus text-white"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-gray-900 dark:text-white">Add User</h3>
-                                <p class="text-xs text-gray-600 dark:text-gray-300">Create new user account</p>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{% trans "Add User" %}</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-300">{% trans "Create new user account" %}</p>
                             </div>
                         </a>
                     </div>
@@ -548,15 +571,15 @@
             });
 
             // Hide loading overlay with animation
-            const loadingOverlay = document.getElementById('loading-overlay');
-            if (loadingOverlay) {
-                setTimeout(() => {
-                    loadingOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingOverlay.style.display = 'none';
-                    }, 500);
-                }, 800);
-            }
+            // const loadingOverlay = document.getElementById('loading-overlay');
+            // if (loadingOverlay) {
+            //     setTimeout(() => {
+            //         loadingOverlay.style.opacity = '0';
+            //         setTimeout(() => {
+            //             loadingOverlay.style.display = 'none';
+            //         }, 500);
+            //     }, 800);
+            // }
 
             // Add entrance animations to main content
             const mainContent = document.querySelector('main');

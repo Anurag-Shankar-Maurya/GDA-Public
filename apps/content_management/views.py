@@ -1,17 +1,124 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from apps.content.models import Project, NewsEvent, SuccessStory, FAQ
+from apps.content.models import Project, NewsEvent, SuccessStory, SuccessStoryGalleryImage, ProjectGalleryImage, NewsEventGalleryImage, FAQ
 from django.views.generic import TemplateView
-from django.db.models import Count, Sum, Q
+from django.db.models import Count, Sum, Q, Max, Avg, F, ExpressionWrapper, FloatField, Case, When, Value
 from django.utils import timezone
 import logging
+import mimetypes
+import os
 from apps.users.models import CustomUser
 from django.db.models.functions import TruncMonth, TruncYear
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .forms import SuccessStoryForm, ProjectForm, NewsEventForm, FAQForm
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+
+
+# --- Helper Functions ---
+def handle_gallery_image_uploads(request, success_story_instance):
+    """
+    Helper function to handle multiple gallery image uploads for a success story.
+    
+    Args:
+        request: The HTTP request object containing uploaded files
+        success_story_instance: The SuccessStory instance to attach images to
+    """
+    if 'gallery_images' not in request.FILES:
+        return
+    
+    files = request.FILES.getlist('gallery_images')
+    
+    # Get the current max order value for existing gallery images
+    max_order = success_story_instance.gallery_images.aggregate(Max('order'))['order__max'] or -1
+    
+    for idx, uploaded_file in enumerate(files):
+        # Read file data
+        file_data = uploaded_file.read()
+        
+        # Get MIME type and filename
+        mime_type, _ = mimetypes.guess_type(uploaded_file.name)
+        filename = os.path.basename(uploaded_file.name)
+        
+        # Create gallery image entry
+        SuccessStoryGalleryImage.objects.create(
+            success_story=success_story_instance,
+            image_blob=file_data,
+            image_blob_mime=mime_type or 'application/octet-stream',
+            image_blob_name=filename,
+            order=max_order + idx + 1
+        )
+
+
+def handle_project_gallery_image_uploads(request, project_instance):
+    """
+    Helper function to handle multiple gallery image uploads for a project.
+    
+    Args:
+        request: The HTTP request object containing uploaded files
+        project_instance: The Project instance to attach images to
+    """
+    if 'project_gallery_images' not in request.FILES:
+        return
+    
+    files = request.FILES.getlist('project_gallery_images')
+    
+    # Get the current max order value for existing gallery images
+    max_order = project_instance.gallery_images.aggregate(Max('order'))['order__max'] or -1
+    
+    for idx, uploaded_file in enumerate(files):
+        # Read file data
+        file_data = uploaded_file.read()
+        
+        # Get MIME type and filename
+        mime_type, _ = mimetypes.guess_type(uploaded_file.name)
+        filename = os.path.basename(uploaded_file.name)
+        
+        # Create gallery image entry
+        ProjectGalleryImage.objects.create(
+            project=project_instance,
+            image_blob=file_data,
+            image_blob_mime=mime_type or 'application/octet-stream',
+            image_blob_name=filename,
+            order=max_order + idx + 1
+        )
+
+
+def handle_news_event_gallery_image_uploads(request, news_event_instance):
+    """
+    Helper function to handle multiple gallery image uploads for a news/event.
+    
+    Args:
+        request: The HTTP request object containing uploaded files
+        news_event_instance: The NewsEvent instance to attach images to
+    """
+    if 'news_event_gallery_images' not in request.FILES:
+        return
+    
+    files = request.FILES.getlist('news_event_gallery_images')
+    
+    # Get the current max order value for existing gallery images
+    max_order = news_event_instance.gallery_images.aggregate(Max('order'))['order__max'] or -1
+    
+    for idx, uploaded_file in enumerate(files):
+        # Read file data
+        file_data = uploaded_file.read()
+        
+        # Get MIME type and filename
+        mime_type, _ = mimetypes.guess_type(uploaded_file.name)
+        filename = os.path.basename(uploaded_file.name)
+        
+        # Create gallery image entry
+        NewsEventGalleryImage.objects.create(
+            news_event=news_event_instance,
+            image_blob=file_data,
+            image_blob_mime=mime_type or 'application/octet-stream',
+            image_blob_name=filename,
+            order=max_order + idx + 1
+        )
+
 
 # --- Dashboard Views --- 
 class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -24,25 +131,139 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # --- User Stats ---
+        total_users = CustomUser.objects.count()
+        new_users_30d = CustomUser.objects.filter(date_joined__gte=timezone.now() - timezone.timedelta(days=30)).count()
+        active_users_30d = CustomUser.objects.filter(last_login__gte=timezone.now() - timezone.timedelta(days=30)).count()
+        
+        context['total_users'] = total_users
+        context['new_users_30d'] = new_users_30d
+        context['active_users_30d'] = active_users_30d
+        # Avoid division by zero
+        previous_users = total_users - new_users_30d
+        context['user_growth_pct'] = round((new_users_30d / previous_users * 100), 1) if previous_users > 0 else 100
 
-        # Summary Cards Data
+        # User Demographics
+        context['users_by_gender'] = CustomUser.objects.values('gender').annotate(count=Count('id')).exclude(gender='').order_by('-count')
+        context['users_by_country'] = CustomUser.objects.values('country_code').annotate(count=Count('id')).exclude(country_code='').order_by('-count')
+        context['login_methods'] = CustomUser.objects.values('login_method').annotate(count=Count('id')).order_by('-count')
+        context['onboarding_complete'] = CustomUser.objects.filter(onboarding_complete=True).count()
+        context['email_verified'] = CustomUser.objects.filter(email_verified=True).count()
+        context['onboarding_rate'] = round((context['onboarding_complete'] / total_users * 100), 1) if total_users > 0 else 0
+        context['verification_rate'] = round((context['email_verified'] / total_users * 100), 1) if total_users > 0 else 0
+
+        # --- Project Stats ---
         context['total_projects'] = Project.objects.count()
         context['active_projects'] = Project.objects.filter(is_active=True).count()
+        context['completed_projects'] = Project.objects.filter(end_date__lt=timezone.now().date()).count()
+        context['upcoming_projects'] = Project.objects.filter(start_date__gt=timezone.now().date()).count()
+        context['featured_projects'] = Project.objects.filter(is_featured=True).count()
+        context['hero_projects'] = Project.objects.filter(is_hero_highlight=True).count()
+        
+        # Capacity & Enrollment
+        project_aggs = Project.objects.aggregate(
+            total_capacity=Sum('total_headcount'),
+            total_enrolled=Sum('headcount'),
+            avg_duration=Avg(F('end_date') - F('start_date'))
+        )
+        context['total_capacity'] = project_aggs['total_capacity'] or 0
+        context['total_enrolled'] = project_aggs['total_enrolled'] or 0
+        context['utilization_rate'] = round((context['total_enrolled'] / context['total_capacity'] * 100), 1) if context['total_capacity'] > 0 else 0
+        context['avg_project_duration'] = project_aggs['avg_duration'].days if project_aggs['avg_duration'] else 0
+
+        # Unique enrolled users
+        context['unique_enrolled_users'] = Project.objects.values('enrolled_users').distinct().count()
+
+        # Upcoming deadlines
+        context['upcoming_deadlines'] = Project.objects.filter(
+            application_deadline__gte=timezone.now(),
+            application_deadline__lte=timezone.now() + timezone.timedelta(days=30)
+        ).count()
+
+        # Breakdowns
+        context['projects_by_difficulty'] = Project.objects.values('difficulty').annotate(count=Count('id')).order_by('-count')
+        context['projects_by_theme'] = Project.objects.values('theme').annotate(count=Count('id')).order_by('-count')
+        context['projects_by_country'] = Project.objects.values('country').annotate(count=Count('id')).order_by('-count')
+
+        # --- News & Events ---
         context['total_news_events'] = NewsEvent.objects.count()
+        context['published_news_events'] = NewsEvent.objects.filter(is_published=True).count()
+        context['news_count'] = NewsEvent.objects.filter(content_type='News').count()
+        context['event_count'] = NewsEvent.objects.filter(content_type='Event').count()
+        context['featured_news'] = NewsEvent.objects.filter(is_featured=True).count()
+        context['hero_news'] = NewsEvent.objects.filter(is_hero_highlight=True).count()
+
+        # --- Success Stories & Impact ---
         context['total_success_stories'] = SuccessStory.objects.count()
+        context['published_stories'] = SuccessStory.objects.filter(is_published=True).count()
+        context['featured_stories'] = SuccessStory.objects.filter(is_featured=True).count()
+        context['hero_stories'] = SuccessStory.objects.filter(is_hero_highlight=True).count()
+        
+        impact_aggs = SuccessStory.objects.aggregate(
+            total_beneficiaries=Sum('beneficiaries'),
+            total_hours=Sum('total_hours_contributed'),
+            avg_beneficiaries=Avg('beneficiaries'),
+            avg_hours=Avg('total_hours_contributed')
+        )
+        context['total_beneficiaries'] = impact_aggs['total_beneficiaries'] or 0
+        context['total_hours_contributed'] = impact_aggs['total_hours'] or 0
+        context['avg_beneficiaries_per_story'] = round(impact_aggs['avg_beneficiaries'] or 0, 1)
+        context['avg_hours_per_story'] = round(impact_aggs['avg_hours'] or 0, 1)
+        
+        # --- FAQs ---
         context['total_faqs'] = FAQ.objects.count()
 
-        # Content Performance (Example: Projects by Theme)
-        context['projects_by_theme'] = Project.objects.values('theme').annotate(count=Count('theme')).order_by('-count')
+        # --- Gallery Images ---
+        context['total_project_gallery_images'] = ProjectGalleryImage.objects.count()
+        context['total_success_story_gallery_images'] = SuccessStoryGalleryImage.objects.count()
+        context['total_news_event_gallery_images'] = NewsEventGalleryImage.objects.count()
+        context['total_gallery_images'] = (
+            context['total_project_gallery_images'] + 
+            context['total_success_story_gallery_images'] + 
+            context['total_news_event_gallery_images']
+        )
 
-        # User Engagement (Example: Success Stories with beneficiaries and hours)
-        context['total_beneficiaries'] = SuccessStory.objects.aggregate(Sum('beneficiaries'))['beneficiaries__sum'] or 0
-        context['total_hours_contributed'] = SuccessStory.objects.aggregate(Sum('total_hours_contributed'))['total_hours_contributed__sum'] or 0
-
-        # Recent Content
+        # --- Recent Content ---
         context['recent_projects'] = Project.objects.order_by('-created_at')[:5]
         context['recent_news_events'] = NewsEvent.objects.order_by('-publish_date')[:5]
         context['recent_success_stories'] = SuccessStory.objects.order_by('-published_at')[:5]
+        
+        # --- Chart Data Preparation ---
+        # 1. Content Distribution (Pie Chart)
+        context['chart_labels'] = ['Projects', 'News & Events', 'Success Stories', 'FAQs']
+        context['chart_data'] = [
+            context['total_projects'], 
+            context['total_news_events'], 
+            context['total_success_stories'], 
+            context['total_faqs']
+        ]
+
+        # 2. Monthly Activity (Line Chart) - Last 6 Months
+        today = timezone.now()
+        months = []
+        project_counts = []
+        news_counts = []
+        
+        # Simple loop for last 6 months
+        for i in range(5, -1, -1):
+            # Calculate start of month
+            month_date = today - timezone.timedelta(days=i*30) 
+            month_start = month_date.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            
+            # Calculate end of month (start of next month)
+            if month_start.month == 12:
+                month_end = month_start.replace(year=month_start.year+1, month=1)
+            else:
+                month_end = month_start.replace(month=month_start.month+1)
+            
+            months.append(month_start.strftime('%b'))
+            project_counts.append(Project.objects.filter(created_at__gte=month_start, created_at__lt=month_end).count())
+            news_counts.append(NewsEvent.objects.filter(publish_date__gte=month_start, publish_date__lt=month_end).count())
+
+        context['activity_months'] = months
+        context['activity_project_data'] = project_counts
+        context['activity_news_data'] = news_counts
 
         return context
 
@@ -322,16 +543,82 @@ class ProjectDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         return self.request.user.is_staff
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.object
+        
+        # Create unified gallery items list combining all content types
+        gallery_items = []
+        index = 0
+        
+        # Add blob images
+        for gallery_image in project.gallery_images.all().order_by('order'):
+            gallery_items.append({
+                'type': 'blob_image',
+                'object': gallery_image,
+                'index': index
+            })
+            index += 1
+        
+        # Add image URLs
+        for image_url in project.image_urls:
+            gallery_items.append({
+                'type': 'image_url',
+                'url': image_url,
+                'index': index
+            })
+            index += 1
+        
+        # Add video URLs
+        for video_url in project.video_urls:
+            gallery_items.append({
+                'type': 'video_url',
+                'url': video_url,
+                'index': index
+            })
+            index += 1
+        
+        # Paginate the unified gallery items
+        from django.core.paginator import Paginator
+        gallery_paginator = Paginator(gallery_items, 12)  # Show 20 items per page
+        gallery_page_number = self.request.GET.get('gallery_page', 1)
+        try:
+            gallery_page_obj = gallery_paginator.page(gallery_page_number)
+        except:
+            gallery_page_obj = gallery_paginator.page(1)
+        
+        context['gallery_items'] = gallery_page_obj
+        context['gallery_paginator'] = gallery_paginator
+        
+        return context
+
 class ProjectCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Project
     template_name = 'content_management/project_form.html'
-    fields = '__all__'
+    form_class = ProjectForm
     success_url = reverse_lazy('project_list')
     login_url = '/login/'
     redirect_field_name = 'next'
 
     def test_func(self):
         return self.request.user.is_staff
+
+    def form_valid(self, form):
+        # Process video and image URLs from form arrays
+        video_urls = self.request.POST.getlist('video_urls[]')
+        image_urls = self.request.POST.getlist('image_urls[]')
+        
+        # Filter out empty strings and save to model
+        form.instance.video_urls = [url for url in video_urls if url.strip()]
+        form.instance.image_urls = [url for url in image_urls if url.strip()]
+        
+        # Save the form first
+        response = super().form_valid(form)
+        
+        # Handle multiple gallery image uploads using helper function
+        handle_project_gallery_image_uploads(self.request, form.instance)
+        
+        return response
 
     def form_invalid(self, form):
         logger.error(f"Form has errors: {form.errors.as_json()}")
@@ -341,13 +628,30 @@ class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Project
     template_name = 'content_management/project_form.html'
     context_object_name = 'project'
-    fields = '__all__'
+    form_class = ProjectForm
     success_url = reverse_lazy('project_list')
     login_url = '/login/'
     redirect_field_name = 'next'
 
     def test_func(self):
         return self.request.user.is_staff
+
+    def form_valid(self, form):
+        # Process video and image URLs from form arrays
+        video_urls = self.request.POST.getlist('video_urls[]')
+        image_urls = self.request.POST.getlist('image_urls[]')
+        
+        # Filter out empty strings and save to model
+        form.instance.video_urls = [url for url in video_urls if url.strip()]
+        form.instance.image_urls = [url for url in image_urls if url.strip()]
+        
+        # Save the form first
+        response = super().form_valid(form)
+        
+        # Handle multiple gallery image uploads using helper function
+        handle_project_gallery_image_uploads(self.request, form.instance)
+        
+        return response
 
     def form_invalid(self, form):
         logger.error(f"Form has errors: {form.errors.as_json()}")
@@ -426,16 +730,81 @@ class NewsEventDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         return self.request.user.is_staff
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        news_event = self.object
+        
+        # Create unified gallery items list combining all content types
+        gallery_items = []
+        index = 0
+        
+        # Add blob images
+        for gallery_image in news_event.gallery_images.all().order_by('order'):
+            gallery_items.append({
+                'type': 'blob_image',
+                'object': gallery_image,
+                'index': index
+            })
+            index += 1
+        
+        # Add image URLs
+        for image_url in news_event.image_urls:
+            gallery_items.append({
+                'type': 'image_url',
+                'url': image_url,
+                'index': index
+            })
+            index += 1
+        
+        # Add video URLs
+        for video_url in news_event.video_urls:
+            gallery_items.append({
+                'type': 'video_url',
+                'url': video_url,
+                'index': index
+            })
+            index += 1
+        
+        # Paginate the unified gallery items
+        from django.core.paginator import Paginator
+        gallery_paginator = Paginator(gallery_items, 12)  # Show 20 items per page
+        gallery_page_number = self.request.GET.get('gallery_page', 1)
+        try:
+            gallery_page_obj = gallery_paginator.page(gallery_page_number)
+        except:
+            gallery_page_obj = gallery_paginator.page(1)
+        
+        context['gallery_items'] = gallery_page_obj
+        context['gallery_paginator'] = gallery_paginator
+        
+        return context
+
 class NewsEventCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = NewsEvent
     template_name = 'content_management/news_event_form.html'
-    fields = '__all__'
+    form_class = NewsEventForm
     success_url = reverse_lazy('news_event_list')
     login_url = '/login/'
     redirect_field_name = 'next'
 
     def test_func(self):
         return self.request.user.is_staff
+
+    def form_valid(self, form):
+        # Handle video and image URLs
+        video_urls = self.request.POST.getlist('video_urls[]')
+        image_urls = self.request.POST.getlist('image_urls[]')
+
+        form.instance.video_urls = [url for url in video_urls if url.strip()]
+        form.instance.image_urls = [url for url in image_urls if url.strip()]
+        
+        # Save the form first
+        response = super().form_valid(form)
+        
+        # Handle multiple gallery image uploads using helper function
+        handle_news_event_gallery_image_uploads(self.request, form.instance)
+        
+        return response
 
     def form_invalid(self, form):
         logger.error(f"Form has errors: {form.errors.as_json()}")
@@ -445,13 +814,29 @@ class NewsEventUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = NewsEvent
     template_name = 'content_management/news_event_form.html'
     context_object_name = 'news_event'
-    fields = '__all__'
+    form_class = NewsEventForm
     success_url = reverse_lazy('news_event_list')
     login_url = '/login/'
     redirect_field_name = 'next'
 
     def test_func(self):
         return self.request.user.is_staff
+
+    def form_valid(self, form):
+        # Handle video and image URLs
+        video_urls = self.request.POST.getlist('video_urls[]')
+        image_urls = self.request.POST.getlist('image_urls[]')
+
+        form.instance.video_urls = [url for url in video_urls if url.strip()]
+        form.instance.image_urls = [url for url in image_urls if url.strip()]
+        
+        # Save the form first
+        response = super().form_valid(form)
+        
+        # Handle multiple gallery image uploads using helper function
+        handle_news_event_gallery_image_uploads(self.request, form.instance)
+        
+        return response
 
     def form_invalid(self, form):
         logger.error(f"Form has errors: {form.errors.as_json()}")
@@ -529,11 +914,59 @@ class SuccessStoryDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView
     def test_func(self):
         return self.request.user.is_staff
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        success_story = self.object
+        
+        # Create unified gallery items list combining all content types
+        gallery_items = []
+        index = 0
+        
+        # Add blob images
+        for gallery_image in success_story.gallery_images.all().order_by('order'):
+            gallery_items.append({
+                'type': 'blob_image',
+                'object': gallery_image,
+                'index': index
+            })
+            index += 1
+        
+        # Add image URLs
+        for image_url in success_story.image_urls:
+            gallery_items.append({
+                'type': 'image_url',
+                'url': image_url,
+                'index': index
+            })
+            index += 1
+        
+        # Add video URLs
+        for video_url in success_story.video_urls:
+            gallery_items.append({
+                'type': 'video_url',
+                'url': video_url,
+                'index': index
+            })
+            index += 1
+        
+        # Paginate the unified gallery items
+        from django.core.paginator import Paginator
+        gallery_paginator = Paginator(gallery_items, 12)  # Show 20 items per page
+        gallery_page_number = self.request.GET.get('gallery_page', 1)
+        try:
+            gallery_page_obj = gallery_paginator.page(gallery_page_number)
+        except:
+            gallery_page_obj = gallery_paginator.page(1)
+        
+        context['gallery_items'] = gallery_page_obj
+        context['gallery_paginator'] = gallery_paginator
+        
+        return context
+
 class SuccessStoryCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = SuccessStory
     template_name = 'content_management/success_story_form.html'
-    # For ForeignKey, Django's default form generation works well if the related model is also managed.
-    fields = '__all__'
+    form_class = SuccessStoryForm
     success_url = reverse_lazy('success_story_list')
     login_url = '/login/'
     redirect_field_name = 'next'
@@ -550,7 +983,13 @@ class SuccessStoryCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
         form.instance.image_urls = [url for url in image_urls if url.strip()]
         form.instance.video_urls = [url for url in video_urls if url.strip()]
 
-        return super().form_valid(form)
+        # Save the form first
+        response = super().form_valid(form)
+        
+        # Handle multiple gallery image uploads using helper function
+        handle_gallery_image_uploads(self.request, form.instance)
+        
+        return response
 
     def form_invalid(self, form):
         logger.error(f"Form has errors: {form.errors.as_json()}")
@@ -560,7 +999,7 @@ class SuccessStoryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
     model = SuccessStory
     template_name = 'content_management/success_story_form.html'
     context_object_name = 'success_story' # Ensure the object is available as 'success_story' in the template
-    fields = '__all__'
+    form_class = SuccessStoryForm
     success_url = reverse_lazy('success_story_list')
     login_url = '/login/'
     redirect_field_name = 'next'
@@ -577,7 +1016,13 @@ class SuccessStoryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
         form.instance.image_urls = [url for url in image_urls if url.strip()]
         form.instance.video_urls = [url for url in video_urls if url.strip()]
 
-        return super().form_valid(form)
+        # Save the form first
+        response = super().form_valid(form)
+        
+        # Handle multiple gallery image uploads using helper function
+        handle_gallery_image_uploads(self.request, form.instance)
+        
+        return response
 
     def form_invalid(self, form):
         logger.error(f"Form has errors: {form.errors.as_json()}")
@@ -600,12 +1045,63 @@ class FAQListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = FAQ
     template_name = 'content_management/faq_list.html'
     context_object_name = 'faqs'
-    queryset = FAQ.objects.all().order_by('order')
     login_url = '/login/'
     redirect_field_name = 'next'
 
     def test_func(self):
         return self.request.user.is_staff
+
+    def get_queryset(self):
+        queryset = FAQ.objects.annotate(
+            total_votes_cnt=F('thumbs_up') + F('thumbs_down')
+        ).annotate(
+            usefulness=Case(
+                When(total_votes_cnt__gt=0, then=ExpressionWrapper(
+                    F('thumbs_up') * 100.0 / F('total_votes_cnt'),
+                    output_field=FloatField()
+                )),
+                default=Value(0.0),
+                output_field=FloatField()
+            )
+        )
+
+        # Search functionality
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = queryset.filter(
+                Q(question__icontains=search_query) |
+                Q(answer__icontains=search_query)
+            )
+
+        # Sorting functionality
+        sort_by = self.request.GET.get('sort', 'order')
+        valid_sort_fields = {
+            'order': 'order',
+            '-order': '-order',
+            'question': 'question',
+            '-question': '-question',
+            'is_schema_ready': 'is_schema_ready',
+            '-is_schema_ready': '-is_schema_ready',
+            'thumbs_up': 'thumbs_up',
+            '-thumbs_up': '-thumbs_up',
+            'thumbs_down': 'thumbs_down',
+            '-thumbs_down': '-thumbs_down',
+            'usefulness': 'usefulness',
+            '-usefulness': '-usefulness',
+        }
+
+        if sort_by in valid_sort_fields:
+            queryset = queryset.order_by(valid_sort_fields[sort_by])
+        else:
+            queryset = queryset.order_by('order')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('search', '')
+        context['current_sort'] = self.request.GET.get('sort', 'order')
+        return context
 
 class FAQDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = FAQ
@@ -621,7 +1117,7 @@ class FAQDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 class FAQCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = FAQ
     template_name = 'content_management/faq_form.html'
-    fields = '__all__'
+    form_class = FAQForm
     success_url = reverse_lazy('faq_list')
     login_url = '/login/'
     redirect_field_name = 'next'
@@ -636,7 +1132,7 @@ class FAQCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 class FAQUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = FAQ
     template_name = 'content_management/faq_form.html'
-    fields = '__all__'
+    form_class = FAQForm
     success_url = reverse_lazy('faq_list')
     login_url = '/login/'
     redirect_field_name = 'next'
@@ -658,4 +1154,3 @@ class FAQDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         return self.request.user.is_staff
-

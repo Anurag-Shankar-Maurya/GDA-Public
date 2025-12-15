@@ -1,0 +1,359 @@
+{% extends 'content_base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "About the Association" %}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'content_organization' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Organization" %}</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12 rounded-3xl transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-4">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/50 dark:to-indigo-900/50 rounded-full mb-6">
+                <i class="fas fa-sitemap text-blue-600 dark:text-blue-400 mr-3"></i>
+                <span class="text-blue-800 dark:text-blue-200 font-semibold">{% trans "Taoyuan City Global Contribution (Communist) Volunteer Association" %}</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">
+                Global Devotion Association
+            </h1>
+        </div>
+
+        <!-- About Section Card -->
+        <div class="bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-blue-900/30 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-blue-100 dark:border-blue-800/30">
+            <div class="flex items-center mb-6">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-info-circle text-xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "About the Association" %}</h2>
+            </div>
+            <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                {% trans "The Global Devotion Association (GDA) was founded to connect volunteers and learning resources across communities. Our aim is to promote community service, cultural exchange and education through volunteer-driven programs." %}
+            </p>
+        </div>
+
+        <!-- Organizational Structure Card -->
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-16 border border-green-200 dark:border-green-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-sitemap text-xl"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Organizational Structure" %}</h2>
+            </div>
+            <div class="bg-white/60 dark:bg-gray-800/40 rounded-2xl p-6 backdrop-blur-sm border border-green-200/50 dark:border-green-800/30">
+                <img src="{% static 'images/organization/organization_str.png' %}" alt="{% trans "Organizational structure" %}" class="w-full h-auto rounded-xl shadow-lg">
+            </div>
+        </div>
+        <!-- Leadership Section Title -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 rounded-full mb-4">
+                <i class="fas fa-crown text-purple-600 dark:text-purple-400 mr-3"></i>
+                <span class="text-purple-800 dark:text-purple-200 font-semibold">{% trans "Leadership Team" %}</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                {% trans "Honorary and Leadership" %}
+            </h2>
+        </div>
+
+        <!-- Honorary Chairman Rao Qingling Card -->
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-purple-200 dark:border-purple-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-crown text-xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Honorary Chairman Rao Qingling" %}</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Image Section -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+                            <img src="{% static 'images/organization/chairman_rao_qingling.png' %}" alt="{% trans "Honorary Chairman Rao Qingling" %}" class="w-full h-80 object-cover">
+                        </div>
+                    </div>
+                    <div class="text-center mt-6">
+                        <div class="flex justify-center space-x-4">
+                            <a href="https://www.facebook.com/Taitungaprilyao" target="_blank" class="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 p-3 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://www.instagram.com/april_chinglingyao/" target="_blank" class="bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400 p-3 rounded-full hover:bg-pink-200 dark:hover:bg-pink-800/50 transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Section -->
+                <div class="lg:col-span-2">
+                    <div class="space-y-6">
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-purple-200/50 dark:border-purple-800/30">
+                            <blockquote class="text-lg italic text-purple-700 dark:text-purple-300 mb-4">
+                                "{% trans "Taitung's hot sun can't melt the volunteers' service spirit" %}"
+                            </blockquote>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "To be honest, I was quite surprised when I first learned that the Global Learning Association was coming to Taitung to serve. How many young people are there with a passion for service in this day and age? Taitung is a land of rich natural beauty and the passion of the indigenous people, but it lacks human resources to help them, which makes volunteers even more valuable." %}
+                            </p>
+                        </div>
+                        
+                        <!-- Experience Section -->
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-purple-200/50 dark:border-purple-800/30">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-briefcase text-purple-600 dark:text-purple-400 mr-2"></i>
+                                {% trans "Experience" %}
+                            </h4>
+                            <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                                <li class="flex items-center"><i class="fas fa-graduation-cap text-purple-500 mr-3"></i>{% trans "PhD in Political Science, National Taiwan Normal University" %}</li>
+                                <li class="flex items-center"><i class="fas fa-gavel text-purple-500 mr-3"></i>{% trans "Chairman of Taitung County Council" %}</li>
+                                <li class="flex items-center"><i class="fas fa-users text-purple-500 mr-3"></i>{% trans "Vice Chairman of Taitung County Council" %}</li>
+                                <li class="flex items-center"><i class="fas fa-star text-purple-500 mr-3"></i>{% trans "Member of the Standing Committee of the Central Committee of the Kuomintang" %}</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Political Views -->
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-purple-200/50 dark:border-purple-800/30">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-lightbulb text-purple-600 dark:text-purple-400 mr-2"></i>
+                                {% trans "Key Initiatives" %}
+                            </h4>
+                            <ol class="space-y-2 text-gray-700 dark:text-gray-300 list-decimal list-inside">
+                                <li>{% trans "Continue to push for the early completion of the double-track and electrification of the Hualien-Taitung Line" %}</li>
+                                <li>{% trans "Reform ticketing system to protect the ticket booking rights of Taitung residents" %}</li>
+                                <li>{% trans "Promote Taitung to become a slow-living city and one of the most livable cities" %}</li>
+                                <li>{% trans "Strengthen guidance, marketing, and promotion of organic agriculture in Taitung" %}</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chairman Chen Zhengzhe Card -->
+        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-yellow-200 dark:border-yellow-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-user-tie text-xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Chairman Chen Zhengzhe" %}</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Content Section -->
+                <div class="lg:col-span-2">
+                    <div class="space-y-6">
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30">
+                            <blockquote class="text-lg italic text-yellow-700 dark:text-yellow-300 mb-4">
+                                "{% trans "Western philosopher Nietzsche once said: 'People are great because of their dreams.'" %}"
+                            </blockquote>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "We live in this world, and there are so many things worth pursuing? And for those of us who are so busy all day long, should we also think about doing our best for the society that nurtures us? My daughter, Qingyu, happened to be studying in high school in the United States." %}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30">
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "The 'Global Contribution Learning Program' held two large-scale activities during the summer vacation of 2017. One was in the outlying island of Lanyu in mid-July, where everyone worked together to bring more hope to children in remote areas. Although individual strength is very weak, a little bit of effort can make a tower, and a little bit of effort can make a coat." %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image Section -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+                            <img src="{% static 'images/organization/chairman_chen_zhengzhe.png' %}" alt="{% trans "Chairman Chen Zhengzhe" %}" class="w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Honorary Consultant Zhang Hongqi Card -->
+        <div class="bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-indigo-900/20 dark:to-cyan-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-indigo-200 dark:border-indigo-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-indigo-500 to-cyan-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-user-md text-xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Honorary Consultant Zhang Hongqi" %}</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Image Section -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-400 to-cyan-500 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+                            <img src="{% static 'images/organization/honorary_consultant_zhang_hongqi.png' %}" alt="{% trans "Honorary Consultant Zhang Hongqi" %}" class="w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Section -->
+                <div class="lg:col-span-2">
+                    <div class="space-y-6">
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-indigo-200/50 dark:border-indigo-800/30">
+                            <blockquote class="text-lg italic text-indigo-700 dark:text-indigo-300 mb-4">
+                                "{% trans "I hope parents can encourage their children to participate in such educational volunteer activities." %}"
+                            </blockquote>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "There are many volunteer groups in Taiwan today that serve all aspects of society, which is of course something that everyone is happy to see. Participating in volunteer activities and doing one's best for issues and causes that one cares about is a spirit of social participation and dedication that young people should actively cultivate." %}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-indigo-200/50 dark:border-indigo-800/30">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
+                                <i class="fas fa-stethoscope text-indigo-600 dark:text-indigo-400 mr-2"></i>
+                                {% trans "Medical Excellence" %}
+                            </h4>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "Dr. Chang Hong-chi is an outstanding professional in the field of obstetrics and gynecology in Taiwan. She graduated from Taipei Medical University in 1970 and has made significant contributions to maternal and child medical services through the 'Chang Hong-chi Obstetrics and Gynecology Clinic' and 'Hongqi Women and Children's Hospital'." %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Honorary Consultant Hu Yufu Card -->
+        <div class="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-rose-200 dark:border-rose-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-rose-500 to-pink-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-graduation-cap text-xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Honorary Consultant Hu Yufu" %}</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Content Section -->
+                <div class="lg:col-span-2">
+                    <div class="space-y-6">
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-rose-200/50 dark:border-rose-800/30">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
+                                <i class="fas fa-school text-rose-600 dark:text-rose-400 mr-2"></i>
+                                {% trans "Educational Leadership" %}
+                            </h4>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "He is currently the principal of Kai-Nan High School in Taipei City. One of the goals of the school is to cultivate students who are proficient in science, technology, humanities, and nature. We hope to create high-quality modern students and strengthen international competitiveness through the cooperation and support of parents and teaching teams." %}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-rose-200/50 dark:border-rose-800/30">
+                            <div class="text-center">
+                                <img src="{% static 'images/organization/honorary_consultant_hu_yufu_award.png' %}" alt="{% trans "Award" %}" class="w-48 h-auto mx-auto rounded-lg shadow-lg mb-4">
+                                <a href="https://www.knvs.tp.edu.tw/行政單位/校長室" class="inline-flex items-center px-4 py-2 bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 rounded-full hover:bg-rose-200 dark:hover:bg-rose-800/50 transition-colors" target="_blank">
+                                    <i class="fas fa-external-link-alt mr-2"></i>
+                                    {% trans "Taipei Kainan High School" %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image Section -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-rose-400 to-pink-500 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+                            <img src="{% static 'images/organization/honorary_consultant_hu_yufu.png' %}" alt="{% trans "Honorary Consultant Hu Yufu" %}" class="w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Honorary Consultant Li Yizhan Card -->
+        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-emerald-200 dark:border-emerald-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-briefcase text-xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Honorary Consultant Li Yizhan" %}</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Image Section -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+                            <img src="{% static 'images/organization/honorary_consultant_li_yizhan.png' %}" alt="{% trans "Honorary Consultant Li Yizhan" %}" class="w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content Section -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-800/30">
+                        <h4 class="font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                            <i class="fas fa-building text-emerald-600 dark:text-emerald-400 mr-2"></i>
+                            {% trans "CEO of Shengyi Group" %}
+                        </h4>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {% trans "Mr. Li Yizhan, CEO of Shengyi Group, has been deeply involved in the medical beauty market for many years. He adheres to the principle of providing not only professional medical care but also customized services that are thoughtful and growing steadily. He hopes to achieve not only making people prettier, but also radiating kindness and confidence from the inside out. Shengyi Medical Beauty Group will continue to contribute and work hard in social welfare." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Honorary Consultant Wang Lianjin Card -->
+        <div class="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-3xl shadow-xl p-8 md:p-12 mb-12 border border-violet-200 dark:border-violet-800/30">
+            <div class="flex items-center mb-8">
+                <div class="bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-full p-3 mr-4">
+                    <i class="fas fa-chalkboard-teacher text-xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">{% trans "Honorary Consultant Wang Lianjin" %}</h3>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Content Section -->
+                <div class="lg:col-span-2">
+                    <div class="space-y-6">
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-violet-200/50 dark:border-violet-800/30">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-school text-violet-600 dark:text-violet-400 mr-2"></i>
+                                {% trans "Educational Leadership" %}
+                            </h4>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "He was formerly the principal of Baiji Elementary School in Fuxing District, Taoyuan City. Principal Wang Lianjin, an educator with profound educational philosophy and rich experience, is committed to improving the quality of education for Aboriginal children. He believes that education is a sacred mission and emphasizes that educators should stay in places where education is most needed." %}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white/70 dark:bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm border border-violet-200/50 dark:border-violet-800/30">
+                            <h4 class="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
+                                <i class="fas fa-lightbulb text-violet-600 dark:text-violet-400 mr-2"></i>
+                                {% trans "Educational Innovation" %}
+                            </h4>
+                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                {% trans "He introduced the management philosophy of small and medium-sized enterprises into the school, striving to create excellent management. Under his leadership, the enrollment rate of graduates into high schools increased significantly from 30% to 90%." %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image Section -->
+                <div class="lg:col-span-1">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-violet-400 to-purple-500 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg">
+                            <img src="{% static 'images/organization/honorary_consultant_wang_lianjin.png' %}" alt="{% trans "Honorary Consultant Wang Lianjin" %}" class="w-full h-80 object-cover">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

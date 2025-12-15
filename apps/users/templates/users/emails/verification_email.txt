@@ -1,18 +1,19 @@
-Welcome to GDA!
+{% load i18n %}
+{% trans "Welcome to GDA!" %}
 
-Hi {{ user.get_full_name|default:user.username }},
+{% trans "Hi" %} {{ user.get_full_name|default:user.username }},
 
-Thank you for creating an account with GDA. We're excited to have you on board!
+{% trans "Thank you for creating an account with GDA. We're excited to have you on board!" %}
 
-To complete your registration and access all the features, please verify your email address by clicking the link below:
+{% trans "To complete your registration and access all the features, please verify your email address by clicking the link below:" %}
 
 {{ verification_link }}
 
-This verification link will expire in 24 hours. If you need to request a new link, you can do so from the login page.
+{% trans "This verification link will expire in 24 hours. If you need to request a new link, you can do so from the login page." %}
 
-SECURITY NOTE: If you didn't create this account, please ignore this email. Your email address will not be verified without your consent.
+{% trans "SECURITY NOTE: If you didn't create this account, please ignore this email. Your email address will not be verified without your consent." %}
 
-Questions? Feel free to contact our support team at https://www.gda.com/contact
+{% trans "Questions? Feel free to contact our support team at" %} {{ protocol }}://{{ domain }}{% url 'landing_page' %}#contact
 
-Best regards,
-The GDA Team
+{% trans "Best regards," %}
+{% trans "The GDA Team" %}

@@ -52,14 +52,16 @@ coverage.xml
 .pytest_cache/
 
 # Translations
-*.mo
+# *.mo
 *.pot
 
 # Django stuff:
 *.log
 local_settings.py
-# db.sqlite3
-# db.sqlite3-journal
+db.sqlite3
+db.sqlite3-journal
+*.db
+*.sqlite
 
 # Flask stuff:
 instance/
@@ -129,11 +131,13 @@ dmypy.json
 .pyre/
 
 # Project specific
-# gda/media/
+# Note: media/ directory not needed - images stored as blobs in database
+media/
 gda/staticfiles/
 gda/static/
-# *.sqlite3
-# *.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
 
 # IDE
 .vscode/

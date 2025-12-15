@@ -1,0 +1,484 @@
+{% load i18n %}
+
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+<!-- Profile Header Card -->
+<div class="overflow-hidden animate-fadeIn mb-8">
+    <div class="bg-gradient-to-r from-primary-blue via-accent-blue to-accent-blue rounded-2xl px-8 py-12 shadow-2xl space-x-2 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+        <div class="relative flex flex-col lg:flex-row items-center lg:items-start text-center lg:text-left">
+            <div class="relative">
+                <div class="h-32 w-32 rounded-full bg-light-bg shadow-2xl flex items-center justify-center text-5xl font-bold text-primary-blue border-4 border-white">
+                    {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-success h-8 w-8 rounded-full border-4 border-white flex items-center justify-center">
+                    <i class="fas fa-check text-white text-xs content-center"></i>
+                </div>
+            </div>
+            <div class="mt-6 lg:mt-0 lg:ml-8 flex-1">
+                <h1 class="text-4xl font-bold text-white mb-2">{{ user.get_full_name }}</h1>
+                <p class="text-white text-lg mb-4 flex items-center justify-center lg:justify-start break-words">
+                    <i class="fas fa-envelope mr-2 content-center"></i>{{ user.email }}
+                    {% if user.email_verified %}
+                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                        <i class="fas fa-check-circle mr-1"></i>{% trans "Verified" %}
+                    </span>
+                    {% endif %}
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center lg:justify-start items-center">
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-light-bg bg-opacity-20 text-white backdrop-blur-sm">
+                        <i class="fas fa-user mr-2 content-center"></i>{% trans "Active Member" %}
+                    </span>
+                    {% with method=request.session.login_method|default:user.login_method %}
+                        {% if method and method != 'email' %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-light-bg bg-opacity-20 text-white backdrop-blur-sm">
+                            {% if method == 'google' %}
+                                <i class="fab fa-google mr-2 content-center"></i>{% trans "Logged in via Google" %}
+                            {% elif method == 'facebook' %}
+                                <i class="fab fa-facebook-f mr-2 content-center"></i>{% trans "Logged in via Facebook" %}
+                            {% elif method == 'github' %}
+                                <i class="fab fa-github mr-2 content-center"></i>{% trans "Logged in via GitHub" %}
+                            {% endif %}
+                        </span>
+                        {% endif %}
+                    {% endwith %}
+                    {% if user.is_superuser %}
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-dark-bg bg-opacity-70 text-success backdrop-blur-sm">
+                        <i class="fas fa-crown mr-2 content-center"></i>{% trans "Administrator" %}
+                    </span>
+                    {% elif user.is_staff %}
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-warning bg-opacity-20 text-warning backdrop-blur-sm">
+                        <i class="fas fa-user-shield mr-2 content-center"></i>{% trans "Staff User" %}
+                    </span>
+                    {% endif %}
+                    {% if current_projects %}
+                    <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-success bg-opacity-20 text-success backdrop-blur-sm">
+                        <i class="fas fa-project-diagram mr-2 content-center"></i>{{ current_projects|length }} {% trans "Active" %}
+                        {% trans "Project" %}{{ current_projects|length|pluralize }}
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="mt-6 flex flex-wrap gap-4">
+                    <!-- <a href="#content-account-management" onclick="switchTab('account-management')"
+                        class="inline-flex items-center px-6 py-3 border border-border-light border-opacity-30 shadow-lg text-base font-medium rounded-xl text-white bg-gradient-to-r from-accent-blue to-primary-blue hover:from-primary-blue hover:to-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-cog mr-2 content-center"></i>{% trans "Account Settings" %}
+                    </a> -->
+                    {% if user.is_staff %}
+                    <a href="{% url 'management_dashboard' %}"
+                        class="inline-flex items-center px-6 py-3 border border-border-light border-opacity-30 shadow-lg text-base font-medium rounded-xl text-white bg-gradient-to-r from-primary-blue to-accent-blue hover:from-accent-blue hover:to-primary-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-shield-alt mr-2 content-center"></i>{% trans "Management Dashboard" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Account Statistics -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.1s">
+    <div class="flex items-center mb-6">
+        <div class="h-10 w-10 rounded-full bg-primary-blue bg-opacity-10 flex items-center justify-center mr-4">
+            <i class="fas fa-chart-bar text-primary-blue content-center"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Account Statistics" %}</h2>
+    </div>
+
+    {% with up=upcoming_projects|length cur=current_projects|length past=past_projects|length %}
+    {% with total=up|add:cur|add:past %}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300 text-center">
+            <i class="fas fa-project-diagram text-primary-blue text-3xl mb-3 content-center"></i>
+            <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Total Projects" %}</div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg">{{ total }}</div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300 text-center">
+            <i class="fas fa-clock text-info text-3xl mb-3 content-center"></i>
+            <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Upcoming Projects" %}</div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg">{{ up }}</div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300 text-center">
+            <i class="fas fa-play-circle text-success text-3xl mb-3 content-center"></i>
+            <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Active Projects" %}</div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg">{{ cur }}</div>
+        </div>
+
+        <div class="group bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300 text-center">
+            <i class="fas fa-check-circle text-text-light-secondary dark:text-text-dark-secondary text-3xl mb-3 content-center"></i>
+            <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Completed Projects" %}</div>
+            <div class="text-text-light dark:text-text-dark font-medium text-lg">{{ past }}</div>
+        </div>
+    </div>
+    {% endwith %}
+    {% endwith %}
+</div>
+
+<!-- User Impact -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.2s">
+    <div class="flex items-center mb-6">
+        <div class="h-10 w-10 rounded-full bg-success bg-opacity-10 flex items-center justify-center mr-4">
+            <i class="fas fa-chart-line text-success content-center"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Your Impact" %}</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300 text-center">
+            <i class="fas fa-users text-primary-blue text-3xl mb-3 content-center"></i>
+            <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Beneficiaries Helped" %}</div>
+            <div class="text-text-light dark:text-text-dark font-medium text-2xl">{{ total_beneficiaries }}</div>
+        </div>
+
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-6 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300 text-center">
+            <i class="fas fa-clock text-accent-blue text-3xl mb-3 content-center"></i>
+            <div class="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary uppercase tracking-wider">{% trans "Hours Contributed" %}</div>
+            <div class="text-text-light dark:text-text-dark font-medium text-2xl">{{ total_hours }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Certificates Earned -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.3s">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <div class="h-10 w-10 rounded-full bg-warning bg-opacity-10 flex items-center justify-center mr-4">
+                <i class="fas fa-certificate text-warning content-center"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Certificates Earned" %}</h2>
+        </div>
+        {% if certificates %}
+        <a href="#content-certificates" onclick="switchTab('certificates')" class="text-primary-blue hover:text-accent-blue transition-colors duration-200 text-sm font-medium">
+            {% trans "View All" %} <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+        {% endif %}
+    </div>
+
+    {% if certificates %}
+    <div class="space-y-4">
+        {% for cert in certificates|slice:":3" %}
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="font-semibold text-text-light dark:text-text-dark">{{ cert.project.title }}</h3>
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{% trans "Issued on" %} {{ cert.issued_at|date:"M d, Y" }}</p>
+                </div>
+                <a href="{% url 'view_certificate' cert.certificate_id %}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-blue hover:bg-accent-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all duration-300">
+                    <i class="fas fa-eye mr-2"></i>{% trans "View" %}
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8">
+        <i class="fas fa-certificate text-text-light-secondary dark:text-text-dark-secondary text-4xl mb-4"></i>
+        <p class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "No certificates earned yet. Complete projects to earn certificates!" %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Current & Upcoming Projects -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.4s">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <div class="h-10 w-10 rounded-full bg-info bg-opacity-10 flex items-center justify-center mr-4">
+                <i class="fas fa-calendar-alt text-info content-center"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Current & Upcoming Projects" %}</h2>
+        </div>
+        {% if current_projects or upcoming_projects %}
+        <a href="#content-projects" onclick="switchTab('projects')" class="text-primary-blue hover:text-accent-blue transition-colors duration-200 text-sm font-medium">
+            {% trans "View All" %} <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+        {% endif %}
+    </div>
+
+    {% if current_projects or upcoming_projects %}
+    <div class="space-y-4">
+        {% for project in current_projects|slice:":2" %}
+        <a href="{% url 'content_project_detail' project.pk %}" class="block">
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-start">
+                {% if project.cover_image_blob or project.cover_image or project.cover_image_url %}
+                <div class="flex-shrink-0 mr-4">
+                    {% if project.cover_image_blob %}
+                        <img class="h-20 w-20 rounded-lg object-cover" src="{% url 'content_serve_blob' 'project' project.pk 'cover_image_blob' %}"
+                                alt="{{ project.title }} cover" loading="lazy">
+                    {% elif project.cover_image %}
+                        <img class="h-20 w-20 rounded-lg object-cover" src="{{ project.cover_image.url }}"
+                                alt="{{ project.title }} cover" loading="lazy">
+                    {% elif project.cover_image_url %}
+                        <img class="h-20 w-20 rounded-lg object-cover" src="{{ project.cover_image_url }}"
+                                alt="{{ project.title }} cover" loading="lazy">
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center mb-2">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-success bg-opacity-10 text-success mr-3">
+                            <i class="fas fa-play-circle mr-1"></i>{% trans "Active" %}
+                        </span>
+                        <h3 class="font-semibold text-text-light dark:text-text-dark">{{ project.title }}</h3>
+                    </div>
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{{ project.teaser|truncatechars:100 }}</p>
+                    {% if project.start_date and project.end_date %}
+                    <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mt-1">
+                        <i class="fas fa-calendar mr-1"></i>{{ project.start_date|date:"M d" }} - {{ project.end_date|date:"M d, Y" }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </a>
+        {% endfor %}
+        {% for project in upcoming_projects|slice:":2" %}
+        <a href="{% url 'content_project_detail' project.pk %}" class="block">
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-start">
+                {% if project.cover_image_blob or project.cover_image or project.cover_image_url %}
+                <div class="flex-shrink-0 mr-4">
+                    {% if project.cover_image_blob %}
+                        <img class="h-20 w-20 rounded-lg object-cover" src="{% url 'content_serve_blob' 'project' project.pk 'cover_image_blob' %}"
+                                alt="{{ project.title }} cover" loading="lazy">
+                    {% elif project.cover_image %}
+                        <img class="h-20 w-20 rounded-lg object-cover" src="{{ project.cover_image.url }}"
+                                alt="{{ project.title }} cover" loading="lazy">
+                    {% elif project.cover_image_url %}
+                        <img class="h-20 w-20 rounded-lg object-cover" src="{{ project.cover_image_url }}"
+                                alt="{{ project.title }} cover" loading="lazy">
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center mb-2">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-info bg-opacity-10 text-info mr-3">
+                            <i class="fas fa-clock mr-1"></i>{% trans "Upcoming" %}
+                        </span>
+                        <h3 class="font-semibold text-text-light dark:text-text-dark">{{ project.title }}</h3>
+                    </div>
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{{ project.teaser|truncatechars:100 }}</p>
+                    {% if project.start_date %}
+                    <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary mt-1">
+                        <i class="fas fa-calendar mr-1"></i>{% trans "Starts" %} {{ project.start_date|date:"M d, Y" }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8">
+        <i class="fas fa-calendar-alt text-text-light-secondary dark:text-text-dark-secondary text-4xl mb-4"></i>
+        <p class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "No current or upcoming projects. Explore available projects to get started!" %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Recent News & Events -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.5s">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <div class="h-10 w-10 rounded-full bg-accent-blue bg-opacity-10 flex items-center justify-center mr-4">
+                <i class="fas fa-newspaper text-accent-blue content-center"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Recent News & Events" %}</h2>
+        </div>
+        <a href="{% url 'content_news_event_list' %}" class="text-primary-blue hover:text-accent-blue transition-colors duration-200 text-sm font-medium">
+            {% trans "View All" %} <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+    </div>
+
+    {% if recent_news_events %}
+    <div class="space-y-4">
+        {% for item in recent_news_events %}
+        <a href="{% url 'content_news_event_detail' item.pk %}" class="block">
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-start">
+                {% if item.cover_image_blob or item.cover_image or item.cover_image_url %}
+                <div class="flex-shrink-0 mr-4">
+                    {% if item.cover_image_blob %}
+                        <img class="h-16 w-16 rounded-lg object-cover" src="{% url 'content_serve_blob' 'news_event' item.pk 'cover_image_blob' %}"
+                                alt="{{ item.title }} cover" loading="lazy">
+                    {% elif item.cover_image %}
+                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ item.cover_image.url }}"
+                                alt="{{ item.title }} cover" loading="lazy">
+                    {% elif item.cover_image_url %}
+                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ item.cover_image_url }}"
+                                alt="{{ item.title }} cover" loading="lazy">
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center mb-1">
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                            {% if item.content_type == 'NEWS' %}bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200{% elif item.content_type == 'EVENT' %}bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200{% else %}bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200{% endif %} mr-2">
+                            {{ item.get_content_type_display }}
+                        </span>
+                        <p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">{{ item.publish_date|date:"M d, Y" }}</p>
+                    </div>
+                    <h3 class="font-semibold text-text-light dark:text-text-dark mb-1">{{ item.title }}</h3>
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">{{ item.body|striptags|truncatechars:120 }}</p>
+                </div>
+            </div>
+        </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8">
+        <i class="fas fa-newspaper text-text-light-secondary dark:text-text-dark-secondary text-4xl mb-4"></i>
+        <p class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "No recent news or events available." %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Success Stories -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.6s">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <div class="h-10 w-10 rounded-full bg-success bg-opacity-10 flex items-center justify-center mr-4">
+                <i class="fas fa-star text-success content-center"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Success Stories" %}</h2>
+        </div>
+        <a href="{% url 'content_success_story_list' %}" class="text-primary-blue hover:text-accent-blue transition-colors duration-200 text-sm font-medium">
+            {% trans "View All" %} <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+    </div>
+
+    {% if success_stories %}
+    <div class="space-y-4">
+        {% for story in success_stories %}
+        <a href="{% url 'content_success_story_detail' story.pk %}" class="block">
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <div class="flex items-start">
+                {% if story.cover_image_blob or story.cover_image or story.cover_image_url %}
+                <div class="flex-shrink-0 mr-4">
+                    {% if story.cover_image_blob %}
+                        <img class="h-16 w-16 rounded-lg object-cover" src="{% url 'content_serve_blob' 'success_story' story.pk 'cover_image_blob' %}"
+                                alt="{{ story.title }} cover" loading="lazy">
+                    {% elif story.cover_image %}
+                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ story.cover_image.url }}"
+                                alt="{{ story.title }} cover" loading="lazy">
+                    {% elif story.cover_image_url %}
+                        <img class="h-16 w-16 rounded-lg object-cover" src="{{ story.cover_image_url }}"
+                                alt="{{ story.title }} cover" loading="lazy">
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-semibold text-text-light dark:text-text-dark mb-1">{{ story.title }}</h3>
+                    <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary mb-2">{{ story.body|striptags|truncatechars:100 }}</p>
+                    {% if story.related_project %}
+                    <p class="text-xs text-primary-blue mb-1">
+                        <i class="fas fa-project-diagram mr-1"></i>{% trans "Related to:" %} {{ story.related_project.title }}
+                    </p>
+                    {% endif %}
+                    {% if story.beneficiaries or story.total_hours_contributed %}
+                    <div class="flex items-center text-xs text-text-light-secondary dark:text-text-dark-secondary">
+                        {% if story.beneficiaries %}
+                        <span class="mr-3"><i class="fas fa-users mr-1"></i>{{ story.beneficiaries }} {% trans "beneficiaries" %}</span>
+                        {% endif %}
+                        {% if story.total_hours_contributed %}
+                        <span><i class="fas fa-clock mr-1"></i>{{ story.total_hours_contributed }} {% trans "hours" %}</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8">
+        <i class="fas fa-star text-text-light-secondary dark:text-text-dark-secondary text-4xl mb-4"></i>
+        <p class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "No success stories available yet." %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Frequently Asked Questions -->
+<div class="bg-light-secondary-bg dark:bg-dark-secondary-bg rounded-2xl shadow-lg p-8 animate-fadeIn border border-border-light dark:border-border-dark mb-8" style="animation-delay: 0.7s">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <div class="h-10 w-10 rounded-full bg-primary-blue bg-opacity-10 flex items-center justify-center mr-4">
+                <i class="fas fa-question-circle text-primary-blue content-center"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-text-light dark:text-text-dark">{% trans "Frequently Asked Questions" %}</h2>
+        </div>
+        <a href="{% url 'content_faq_list' %}" class="text-primary-blue hover:text-accent-blue transition-colors duration-200 text-sm font-medium">
+            {% trans "View All" %} <i class="fas fa-arrow-right ml-1"></i>
+        </a>
+    </div>
+
+    {% if faqs %}
+    <div class="space-y-4">
+        {% for faq in faqs %}
+        <div class="bg-light-bg dark:bg-dark-bg rounded-xl p-4 border border-border-light dark:border-border-dark hover:shadow-md transition-all duration-300">
+            <h3 class="font-semibold text-text-light dark:text-text-dark mb-2">{{ faq.question }}</h3>
+            <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary mb-3">{{ faq.answer|striptags|truncatechars:150 }}</p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center text-xs text-text-light-secondary dark:text-text-dark-secondary">
+                    <button class="vote-btn mr-2 {% if faq.user_vote == 'UP' %}text-success{% else %}text-gray-400{% endif %} hover:text-success transition-colors" data-faq-id="{{ faq.id }}" data-vote-type="up">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <span class="mr-3">{{ faq.thumbs_up }}</span>
+                    <button class="vote-btn mr-2 {% if faq.user_vote == 'DOWN' %}text-error{% else %}text-gray-400{% endif %} hover:text-error transition-colors" data-faq-id="{{ faq.id }}" data-vote-type="down">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                    <span>{{ faq.thumbs_down }}</span>
+                </div>
+                {% if not user.is_authenticated %}
+                <span class="text-xs text-text-light-secondary dark:text-text-dark-secondary">{% trans "Login to vote" %}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-8">
+        <i class="fas fa-question-circle text-text-light-secondary dark:text-text-dark-secondary text-4xl mb-4"></i>
+        <p class="text-text-light-secondary dark:text-text-dark-secondary">{% trans "No FAQs available yet." %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const voteButtons = document.querySelectorAll('.vote-btn');
+    
+    voteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const faqId = this.getAttribute('data-faq-id');
+            const voteType = this.getAttribute('data-vote-type');
+            
+            fetch(`{% url 'vote_faq' 0 %}`.replace('0', faqId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: `vote_type=${voteType}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'OK' || data === 'Already voted') {
+                    // Reload the page or update counts
+                    location.reload();
+                } else {
+                    alert('Error voting');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error voting');
+            });
+        });
+    });
+});
+</script>

@@ -2,7 +2,24 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 from django.db.models import Count, Q
-from .models import CustomUser
+from .models import CustomUser, Certificate
+
+
+@admin.register(Certificate)
+class CertificateAdmin(admin.ModelAdmin):
+    list_display = ('certificate_id', 'user', 'project', 'issued_at', 'view_certificate_link')
+    search_fields = ('certificate_id', 'user__username', 'user__email', 'project__title')
+    list_filter = ('issued_at',)
+    readonly_fields = ('certificate_id', 'issued_at', 'view_certificate_link')
+    autocomplete_fields = ['user', 'project']
+
+    def view_certificate_link(self, obj):
+        from django.urls import reverse
+        if obj.certificate_id:
+            url = reverse('view_certificate', args=[obj.certificate_id])
+            return format_html('<a href="{}" target="_blank">View Certificate</a>', url)
+        return "-"
+    view_certificate_link.short_description = "Certificate"
 
 
 @admin.register(CustomUser)
@@ -14,11 +31,13 @@ class CustomUserAdmin(UserAdmin):
         'username',
         'email',
         'full_name_display',
+        'email_verified',
+        'onboarding_complete',
+        'is_active',
         'contact_display',
         'gender',
         'blood_group',
         'enrolled_projects_count',
-        'is_active',
         'is_staff',
         'is_superuser',
         'date_joined',
@@ -29,6 +48,8 @@ class CustomUserAdmin(UserAdmin):
         'is_staff',
         'is_superuser',
         'is_active',
+        'email_verified',
+        'onboarding_complete',
         'gender',
         'blood_group',
         'date_joined',
@@ -55,6 +76,8 @@ class CustomUserAdmin(UserAdmin):
     actions = [
         'activate_users',
         'deactivate_users',
+        'mark_email_verified',
+        'mark_email_unverified',
         'make_staff',
         'remove_staff',
         'export_user_data'
@@ -79,8 +102,8 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('guardian_name', 'guardian_relation'),
             'classes': ('collapse',)
         }),
-        ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        ('Status & Permissions', {
+            'fields': ('is_active', 'email_verified', 'onboarding_complete', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
             'classes': ('collapse',)
         }),
         ('Enrolled Projects', {
@@ -110,9 +133,9 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('wide', 'collapse'),
             'fields': ('blood_group', 'guardian_name', 'guardian_relation'),
         }),
-        ('Permissions', {
+        ('Status & Permissions', {
             'classes': ('wide', 'collapse'),
-            'fields': ('is_active', 'is_staff', 'is_superuser'),
+            'fields': ('is_active', 'email_verified', 'onboarding_complete', 'is_staff', 'is_superuser'),
         }),
     )
     
@@ -205,6 +228,18 @@ class CustomUserAdmin(UserAdmin):
             level='info'
         )
     export_user_data.short_description = 'Export user data'
+    
+    def mark_email_verified(self, request, queryset):
+        """Mark selected users' emails as verified"""
+        count = queryset.update(email_verified=True)
+        self.message_user(request, f'{count} user(s) successfully marked as email verified.')
+    mark_email_verified.short_description = 'Mark selected users as email verified'
+    
+    def mark_email_unverified(self, request, queryset):
+        """Mark selected users' emails as unverified"""
+        count = queryset.update(email_verified=False)
+        self.message_user(request, f'{count} user(s) successfully marked as email unverified.')
+    mark_email_unverified.short_description = 'Mark selected users as email unverified'
     
     def get_queryset(self, request):
         """Optimize queryset with prefetch for enrolled projects"""

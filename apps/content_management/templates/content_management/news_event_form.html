@@ -1,414 +1,579 @@
 {% extends "content_management_base.html" %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}
 {% if news_event.title %}
-Update News/Event: {{ news_event.title }}
+{% blocktrans with title=news_event.title %}Update: {{ title }}{% endblocktrans %}
 {% else %}
-New News & Event
+{% trans "New News & Event" %}
 {% endif %}
 {% endblock %}
 
 {% block breadcrumb %}
 <li class="flex items-center">
-    <a href="{% url 'news_event_list' %}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">News & Events</a>
-    <i class="fas fa-chevron-right h-5 w-5 content-center text-gray-400 dark:text-gray-500 mx-2"></i>
+    <a href="{% url 'news_event_list' %}" class="text-primary-blue hover:text-accent-blue transition-colors">{% trans "News & Events" %}</a>
+    <i class="fas fa-chevron-right h-4 w-4 text-gray-400 mx-2"></i>
 </li>
-<li class="flex items-center">
+<li class="flex items-center text-gray-600 dark:text-gray-400">
     {% if news_event.title %}
-    <span class="text-gray-500 dark:text-gray-400">{{ news_event.title }}</span>
+    <span>{{ news_event.title|truncatechars:30 }}</span>
     {% else %}
-    <span class="text-gray-500 dark:text-gray-400">New News & Event</span>
+    <span>{% trans "New Entry" %}</span>
     {% endif %}
 </li>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- News/Event Form Header -->
-    {% if news_event.title %}
-    <div class="bg-gradient-to-r from-amber-600 to-orange-600 rounded-lg shadow-lg overflow-hidden mb-8">
-        <div class="px-6 py-8 text-white">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 mr-4">
-                    <i class="fas fa-edit text-4xl text-amber-200 content-center"></i>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-bold mb-2">Update News/Event</h1>
-                    <p class="text-amber-100">{{ news_event.title|truncatechars:80 }}</p>
-                    <p class="text-amber-200 text-sm mt-1">Modify existing content</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% else %}
-    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg overflow-hidden mb-8">
-        <div class="px-6 py-8 text-white">
-            <div class="flex items-center">
-                <div class="flex-shrink-0 mr-4">
-                    <i class="fas fa-newspaper text-4xl text-blue-200 content-center"></i>
-                </div>
-                <div>
-                    <h1 class="text-3xl font-bold mb-2">Create New News/Event</h1>
-                    <p class="text-blue-100">Add news, events, or announcements to the platform</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+<div class="max-w-7xl mx-auto">
+    <form method="post" enctype="multipart/form-data" id="news-event-form">
+        {% csrf_token %}
 
-    <div class="bg-card-bg-light dark:bg-card-bg-dark shadow-lg rounded-lg border border-border-light dark:border-border-dark overflow-hidden">
-        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-border-light dark:border-border-dark">
-            <h2 class="text-lg font-semibold text-text-light dark:text-text-dark flex items-center">
-                <i class="fas fa-edit text-primary-blue mr-2 content-center"></i>
-                {% if news_event.title %}Edit News/Event Details{% else %}News/Event Information{% endif %}
-            </h2>
-        </div>
-
-        <form method="post" enctype="multipart/form-data" class="p-6 space-y-8">
-            {% csrf_token %}
-
-            <!-- Title Field -->
-            <div class="space-y-2">
-                <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-heading text-blue-600 mr-2 content-center"></i>
-                    {{ form.title.label_tag }}
-                    {% if form.title.field.required %}
-                        <span class="text-red-500 ml-1">*</span>
+        <!-- Header Actions -->
+        <div class="sticky top-0 z-30 bg-gray-100 dark:bg-gray-900 -mx-6 px-6 py-4 mb-8 border-b border-gray-200 dark:border-gray-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-200">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+                    {% if news_event.title %}
+                    <i class="fas fa-edit text-primary-blue mr-3"></i>
+                    {% trans "Edit News/Event" %}
+                    {% else %}
+                    <i class="fas fa-plus-circle text-primary-blue mr-3"></i>
+                    {% trans "Create News/Event" %}
                     {% endif %}
-                </label>
-                <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}"
-                       class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                              focus:border-blue-500 focus:ring-blue-500 focus:bg-blue-50 dark:focus:bg-blue-900/20
-                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
-                       value="{% if form.title.value %}{{ form.title.value }}{% endif %}"
-                       placeholder="Enter a compelling title for your news or event..."
-                       {% if form.title.field.required %}required{% endif %}>
-                {% if form.title.errors %}
-                    <div class="mt-2">
-                        {% for error in form.title.errors %}
-                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                            </p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">This will be the main headline displayed to users</p>
+                </h1>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    {% trans "Publish news updates, events, or announcements." %}
+                </p>
             </div>
-
-            <!-- Content Type Field -->
-            <div class="space-y-2">
-                <label for="{{ form.content_type.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-tags text-green-600 mr-2 content-center"></i>
-                    {{ form.content_type.label_tag }}
-                    {% if form.content_type.field.required %}
-                        <span class="text-red-500 ml-1">*</span>
-                    {% endif %}
-                </label>
-                <select name="{{ form.content_type.name }}" id="{{ form.content_type.id_for_label }}"
-                        class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                               focus:border-green-500 focus:ring-green-500 focus:bg-green-50 dark:focus:bg-green-900/20
-                               dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
-                        {% if form.content_type.field.required %}required{% endif %}>
-                    {% for value, text in form.content_type.field.choices %}
-                        <option value="{{ value }}" {% if form.content_type.value == value|stringformat:"s" %}selected{% endif %}>{{ text }}</option>
-                    {% endfor %}
-                </select>
-                {% if form.content_type.errors %}
-                    <div class="mt-2">
-                        {% for error in form.content_type.errors %}
-                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                            </p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Choose the appropriate category for this content</p>
-            </div>
-
-            <!-- Publish Date Field -->
-            <div class="space-y-2">
-                <label for="{{ form.publish_date.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-calendar-alt text-purple-600 mr-2 content-center"></i>
-                    {{ form.publish_date.label_tag }}
-                    {% if form.publish_date.field.required %}
-                        <span class="text-red-500 ml-1">*</span>
-                    {% endif %}
-                </label>
-                <input type="datetime-local" name="{{ form.publish_date.name }}" id="{{ form.publish_date.id_for_label }}"
-                       value="{% if form.publish_date.value %}{{ form.publish_date.value|date:'Y-m-d\\TH:i' }}{% endif %}"
-                       class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                              focus:border-purple-500 focus:ring-purple-500 focus:bg-purple-50 dark:focus:bg-purple-900/20
-                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
-                       {% if form.publish_date.field.required %}required{% endif %}>
-                {% if form.publish_date.errors %}
-                    <div class="mt-2">
-                        {% for error in form.publish_date.errors %}
-                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                            </p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">When should this content be published?</p>
-            </div>
-
-            <!-- Publication Status -->
-            <div class="space-y-2">
-                <label for="{{ form.is_published.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-eye text-indigo-600 mr-2 content-center"></i>
-                    {{ form.is_published.label_tag }}
-                </label>
-                <div class="flex items-center space-x-3">
-                    <input type="checkbox" name="{{ form.is_published.name }}" id="{{ form.is_published.id_for_label }}"
-                           class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded transition-all duration-200"
-                           {% if form.is_published.value %}checked{% endif %}>
-                    <div class="flex-1">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">Make this content visible to users</span>
-                        {% if form.is_published.errors %}
-                            <div class="mt-1">
-                                {% for error in form.is_published.errors %}
-                                    <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                        <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                                    </p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Unpublished content is only visible in the admin panel</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Highlight & Featured Options -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Is Hero Highlight -->
-                <div class="space-y-2">
-                    <label for="{{ form.is_hero_highlight.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                        <i class="fas fa-star text-yellow-600 mr-2 content-center"></i>
-                        {{ form.is_hero_highlight.label_tag }}
-                    </label>
-                    <div class="flex items-center space-x-3">
-                        <input type="checkbox" name="{{ form.is_hero_highlight.name }}" id="{{ form.is_hero_highlight.id_for_label }}"
-                               class="h-5 w-5 text-yellow-600 focus:ring-yellow-500 border-gray-300 dark:border-gray-600 rounded transition-all duration-200"
-                               {% if form.is_hero_highlight.value %}checked{% endif %}>
-                        <div class="flex-1">
-                            <span class="text-sm text-gray-700 dark:text-gray-300">Feature in hero carousel</span>
-                            {% if form.is_hero_highlight.errors %}
-                                <div class="mt-1">
-                                    {% for error in form.is_hero_highlight.errors %}
-                                        <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                            <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                                        </p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Display prominently in the carousel</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Is Featured -->
-                <div class="space-y-2">
-                    <label for="{{ form.is_featured.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                        <i class="fas fa-heart text-rose-600 mr-2 content-center"></i>
-                        {{ form.is_featured.label_tag }}
-                    </label>
-                    <div class="flex items-center space-x-3">
-                        <input type="checkbox" name="{{ form.is_featured.name }}" id="{{ form.is_featured.id_for_label }}"
-                               class="h-5 w-5 text-rose-600 focus:ring-rose-500 border-gray-300 dark:border-gray-600 rounded transition-all duration-200"
-                               {% if form.is_featured.value %}checked{% endif %}>
-                        <div class="flex-1">
-                            <span class="text-sm text-gray-700 dark:text-gray-300">Mark as featured content</span>
-                            {% if form.is_featured.errors %}
-                                <div class="mt-1">
-                                    {% for error in form.is_featured.errors %}
-                                        <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                            <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                                        </p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Show in featured section</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cover Image Field -->
-            <div class="space-y-2">
-                <label for="{{ form.cover_image.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-image text-orange-600 mr-2 content-center"></i>
-                    {{ form.cover_image.label_tag }}
-                </label>
-                <input type="file" name="{{ form.cover_image.name }}" id="{{ form.cover_image.id_for_label }}"
-                       class="block w-full px-4 py-3 text-sm text-gray-500 dark:text-gray-400
-                              file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
-                              file:text-sm file:font-semibold file:bg-orange-500 file:text-white
-                              hover:file:bg-orange-600 dark:file:bg-orange-600 dark:hover:file:bg-orange-500
-                              cursor-pointer transition-all duration-200 border border-gray-300 dark:border-gray-600 rounded-lg">
-                {% if form.cover_image.value %}
-                    <div id="{{ form.cover_image.id_for_label }}_current" class="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                        <p class="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                            <i class="fas fa-check-circle text-green-500 mr-1 content-center"></i>
-                            Current: <a href="{{ form.cover_image.value.url }}" target="_blank" class="text-orange-600 hover:text-orange-700 font-medium">{{ form.cover_image.value.name }}</a>
-                        </p>
-                    </div>
-                    <button type="button" id="clear-cover-image" class="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200 dark:bg-orange-900 dark:text-orange-300 dark:hover:bg-orange-800 transition-colors duration-200">
-                        <i class="fas fa-times mr-1 content-center"></i>Clear Image
-                    </button>
-                    <input type="checkbox" name="{{ form.cover_image.name }}-clear" id="{{ form.cover_image.id_for_label }}_clear" style="display:none">
-                {% endif %}
-                {% if form.cover_image.errors %}
-                    <div class="mt-2">
-                        {% for error in form.cover_image.errors %}
-                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                            </p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Upload a cover image or provide a URL below</p>
-            </div>
-
-            <!-- Cover Image URL Field -->
-            <div class="space-y-2">
-                <label for="{{ form.cover_image_url.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-link text-teal-600 mr-2 content-center"></i>
-                    {{ form.cover_image_url.label_tag }}
-                </label>
-                <input type="url" name="{{ form.cover_image_url.name }}" id="{{ form.cover_image_url.id_for_label }}"
-                       class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                              focus:border-teal-500 focus:ring-teal-500 focus:bg-teal-50 dark:focus:bg-teal-900/20
-                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
-                       value="{% if form.cover_image_url.value %}{{ form.cover_image_url.value }}{% endif %}"
-                       placeholder="https://example.com/image.jpg">
-                {% if form.cover_image_url.errors %}
-                    <div class="mt-2">
-                        {% for error in form.cover_image_url.errors %}
-                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                            </p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Alternative to uploading: provide a direct link to an image</p>
-            </div>
-
-            <!-- External Link Field -->
-            <div class="space-y-2">
-                <label for="{{ form.external_link.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-external-link-alt text-pink-600 mr-2 content-center"></i>
-                    {{ form.external_link.label_tag }}
-                </label>
-                <input type="url" name="{{ form.external_link.name }}" id="{{ form.external_link.id_for_label }}"
-                       class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                              focus:border-pink-500 focus:ring-pink-500 focus:bg-pink-50 dark:focus:bg-pink-900/20
-                              dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-lg"
-                       value="{% if form.external_link.value %}{{ form.external_link.value }}{% endif %}"
-                       placeholder="https://external-site.com/article">
-                {% if form.external_link.errors %}
-                    <div class="mt-2">
-                        {% for error in form.external_link.errors %}
-                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                            </p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Optional: link to external content or full article</p>
-            </div>
-
-            <!-- Body Field -->
-            <div class="space-y-2">
-                <label for="{{ form.body.id_for_label }}" class="block text-sm font-semibold text-text-light dark:text-text-dark flex items-center">
-                    <i class="fas fa-align-left text-cyan-600 mr-2 content-center"></i>
-                    {{ form.body.label_tag }}
-                    {% if form.body.field.required %}
-                        <span class="text-red-500 ml-1">*</span>
-                    {% endif %}
-                </label>
-                <textarea name="{{ form.body.name }}" id="{{ form.body.id_for_label }}" rows="10"
-                          class="block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm
-                                 focus:border-cyan-500 focus:ring-cyan-500 focus:bg-cyan-50 dark:focus:bg-cyan-900/20
-                                 dark:bg-gray-800 dark:text-gray-200 transition-all duration-200 text-base leading-relaxed"
-                          placeholder="Write your news content, event details, or announcement here..."
-                          {% if form.body.field.required %}required{% endif %}>{% if form.body.value %}{{ form.body.value }}{% endif %}</textarea>
-                {% if form.body.errors %}
-                    <div class="mt-2">
-                        {% for error in form.body.errors %}
-                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-1 content-center"></i>{{ error }}
-                            </p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Provide detailed content for your news or event</p>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-border-light dark:border-border-dark">
-                <a href="{% url 'news_event_list' %}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg shadow-sm text-text-light dark:text-text-dark bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300 transform hover:scale-105">
-                    <i class="fas fa-arrow-left mr-2 content-center"></i>
-                    Cancel
+            <div class="flex space-x-3 w-full sm:w-auto">
+                <a href="{% url 'news_event_list' %}" class="flex-1 sm:flex-none justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue">
+                    {% trans "Cancel" %}
                 </a>
-                <button type="submit" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105">
-                    <i class="fas fa-save mr-2 content-center"></i>
-                    {% if news_event.title %}Update News/Event{% else %}Create News/Event{% endif %}
+                <button type="submit" class="flex-1 sm:flex-none justify-center items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-all transform hover:scale-105">
+                    <i class="fas fa-save mr-2"></i>
+                    {% trans "Save Entry" %}
                 </button>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <!-- Help Section -->
-    <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-        <div class="flex">
-            <div class="flex-shrink-0">
-                <i class="fas fa-info-circle text-blue-600 dark:text-blue-400 content-center"></i>
-            </div>
-            <div class="ml-3">
-                <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">Content Creation Tips</h3>
-                <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
-                    <ul class="list-disc list-inside space-y-1">
-                        <li>Use compelling titles that clearly indicate the content type</li>
-                        <li>Set appropriate publish dates for timely content</li>
-                        <li>Add cover images to increase engagement</li>
-                        <li>Provide external links for additional resources</li>
-                        <li>Write clear, engaging content that serves your audience</li>
-                    </ul>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Basic Info Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-blue-50 dark:bg-blue-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-heading text-primary-blue"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Title & Type" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <!-- English Title -->
+                        <div>
+                            <label for="{{ form.title_en.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                {{ form.title_en.label }} <span class="text-xs text-gray-400">({% trans "English" %})</span>
+                                {% if form.title_en.field.required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <input type="text" name="{{ form.title_en.name }}" id="{{ form.title_en.id_for_label }}"
+                                   class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                   value="{{ form.title_en.value|default:'' }}"
+                                   {% if form.title_en.field.required %}required{% endif %}>
+                            {% if form.title_en.errors %}
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.title_en.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Chinese Title -->
+                        <div>
+                            <label for="{{ form.title_zh_tw.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                {{ form.title_zh_tw.label }} <span class="text-xs text-gray-400">({% trans "Traditional Chinese" %})</span>
+                            </label>
+                            <input type="text" name="{{ form.title_zh_tw.name }}" id="{{ form.title_zh_tw.id_for_label }}"
+                                   class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors py-2.5 px-3"
+                                   value="{{ form.title_zh_tw.value|default:'' }}">
+                        </div>
+
+                        <!-- Content Type -->
+                        <div>
+                            <label for="{{ form.content_type.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                {{ form.content_type.label }} <span class="text-red-500">*</span>
+                            </label>
+                            <select name="{{ form.content_type.name }}" id="{{ form.content_type.id_for_label }}"
+                                    class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm py-2.5 px-3"
+                                    {% if form.content_type.field.required %}required{% endif %}>
+                                {% for value, text in form.content_type.field.choices %}
+                                    <option value="{{ value }}" {% if form.content_type.value == value|stringformat:"s" %}selected{% endif %}>{{ text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-cyan-50 dark:bg-cyan-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-align-left text-cyan-600 dark:text-cyan-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Body Content" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <!-- English Body -->
+                        <div>
+                            <label for="{{ form.body_en.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                {{ form.body_en.label }} <span class="text-xs text-gray-400">({% trans "English" %})</span>
+                                {% if form.body_en.field.required %}<span class="text-red-500">*</span>{% endif %}
+                            </label>
+                            <textarea name="{{ form.body_en.name }}" id="{{ form.body_en.id_for_label }}" rows="10"
+                                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors p-3"
+                                      {% if form.body_en.field.required %}required{% endif %}>{{ form.body_en.value|default:'' }}</textarea>
+                        </div>
+
+                        <!-- Chinese Body -->
+                        <div>
+                            <label for="{{ form.body_zh_tw.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                {{ form.body_zh_tw.label }} <span class="text-xs text-gray-400">({% trans "Traditional Chinese" %})</span>
+                            </label>
+                            <textarea name="{{ form.body_zh_tw.name }}" id="{{ form.body_zh_tw.id_for_label }}" rows="10"
+                                      class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm transition-colors p-3">{{ form.body_zh_tw.value|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-orange-50 dark:bg-orange-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-photo-video text-orange-600 dark:text-orange-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Media" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-8">
+                        
+                        <!-- Cover Image -->
+                        <div class="space-y-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{% trans "Cover Image" %}</label>
+                            
+                            <div class="flex items-center justify-center w-full">
+                                <label for="{{ form.cover_image.id_for_label }}" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 mb-2"></i>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{% trans "Click to upload" %}</span> {% trans "or drag and drop" %}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF</p>
+                                    </div>
+                                    <input type="file" name="{{ form.cover_image.name }}" id="{{ form.cover_image.id_for_label }}" class="hidden" accept="image/*" />
+                                </label>
+                            </div>
+
+                            <!-- New Upload Preview -->
+                            <div id="cover-image-preview-container" class="hidden flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                <div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-blue-200 dark:border-blue-700">
+                                    <img id="cover-image-preview" src="#" alt="New cover" class="h-full w-full object-cover">
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{% trans "New Selection" %}</p>
+                                    <p id="cover-image-name" class="text-xs text-gray-500 dark:text-gray-400 truncate"></p>
+                                </div>
+                                <button type="button" id="remove-cover-selection" class="text-gray-400 hover:text-red-500 transition-colors">
+                                    <i class="fas fa-times-circle text-xl"></i>
+                                </button>
+                            </div>
+                            
+                            {% if form.cover_image.value %}
+                            <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div class="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-600">
+                                    <img src="{{ form.cover_image.value.url }}" alt="Current cover" class="h-full w-full object-cover">
+                                </div>
+                                <div class="ml-4 flex-1">
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{% trans "Current Image" %}</p>
+                                    <a href="{{ form.cover_image.value.url }}" target="_blank" class="text-xs text-primary-blue hover:underline">{{ form.cover_image.value.name }}</a>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="{{ form.cover_image.name }}-clear" id="{{ form.cover_image.id_for_label }}_clear" class="rounded border-gray-300 text-primary-blue shadow-sm focus:border-primary-blue focus:ring focus:ring-primary-blue focus:ring-opacity-50 mr-2">
+                                    <label for="{{ form.cover_image.id_for_label }}_clear" class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer">{% trans "Delete" %}</label>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-link text-gray-400"></i>
+                                </div>
+                                <input type="url" name="{{ form.cover_image_url.name }}" id="{{ form.cover_image_url.id_for_label }}"
+                                       class="block w-full pl-10 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm py-2.5 transition-colors"
+                                       placeholder="{% trans "Or paste an image URL..." %}"
+                                       value="{{ form.cover_image_url.value|default:'' }}">
+                            </div>
+                        </div>
+
+                         <!-- Gallery Images -->
+                        <div class="space-y-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {% trans "Gallery Images" %}
+                            </label>
+                            
+                            <!-- Custom Upload Area -->
+                            <div class="relative">
+                                <label for="news_event_gallery_images" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <i class="fas fa-images text-2xl text-gray-400 mb-2"></i>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{% trans "Add gallery images" %}</span></p>
+                                    </div>
+                                    <input type="file" name="news_event_gallery_images" id="news_event_gallery_images" multiple accept="image/*" class="hidden" />
+                                </label>
+                            </div>
+
+                            <!-- New Uploads Preview Grid -->
+                            <div id="gallery-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 hidden">
+                                <!-- Previews injected via JS -->
+                            </div>
+
+                             {% if news_event.gallery_images.all %}
+                                <div class="mt-4">
+                                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Current Gallery" %}</p>
+                                    <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        {% for gallery_image in news_event.gallery_images.all %}
+                                            <div class="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                                                <img src="{% url 'content_serve_blob' 'news_event_gallery_image' gallery_image.pk 'image_blob' %}" alt="Gallery" class="w-full h-24 object-cover">
+                                                {% if gallery_image.caption %}
+                                                    <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 truncate">{{ gallery_image.caption }}</div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Additional Media URLs -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Image URLs -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {% trans "Additional Image URLs" %}
+                                </label>
+                                <div id="image-urls-container" class="space-y-3">
+                                    {% for image_url in news_event.image_urls|default:'' %}
+                                    <div class="flex gap-2 image-url-field">
+                                        <input type="url" name="image_urls[]" class="flex-1 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-sm py-2 px-3" value="{{ image_url }}" placeholder="https://">
+                                        <button type="button" class="text-red-500 hover:text-red-700 p-2 remove-url-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                    {% empty %}
+                                    <div class="flex gap-2 image-url-field">
+                                        <input type="url" name="image_urls[]" class="flex-1 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-sm py-2 px-3" placeholder="https://">
+                                        <button type="button" class="text-red-500 hover:text-red-700 p-2 remove-url-btn hidden"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="button" id="add-image-url-btn" class="mt-2 text-sm text-primary-blue hover:text-blue-600 font-medium flex items-center">
+                                    <i class="fas fa-plus-circle mr-1"></i> {% trans "Add URL" %}
+                                </button>
+                            </div>
+
+                            <!-- Video URLs -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {% trans "Video URLs" %}
+                                </label>
+                                <div id="video-urls-container" class="space-y-3">
+                                    {% for video_url in news_event.video_urls|default:'' %}
+                                    <div class="flex gap-2 video-url-field">
+                                        <input type="url" name="video_urls[]" class="flex-1 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-sm py-2 px-3" value="{{ video_url }}" placeholder="https://youtube.com/...">
+                                        <button type="button" class="text-red-500 hover:text-red-700 p-2 remove-url-btn"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                    {% empty %}
+                                    <div class="flex gap-2 video-url-field">
+                                        <input type="url" name="video_urls[]" class="flex-1 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-sm py-2 px-3" placeholder="https://youtube.com/...">
+                                        <button type="button" class="text-red-500 hover:text-red-700 p-2 remove-url-btn hidden"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <button type="button" id="add-video-url-btn" class="mt-2 text-sm text-primary-blue hover:text-blue-600 font-medium flex items-center">
+                                    <i class="fas fa-plus-circle mr-1"></i> {% trans "Add URL" %}
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
+
+            <!-- Right Column: Settings & Meta -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Publishing Card -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-purple-50 dark:bg-purple-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-rocket text-purple-600 dark:text-purple-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Publishing" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <!-- Published Checkbox -->
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="{{ form.is_published.name }}" id="{{ form.is_published.id_for_label }}"
+                                       class="focus:ring-primary-blue h-4 w-4 text-primary-blue border-gray-300 rounded"
+                                       {% if form.is_published.value %}checked{% endif %}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="{{ form.is_published.id_for_label }}" class="font-medium text-gray-700 dark:text-gray-300">{% trans "Publish Entry" %}</label>
+                                <p class="text-gray-500 dark:text-gray-400">{% trans "Visible to public" %}</p>
+                            </div>
+                        </div>
+
+                        <!-- Publish Date -->
+                        <div>
+                            <label for="{{ form.publish_date.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                {{ form.publish_date.label }}
+                            </label>
+                            <input type="datetime-local" name="{{ form.publish_date.name }}" id="{{ form.publish_date.id_for_label }}"
+                                   class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm py-2 px-3"
+                                   value="{{ form.publish_date.value|date:'Y-m-d\TH:i' }}">
+                        </div>
+                        
+                         {% if form.created_at %}
+                        <div>
+                            <label for="{{ form.created_at.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                {{ form.created_at.label }}
+                            </label>
+                            <input type="datetime-local" name="{{ form.created_at.name }}" id="{{ form.created_at.id_for_label }}"
+                                   class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm py-2 px-3"
+                                   value="{% if form.created_at.value %}{{ form.created_at.value|date:'Y-m-d\TH:i' }}{% else %}{% now 'Y-m-d\TH:i' %}{% endif %}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Visibility Options -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-yellow-50 dark:bg-yellow-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-eye text-yellow-600 dark:text-yellow-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "Visibility" %}</h2>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="{{ form.is_featured.name }}" id="{{ form.is_featured.id_for_label }}"
+                                       class="focus:ring-primary-blue h-4 w-4 text-primary-blue border-gray-300 rounded"
+                                       {% if form.is_featured.value %}checked{% endif %}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="{{ form.is_featured.id_for_label }}" class="font-medium text-gray-700 dark:text-gray-300">{% trans "Featured" %}</label>
+                                <p class="text-gray-500 dark:text-gray-400">{% trans "Show in featured section" %}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input type="checkbox" name="{{ form.is_hero_highlight.name }}" id="{{ form.is_hero_highlight.id_for_label }}"
+                                       class="focus:ring-primary-blue h-4 w-4 text-primary-blue border-gray-300 rounded"
+                                       {% if form.is_hero_highlight.value %}checked{% endif %}>
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="{{ form.is_hero_highlight.id_for_label }}" class="font-medium text-gray-700 dark:text-gray-300">{% trans "Hero Highlight" %}</label>
+                                <p class="text-gray-500 dark:text-gray-400">{% trans "Display in carousel" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <!-- External Link -->
+                <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                        <div class="bg-pink-50 dark:bg-pink-900/30 p-2 rounded-lg mr-3">
+                            <i class="fas fa-external-link-alt text-pink-600 dark:text-pink-400"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{% trans "External Link" %}</h2>
+                    </div>
+                    <div class="p-6">
+                        <label for="{{ form.external_link.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            {{ form.external_link.label }}
+                        </label>
+                         <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-globe text-gray-400"></i>
+                            </div>
+                            <input type="url" name="{{ form.external_link.name }}" id="{{ form.external_link.id_for_label }}"
+                                   class="block w-full pl-10 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-primary-blue focus:border-primary-blue sm:text-sm py-2.5 transition-colors"
+                                   placeholder="https://..."
+                                   value="{{ form.external_link.value|default:'' }}">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
+<!-- Dynamic Fields Script -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const coverImageInput = document.getElementById('{{ form.cover_image.id_for_label }}');
-        const coverImageUrlInput = document.getElementById('{{ form.cover_image_url.id_for_label }}');
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Helper function for dynamic fields
+    function setupDynamicFields(containerId, btnId, fieldClass, removeBtnClass, placeholder) {
+        const container = document.getElementById(containerId);
+        const btn = document.getElementById(btnId);
+        
+        if (!container || !btn) return;
 
-        // Ensure only one of the fields is filled
-        coverImageInput.addEventListener('change', function() {
-            if (coverImageInput.value) {
-                coverImageUrlInput.value = '';
+        // Add function
+        btn.addEventListener('click', function() {
+            const div = document.createElement('div');
+            div.className = `flex gap-2 ${fieldClass}`;
+            div.innerHTML = `
+                <input type="url" name="${containerId === 'video-urls-container' ? 'video_urls[]' : 'image_urls[]'}" 
+                       class="flex-1 rounded-lg border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-sm py-2 px-3 focus:ring-primary-blue focus:border-primary-blue transition-colors" 
+                       placeholder="${placeholder}">
+                <button type="button" class="text-red-500 hover:text-red-700 p-2 ${removeBtnClass}"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+            updateVisibility();
+        });
+
+        // Remove function (delegation)
+        container.addEventListener('click', function(e) {
+            if (e.target.closest('.' + removeBtnClass)) {
+                const row = e.target.closest('.' + fieldClass);
+                row.remove();
+                updateVisibility();
             }
         });
 
-        coverImageUrlInput.addEventListener('input', function() {
-            if (coverImageUrlInput.value) {
-                coverImageInput.value = '';
-            }
-        });
-
-        // Clear uploaded cover image (if present)
-        const clearCoverBtn = document.getElementById('clear-cover-image');
-        if (clearCoverBtn) {
-            clearCoverBtn.addEventListener('click', function() {
-                if (coverImageInput) coverImageInput.value = '';
-                const clearCheckbox = document.getElementById('{{ form.cover_image.id_for_label }}_clear');
-                if (clearCheckbox) clearCheckbox.checked = true;
-                clearCoverBtn.style.display = 'none';
+        function updateVisibility() {
+            const rows = container.querySelectorAll('.' + fieldClass);
+            rows.forEach(row => {
+                const btn = row.querySelector('.' + removeBtnClass);
+                if(btn) {
+                    if (rows.length > 1) {
+                        btn.classList.remove('hidden');
+                    } else {
+                         btn.classList.add('hidden');
+                    }
+                }
             });
         }
-    });
+        
+        updateVisibility();
+    }
+
+    setupDynamicFields('image-urls-container', 'add-image-url-btn', 'image-url-field', 'remove-url-btn', 'https://');
+    setupDynamicFields('video-urls-container', 'add-video-url-btn', 'video-url-field', 'remove-url-btn', 'https://youtube.com/...');
+
+    // --- Cover Image Preview Logic ---
+    const coverInput = document.getElementById('{{ form.cover_image.id_for_label }}');
+    const coverUrlInput = document.getElementById('{{ form.cover_image_url.id_for_label }}');
+    const coverPreviewContainer = document.getElementById('cover-image-preview-container');
+    const coverPreviewImg = document.getElementById('cover-image-preview');
+    const coverName = document.getElementById('cover-image-name');
+    const removeCoverBtn = document.getElementById('remove-cover-selection');
+
+    if(coverInput) {
+        coverInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    coverPreviewImg.src = e.target.result;
+                    coverPreviewContainer.classList.remove('hidden');
+                    coverName.textContent = file.name;
+                    if(coverUrlInput) coverUrlInput.value = ''; // Clear URL if file selected
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    if(removeCoverBtn) {
+        removeCoverBtn.addEventListener('click', function() {
+            coverInput.value = '';
+            coverPreviewContainer.classList.add('hidden');
+            coverPreviewImg.src = '#';
+        });
+    }
+
+    if(coverUrlInput) {
+        coverUrlInput.addEventListener('input', function() {
+            if(coverUrlInput.value) {
+                coverInput.value = '';
+                coverPreviewContainer.classList.add('hidden');
+            }
+        });
+    }
+
+    // --- Gallery Images Preview Logic ---
+    const galleryInput = document.getElementById('news_event_gallery_images');
+    const galleryPreviewContainer = document.getElementById('gallery-preview-container');
+    let galleryDataTransfer = new DataTransfer();
+
+    if(galleryInput) {
+        galleryInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Add new files to DataTransfer (Accumulate)
+            files.forEach(file => {
+                galleryDataTransfer.items.add(file);
+            });
+            
+            // Update input files
+            galleryInput.files = galleryDataTransfer.files;
+            
+            renderGalleryPreviews();
+        });
+    }
+
+    function renderGalleryPreviews() {
+        galleryPreviewContainer.innerHTML = '';
+        if (galleryDataTransfer.files.length > 0) {
+            galleryPreviewContainer.classList.remove('hidden');
+        } else {
+            galleryPreviewContainer.classList.add('hidden');
+        }
+
+        Array.from(galleryDataTransfer.files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'relative group rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800';
+                div.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-24 object-cover" alt="Preview">
+                    <button type="button" data-index="${index}" class="remove-gallery-img absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                    <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-[10px] p-1 truncate px-2">
+                        ${file.name}
+                    </div>
+                `;
+                galleryPreviewContainer.appendChild(div);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Event delegation for gallery removal
+    if(galleryPreviewContainer) {
+        galleryPreviewContainer.addEventListener('click', function(e) {
+            const btn = e.target.closest('.remove-gallery-img');
+            if (btn) {
+                const indexToRemove = parseInt(btn.dataset.index);
+                const newDataTransfer = new DataTransfer();
+                
+                Array.from(galleryDataTransfer.files).forEach((file, i) => {
+                    if (i !== indexToRemove) {
+                        newDataTransfer.items.add(file);
+                    }
+                });
+
+                galleryDataTransfer = newDataTransfer;
+                galleryInput.files = galleryDataTransfer.files;
+                renderGalleryPreviews();
+            }
+        });
+    }
+});
 </script>
 {% endblock %}

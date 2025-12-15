@@ -1,0 +1,937 @@
+{% extends "content_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="flex items-center">
+        <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right h-3 w-3 text-text-light-secondary dark:text-text-dark-secondary mx-2"></i>
+    </li>
+    <li class="flex items-center">
+        <a href="{% url 'amazing_taiwan' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Amazing Taiwan" %}</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-bg-light dark:bg-bg-dark">
+    <!-- Hero Section -->
+    <section
+        class="relative bg-gradient-to-r from-primary-blue to-accent-blue text-white py-20 rounded-xl mx-4 sm:mx-6 lg:mx-8 mt-8 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-6xl md:text-7xl font-bold mb-6 animate-fade-in-up">{% trans "Amazing Taiwan" %}</h1>
+            <p class="text-xl md:text-2xl mb-8 animate-fade-in-up animation-delay-200">{% blocktrans %}Global Devotion Association | Kingslish International Cultural & Creative Co., Ltd. (KICC) Volunteer Service School Exchange, Chinese Language Courses{% endblocktrans %}</p>
+        </div>
+    </section>
+
+    <!-- Images Section -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-y-8 justify-center ">
+                <div class="rounded-lg overflow-hidden shadow-lg flex-1 ">
+                    <img src="{% static 'images/amazing_taiwan/amazing-taiwan-1.png' %}"
+                        alt="{% trans 'Amazing Taiwan 1' %}" class="w-full h-full object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-lg flex-1">
+                    <img src="{% static 'images/amazing_taiwan/amazing-taiwan-2.png' %}"
+                        alt="{% trans 'Amazing Taiwan 2' %}" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl font-bold text-text-light dark:text-text-dark mb-4">{% trans "Taiwan Regions" %}</h2>
+                <p class="text-lg md:text-xl text-text-light-secondary dark:text-text-dark-secondary">{% blocktrans %}Explore amazing places across Taiwan's four regions{% endblocktrans %}</p>
+            </div>
+
+            <!-- Modern Tab Navigation -->
+            <div class="mb-12">
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-4">
+                    <button
+                        class="tab-button active px-6 py-3 rounded-full text-sm font-semibold bg-primary-blue text-white shadow-lg hover:shadow-xl hover:text-primary-blue dark:hover:text-accent-light transform hover:scale-105 transition-all duration-300"
+                        data-tab="north">
+                        <i class="fas fa-compass mr-2"></i>{% trans "North Taiwan" %}
+                    </button>
+                    <button
+                        class="tab-button px-6 py-3 rounded-full text-sm font-semibold bg-light-secondary-bg text-text-light-secondary hover:bg-light-secondary-bg hover:text-primary-blue dark:bg-dark-secondary-bg dark:text-text-dark-secondary dark:hover:bg-dark-secondary-bg dark:hover:text-accent-light shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                        data-tab="central">
+                        <i class="fas fa-map-marker-alt mr-2"></i>{% trans "Central Taiwan" %}
+                    </button>
+                    <button
+                        class="tab-button px-6 py-3 rounded-full text-sm font-semibold bg-light-secondary-bg text-text-light-secondary hover:bg-light-secondary-bg hover:text-primary-blue dark:bg-dark-secondary-bg dark:text-text-dark-secondary dark:hover:bg-dark-secondary-bg dark:hover:text-accent-light shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                        data-tab="east">
+                        <i class="fas fa-sun mr-2"></i>{% trans "East Taiwan" %}
+                    </button>
+                    <button
+                        class="tab-button px-6 py-3 rounded-full text-sm font-semibold bg-light-secondary-bg text-text-light-secondary hover:bg-light-secondary-bg hover:text-primary-blue dark:bg-dark-secondary-bg dark:text-text-dark-secondary dark:hover:bg-dark-secondary-bg dark:hover:text-accent-light shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                        data-tab="south">
+                        <i class="fas fa-umbrella-beach mr-2"></i>{% trans "South Taiwan" %}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- North Taiwan -->
+                <div id="north" class="tab-pane active">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/3UtmDnL5Iu8/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/3UtmDnL5Iu8?si=MvxeZJ24FNpJBdDz"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/DPIHsiR6_XM/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/DPIHsiR6_XM?si=iJSs9q48elz-yPeI"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/sBSTFVu3BYU/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/sBSTFVu3BYU?si=HujfiiT-_zfmk9GQ"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/Wvnqyaze_GA/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/Wvnqyaze_GA?si=xohTVvP6XPEh7jPI"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/NLBCCXBAjIE/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/NLBCCXBAjIE?si=LV_3ewwtIb507qW2"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/TK9dK4cVqco/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/TK9dK4cVqco?si=mpsXuIhDZG9SV4RZ"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/IUqaMrtTWgc/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/IUqaMrtTWgc?si=PLzbfIf7ZFAwP95T"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/IUqaMrtTWgc/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/IUqaMrtTWgc?si=R-VErfstnT9NlsNW"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/Q8D00swfuYM/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/Q8D00swfuYM?si=18nQUT0L7ujimL20"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/st8ATGlIe1I/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/st8ATGlIe1I?si=6uY6RdflqLMg9tuS"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/4P4XIMHhLHs/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/4P4XIMHhLHs?si=uwksPZJVuoPSMmAv"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/LFj8k6ZM-hw/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/LFj8k6ZM-hw?si=GwecUsiB2E_ZSC71"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/VJ9crFm2C6c/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/VJ9crFm2C6c?si=FKmCDh-jddweRgiE"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/W0EDYkICCUw/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/W0EDYkICCUw?si=ZgIsbCijmpFcJ0L-"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/wceqmS1LvRY/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/wceqmS1LvRY?si=dH0jO2CdJ-kymXOf"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/ZGWC8vpygHk/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/ZGWC8vpygHk?si=t2MEKaLcLfJtEbQd"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Central Taiwan -->
+                <div id="central" class="tab-pane hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2  gap-6">
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/lEznk6go9zg/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/lEznk6go9zg?si=rDmp4Q8QLlcy9Gi7"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/f7-14W9b4Pc/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/f7-14W9b4Pc?si=jpOnp50blA-NZftS"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/ZPWUywQNXUI/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/ZPWUywQNXUI?si=zUuTnRVhER7kVs48"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/Mu_yRwhYdIQ/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/Mu_yRwhYdIQ?si=ULFG6s0RGkZq4Ncy"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/Mu_yRwhYdIQ/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/Mu_yRwhYdIQ?si=r6znDDwIKQXn8ATj"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-border-light via-light-secondary-bg to-border-light dark:from-border-dark dark:via-dark-secondary-bg dark:to-border-dark">
+                                <img src="https://img.youtube.com/vi/pKr-8DQKaoc/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/pKr-8DQKaoc?si=w7qZP8BKcV-1Fr7b"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- East Taiwan -->
+                <div id="east" class="tab-pane hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/pw84PWMsws0/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/pw84PWMsws0?si=jqMClqT1Fg-g9TrT"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/GY6GAiDtVqE/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/GY6GAiDtVqE?si=jLaUO1RAXsHP5zvz"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/VeBCwgWJkik/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/VeBCwgWJkik?si=fbTr4cQVWSc3njp5"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/UNAH9fbE2tw/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/UNAH9fbE2tw?si=NiqdcQli_Jt5S15v"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- South Taiwan -->
+                <div id="south" class="tab-pane hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2  gap-6">
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/9NaUGhjgp_0/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/9NaUGhjgp_0?si=szcIbBR6VvKqTiD7"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/mT3QyvytpA8/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/mT3QyvytpA8?si=6Mc-P671gV77ROT4"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/Pm6CogVMNYE/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/Pm6CogVMNYE?si=74U1JAaqCv7j2y52"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/Pr0pK5yV06M/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/Pr0pK5yV06M?si=KzQSh1nLd1KJ2Q5u"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/k0ubbKPnurM/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/k0ubbKPnurM?si=pb9IixivZkgkuwM9"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/xGN67i_DiSQ/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/xGN67i_DiSQ?si=4Gukk8nUstsTENIq"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/tJl_AcZQ8mM/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/tJl_AcZQ8mM?si=0E6PJGbDzJft4mYt"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/wTLUCAKfjtg/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/wTLUCAKfjtg?si=CvZ0MJKMI9ygRorn"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/JWeGFX86NzA/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/JWeGFX86NzA?si=eLAsxy-KySLbsRga"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/JWeGFX86NzA/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/JWeGFX86NzA?si=4crc32o-c_aCK6yq"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/DY_DuMFgGus/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/DY_DuMFgGus?si=ForjV4zr_URslE68"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/uQEHlYUKF_k/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/uQEHlYUKF_k?si=h2kHAu49kW6kW2hA"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                        <div
+                            class="iframe-container relative rounded-lg overflow-hidden shadow-lg bg-light-secondary-bg dark:bg-dark-secondary-bg">
+                            <div
+                                class="skeleton-loader absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700">
+                                <img src="https://img.youtube.com/vi/BF3Q7sqmE1I/maxresdefault.jpg"
+                                    class="absolute inset-0 w-full h-full object-cover z-0" alt="{% trans 'Video thumbnail' %}">
+                                <div
+                                    class="animate-spin rounded-full h-12 w-12 border-4 border-primary-blue border-t-transparent">
+                                </div>
+                            </div>
+                            <div class="relative" style="padding-top: 56.25%;">
+                                <iframe class="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-500"
+                                    src="https://www.youtube.com/embed/BF3Q7sqmE1I?si=zJgJf_xzh0e1GOyR"
+                                    title="{% trans 'YouTube video player' %}" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+                                    loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const tabId = this.getAttribute('data-tab');
+
+                    // Remove active class from all buttons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active', 'bg-primary-blue', 'text-white', 'shadow-lg');
+                        btn.classList.add('bg-light-secondary-bg', 'text-text-light-secondary', 'dark:bg-dark-secondary-bg', 'dark:text-text-dark-secondary', 'shadow-md');
+                    });
+
+                    // Add active class to clicked button
+                    this.classList.add('active', 'bg-primary-blue', 'text-white', 'shadow-lg');
+                    this.classList.remove('bg-light-secondary-bg', 'text-text-light-secondary', 'dark:bg-dark-secondary-bg', 'dark:text-text-dark-secondary', 'shadow-md');
+
+                    // Hide all tab panes
+                    tabPanes.forEach(pane => {
+                        pane.classList.add('hidden');
+                        pane.classList.remove('active');
+                    });
+
+                    // Show selected tab pane
+                    const activePane = document.getElementById(tabId);
+                    if (activePane) {
+                        activePane.classList.remove('hidden');
+                        activePane.classList.add('active');
+                    }
+                });
+            });
+
+            // Skeleton loader functionality
+            const iframeContainers = document.querySelectorAll('.iframe-container');
+
+            iframeContainers.forEach(container => {
+                const iframe = container.querySelector('iframe');
+                const skeleton = container.querySelector('.skeleton-loader');
+
+                if (iframe && skeleton) {
+                    // Function to hide skeleton and show iframe
+                    const hideSkeleton = () => {
+                        skeleton.style.opacity = '0';
+                        iframe.style.opacity = '1';
+                        setTimeout(() => {
+                            skeleton.style.display = 'none';
+                        }, 300);
+                    };
+
+                    // Try to detect when iframe is ready
+                    let checkCount = 0;
+                    const checkIframeReady = () => {
+                        try {
+                            // Check if iframe document is accessible (same origin)
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            if (iframeDoc && iframeDoc.readyState === 'complete') {
+                                hideSkeleton();
+                                return;
+                            }
+                        } catch (e) {
+                            // Cross-origin iframe, use fallback timing
+                        }
+
+                        checkCount++;
+                        if (checkCount > 50) { // Stop checking after ~5 seconds
+                            hideSkeleton();
+                        } else {
+                            setTimeout(checkIframeReady, 100);
+                        }
+                    };
+
+                    // Start checking immediately
+                    setTimeout(checkIframeReady, 500);
+
+                    // Fallback: hide skeleton after 8 seconds regardless
+                    setTimeout(hideSkeleton, 8000);
+
+                    // Also listen for load event as backup
+                    iframe.addEventListener('load', hideSkeleton);
+                }
+            });
+        });
+    </script>
+
+
+</div>
+{% endblock %}
