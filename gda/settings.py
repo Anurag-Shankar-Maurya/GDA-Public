@@ -39,7 +39,13 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Get allowed hosts from environment or use defaults
-ALLOWED_HOSTS = ['127.0.0.1','localhost','gda-oy5s.onrender.com', 'gda-dev.onrender.com', 'gda-public.vercel.app', '*.vercel.app']
+ALLOWED_HOSTS = [
+    '127.0.0.1','localhost',
+    'gda-oy5s.onrender.com',
+    'gda-dev.onrender.com',
+    'gda-public.vercel.app',
+    'gda-public-dev.vercel.app',
+]
 
 # CSRF trusted origins for POST requests
 CSRF_TRUSTED_ORIGINS = [
@@ -48,7 +54,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'https://gda-public.vercel.app',
-    'https://*.vercel.app',
+    'https://gda-public-dev.vercel.app',
 ]
 
 # Application definition
