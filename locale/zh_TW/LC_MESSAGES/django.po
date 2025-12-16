@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:31+0530\n"
+"POT-Creation-Date: 2025-12-16 18:59+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -308,19 +308,19 @@ msgstr "常見問題"
 
 #: .\apps\content\models.py:628
 msgid "Thumbs Up"
-msgstr ""
+msgstr "讚"
 
 #: .\apps\content\models.py:629
 msgid "Thumbs Down"
-msgstr ""
+msgstr "倒讚"
 
 #: .\apps\content\models.py:634
 msgid "Type of vote: up or down."
-msgstr ""
+msgstr "投票類型：贊成或反對。"
 
 #: .\apps\content\models.py:640
 msgid "FAQ Vote"
-msgstr ""
+msgstr "常見問題投票"
 
 # Added translation
 #: .\apps\content\models.py:641
@@ -501,7 +501,7 @@ msgstr "台灣南部"
 #: .\apps\content\templates\content\taiwan.html:1646
 #: .\apps\content\templates\content\taiwan.html:1665
 msgid "Video thumbnail"
-msgstr ""
+msgstr "影片縮圖"
 
 #: .\apps\content\templates\content\amazing_taiwan.html:96
 #: .\apps\content\templates\content\amazing_taiwan.html:115
@@ -841,6 +841,9 @@ msgid ""
 "to spread awareness about Earth Day and the importance of protecting our "
 "planet."
 msgstr ""
+"您還記得嗎？我們曾在 2018 年 7 月於中壢街頭舉辦了一場世界地球日活動。當時，我"
+"們的志工製作了 PPT 來向中壢市民介紹地球日。在這裡，我們收集並分享這些簡報，希"
+"望能夠傳播有關地球日以及保護我們星球重要性的意識。"
 
 #: .\apps\content\templates\content\earth_day.html:33
 #: .\apps\content\templates\content\earth_day.html:60
@@ -852,15 +855,15 @@ msgstr ""
 #: .\apps\content\templates\content\earth_day.html:186
 #: .\apps\content\templates\content\earth_day.html:201
 msgid "Download PDF"
-msgstr ""
+msgstr "下載 PDF"
 
 #: .\apps\content\templates\content\earth_day.html:218
 msgid "World Map"
-msgstr ""
+msgstr "世界地圖"
 
 #: .\apps\content\templates\content\earth_day.html:221
 msgid "Protecting our planet, one step at a time."
-msgstr ""
+msgstr "一步一腳印地保護我們的星球。"
 
 # Added translation
 #: .\apps\content\templates\content\faq_list.html:6
@@ -877,7 +880,7 @@ msgstr "常見問題"
 msgid ""
 "Find answers to common questions about our volunteer programs and community "
 "initiatives."
-msgstr ""
+msgstr "尋找有關我們的志工計畫和社區活動的常見問題解答。"
 
 #: .\apps\content\templates\content\faq_list.html:69
 #: .\apps\content\templates\content\news_event_list.html:165
@@ -920,7 +923,7 @@ msgstr "清除篩選"
 #: .\apps\content\templates\content\faq_list.html:150
 #: .\apps\users\templates\users\profile\overview.html:437
 msgid "Login to vote"
-msgstr ""
+msgstr "登入以投票"
 
 #: .\apps\content\templates\content\faq_list.html:254
 #: .\apps\content\templates\content\news_event_list.html:388
@@ -1058,7 +1061,7 @@ msgstr "南加州大學馬歇爾商學院工商管理理學士學位（美國）
 
 #: .\apps\content\templates\content\founder.html:117
 msgid "Focus"
-msgstr ""
+msgstr "重點領域"
 
 #: .\apps\content\templates\content\founder.html:119
 msgid ""
@@ -1068,7 +1071,7 @@ msgstr "熱衷於跨學科學習和社會影響，尤其關注商業和社會創
 
 #: .\apps\content\templates\content\founder.html:125
 msgid "Expected 2025"
-msgstr ""
+msgstr "預計 2025 年"
 
 #: .\apps\content\templates\content\founder.html:127
 msgid ""
@@ -1137,7 +1140,7 @@ msgstr "有任何疑問？請給我們發郵件，讓我們一起改變現狀！
 
 #: .\apps\content\templates\content\green_declaration_2018.html:5
 msgid "GDA — Taiwan Explore"
-msgstr ""
+msgstr "GDA — 探索台灣"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:13
 #: .\apps\content\templates\content_base.html:268
@@ -1145,7 +1148,7 @@ msgstr ""
 #: .\apps\users\templates\users_base.html:282
 #: .\apps\users\templates\users_base.html:327
 msgid "Green Declaration 2018"
-msgstr ""
+msgstr "2018 年綠色宣言"
 
 # Added translation
 #: .\apps\content\templates\content\green_declaration_2018.html:20
@@ -1154,15 +1157,15 @@ msgstr "台灣英雄"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:31
 msgid "JULY 28, 2018 | GUANGNAN BUILDING, ZHONGLI, TAOYUAN"
-msgstr ""
+msgstr "2018 年 7 月 28 日 | 桃園中壢廣南大樓"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:35
 msgid "2018 World Earth Day: Plastic‑Free Life<br/>Campaign"
-msgstr ""
+msgstr "2018年世界地球日：無塑膠生活<br/>活動"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:39
 msgid "A Journey of Courage and Growth for Young Volunteers"
-msgstr ""
+msgstr "年輕志工的勇氣與成長之旅"
 
 # Corrected: Taiwan Office: -> Taiwan
 #: .\apps\content\templates\content\green_declaration_2018.html:52
@@ -1186,6 +1189,9 @@ msgid ""
 "philosophy to the public but also actively promoted the 2018 World Earth Day "
 "theme—Plastic-Free Life."
 msgstr ""
+"2018 年 7 月 28 日，全球奉獻協會（Global Devotion Association）於桃園中壢廣南"
+"大樓一樓廣場舉辦了世界地球日宣傳活動。志工們不僅向大眾介紹了協會的理念，更積"
+"極宣傳 2018 年世界地球日的主題——無塑生活。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:57
 msgid ""
@@ -1195,14 +1201,17 @@ msgid ""
 "and the frustration of rejection to the joy of successful communication, "
 "each volunteer gained profound personal growth through this process."
 msgstr ""
+"此次活動不僅提高了中壢居民的環保意識，也為參與的志工們提供了平時難以遇到的寶"
+"貴經驗。從接觸陌生人的緊張，面對被拒絕的沮喪，到成功溝通的喜悅，每位志工都在"
+"此過程中獲得了深刻的個人成長。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:59
 msgid "Featured Location: Guangnan Building, Zhongli"
-msgstr ""
+msgstr "精選地點：中壢廣南大樓"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:60
 msgid "A common hub for outreach and volunteer coordination in Taoyuan."
-msgstr ""
+msgstr "桃園地區外展活動與志工協調的常見中心。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:86
 msgid "Event Location Map"
@@ -1210,7 +1219,7 @@ msgstr "活動地點地圖"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:88
 msgid "Guangnan Building, Zhongli, Taoyuan"
-msgstr ""
+msgstr "桃園中壢廣南大樓"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:100
 msgid "Event Highlights"
@@ -1218,15 +1227,15 @@ msgstr "活動亮點"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:102
 msgid "Relive key moments from our volunteer programs across Taiwan"
-msgstr ""
+msgstr "重溫我們在台灣各地志工計畫的關鍵時刻"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:126
 msgid "Moments of Action"
-msgstr ""
+msgstr "行動時刻"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:128
 msgid "Capturing volunteers in the field"
-msgstr ""
+msgstr "捕捉志工在現場的身影"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:146
 msgid "Volunteer Voices"
@@ -1234,11 +1243,11 @@ msgstr "志工心聲"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:148
 msgid "Real stories of challenge, rejection, and growth"
-msgstr ""
+msgstr "挑戰、拒絕與成長的真實故事"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:159
 msgid "Lin Zhankai"
-msgstr ""
+msgstr "林展凱"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:163
 msgid "Personal Growth"
@@ -1255,14 +1264,17 @@ msgid ""
 "began, the harsh reality completely changed my foolish thinking. No matter "
 "how well prepared I was, I still felt nervous when talking to strangers."
 msgstr ""
+"活動開始前，我天真地以為只要把資料準備好，就可以輕鬆完成這個任務。然而，當活"
+"動真正開始時，殘酷的現實徹底改變了我愚蠢的想法。無論我準備得多麼充分，向陌生"
+"人開口時仍感到緊張不安。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:175
 msgid "Zheng Fuxin"
-msgstr ""
+msgstr "鄭福鑫"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:179
 msgid "Courage"
-msgstr ""
+msgstr "勇氣"
 
 # Added translation
 #: .\apps\content\templates\content\green_declaration_2018.html:180
@@ -1278,10 +1290,13 @@ msgid ""
 "walking by one by one, but I didn't take any action. When I mustered up my "
 "courage, most passers-by rejected me again and again."
 msgstr ""
+"透過這次活動，我學到了許多寶貴的經驗。本來以為只要在活動前練好說詞就好，一開"
+"始還非常有自信。但當活動開始時，看著路人一個個走過，我卻遲遲沒有行動。當我鼓"
+"起勇氣時，大多數路人卻又一次次地拒絕我。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:191
 msgid "Yang Yuquan"
-msgstr ""
+msgstr "楊羽泉"
 
 # Added translation
 #: .\apps\content\templates\content\green_declaration_2018.html:195
@@ -1290,7 +1305,7 @@ msgstr "韌性"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:196
 msgid "Self-Awareness"
-msgstr ""
+msgstr "自我覺察"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:198
 msgid ""
@@ -1300,10 +1315,13 @@ msgid ""
 "developed the courage to face setbacks and also realized how inadequate my "
 "own abilities were."
 msgstr ""
+"在參加這次活動之前，我以為這個任務很簡單，但實際參與後才發現挑戰性十足。被拒"
+"絕或被投以異樣眼光真的讓人很沮喪。然而，透過這個過程，我逐漸培養了面對挫折的"
+"勇氣，也察覺到自己能力的不足。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:207
 msgid "Wang Guanda"
-msgstr ""
+msgstr "王冠達"
 
 # Corrected: Title -> Theme
 #: .\apps\content\templates\content\green_declaration_2018.html:211
@@ -1312,7 +1330,7 @@ msgstr "環境"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:212
 msgid "Teamwork"
-msgstr ""
+msgstr "團隊合作"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:214
 msgid ""
@@ -1322,10 +1340,13 @@ msgid ""
 "frustrating, but if we don't stand up and do this today, the environmental "
 "protection problems will only get worse."
 msgstr ""
+"透過這次志工活動，我經歷了許多從未體驗過的事。大多數人都拒絕了我們，有些人甚"
+"至問我是否真的想做這個志工工作。被拒絕的感覺非常令人沮喪，但如果我們今天不站"
+"出來做這些事，環境保護問題只會變得更糟。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:223
 msgid "Lian Weixuan"
-msgstr ""
+msgstr "連偉軒"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:227
 #: .\apps\content_management\templates\content_management\success_story_list.html:123
@@ -1334,7 +1355,7 @@ msgstr "影響"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:228
 msgid "Gratitude"
-msgstr ""
+msgstr "感恩"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:230
 msgid ""
@@ -1344,6 +1365,9 @@ msgid ""
 "ripples to join us, and eventually the calm water surface will be full of "
 "responsive ripples."
 msgstr ""
+"這是一個很棒的活動，給了我們訓練口才、將理念傳達給他人，並為這個藍色星球盡一"
+"份心力的機會。雖然我們可能只是一滴水，但我希望我們可以激起更多漣漪來加入我"
+"們，最終讓平靜的水面充滿響應的波紋。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:239
 msgid "Cui Xiangyu"
@@ -1366,16 +1390,19 @@ msgid ""
 "This made me understand one of the original intentions of Global Devotion "
 "Volunteer. Protecting the environment starts with you and me!"
 msgstr ""
+"這次志工活動教會了我很多事。本以為宣傳很簡單，但卻不斷地被拒絕。「志願服務」"
+"這四個字在民眾的心中，已經成為孩子們賺取時數的工具。這讓我明白了 Global "
+"Devotion Volunteer 的其中一個初衷。保護環境，從你我做起！"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:258
 msgid "Ready to Explore Taiwan with GDA?"
-msgstr ""
+msgstr "準備好與 GDA 一起探索台灣了嗎？"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:259
 msgid ""
 "Find a program that fits your interests and join our next cohort of "
 "passionate volunteers."
-msgstr ""
+msgstr "找到適合您興趣的計畫，加入我們下一批充滿熱忱的志工行列。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:262
 #: .\apps\content\templates\content\landing_page.html:881
@@ -1443,11 +1470,11 @@ msgstr "觀看影片"
 
 #: .\apps\content\templates\content\landing_page.html:73
 msgid "Trusted by 2,000+ volunteers worldwide"
-msgstr ""
+msgstr "受到全球 2,000 多名志工的信任"
 
 #: .\apps\content\templates\content\landing_page.html:89
 msgid "Cultural Exchange Illustration"
-msgstr ""
+msgstr "文化交流插圖"
 
 #: .\apps\content\templates\content\landing_page.html:100
 msgid "Our Mission"
@@ -1459,9 +1486,14 @@ msgstr "探索。體驗。"
 
 #: .\apps\content\templates\content\landing_page.html:104
 msgid "Give Back."
-msgstr ""
+msgstr "回饋社會。"
 
 #: .\apps\content\templates\content\landing_page.html:107
+#, fuzzy
+#| msgid ""
+#| "We encourage young volunteers to explore different cultures and "
+#| "lifestyles. We believe that through cultural exchange and volunteer "
+#| "service, we can create a better future."
 msgid ""
 "\n"
 "                            We encourage young volunteers to explore "
@@ -1469,9 +1501,8 @@ msgid ""
 "and volunteer service, we can create a better future together.\n"
 "                            "
 msgstr ""
-"我們鼓勵年輕志工探索不同的文化與生活方式。我們相信，透過文化交流及志工服務，"
-"我們可以共同創造更美好的未來。\n"
-"                            "
+"我們鼓勵年輕志工探索不同的文化和生活方式。我們相信，透過文化交流和志願服務，"
+"我們可以創造更美好的未來。"
 
 #: .\apps\content\templates\content\landing_page.html:119
 #: .\apps\content\templates\content\landing_page.html:501
@@ -1488,7 +1519,7 @@ msgstr ""
 
 #: .\apps\content\templates\content\landing_page.html:132
 msgid "Social Welfare"
-msgstr ""
+msgstr "社會福利"
 
 #: .\apps\content\templates\content\landing_page.html:134
 msgid ""
@@ -1508,7 +1539,7 @@ msgstr ""
 
 #: .\apps\content\templates\content\landing_page.html:158
 msgid "Our Journey"
-msgstr ""
+msgstr "我們的旅程"
 
 #: .\apps\content\templates\content\landing_page.html:161
 msgid "Global Elite Program Roadmap"
@@ -1720,7 +1751,7 @@ msgstr "加入我們"
 
 #: .\apps\content\templates\content\landing_page.html:531
 msgid "Team"
-msgstr ""
+msgstr "團隊"
 
 # Corrected: Global Devotion Association -> About the Association
 #: .\apps\content\templates\content\landing_page.html:533
@@ -1847,7 +1878,7 @@ msgstr "您的時間和技能可以創造持久的改變。探索我們的機會
 
 #: .\apps\content\templates\content\landing_page.html:891
 msgid "Where We Are"
-msgstr ""
+msgstr "我們的足跡"
 
 # Added translation
 #: .\apps\content\templates\content\landing_page.html:894
@@ -1860,10 +1891,12 @@ msgid ""
 "volunteers are making a difference across the island. We connect local "
 "communities with global resources."
 msgstr ""
+"從熙熙攘攘的台北街頭到寧靜的南投山區，我們的志工在全島各地發揮影響力。我們將"
+"在地社區與全球資源聯繫起來。"
 
 #: .\apps\content\templates\content\landing_page.html:902
 msgid "North"
-msgstr ""
+msgstr "北部"
 
 # Added translation
 #: .\apps\content\templates\content\landing_page.html:903
@@ -1877,31 +1910,31 @@ msgstr "中部"
 
 #: .\apps\content\templates\content\landing_page.html:907
 msgid "Taichung, Nantou, Changhua"
-msgstr ""
+msgstr "台中、南投、彰化"
 
 #: .\apps\content\templates\content\landing_page.html:910
 msgid "South"
-msgstr ""
+msgstr "南部"
 
 #: .\apps\content\templates\content\landing_page.html:911
 msgid "Tainan, Kaohsiung, Pingtung"
-msgstr ""
+msgstr "台南、高雄、屏東"
 
 #: .\apps\content\templates\content\landing_page.html:914
 msgid "East"
-msgstr ""
+msgstr "東部"
 
 #: .\apps\content\templates\content\landing_page.html:915
 msgid "Hualien, Taitung, Yilan"
-msgstr ""
+msgstr "花蓮、台東、宜蘭"
 
 #: .\apps\content\templates\content\landing_page.html:921
 msgid "Illustrated Map of Taiwan"
-msgstr ""
+msgstr "台灣地圖插畫"
 
 #: .\apps\content\templates\content\landing_page.html:952
 msgid "Find a Location Near You"
-msgstr ""
+msgstr "尋找離您最近的地點"
 
 # Corrected: Make a Difference -> Save Preferences
 #: .\apps\content\templates\content\life_of_gong_school.html:4
@@ -1910,7 +1943,7 @@ msgstr "功學校文章列表 - 全球奉獻協會"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:12
 msgid "Life of Gong School"
-msgstr ""
+msgstr "公學生活"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:24
 #: .\apps\content\templates\content_base.html:264
@@ -1922,13 +1955,13 @@ msgstr "功派文章列表"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:35
 msgid "Digital integration & point-by-point formula"
-msgstr ""
+msgstr "數位整合與點對點公式"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:38
 msgid ""
 "Explore the fundamental concepts of digital integration and how to apply "
 "point-by-point formulas in various scenarios."
-msgstr ""
+msgstr "探索數位整合的基本概念以及如何在各種情境中應用點對點公式。"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:41
 #: .\apps\content\templates\content\life_of_gong_school.html:54
@@ -1939,33 +1972,33 @@ msgstr "立即觀看"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:48
 msgid "Properties of absolute values"
-msgstr ""
+msgstr "絕對值的性質"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:51
 msgid ""
 "Understand the unique properties of absolute values and their implications "
 "in algebraic equations and inequalities."
-msgstr ""
+msgstr "了解絕對值的獨特性質及其在代數方程式和不等式中的應用。"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:61
 msgid "Argumentation on rational and irrational numbers"
-msgstr ""
+msgstr "有理數與無理數的論證"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:64
 msgid ""
 "Develop strong argumentation skills when discussing the nature and "
 "differences between rational and irrational numbers."
-msgstr ""
+msgstr "在討論有理數和無理數的本質與差異時，培養強大的論證能力。"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:74
 msgid "Multiplication formula"
-msgstr ""
+msgstr "乘法公式"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:77
 msgid ""
 "Master the various multiplication formulas and their applications in "
 "simplifying algebraic expressions and solving equations."
-msgstr ""
+msgstr "掌握各種乘法公式及其在簡化代數表達式和求解方程式中的應用。"
 
 # Corrected: Related Project -> Create a new project
 #: .\apps\content\templates\content\news_event_detail.html:5
@@ -2471,12 +2504,17 @@ msgid "Educational Innovation"
 msgstr "教育創新"
 
 #: .\apps\content\templates\content\organization.html:340
-#, python-format
+#, fuzzy, python-format
+#| msgid ""
+#| "He introduced the management philosophy of small and medium-sized "
+#| "enterprises into the school, striving to create excellent management. "
+#| "Under his leadership, the enrollment rate of graduates into high schools "
+#| "increased significantly from 30%% to 90%%."
 msgid ""
 "He introduced the management philosophy of small and medium-sized "
 "enterprises into the school, striving to create excellent management. Under "
 "his leadership, the enrollment rate of graduates into high schools increased "
-"significantly from 30%% to 90%%."
+"significantly from 30\\%% to 90\\%%."
 msgstr ""
 "他將中小企業的管理理念引進學校，力求打造卓越的管理模式。在他的領導下，畢業生"
 "升上高中的比例從30%顯著提高到90%。"
@@ -2895,7 +2933,7 @@ msgstr "GDA：專案"
 
 #: .\apps\content\templates\content\project_detail.html:55
 msgid "Back"
-msgstr ""
+msgstr "返回"
 
 #: .\apps\content\templates\content\project_detail.html:79
 #: .\apps\content\templates\content\project_detail.html:323
@@ -2926,7 +2964,7 @@ msgstr "志工"
 
 #: .\apps\content\templates\content\project_detail.html:149
 msgid "Trusted by"
-msgstr ""
+msgstr "信任我們的夥伴"
 
 # Corrected: hours -> 時數
 #: .\apps\content\templates\content\project_detail.html:149
@@ -2935,7 +2973,7 @@ msgstr "志工"
 
 #: .\apps\content\templates\content\project_detail.html:154
 msgid "Share"
-msgstr ""
+msgstr "分享"
 
 # Added translation
 #: .\apps\content\templates\content\project_detail.html:168
@@ -3046,7 +3084,7 @@ msgstr "已報名"
 
 #: .\apps\content\templates\content\project_detail.html:368
 msgid "Log in to Apply"
-msgstr ""
+msgstr "登入以申請"
 
 #: .\apps\content\templates\content\project_detail.html:377
 #: .\apps\content_management\templates\content_management\faq_detail.html:139
@@ -3335,32 +3373,32 @@ msgstr "傳統服飾"
 #: .\apps\content\templates\content\taiwan.html:249
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:247
 msgid "performer"
-msgstr ""
+msgstr "表演者"
 
 #: .\apps\content\templates\content\taiwan.html:253
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:251
 msgid "opera performer"
-msgstr ""
+msgstr "歌劇表演者"
 
 #: .\apps\content\templates\content\taiwan.html:257
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:255
 msgid "baked goods"
-msgstr ""
+msgstr "烘焙食品"
 
 #: .\apps\content\templates\content\taiwan.html:261
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:259
 msgid "bamboo crafts"
-msgstr ""
+msgstr "竹工藝品"
 
 #: .\apps\content\templates\content\taiwan.html:276
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:274
 msgid "preview"
-msgstr ""
+msgstr "預覽"
 
 #: .\apps\content\templates\content\taiwan.html:361
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:357
 msgid "Second view"
-msgstr ""
+msgstr "第二視角"
 
 # Added translation
 #: .\apps\content\templates\content\taiwan.html:373
@@ -3711,24 +3749,27 @@ msgid ""
 "Our goal is to safeguard these priceless cultures while fostering an "
 "appreciation for Taiwan's extensive history and variety."
 msgstr ""
+"我們的目標是保護這些無價的文化，同時培養人們對台灣悠久歷史和多樣性的欣賞。"
 
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:212
 msgid ""
 "As we travel through the breathtaking landscapes of Taiwan, we "
 "simultaneously immerse ourselves in its diverse and dynamic cultures."
 msgstr ""
+"當我們穿梭於台灣令人驚嘆的風景中時，我們也同時沉浸在其中多樣且充滿活力的文化"
+"裡。"
 
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:221
 msgid ""
 "Dive deep into the rich traditions of Taiwan's indigenous peoples and "
 "experience their way of life and heritage."
-msgstr ""
+msgstr "深入了解台灣原住民豐富的傳統，體驗他們的生活方式和文化遺產。"
 
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:230
 msgid ""
 "Savor the unique aspects of Taiwanese Hakka culture, taste delicious Hakka "
 "cuisine, and explore their traditional arts."
-msgstr ""
+msgstr "品味台灣客家文化的獨特之處，品嚐美味的客家菜餚，並探索他們的傳統藝術。"
 
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:378
 msgid ""
@@ -3747,6 +3788,13 @@ msgid ""
 "decorations, jewelry, etc. These costumes reflect the ethnic identity and "
 "cultural symbols."
 msgstr ""
+"原住民歌舞不僅是民族文化的傳承，也是社會交流與慶典活動的一部分。透過這些藝術"
+"表演，原住民族展現了對自然環境的敬畏、生活中的智慧以及豐富的藝術創造力。原住"
+"民舞蹈通常融入自然元素，如模仿動物和植物，以及展現農耕活動。舞蹈優雅而生動，"
+"展現了原住民族獨特的舞蹈風格。歌曲是原住民文化表達的重要形式。歌詞通常反映生"
+"活、自然與愛情等主題，並以獨特的旋律和節奏呈現。原住民舞蹈的服飾多樣，每個民"
+"族都有不同的特色。常見元素包括色彩鮮豔的刺繡、羽毛裝飾、珠寶等。這些服飾反映"
+"了族群身份和文化符號。"
 
 # Corrected: Taiwan Office: -> Taiwanese Opera
 #: .\apps\content\templates\content\terms_of_service.html:4
@@ -4021,7 +4069,7 @@ msgstr "姓名"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:16
 msgid "LINE ID"
-msgstr ""
+msgstr "LINE 帳號"
 
 # Corrected: Easy -> 簡易
 #: .\apps\content\templates\content\volunteer_video_upload.html:20
@@ -4030,7 +4078,7 @@ msgstr "標題"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:24
 msgid "Expected results"
-msgstr ""
+msgstr "預期成果"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:28
 msgid "Date"
@@ -4038,15 +4086,15 @@ msgstr "日期"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:32
 msgid "E-Mail"
-msgstr ""
+msgstr "電子郵件"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:36
 msgid "Facebook"
-msgstr ""
+msgstr "臉書"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:48
 msgid "Study Sheet"
-msgstr ""
+msgstr "學習單"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:52
 msgid "Video link"
@@ -4054,11 +4102,11 @@ msgstr "影片連結"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:52
 msgid "Please enter Youtube URL"
-msgstr ""
+msgstr "請輸入 Youtube 網址"
 
 #: .\apps\content\templates\content\volunteer_video_upload.html:56
 msgid "Submit"
-msgstr ""
+msgstr "送出"
 
 # Added translation
 #: .\apps\content\templates\content_base.html:138
@@ -4088,12 +4136,12 @@ msgstr "發現台灣"
 #: .\apps\content\templates\content_base.html:215
 #: .\apps\users\templates\users_base.html:229
 msgid "An overview of Taiwan's beauty."
-msgstr ""
+msgstr "台灣之美綜覽"
 
 #: .\apps\content\templates\content_base.html:219
 #: .\apps\users\templates\users_base.html:233
 msgid "Discover the breathtaking landscapes and vibrant cities of Taiwan."
-msgstr ""
+msgstr "探索台灣令人驚嘆的風景和充滿活力的城市。"
 
 #: .\apps\content\templates\content_base.html:222
 #: .\apps\content\templates\content_base.html:294
@@ -4105,7 +4153,7 @@ msgstr "文化體驗"
 #: .\apps\content\templates\content_base.html:223
 #: .\apps\users\templates\users_base.html:237
 msgid "Engage in unique cultural activities and workshops."
-msgstr ""
+msgstr "參與獨特的文化活動和工作坊。"
 
 # Added translation
 #: .\apps\content\templates\content_base.html:239
@@ -4549,7 +4597,7 @@ msgstr "儀表板"
 
 #: .\apps\content_management\templates\content_management\application_analytics.html:33
 msgid "Comprehensive insights into project applications and enrollments"
-msgstr ""
+msgstr "專案申請與報名綜合洞察"
 
 # Added translation
 #: .\apps\content_management\templates\content_management\application_analytics.html:38
@@ -4863,11 +4911,11 @@ msgstr "數字較小的會優先顯示。"
 
 #: .\apps\content_management\templates\content_management\faq_form.html:171
 msgid "Include in SEO structured data."
-msgstr ""
+msgstr "包含於 SEO 結構化資料"
 
 #: .\apps\content_management\templates\content_management\faq_form.html:195
 msgid "Tips"
-msgstr ""
+msgstr "小提示"
 
 #: .\apps\content_management\templates\content_management\faq_form.html:198
 msgid "Keep questions concise."
@@ -4875,11 +4923,11 @@ msgstr "問題請盡量簡潔。"
 
 #: .\apps\content_management\templates\content_management\faq_form.html:199
 msgid "Ensure translations are accurate."
-msgstr ""
+msgstr "確保翻譯準確"
 
 #: .\apps\content_management\templates\content_management\faq_form.html:200
 msgid "Use ordering to prioritize common questions."
-msgstr ""
+msgstr "使用排序以優先處理常見問題"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:5
 msgid "Managed FAQs"
@@ -4931,11 +4979,11 @@ msgstr "讚數（低-高）"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:62
 msgid "Thumbs Down (High-Low)"
-msgstr ""
+msgstr "不喜歡 (多到少)"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:63
 msgid "Thumbs Down (Low-High)"
-msgstr ""
+msgstr "不喜歡 (少到多)"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:64
 msgid "Usefulness (High-Low)"
@@ -4968,7 +5016,7 @@ msgstr "結構化資料"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:135
 msgid "Usefulness"
-msgstr ""
+msgstr "實用性"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:160
 msgid "Not Ready"
@@ -5014,7 +5062,7 @@ msgstr "的"
 #: .\apps\content_management\templates\content_management\user_analytics.html:239
 #: .\apps\content_management\templates\content_management\user_analytics.html:241
 msgid "results"
-msgstr ""
+msgstr "結果"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:197
 #: .\apps\content_management\templates\content_management\news_event_list.html:204
@@ -5038,7 +5086,7 @@ msgstr "未找到常見問題解答"
 
 #: .\apps\content_management\templates\content_management\faq_list.html:236
 msgid "Try adjusting your search or add a new FAQ."
-msgstr ""
+msgstr "嘗試調整您的搜尋或新增常見問題。"
 
 # Added translation
 #: .\apps\content_management\templates\content_management\management_dashboard.html:5
@@ -5089,7 +5137,7 @@ msgstr "使用者分析"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:95
 msgid "new (30d)"
-msgstr ""
+msgstr "最新 (30天)"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:107
 msgid "Utilization"
@@ -5154,7 +5202,7 @@ msgstr "近 30 天活躍用戶"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:215
 msgid "Onboarded"
-msgstr ""
+msgstr "已上線"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:228
 msgid "Content Distribution"
@@ -5162,7 +5210,7 @@ msgstr "內容分發"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:237
 msgid "Monthly Activity Trend"
-msgstr ""
+msgstr "每月活動趨勢"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:249
 msgid "Projects by Difficulty"
@@ -5179,11 +5227,11 @@ msgstr "依國家分類的專案"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:295
 msgid "User Demographics"
-msgstr ""
+msgstr "使用者人口統計"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:298
 msgid "Gender Distribution"
-msgstr ""
+msgstr "性別分佈"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:307
 msgid "Top Countries"
@@ -5195,11 +5243,11 @@ msgstr "用戶參與度"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:323
 msgid "Login Methods"
-msgstr ""
+msgstr "登入方式"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:333
 msgid "Onboarding Complete"
-msgstr ""
+msgstr "新手上路完成"
 
 # Added translation
 #: .\apps\content_management\templates\content_management\management_dashboard.html:337
@@ -5208,7 +5256,7 @@ msgstr "電子郵件已驗證"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:346
 msgid "Content & Impact Summary"
-msgstr ""
+msgstr "內容與影響摘要"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:349
 msgid "Avg Project Duration"
@@ -5216,7 +5264,7 @@ msgstr "平均專案時長"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:350
 msgid "days"
-msgstr ""
+msgstr "天"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:353
 msgid "Avg Beneficiaries/Story"
@@ -5224,11 +5272,11 @@ msgstr "平均每則故事受益人數"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:357
 msgid "Avg Hours/Story"
-msgstr ""
+msgstr "平均每故事時數"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:361
 msgid "Unique Enrolled Users"
-msgstr ""
+msgstr "不重複報名使用者"
 
 #: .\apps\content_management\templates\content_management\management_dashboard.html:366
 msgid "Published Stories"
@@ -5448,7 +5496,7 @@ msgstr "發佈新聞、活動或公告"
 
 #: .\apps\content_management\templates\content_management\news_event_form.html:54
 msgid "Save Entry"
-msgstr ""
+msgstr "儲存條目"
 
 # Added translation
 #: .\apps\content_management\templates\content_management\news_event_form.html:69
@@ -5477,13 +5525,13 @@ msgstr "封面圖片"
 #: .\apps\content_management\templates\content_management\project_form.html:224
 #: .\apps\content_management\templates\content_management\success_story_form.html:152
 msgid "Click to upload"
-msgstr ""
+msgstr "點擊上傳"
 
 #: .\apps\content_management\templates\content_management\news_event_form.html:162
 #: .\apps\content_management\templates\content_management\project_form.html:224
 #: .\apps\content_management\templates\content_management\success_story_form.html:152
 msgid "or drag and drop"
-msgstr ""
+msgstr "或拖曳上傳"
 
 # Added translation
 #: .\apps\content_management\templates\content_management\news_event_form.html:175
@@ -5503,7 +5551,7 @@ msgstr "目前圖片"
 #: .\apps\content_management\templates\content_management\project_form.html:267
 #: .\apps\content_management\templates\content_management\success_story_form.html:197
 msgid "Or paste an image URL..."
-msgstr ""
+msgstr "或貼上圖片網址..."
 
 # Corrected: Original was "Project start date"
 #: .\apps\content_management\templates\content_management\news_event_form.html:221
@@ -5552,7 +5600,7 @@ msgstr "發佈條目"
 #: .\apps\content_management\templates\content_management\news_event_form.html:323
 #: .\apps\content_management\templates\content_management\success_story_form.html:312
 msgid "Visible to public"
-msgstr ""
+msgstr "向公眾顯示"
 
 #: .\apps\content_management\templates\content_management\news_event_form.html:356
 #: .\apps\content_management\templates\content_management\success_story_form.html:396
@@ -5634,7 +5682,7 @@ msgstr "未找到新聞/活動"
 
 #: .\apps\content_management\templates\content_management\news_event_list.html:243
 msgid "Try adjusting your search or add a new entry."
-msgstr ""
+msgstr "嘗試調整您的搜尋或新增條目。"
 
 #: .\apps\content_management\templates\content_management\project_confirm_delete.html:5
 msgid "Confirm Delete Project"
@@ -5678,7 +5726,7 @@ msgstr "全部的："
 #: .\apps\content_management\templates\content_management\project_detail.html:139
 #, python-format
 msgid "%(progress|floatformat:1)s%% filled"
-msgstr "%(進度|floatformat:1)s%% 已填充"
+msgstr ""
 
 #: .\apps\content_management\templates\content_management\project_detail.html:154
 #: .\apps\content_management\templates\content_management\project_form.html:161
@@ -5711,7 +5759,7 @@ msgstr "創建專案"
 
 #: .\apps\content_management\templates\content_management\project_form.html:45
 msgid "Manage volunteer opportunities and project details."
-msgstr ""
+msgstr "管理志工機會和專案詳情。"
 
 # Corrected: Quick Links -> Quick Actions
 #: .\apps\content_management\templates\content_management\project_form.html:54
@@ -5727,12 +5775,12 @@ msgstr "基本訊息："
 #: .\apps\content_management\templates\content_management\project_form.html:102
 #: .\apps\content_management\templates\content_management\project_form.html:118
 msgid "EN"
-msgstr ""
+msgstr "英文"
 
 #: .\apps\content_management\templates\content_management\project_form.html:108
 #: .\apps\content_management\templates\content_management\project_form.html:124
 msgid "TW"
-msgstr ""
+msgstr "繁體中文"
 
 #: .\apps\content_management\templates\content_management\project_form.html:139
 msgid "Select difficulty..."
@@ -5742,7 +5790,7 @@ msgstr "選擇難度..."
 #: .\apps\content_management\templates\content_management\project_form.html:183
 #: .\apps\content_management\templates\content_management\project_form.html:198
 msgid "Chinese"
-msgstr ""
+msgstr "中文"
 
 #: .\apps\content_management\templates\content_management\project_form.html:370
 msgid "Status & Visibility"
@@ -5760,7 +5808,7 @@ msgstr "接受申請中"
 
 #: .\apps\content_management\templates\content_management\project_form.html:420
 msgid "Schedule"
-msgstr ""
+msgstr "排程"
 
 #: .\apps\content_management\templates\content_management\project_form.html:472
 msgid "Capacity & ID"
@@ -5836,7 +5884,7 @@ msgstr "沒有找到專案"
 
 #: .\apps\content_management\templates\content_management\project_list.html:271
 msgid "Try adjusting your search or add a new project."
-msgstr ""
+msgstr "嘗試調整您的搜尋或新增專案。"
 
 #: .\apps\content_management\templates\content_management\success_story_confirm_delete.html:5
 msgid "Confirm Delete Success Story"
@@ -5895,9 +5943,10 @@ msgid "Delete Story"
 msgstr "刪除故事"
 
 #: .\apps\content_management\templates\content_management\success_story_form.html:7
-#, python-format
+#, fuzzy, python-format
+#| msgid "Success Story: %(title)s"
 msgid "Success Story: %(title)s"
-msgstr "成功案例：%(title)s"
+msgstr "成功故事：%s(title)s"
 
 #: .\apps\content_management\templates\content_management\success_story_form.html:9
 #: .\apps\content_management\templates\content_management\success_story_form.html:22
@@ -5963,7 +6012,7 @@ msgstr "項目（Z-A）"
 
 #: .\apps\content_management\templates\content_management\success_story_list.html:165
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #: .\apps\content_management\templates\content_management\success_story_list.html:267
 msgid "No Success Stories found"
@@ -5971,7 +6020,7 @@ msgstr "未找到成功案例"
 
 #: .\apps\content_management\templates\content_management\success_story_list.html:268
 msgid "Try adjusting your search or add a new story."
-msgstr ""
+msgstr "嘗試調整您的搜尋或新增故事。"
 
 #: .\apps\content_management\templates\content_management\user_analytics.html:33
 msgid "Comprehensive insights into user engagement and demographics"
@@ -6051,7 +6100,7 @@ msgstr "沒有找到用戶"
 
 #: .\apps\content_management\templates\content_management\user_analytics.html:279
 msgid "Try adjusting your search or add a new user."
-msgstr ""
+msgstr "嘗試調整您的搜尋或新增使用者。"
 
 #: .\apps\content_management\templates\content_management\user_confirm_delete.html:5
 msgid "Confirm Delete User"
@@ -6069,7 +6118,7 @@ msgstr ""
 #: .\apps\content_management\templates\content_management\user_detail.html:5
 #, python-format
 msgid "User Detail: %(first)s %(last)s"
-msgstr "用戶詳情：%(名字)s %(姓氏)s"
+msgstr ""
 
 #: .\apps\content_management\templates\content_management\user_detail.html:45
 msgid "Staff"
@@ -6313,7 +6362,7 @@ msgstr "地址及地點"
 
 #: .\apps\content_management\templates\content_management\user_form.html:273
 msgid "Allow this user to sign in"
-msgstr ""
+msgstr "允許此使用者登入"
 
 #: .\apps\content_management\templates\content_management\user_form.html:287
 msgid "Allow access to admin site"
@@ -6321,7 +6370,7 @@ msgstr "允許存取管理網站"
 
 #: .\apps\content_management\templates\content_management\user_form.html:301
 msgid "Full access to all permissions"
-msgstr ""
+msgstr "完全存取所有權限"
 
 # Corrected: Clear Filters -> Search & Filter
 #: .\apps\content_management\templates\content_management_base.html:9
@@ -7054,7 +7103,7 @@ msgstr "刪除帳戶"
 #: .\apps\users\templates\users\delete_account.html:23
 #: .\apps\users\templates\users\profile\account_management.html:172
 msgid "Permanently deactivate your account"
-msgstr ""
+msgstr "永久停用您的帳號"
 
 #: .\apps\users\templates\users\delete_account.html:33
 msgid "Warning: This action cannot be undone"
@@ -7066,6 +7115,8 @@ msgid ""
 "projects, certificates, and any other information associated with your "
 "account. This action is irreversible."
 msgstr ""
+"一旦您刪除帳號，將會遺失所有與您帳號相關的資料、專案、憑證和任何其他資訊。此"
+"動作無法復原。"
 
 #: .\apps\users\templates\users\delete_account.html:38
 msgid "All your project enrollments will be removed"
@@ -7073,15 +7124,15 @@ msgstr "您所有已報名的專案將會被移除"
 
 #: .\apps\users\templates\users\delete_account.html:39
 msgid "Your certificates will become inaccessible"
-msgstr ""
+msgstr "您的憑證將無法存取"
 
 #: .\apps\users\templates\users\delete_account.html:40
 msgid "Your profile and personal information will be hidden"
-msgstr ""
+msgstr "您的個人資料和個人資訊將會隱藏"
 
 #: .\apps\users\templates\users\delete_account.html:41
 msgid "You will be logged out immediately"
-msgstr ""
+msgstr "您將立即登出"
 
 # Added translation
 #: .\apps\users\templates\users\delete_account.html:49
@@ -7090,11 +7141,11 @@ msgstr "帳戶摘要"
 
 #: .\apps\users\templates\users\delete_account.html:83
 msgid "Before you proceed"
-msgstr ""
+msgstr "在您繼續之前"
 
 #: .\apps\users\templates\users\delete_account.html:85
 msgid "Consider these alternatives to account deletion:"
-msgstr ""
+msgstr "考慮以下帳號刪除的替代方案："
 
 #: .\apps\users\templates\users\delete_account.html:89
 msgid "Edit your profile information"
@@ -7108,15 +7159,15 @@ msgstr "管理您的帳戶設定"
 
 #: .\apps\users\templates\users\delete_account.html:107
 msgid "Type your username to confirm"
-msgstr ""
+msgstr "輸入您的使用者名稱以確認"
 
 #: .\apps\users\templates\users\delete_account.html:114
 msgid "Enter your username"
-msgstr ""
+msgstr "輸入您的使用者名稱"
 
 #: .\apps\users\templates\users\delete_account.html:117
 msgid "Please type"
-msgstr ""
+msgstr "請輸入"
 
 # Added translation
 #: .\apps\users\templates\users\delete_account.html:117
@@ -7127,7 +7178,7 @@ msgstr "以確認帳戶刪除。"
 msgid ""
 "I understand that this action cannot be undone and I want to permanently "
 "delete my account."
-msgstr ""
+msgstr "我了解此動作無法復原，並想要永久刪除我的帳號。"
 
 #: .\apps\users\templates\users\emails\email_base.html:179
 msgid "© 2025 GDA (Global Development Association). All rights reserved."
@@ -7441,7 +7492,7 @@ msgstr "驗證電子郵件"
 
 #: .\apps\users\templates\users\profile\account_management.html:56
 msgid "Change Email"
-msgstr ""
+msgstr "變更電子郵件"
 
 # Added translation
 #: .\apps\users\templates\users\profile\account_management.html:76
@@ -7450,7 +7501,7 @@ msgstr "已連結的帳戶："
 
 #: .\apps\users\templates\users\profile\account_management.html:77
 msgid "Social accounts linked to your profile"
-msgstr ""
+msgstr "連結到您個人資料的社交帳號"
 
 #: .\apps\users\templates\users\profile\account_management.html:83
 #: .\apps\users\templates\users\profile\account_management.html:93
@@ -7459,11 +7510,11 @@ msgstr "已連結"
 
 #: .\apps\users\templates\users\profile\account_management.html:87
 msgid "Add Google"
-msgstr ""
+msgstr "新增 Google"
 
 #: .\apps\users\templates\users\profile\account_management.html:97
 msgid "Add Facebook"
-msgstr ""
+msgstr "新增 Facebook"
 
 # Corrected: Sign up -> Sign Out
 #: .\apps\users\templates\users\profile\account_management.html:134
@@ -7481,7 +7532,7 @@ msgstr "尚未連結任何社群帳戶。"
 
 #: .\apps\users\templates\users\profile\account_management.html:146
 msgid "Connect your social accounts for easier login and account recovery."
-msgstr ""
+msgstr "連結您的社交帳號以方便登入和帳號復原。"
 
 # Added translation
 #: .\apps\users\templates\users\profile\account_management.html:158
@@ -7490,7 +7541,7 @@ msgstr "帳戶操作"
 
 #: .\apps\users\templates\users\profile\certificates.html:7
 msgid "My Certificates"
-msgstr ""
+msgstr "我的憑證"
 
 # Added translation
 #: .\apps\users\templates\users\profile\certificates.html:14
@@ -7499,16 +7550,16 @@ msgstr "已核發的憑證"
 
 #: .\apps\users\templates\users\profile\certificates.html:24
 msgid "Issued on:"
-msgstr ""
+msgstr "發行日期："
 
 #: .\apps\users\templates\users\profile\certificates.html:27
 #: .\apps\users\templates\users\profile\projects.html:67
 msgid "View Certificate"
-msgstr ""
+msgstr "檢視憑證"
 
 #: .\apps\users\templates\users\profile\certificates.html:39
 msgid "Available for Generation"
-msgstr ""
+msgstr "可供生成"
 
 #: .\apps\users\templates\users\profile\certificates.html:47
 msgid "Completed on:"
@@ -7517,7 +7568,7 @@ msgstr "完成日期："
 #: .\apps\users\templates\users\profile\certificates.html:53
 #: .\apps\users\templates\users\profile\projects.html:73
 msgid "Generate Certificate"
-msgstr ""
+msgstr "產生憑證"
 
 #: .\apps\users\templates\users\profile\certificates.html:65
 msgid "No certificates available"
@@ -7525,7 +7576,7 @@ msgstr "無可用憑證"
 
 #: .\apps\users\templates\users\profile\certificates.html:66
 msgid "Complete projects to earn certificates!"
-msgstr ""
+msgstr "完成專案以獲得憑證！"
 
 #: .\apps\users\templates\users\profile\edit_profile.html:10
 msgid "Edit Your Profile"
@@ -7611,7 +7662,7 @@ msgstr "受惠者人數"
 
 #: .\apps\users\templates\users\profile\overview.html:149
 msgid "Certificates Earned"
-msgstr ""
+msgstr "獲得的憑證"
 
 #: .\apps\users\templates\users\profile\overview.html:153
 #: .\apps\users\templates\users\profile\overview.html:193
@@ -7623,7 +7674,7 @@ msgstr "查看全部"
 
 #: .\apps\users\templates\users\profile\overview.html:165
 msgid "Issued on"
-msgstr ""
+msgstr "發行日期"
 
 #: .\apps\users\templates\users\profile\overview.html:168
 msgid "View"
@@ -7631,7 +7682,7 @@ msgstr "看法"
 
 #: .\apps\users\templates\users\profile\overview.html:177
 msgid "No certificates earned yet. Complete projects to earn certificates!"
-msgstr ""
+msgstr "尚未獲得任何憑證。完成專案即可獲得憑證！"
 
 # Added translation
 #: .\apps\users\templates\users\profile\overview.html:189
@@ -7645,7 +7696,7 @@ msgstr "開始日期"
 #: .\apps\users\templates\users\profile\overview.html:276
 msgid ""
 "No current or upcoming projects. Explore available projects to get started!"
-msgstr ""
+msgstr "沒有目前或即將進行的專案。探索可用的專案以開始！"
 
 #: .\apps\users\templates\users\profile\overview.html:334
 msgid "No recent news or events available."
@@ -7711,7 +7762,7 @@ msgstr "從報名參加計畫開始你的旅程吧！"
 
 #: .\apps\users\templates\users\profile\sidebar.html:5
 msgid "Menu"
-msgstr ""
+msgstr "選單"
 
 #: .\apps\users\templates\users\profile\sidebar.html:20
 msgid "Personal Info"
@@ -7741,7 +7792,7 @@ msgstr "建立您的帳戶"
 
 #: .\apps\users\templates\users\register.html:45
 msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-msgstr ""
+msgstr "必填。150 個字元或更少。僅限字母、數字和 @/./+/-/_。"
 
 #: .\apps\users\templates\users\register.html:98
 msgid "Please select your date of birth using the calendar."
@@ -7775,4 +7826,4 @@ msgstr ""
 
 #: .\apps\users\templates\users\verify_certificate.html:8
 msgid "Verify Certificate"
-msgstr ""
+msgstr "驗證憑證"
