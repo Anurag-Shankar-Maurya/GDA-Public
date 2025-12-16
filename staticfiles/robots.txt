@@ -1,0 +1,25 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /management/
+Disallow: /api-auth/
+Disallow: /api/
+Disallow: /profile/
+Disallow: /onboarding/
+Disallow: /verify-email/
+Disallow: /resend-verification/
+Disallow: /reset-password/
+Disallow: /sync/
+Disallow: /health/
+Disallow: /blob/
+
+Allow: /static/
+Allow: /media/
+
+Crawl-delay: 5
+
+# Sitemaps
+Sitemap: https://gda-oy5s.onrender.com/sitemap.xml
+Sitemap: https://gda-dev.onrender.com/sitemap.xml
+Sitemap: https://gda-public.vercel.app/sitemap.xml
+Sitemap: https://gda-public-dev.vercel.app/sitemap.xml
