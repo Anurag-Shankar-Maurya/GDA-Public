@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}GDA{% endblock %}</title>
+    <meta name="description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news and success stories supporting community and environmental initiatives." %}">
+    <meta property="og:description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news and success stories supporting community and environmental initiatives." %}">
+    {% block extra_meta %}{% endblock %}
     <!-- favicon -->
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <!-- Tailwind CSS CDN -->

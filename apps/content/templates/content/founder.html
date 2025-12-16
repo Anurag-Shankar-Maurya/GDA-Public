@@ -2,6 +2,12 @@
 {% load i18n static %}
 
 {% block title %}{% trans "About the Association" %}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "About the Global Devotion Association — our mission, founder's story, and how we empower volunteers through cultural and community programs." %}">
+<meta property="og:description" content="{% trans "About the Global Devotion Association — our mission, founder's story, and how we empower volunteers through cultural and community programs." %}">
+<meta property="og:title" content="{% trans "About the Association - GDA" %}">
+<meta property="og:image" content="{% static 'images/founder.jpg' %}">
+{% endblock %} 
 
 {% block breadcrumb %}
     <li class="flex items-center">

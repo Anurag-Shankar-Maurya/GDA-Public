@@ -3,6 +3,18 @@
 {% load content_filters %}
 
 {% block title %}{% trans "GDA News" %}: {{ news_event.title }}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{{ news_event.body|striptags|truncatechars:160|escape }}">
+<meta property="og:description" content="{{ news_event.body|striptags|truncatechars:200|escape }}">
+<meta property="og:title" content="{{ news_event.title|escape }}">
+{% if news_event.cover_image_blob %}
+<meta property="og:image" content="{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}">
+{% elif news_event.cover_image %}
+<meta property="og:image" content="{{ news_event.cover_image.url }}">
+{% elif news_event.cover_image_url %}
+<meta property="og:image" content="{{ news_event.cover_image_url }}">
+{% endif %}
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

@@ -1,7 +1,14 @@
 {% extends "content_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "Cookies Policy" %} - GDA{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Our Cookies Policy explains how GDA uses cookies and similar technologies, what types we use, and how you can manage your preferences." %}">
+<meta property="og:description" content="{% trans "Our Cookies Policy explains how GDA uses cookies and similar technologies, what types we use, and how you can manage your preferences." %}">
+<meta property="og:title" content="{% trans "Cookies Policy - GDA" %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-12">

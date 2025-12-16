@@ -3,6 +3,12 @@
 {% load static %}
 
 {% block title %}Taiwan - GDA{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Discover Taiwan with GDA — regional highlights, cultural insights, and volunteer opportunities across the island." %}">
+<meta property="og:description" content="{% trans "Discover Taiwan with GDA — regional highlights, cultural insights, and volunteer opportunities across the island." %}">
+<meta property="og:title" content="{% trans "Taiwan - GDA" %}">
+<meta property="og:image" content="{% static 'images/amazing_taiwan/amazing-taiwan-1.png' %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

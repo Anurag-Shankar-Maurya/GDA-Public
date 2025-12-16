@@ -2,6 +2,10 @@
 {% load i18n %}
 
 {% block title %}{% trans "GDA: Projects" %}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+<meta property="og:description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

@@ -3,6 +3,12 @@
 {% load i18n %}
 
 {% block title %}{% trans "GDA — Taiwan Explore" %}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Green Declaration 2018 — World Earth Day campaign and volunteer-led plastic‑free initiatives organized by GDA in Zhongli, Taoyuan." %}">
+<meta property="og:description" content="{% trans "Green Declaration 2018 — World Earth Day campaign and volunteer-led plastic‑free initiatives organized by GDA in Zhongli, Taoyuan." %}">
+<meta property="og:title" content="{% trans "Green Declaration 2018 - GDA" %}">
+<meta property="og:image" content="{% static 'images/green_declaration_2018/hero.jpg' %}">
+{% endblock %} 
 
 {% block breadcrumb %}
     <li class="flex items-center">

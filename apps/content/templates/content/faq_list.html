@@ -1,9 +1,16 @@
 {% extends "content_base.html" %}
 {% load i18n %}
+{% load static %}
 
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 {% block title %}{% trans "GDA: FAQs" %}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Frequently Asked Questions about GDA — volunteer projects, participation, and how our programs work." %}">
+<meta property="og:description" content="{% trans "Frequently Asked Questions about GDA — volunteer projects, participation, and how our programs work." %}">
+<meta property="og:title" content="{% trans "FAQs - GDA" %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+{% endblock %} 
 
 {% block breadcrumb %}
     <li class="flex items-center">

@@ -3,6 +3,18 @@
 {% load content_filters %}
 
 {% block title %}{% trans "GDA Success Story" %}: {{ success_story.title }}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{{ success_story.body|striptags|truncatechars:160|escape }}">
+<meta property="og:description" content="{{ success_story.body|striptags|truncatechars:200|escape }}">
+<meta property="og:title" content="{{ success_story.title|escape }}">
+{% if success_story.cover_image_blob %}
+<meta property="og:image" content="{% url 'content_serve_blob' 'success_story' success_story.pk 'cover_image_blob' %}">
+{% elif success_story.cover_image %}
+<meta property="og:image" content="{{ success_story.cover_image.url }}">
+{% elif success_story.cover_image_url %}
+<meta property="og:image" content="{{ success_story.cover_image_url }}">
+{% endif %}
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">
