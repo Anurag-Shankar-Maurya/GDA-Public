@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://gda-oy5s.onrender.com/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://gda-dev.onrender.com/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://gda-public.vercel.app/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://gda-public-dev.vercel.app/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>http://localhost:8000/sitemap.xml</loc>
+  </sitemap>
+</sitemapindex>

@@ -19,13 +19,16 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse, Http404
+import os
 from rest_framework import routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-from apps.content.api_views import ProjectViewSet, NewsEventViewSet, SuccessStoryViewSet, FAQViewSet
-from apps.users.api_views import UserViewSet, CertificateViewSet, SocialAccountViewSet
+from apps.content.api_views import ProjectViewSet, NewsEventViewSet, SuccessStoryViewSet
+from apps.users.api_views import UserViewSet
+
+from gda.seo import sitemap_view, robots_view
 
 from apps.users import views as user_views
 
@@ -35,18 +38,15 @@ router.register(r'api/projects', ProjectViewSet)
 router.register(r'api/news-events', NewsEventViewSet)
 router.register(r'api/success-stories', SuccessStoryViewSet)
 router.register(r'api/users', UserViewSet)
-router.register(r'api/certificates', CertificateViewSet)
-router.register(r'api/social-accounts', SocialAccountViewSet, basename='socialaccount')
-router.register(r'api/faq', FAQViewSet)
 
 # Schema view for Swagger documentation
 schema_view = get_schema_view(
     openapi.Info(
         title="GDA API",
         default_version='v1',
-        description="API documentation for GDA",
-        terms_of_service="/terms-of-service/",
-        contact=openapi.Contact(email="anuragshankarmaurya@gmail.com"),
+        description="API documentation for GDA (Google Developer Academy)",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@example.com"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
@@ -66,6 +66,9 @@ urlpatterns = [
     # API URLs
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
+    # SEO URLs
+    path('sitemap.xml', sitemap_view),
+    path('robots.txt', robots_view),
     # Swagger documentation
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
