@@ -8,6 +8,14 @@
     <title>{% block title %}GDA{% endblock %}</title>
     <meta name="description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news and success stories supporting community and environmental initiatives." %}">
     <meta property="og:description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news and success stories supporting community and environmental initiatives." %}">
+    {% comment %}Canonical URL for SEO; can be overridden by providing `canonical_url` context or by child templates using block canonical.{% endcomment %}
+    {% block canonical %}
+        {% if canonical_url %}
+            <link rel="canonical" href="{{ canonical_url }}">
+        {% elif request %}
+            <link rel="canonical" href="{{ request.build_absolute_uri }}">
+        {% endif %}
+    {% endblock %}
     {% block extra_meta %}{% endblock %}
     <!-- favicon -->
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">

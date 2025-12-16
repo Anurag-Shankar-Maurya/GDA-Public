@@ -10,6 +10,10 @@
 <meta property="og:image" content="{% static 'images/landing/hero-bg.png' %}">
 {% endblock %}
 
+{% block canonical %}
+    <link rel="canonical" href="{% if request %}{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}{% url 'landing_page' %}{% endif %}">
+{% endblock %}
+
 {% block hero %}
     <!-- Hero Section -->
     <div class="relative w-full h-[90vh] mb-12 overflow-hidden bg-transparent-bg">

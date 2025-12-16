@@ -7,6 +7,10 @@
 <meta property="og:description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
 {% endblock %}
 
+{% block canonical %}
+    <link rel="canonical" href="{% if request %}{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}{% url 'content_project_list' %}{% endif %}">
+{% endblock %}
+
 {% block breadcrumb %}
     <li class="flex items-center">
         <a href="{% url 'landing_page' %}" class="text-primary-blue dark:text-accent-light hover:text-accent-blue dark:hover:text-text-dark transition-colors duration-200">{% trans "Home" %}</a>

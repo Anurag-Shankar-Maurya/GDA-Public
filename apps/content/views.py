@@ -19,6 +19,16 @@ _BLOB_MODEL_MAP = {
     'news_event_gallery_image': NewsEventGalleryImage,
 }
 
+
+def build_canonical_url(request):
+    """Return a canonical absolute URL for the current request path (no query string).
+    Favor the request path so templates that rely on it get a stable canonical.
+    """
+    try:
+        return request.build_absolute_uri(request.path)
+    except Exception:
+        return None
+
 # Project Views
 class ProjectListView(ListView):
     model = Project
@@ -101,6 +111,8 @@ class ProjectListView(ListView):
             {'value': 'title', 'label': _('Title (A-Z)')},
             {'value': '-title', 'label': _('Title (Z-A)')},
         ]
+        # Add canonical URL for SEO
+        context['canonical_url'] = build_canonical_url(self.request)
         return context
 
 class ProjectDetailView(DetailView):
@@ -213,6 +225,8 @@ class ProjectDetailView(DetailView):
         
         context['gallery_items'] = gallery_page_obj
         context['gallery_paginator'] = gallery_paginator
+        # Canonical URL for this detail page
+        context['canonical_url'] = build_canonical_url(self.request)
         
         return context
 
@@ -243,7 +257,7 @@ def apply_to_project(request, pk):
         return redirect('content_project_detail', pk=pk)
     
     # GET request: show confirmation
-    return render(request, 'content/project_apply_confirm.html', {'project': project})
+    return render(request, 'content/project_apply_confirm.html', {'project': project, 'canonical_url': build_canonical_url(request)})
 
 # News/Event Views
 class NewsEventListView(ListView):
@@ -285,6 +299,8 @@ class NewsEventListView(ListView):
             {'value': 'title', 'label': _('Title (A-Z)')},
             {'value': '-title', 'label': _('Title (Z-A)')},
         ]
+        # Add canonical URL for SEO
+        context['canonical_url'] = build_canonical_url(self.request)
         return context
 
 class NewsEventDetailView(DetailView):
@@ -372,6 +388,8 @@ class NewsEventDetailView(DetailView):
         
         context['gallery_items'] = gallery_page_obj
         context['gallery_paginator'] = gallery_paginator
+        # Canonical URL for this detail page
+        context['canonical_url'] = build_canonical_url(self.request)
         
         return context
 
@@ -415,6 +433,8 @@ class SuccessStoryListView(ListView):
             {'value': 'title', 'label': _('Title (A-Z)')},
             {'value': '-title', 'label': _('Title (Z-A)')},
         ]
+        # Add canonical URL for SEO
+        context['canonical_url'] = build_canonical_url(self.request)
         return context
 
 class SuccessStoryDetailView(DetailView):
@@ -511,6 +531,8 @@ class SuccessStoryDetailView(DetailView):
         
         context['gallery_items'] = gallery_page_obj
         context['gallery_paginator'] = gallery_paginator
+        # Canonical URL for this detail page
+        context['canonical_url'] = build_canonical_url(self.request)
         
         return context
 
@@ -551,6 +573,8 @@ class FAQListView(ListView):
         else:
             for faq in context['faqs']:
                 faq.user_vote = None
+        # Add canonical URL for SEO
+        context['canonical_url'] = build_canonical_url(self.request)
         return context
 
 # Landing Page View
@@ -580,6 +604,7 @@ def landing_page_view(request):
         'latest_news_events': latest_news_events,
         'latest_success_stories': latest_success_stories,
         'latest_faqs': latest_faqs,
+        'canonical_url': build_canonical_url(request),
     }
     return render(request, 'content/landing_page.html', context)
 
@@ -590,6 +615,7 @@ def about_view(request):
     context = {
         'founder_name': 'Chen Qingyu',
         'contact_email': 'globaldevotion2017@gmail.com',
+        'canonical_url': build_canonical_url(request),
     }
     return render(request, 'content/founder.html', context)
 
@@ -604,6 +630,7 @@ def organization_view(request):
     context = {
         'page_title': 'About the Association',
         'contact_email': 'globaldevotion2017@gmail.com',
+        'canonical_url': build_canonical_url(request),
     }
     return render(request, 'content/organization.html', context)
 
@@ -615,6 +642,7 @@ def taiwan_cultural_experience_view(request):
     context = {
         'page_title': 'Taiwan Cultural Experience',
         'youtube_ids': ['', '', '', '', ''],
+        'canonical_url': build_canonical_url(request),
     }
     return render(request, 'content/taiwan_cultural_experience.html', context)
 
@@ -623,6 +651,7 @@ def amazing_taiwan_view(request):
     """Render the Amazing Taiwan static page."""
     context = {
         'page_title': 'Amazing Taiwan',
+        'canonical_url': build_canonical_url(request),
     }
     return render(request, 'content/amazing_taiwan.html', context)
 
@@ -670,36 +699,35 @@ def serve_blob(request, model_name, pk, field_name):
 
 def privacy_policy_view(request):
     """Render the Privacy Policy static page."""
-    return render(request, 'content/privacy_policy.html')
+    return render(request, 'content/privacy_policy.html', {'canonical_url': build_canonical_url(request)})
 
 def taiwan_view(request):
     """Render the consolidated Taiwan page with both regions and cultural experiences."""
-    return render(request, 'content/taiwan.html')
+    return render(request, 'content/taiwan.html', {'canonical_url': build_canonical_url(request)})
 
 def terms_of_service_view(request):
     """Render the Terms of Service static page."""
-    return render(request, 'content/terms_of_service.html')
+    return render(request, 'content/terms_of_service.html', {'canonical_url': build_canonical_url(request)})
 
 def cookies_policy_view(request):
     """Render the Cookies Policy static page."""
-    return render(request, 'content/cookies_policy.html')
+    return render(request, 'content/cookies_policy.html', {'canonical_url': build_canonical_url(request)})
 
 def earth_day_view(request):
     """Render the Earth Day static page."""
-    return render(request, 'content/earth_day.html')
+    return render(request, 'content/earth_day.html', {'canonical_url': build_canonical_url(request)})
 
 def volunteer_video_upload_view(request):
     """Render the Volunteer Video Upload page."""
-    return render(request, 'content/volunteer_video_upload.html')
+    return render(request, 'content/volunteer_video_upload.html', {'canonical_url': build_canonical_url(request)})
 
 def life_of_gong_school_view(request):
     """Render the Gong School Article List page."""
-    return render(request, 'content/life_of_gong_school.html')
+    return render(request, 'content/life_of_gong_school.html', {'canonical_url': build_canonical_url(request)})
 
 def green_declaration_2018_view(request):
     """Render the Green Declaration 2018 static page."""
-    return render(request, 'content/green_declaration_2018.html')
-
+    return render(request, 'content/green_declaration_2018.html', {'canonical_url': build_canonical_url(request)})
 
 @login_required
 def vote_faq(request, faq_id):
