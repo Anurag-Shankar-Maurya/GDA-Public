@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-17 14:10+0530\n"
+"POT-Creation-Date: 2025-12-17 14:33+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,9 +97,9 @@ msgstr "專案"
 #: .\apps\content\templates\content\project_apply_confirm.html:27
 #: .\apps\content\templates\content\project_detail.html:27
 #: .\apps\content\templates\content\project_list.html:26
-#: .\apps\content\templates\content_base.html:243
-#: .\apps\content\templates\content_base.html:325
-#: .\apps\content\templates\content_base.html:574
+#: .\apps\content\templates\content_base.html:244
+#: .\apps\content\templates\content_base.html:326
+#: .\apps\content\templates\content_base.html:575
 #: .\apps\content_management\templates\content_management\management_dashboard.html:46
 #: .\apps\content_management\templates\content_management\project_confirm_delete.html:9
 #: .\apps\content_management\templates\content_management\project_detail.html:10
@@ -115,9 +115,9 @@ msgstr "專案"
 
 #: .\apps\content\models.py:220
 #: .\apps\content\templates\content\landing_page.html:401
-#: .\apps\content\templates\content_base.html:244
-#: .\apps\content\templates\content_base.html:326
-#: .\apps\content\templates\content_base.html:577
+#: .\apps\content\templates\content_base.html:245
+#: .\apps\content\templates\content_base.html:327
+#: .\apps\content\templates\content_base.html:578
 #: .\apps\content_management\templates\content_management\news_event_detail.html:34
 #: .\apps\users\templates\users_base.html:218
 #: .\apps\users\templates\users_base.html:300
@@ -184,9 +184,9 @@ msgstr "成功故事"
 #: .\apps\content\templates\content\project_detail.html:448
 #: .\apps\content\templates\content\success_story_detail.html:27
 #: .\apps\content\templates\content\success_story_list.html:26
-#: .\apps\content\templates\content_base.html:316
-#: .\apps\content\templates\content_base.html:356
-#: .\apps\content\templates\content_base.html:584
+#: .\apps\content\templates\content_base.html:317
+#: .\apps\content\templates\content_base.html:357
+#: .\apps\content\templates\content_base.html:585
 #: .\apps\content_management\templates\content_management\management_dashboard.html:129
 #: .\apps\content_management\templates\content_management\success_story_confirm_delete.html:9
 #: .\apps\content_management\templates\content_management\success_story_detail.html:10
@@ -291,9 +291,9 @@ msgstr "常見問題"
 
 #: .\apps\content\models.py:611
 #: .\apps\content\templates\content\faq_list.html:25
-#: .\apps\content\templates\content_base.html:317
-#: .\apps\content\templates\content_base.html:357
-#: .\apps\content\templates\content_base.html:585
+#: .\apps\content\templates\content_base.html:318
+#: .\apps\content\templates\content_base.html:358
+#: .\apps\content\templates\content_base.html:586
 #: .\apps\content_management\templates\content_management\faq_confirm_delete.html:9
 #: .\apps\content_management\templates\content_management\faq_detail.html:9
 #: .\apps\content_management\templates\content_management\faq_form.html:15
@@ -351,9 +351,9 @@ msgstr ""
 #: .\apps\content\templates\content\success_story_list.html:22
 #: .\apps\content\templates\content\taiwan.html:15
 #: .\apps\content\templates\content\taiwan_cultural_experience.html:15
-#: .\apps\content\templates\content_base.html:242
-#: .\apps\content\templates\content_base.html:324
-#: .\apps\content\templates\content_base.html:573
+#: .\apps\content\templates\content_base.html:243
+#: .\apps\content\templates\content_base.html:325
+#: .\apps\content\templates\content_base.html:574
 #: .\apps\users\templates\users\delete_account.html:6
 #: .\apps\users\templates\users\onboarding.html:7
 #: .\apps\users\templates\users\profile.html:6
@@ -366,8 +366,8 @@ msgstr "首頁"
 #: .\apps\content\templates\content\amazing_taiwan.html:19
 #: .\apps\content\templates\content\amazing_taiwan.html:29
 #: .\apps\content\templates\content\taiwan.html:867
-#: .\apps\content\templates\content_base.html:258
-#: .\apps\content\templates\content_base.html:333
+#: .\apps\content\templates\content_base.html:259
+#: .\apps\content\templates\content_base.html:334
 #: .\apps\users\templates\users_base.html:232
 #: .\apps\users\templates\users_base.html:307
 msgid "Amazing Taiwan"
@@ -596,8 +596,8 @@ msgstr "YouTube 影片播放器"
 # Added translation
 #: .\apps\content\templates\content\cookies_policy.html:5
 #: .\apps\content\templates\content\cookies_policy.html:15
-#: .\apps\content\templates\content_base.html:435
-#: .\apps\content\templates\content_base.html:587
+#: .\apps\content\templates\content_base.html:436
+#: .\apps\content\templates\content_base.html:588
 #: .\apps\users\templates\users_base.html:409
 #: .\apps\users\templates\users_base.html:561
 msgid "Cookies Policy"
@@ -672,7 +672,7 @@ msgstr "政策變更"
 #: .\apps\content\templates\content\privacy_policy.html:176
 #: .\apps\content\templates\content\terms_of_service.html:37
 #: .\apps\content\templates\content\terms_of_service.html:162
-#: .\apps\content\templates\content_base.html:603
+#: .\apps\content\templates\content_base.html:604
 #: .\apps\users\templates\users\emails\email_base.html:182
 #: .\apps\users\templates\users_base.html:577
 msgid "Contact Us"
@@ -859,8 +859,8 @@ msgid "Earth Day - Global Devotion Association"
 msgstr "世界地球日 - 全球奉獻協會"
 
 #: .\apps\content\templates\content\earth_day.html:20
-#: .\apps\content\templates\content_base.html:300
-#: .\apps\content\templates\content_base.html:351
+#: .\apps\content\templates\content_base.html:301
+#: .\apps\content\templates\content_base.html:352
 #: .\apps\users\templates\users_base.html:274
 #: .\apps\users\templates\users_base.html:325
 msgid "Earth Day"
@@ -1218,8 +1218,8 @@ msgid "Green Declaration 2018 - GDA"
 msgstr "綠色宣言 2018 - GDA"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:19
-#: .\apps\content\templates\content_base.html:308
-#: .\apps\content\templates\content_base.html:353
+#: .\apps\content\templates\content_base.html:309
+#: .\apps\content\templates\content_base.html:354
 #: .\apps\users\templates\users_base.html:282
 #: .\apps\users\templates\users_base.html:327
 msgid "Green Declaration 2018"
@@ -1245,8 +1245,8 @@ msgstr "年輕志工的勇氣與成長之旅"
 # Corrected: Taiwan Office: -> Taiwan
 #: .\apps\content\templates\content\green_declaration_2018.html:58
 #: .\apps\content\templates\content\volunteer_video_upload.html:47
-#: .\apps\content\templates\content_base.html:272
-#: .\apps\content\templates\content_base.html:338
+#: .\apps\content\templates\content_base.html:273
+#: .\apps\content\templates\content_base.html:339
 #: .\apps\users\templates\users_base.html:246
 #: .\apps\users\templates\users_base.html:312
 msgid "About"
@@ -1264,7 +1264,9 @@ msgid ""
 "philosophy to the public but also actively promoted the 2018 World Earth Day "
 "theme-Plastic-Free Life."
 msgstr ""
-"2018 年 7 月 28 日，全球奉獻協會（Global Devotion Association）於桃園中壢廣南大樓一樓廣場舉辦了世界地球日宣傳活動。志工們不僅向大眾介紹了協會的理念，更積極宣傳 2018 年世界地球日的主題——無塑生活。"
+"2018 年 7 月 28 日，全球奉獻協會（Global Devotion Association）於桃園中壢廣南"
+"大樓一樓廣場舉辦了世界地球日宣傳活動。志工們不僅向大眾介紹了協會的理念，更積"
+"極宣傳 2018 年世界地球日的主題——無塑生活。"
 
 #: .\apps\content\templates\content\green_declaration_2018.html:63
 msgid ""
@@ -2022,8 +2024,8 @@ msgid "Life of Gong School"
 msgstr "公學生活"
 
 #: .\apps\content\templates\content\life_of_gong_school.html:31
-#: .\apps\content\templates\content_base.html:304
-#: .\apps\content\templates\content_base.html:352
+#: .\apps\content\templates\content_base.html:305
+#: .\apps\content\templates\content_base.html:353
 #: .\apps\users\templates\users_base.html:278
 #: .\apps\users\templates\users_base.html:326
 msgid "Gong School Article List"
@@ -2345,9 +2347,9 @@ msgstr ""
 
 # Added translation
 #: .\apps\content\templates\content\organization.html:19
-#: .\apps\content\templates\content_base.html:283
-#: .\apps\content\templates\content_base.html:343
-#: .\apps\content\templates\content_base.html:576
+#: .\apps\content\templates\content_base.html:284
+#: .\apps\content\templates\content_base.html:344
+#: .\apps\content\templates\content_base.html:577
 #: .\apps\users\templates\users_base.html:257
 #: .\apps\users\templates\users_base.html:317
 #: .\apps\users\templates\users_base.html:550
@@ -2603,17 +2605,18 @@ msgstr "教育創新"
 #: .\apps\content\templates\content\organization.html:346
 #, python-format
 msgid ""
-"\"He introduced the management philosophy of small and medium-sized "
+"He introduced the management philosophy of small and medium-sized "
 "enterprises into the school, striving to create excellent management. Under "
 "his leadership, the enrollment rate of graduates into high schools increased "
-"significantly from 30%% to 90%%.\""
+"significantly from 30%% to 90%%."
 msgstr ""
-"「他將中小企業的管理哲學引入學校，致力於創造卓越的管理。在他的領導下，畢業生升入高中的比例從 30%% 顯著提高到 90%%。」"
+"他將中小企業的管理哲學引入學校，致力於創造卓越的管理。在他的領導下，畢業生升"
+"入高中的比例從 30%% 顯著提高到 90%%。"
 
 #: .\apps\content\templates\content\privacy_policy.html:5
 #: .\apps\content\templates\content\privacy_policy.html:9
-#: .\apps\content\templates\content_base.html:435
-#: .\apps\content\templates\content_base.html:586
+#: .\apps\content\templates\content_base.html:436
+#: .\apps\content\templates\content_base.html:587
 #: .\apps\users\templates\users_base.html:409
 #: .\apps\users\templates\users_base.html:560
 msgid "Privacy Policy"
@@ -3481,8 +3484,8 @@ msgstr "台灣 - GDA"
 
 # Added translation
 #: .\apps\content\templates\content\taiwan.html:20
-#: .\apps\content\templates\content_base.html:247
-#: .\apps\content\templates\content_base.html:328
+#: .\apps\content\templates\content_base.html:248
+#: .\apps\content\templates\content_base.html:329
 #: .\apps\users\templates\users_base.html:221
 #: .\apps\users\templates\users_base.html:302
 msgid "Taiwan"
@@ -3948,7 +3951,7 @@ msgstr ""
 # Corrected: Taiwan Office: -> Taiwanese Opera
 #: .\apps\content\templates\content\terms_of_service.html:5
 #: .\apps\content\templates\content\terms_of_service.html:15
-#: .\apps\content\templates\content_base.html:588
+#: .\apps\content\templates\content_base.html:589
 #: .\apps\users\templates\users_base.html:562
 msgid "Terms of Service"
 msgstr "服務條款"
@@ -4281,22 +4284,22 @@ msgstr "請輸入 Youtube 網址"
 msgid "Submit"
 msgstr "送出"
 
-#: .\apps\content\templates\content_base.html:14
+#: .\apps\content\templates\content_base.html:15
 msgid ""
 "Global Devotion Association (GDA) — volunteer projects, news and success "
 "stories supporting community and environmental initiatives."
 msgstr "全球奉獻協會 (GDA) — 志工計畫、新聞和成功故事，支持社區和環境倡議。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:178
+#: .\apps\content\templates\content_base.html:179
 #: .\apps\content_management\templates\content_management_base.html:193
 #: .\apps\users\templates\users_base.html:152
 msgid "GDA Logo"
 msgstr "GDA 標誌"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:195
-#: .\apps\content\templates\content_base.html:361
+#: .\apps\content\templates\content_base.html:196
+#: .\apps\content\templates\content_base.html:362
 #: .\apps\content_management\templates\content_management_base.html:254
 #: .\apps\content_management\templates\content_management_base.html:366
 #: .\apps\users\templates\users_base.html:169
@@ -4305,39 +4308,39 @@ msgid "Login"
 msgstr "登入"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:254
-#: .\apps\content\templates\content_base.html:332
+#: .\apps\content\templates\content_base.html:255
+#: .\apps\content\templates\content_base.html:333
 #: .\apps\users\templates\users_base.html:228
 #: .\apps\users\templates\users_base.html:306
 msgid "Discover Taiwan"
 msgstr "發現台灣"
 
-#: .\apps\content\templates\content_base.html:255
+#: .\apps\content\templates\content_base.html:256
 #: .\apps\users\templates\users_base.html:229
 msgid "An overview of Taiwan's beauty."
 msgstr "台灣之美綜覽"
 
-#: .\apps\content\templates\content_base.html:259
+#: .\apps\content\templates\content_base.html:260
 #: .\apps\users\templates\users_base.html:233
 msgid "Discover the breathtaking landscapes and vibrant cities of Taiwan."
 msgstr "探索台灣令人驚嘆的風景和充滿活力的城市。"
 
-#: .\apps\content\templates\content_base.html:262
-#: .\apps\content\templates\content_base.html:334
+#: .\apps\content\templates\content_base.html:263
+#: .\apps\content\templates\content_base.html:335
 #: .\apps\users\templates\users_base.html:236
 #: .\apps\users\templates\users_base.html:308
 msgid "Cultural Experience"
 msgstr "文化體驗"
 
-#: .\apps\content\templates\content_base.html:263
+#: .\apps\content\templates\content_base.html:264
 #: .\apps\users\templates\users_base.html:237
 msgid "Engage in unique cultural activities and workshops."
 msgstr "參與獨特的文化活動和工作坊。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:279
-#: .\apps\content\templates\content_base.html:342
-#: .\apps\content\templates\content_base.html:575
+#: .\apps\content\templates\content_base.html:280
+#: .\apps\content\templates\content_base.html:343
+#: .\apps\content\templates\content_base.html:576
 #: .\apps\users\templates\users_base.html:253
 #: .\apps\users\templates\users_base.html:316
 #: .\apps\users\templates\users_base.html:549
@@ -4345,60 +4348,60 @@ msgid "Founder's Philosophy"
 msgstr "創辦人理念"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:280
+#: .\apps\content\templates\content_base.html:281
 #: .\apps\users\templates\users_base.html:254
 msgid "Learn about our founder's vision and guiding principles"
 msgstr "了解創辦人的願景與指導原則"
 
 # Corrected: Duration -> Organization
-#: .\apps\content\templates\content_base.html:284
+#: .\apps\content\templates\content_base.html:285
 #: .\apps\users\templates\users_base.html:258
 msgid "Explore our organizational structure and leadership"
 msgstr "探索我們的組織架構與領導層"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:293
-#: .\apps\content\templates\content_base.html:347
+#: .\apps\content\templates\content_base.html:294
+#: .\apps\content\templates\content_base.html:348
 #: .\apps\users\templates\users_base.html:267
 #: .\apps\users\templates\users_base.html:321
 msgid "GDA School"
 msgstr "GDA學校"
 
-#: .\apps\content\templates\content_base.html:301
+#: .\apps\content\templates\content_base.html:302
 #: .\apps\users\templates\users_base.html:275
 msgid "Learn about our Earth Day activities and volunteer contributions"
 msgstr "了解我們的地球日活動和志工貢獻"
 
 # Corrected: Duration -> Organization
-#: .\apps\content\templates\content_base.html:305
+#: .\apps\content\templates\content_base.html:306
 #: .\apps\users\templates\users_base.html:279
 msgid "Explore educational articles and resources"
 msgstr "瀏覽教育文章和資源"
 
-#: .\apps\content\templates\content_base.html:309
+#: .\apps\content\templates\content_base.html:310
 #: .\apps\users\templates\users_base.html:283
 msgid "Learn about our environmental initiatives and commitments"
 msgstr "了解我們的環境倡議與承諾"
 
-#: .\apps\content\templates\content_base.html:387
+#: .\apps\content\templates\content_base.html:388
 #: .\apps\content_management\templates\content_management_base.html:273
 #: .\apps\content_management\templates\content_management_base.html:388
 #: .\apps\users\templates\users_base.html:361
 msgid "Toggle Theme"
 msgstr "切換主題"
 
-#: .\apps\content\templates\content_base.html:397
+#: .\apps\content\templates\content_base.html:398
 #: .\apps\users\templates\users_base.html:371
 msgid "Loading GDA..."
 msgstr "載入 GDA..."
 
-#: .\apps\content\templates\content_base.html:430
+#: .\apps\content\templates\content_base.html:431
 #: .\apps\users\templates\users_base.html:404
 msgid "Cookie Notice"
 msgstr "Cookie 聲明"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:432
+#: .\apps\content\templates\content_base.html:433
 #: .\apps\users\templates\users_base.html:406
 msgid ""
 "We use cookies to provide the best website experience. In accordance with "
@@ -4409,66 +4412,66 @@ msgstr ""
 "能使用非必要的 Cookie。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:435
+#: .\apps\content\templates\content_base.html:436
 #: .\apps\users\templates\users_base.html:409
 msgid "For details, please refer to our"
 msgstr "詳細資訊，請參閱我們的"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:435
+#: .\apps\content\templates\content_base.html:436
 #: .\apps\users\templates\users_base.html:409
 msgid "and"
 msgstr "和"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:439
+#: .\apps\content\templates\content_base.html:440
 #: .\apps\users\templates\users_base.html:413
 msgid ""
 "Detected Region: TW | Your rights may vary depending on your jurisdiction"
 msgstr "偵測到地區：TW | 您的權利可能因您所在的司法管轄區而異"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:444
+#: .\apps\content\templates\content_base.html:445
 #: .\apps\users\templates\users_base.html:418
 msgid "Custom Settings"
 msgstr "自訂設定"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:447
-#: .\apps\content\templates\content_base.html:538
+#: .\apps\content\templates\content_base.html:448
+#: .\apps\content\templates\content_base.html:539
 #: .\apps\users\templates\users_base.html:421
 #: .\apps\users\templates\users_base.html:512
 msgid "Necessary Only"
 msgstr "僅限必要"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:450
-#: .\apps\content\templates\content_base.html:544
+#: .\apps\content\templates\content_base.html:451
+#: .\apps\content\templates\content_base.html:545
 #: .\apps\users\templates\users_base.html:424
 #: .\apps\users\templates\users_base.html:518
 msgid "Accept All"
 msgstr "全部接受"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:456
+#: .\apps\content\templates\content_base.html:457
 #: .\apps\users\templates\users_base.html:430
 msgid "Cookie Categories"
 msgstr "Cookie 類別"
 
 # Corrected: More Stories -> Cookie Categories
-#: .\apps\content\templates\content_base.html:461
+#: .\apps\content\templates\content_base.html:462
 #: .\apps\users\templates\users_base.html:435
 msgid "Necessary Cookies"
 msgstr "必要 Cookie"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:462
+#: .\apps\content\templates\content_base.html:463
 #: .\apps\users\templates\users_base.html:436
 msgid "Necessary"
 msgstr "必要"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:471
+#: .\apps\content\templates\content_base.html:472
 #: .\apps\users\templates\users_base.html:445
 msgid ""
 "These cookies are essential for the website to function properly. They "
@@ -4479,19 +4482,19 @@ msgstr ""
 "無障礙性。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:473
+#: .\apps\content\templates\content_base.html:474
 #: .\apps\users\templates\users_base.html:447
 msgid "Examples: session cookies, authentication tokens, CSRF protection"
 msgstr "範例：會話 Cookie、驗證令牌、CSRF 保護"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:478
+#: .\apps\content\templates\content_base.html:479
 #: .\apps\users\templates\users_base.html:452
 msgid "Functional Cookies"
 msgstr "功能性 Cookie"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:485
+#: .\apps\content\templates\content_base.html:486
 #: .\apps\users\templates\users_base.html:459
 msgid ""
 "These cookies allow the website to provide enhanced features and "
@@ -4499,19 +4502,19 @@ msgid ""
 msgstr "這些 Cookie 可讓網站提供增強的功能和個人化設定，例如記住您的偏好設定。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:487
+#: .\apps\content\templates\content_base.html:488
 #: .\apps\users\templates\users_base.html:461
 msgid "Examples: language preferences, theme settings, form data"
 msgstr "範例：語言偏好設定、主題設定、表單資料"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:492
+#: .\apps\content\templates\content_base.html:493
 #: .\apps\users\templates\users_base.html:466
 msgid "Analytical Cookies"
 msgstr "分析性 Cookie"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:499
+#: .\apps\content\templates\content_base.html:500
 #: .\apps\users\templates\users_base.html:473
 msgid ""
 "These cookies help us understand how visitors interact with our website by "
@@ -4520,19 +4523,19 @@ msgstr ""
 "這些 Cookie 透過匿名收集和報告資訊，幫助我們了解訪客如何與我們的網站互動。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:501
+#: .\apps\content\templates\content_base.html:502
 #: .\apps\users\templates\users_base.html:475
 msgid "Examples: Google Analytics, page visit tracking, user behavior analysis"
 msgstr "範例：Google Analytics、頁面造訪追蹤、使用者行為分析"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:506
+#: .\apps\content\templates\content_base.html:507
 #: .\apps\users\templates\users_base.html:480
 msgid "Marketing Cookies"
 msgstr "行銷 Cookie"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:513
+#: .\apps\content\templates\content_base.html:514
 #: .\apps\users\templates\users_base.html:487
 msgid ""
 "These cookies are used to track visitors across websites to display relevant "
@@ -4540,19 +4543,19 @@ msgid ""
 msgstr "這些 Cookie 用於跨網站追蹤訪客，以顯示相關廣告並衡量行銷活動的成效。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:515
+#: .\apps\content\templates\content_base.html:516
 #: .\apps\users\templates\users_base.html:489
 msgid "Examples: Facebook Pixel, Google Ads, remarketing tags"
 msgstr "範例：Facebook Pixel、Google Ads、再行銷標籤"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:520
+#: .\apps\content\templates\content_base.html:521
 #: .\apps\users\templates\users_base.html:494
 msgid "Social Media Cookies"
 msgstr "社群媒體 Cookie"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:527
+#: .\apps\content\templates\content_base.html:528
 #: .\apps\users\templates\users_base.html:501
 msgid ""
 "These cookies enable social media features and allow you to share content "
@@ -4560,83 +4563,83 @@ msgid ""
 msgstr "這些 Cookie 可啟用社群媒體功能，並讓您在社群平台上分享我們網站的內容。"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:529
+#: .\apps\content\templates\content_base.html:530
 #: .\apps\users\templates\users_base.html:503
 msgid "Examples: Facebook Like button, Twitter Share, LinkedIn plugins"
 msgstr "範例：Facebook 讚好按鈕、Twitter 分享、LinkedIn 外掛程式"
 
 # Added translation
-#: .\apps\content\templates\content_base.html:535
+#: .\apps\content\templates\content_base.html:536
 #: .\apps\users\templates\users_base.html:509
 msgid "Hide Details"
 msgstr "隱藏詳細訊息"
 
 # Corrected: View Details -> Hide Details
-#: .\apps\content\templates\content_base.html:541
+#: .\apps\content\templates\content_base.html:542
 #: .\apps\users\templates\users_base.html:515
 msgid "Save Preferences"
 msgstr "儲存首選項"
 
-#: .\apps\content\templates\content_base.html:565
+#: .\apps\content\templates\content_base.html:566
 #: .\apps\users\templates\users_base.html:539
 msgid "&copy; 2025 GDA. All rights reserved."
 msgstr "&copy; 2025 GDA. 版權所有。"
 
 # Corrected: All rights reserved. -> 版權所有。
-#: .\apps\content\templates\content_base.html:571
+#: .\apps\content\templates\content_base.html:572
 #: .\apps\users\templates\users_base.html:545
 msgid "Quick Links"
 msgstr "快速連結"
 
-#: .\apps\content\templates\content_base.html:582
+#: .\apps\content\templates\content_base.html:583
 #: .\apps\users\templates\users_base.html:556
 msgid "Resources"
 msgstr "資源"
 
-#: .\apps\content\templates\content_base.html:593
+#: .\apps\content\templates\content_base.html:594
 #: .\apps\users\templates\socialaccount\connections.html:54
 #: .\apps\users\templates\users_base.html:567
 msgid "Connect"
 msgstr "連結"
 
 # Corrected: Connect -> 連結
-#: .\apps\content\templates\content_base.html:606
+#: .\apps\content\templates\content_base.html:607
 #: .\apps\users\templates\users_base.html:580
 msgid "USA Office:"
 msgstr "美國辦公室："
 
-#: .\apps\content\templates\content_base.html:607
+#: .\apps\content\templates\content_base.html:608
 #: .\apps\users\templates\users_base.html:581
 msgid "18031 Irvine Blvd Unit 209"
 msgstr "18031 Irvine Blvd Unit 209"
 
-#: .\apps\content\templates\content_base.html:608
+#: .\apps\content\templates\content_base.html:609
 #: .\apps\users\templates\users_base.html:582
 msgid "Tustin, CA 92780, USA"
 msgstr "Tustin, CA 92780, USA"
 
-#: .\apps\content\templates\content_base.html:611
+#: .\apps\content\templates\content_base.html:612
 #: .\apps\users\templates\users_base.html:585
 msgid "Taiwan Office:"
 msgstr "台灣辦公室："
 
-#: .\apps\content\templates\content_base.html:612
+#: .\apps\content\templates\content_base.html:613
 #: .\apps\users\templates\users_base.html:586
 msgid "1F., No.238, Sec. 2, Linghang N. Rd."
 msgstr "1F., No.238, Sec. 2, Linghang N. Rd."
 
-#: .\apps\content\templates\content_base.html:613
+#: .\apps\content\templates\content_base.html:614
 #: .\apps\users\templates\users_base.html:587
 msgid "Zhongli Dist., Taoyuan City 320014, Taiwan"
 msgstr "Zhongli Dist., Taoyuan City 320014, 台灣"
 
-#: .\apps\content\templates\content_base.html:647
+#: .\apps\content\templates\content_base.html:648
 #: .\apps\users\templates\users_base.html:621
 msgid "Detected Region:"
 msgstr "偵測到地區："
 
 # Added translation
-#: .\apps\content\templates\content_base.html:647
+#: .\apps\content\templates\content_base.html:648
 #: .\apps\users\templates\users_base.html:621
 msgid "| Your rights may vary depending on your jurisdiction"
 msgstr "| 您的權利可能因您所在的司法管轄區而異"
