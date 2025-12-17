@@ -2,9 +2,14 @@
 {% load i18n %}
 
 {% block title %}{% trans "GDA: Projects" %}{% endblock %}
-{% block extra_meta %}
+{% block social_meta %}
 <meta name="description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+<meta property="og:title" content="{% trans "GDA: Projects" %}">
 <meta property="og:description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+<meta name="twitter:title" content="{% trans "GDA: Projects" %}">
+<meta name="twitter:description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+<meta name="twitter:image" content="{% static 'images/logo.png' %}">
 {% endblock %}
 
 {% block canonical %}

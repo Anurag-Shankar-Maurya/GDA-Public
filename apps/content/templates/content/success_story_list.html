@@ -2,9 +2,14 @@
 {% load i18n %}
 
 {% block title %}{% trans "GDA: Success Stories" %}{% endblock %}
-{% block extra_meta %}
+{% block social_meta %}
 <meta name="description" content="{% trans "Read inspiring success stories from GDA — real impact achieved through volunteer projects and community action." %}">
+<meta property="og:title" content="{% trans "GDA: Success Stories" %}">
 <meta property="og:description" content="{% trans "Read inspiring success stories from GDA — real impact achieved through volunteer projects and community action." %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+<meta name="twitter:title" content="{% trans "GDA: Success Stories" %}">
+<meta name="twitter:description" content="{% trans "Read inspiring success stories from GDA — real impact achieved through volunteer projects and community action." %}">
+<meta name="twitter:image" content="{% static 'images/logo.png' %}">
 {% endblock %}
 
 {% block canonical %}

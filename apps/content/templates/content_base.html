@@ -7,7 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}GDA{% endblock %}</title>
     <meta name="description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news and success stories supporting community and environmental initiatives." %}">
-    <meta property="og:description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news and success stories supporting community and environmental initiatives." %}">
+
+    {# --- Social / Open Graph / Twitter meta (overrideable via context or by overriding `social_meta`) --- #}
+    {% trans "Global Devotion Association (GDA) — volunteer projects, news and success stories supporting community and environmental initiatives." as DEFAULT_META_DESCRIPTION %}
+    {% static 'images/logo.png' as DEFAULT_META_IMAGE %}
+    {% with DEFAULT_META_TITLE="Global Devotion Association (GDA)" %}
+    {% block social_meta %}
+        <meta property="og:title" content="{{ meta_title|default:DEFAULT_META_TITLE }}">
+        <meta property="og:description" content="{{ meta_description|default:DEFAULT_META_DESCRIPTION }}">
+        <meta property="og:type" content="{{ meta_type|default:'website' }}">
+        <meta property="og:url" content="{% if canonical_url %}{{ canonical_url }}{% elif request %}{{ request.build_absolute_uri }}{% endif %}">
+        <meta property="og:image" content="{{ meta_image|default:DEFAULT_META_IMAGE }}">
+        <meta property="og:image:alt" content="Global Devotion Association (GDA)">
+        <meta property="og:site_name" content="Global Devotion Association (GDA)">
+        {% get_current_language as LANGUAGE_CODE %}
+        <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
+
+        {# Twitter Card #}
+        <meta name="twitter:card" content="{{ twitter_card|default:'summary_large_image' }}">
+        <meta name="twitter:site" content="{{ twitter_site|default:'@globaldevotion' }}">
+        <meta name="twitter:title" content="{{ meta_title|default:DEFAULT_META_TITLE }}">
+        <meta name="twitter:description" content="{{ meta_description|default:DEFAULT_META_DESCRIPTION }}">
+        <meta name="twitter:image" content="{{ meta_image|default:DEFAULT_META_IMAGE }}">
+        <meta name="twitter:image:alt" content="Global Devotion Association (GDA)">
+    {% endblock %}
+    {% endwith %}
+    {# --- End social meta --- #}
+
     {% comment %}Canonical URL for SEO; can be overridden by providing `canonical_url` context or by child templates using block canonical.{% endcomment %}
     {% block canonical %}
         {% if canonical_url %}

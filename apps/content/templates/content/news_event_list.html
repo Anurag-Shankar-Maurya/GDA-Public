@@ -2,9 +2,14 @@
 {% load i18n %}
 
 {% block title %}{% trans "GDA: News" %}{% endblock %}
-{% block extra_meta %}
+{% block social_meta %}
 <meta name="description" content="{% trans "Latest news and events from Global Devotion Association — announcements, updates, and community stories." %}">
+<meta property="og:title" content="{% trans "GDA: News" %}">
 <meta property="og:description" content="{% trans "Latest news and events from Global Devotion Association — announcements, updates, and community stories." %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+<meta name="twitter:title" content="{% trans "GDA: News" %}">
+<meta name="twitter:description" content="{% trans "Latest news and events from Global Devotion Association — announcements, updates, and community stories." %}">
+<meta name="twitter:image" content="{% static 'images/logo.png' %}">
 {% endblock %}
 
 {% block canonical %}

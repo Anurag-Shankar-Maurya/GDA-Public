@@ -3,17 +3,14 @@
 {% load content_filters %}
 
 {% block title %}{% trans "GDA News" %}: {{ news_event.title }}{% endblock %}
-{% block extra_meta %}
+{% block social_meta %}
 <meta name="description" content="{{ news_event.body|striptags|truncatechars:160|escape }}">
-<meta property="og:description" content="{{ news_event.body|striptags|truncatechars:200|escape }}">
 <meta property="og:title" content="{{ news_event.title|escape }}">
-{% if news_event.cover_image_blob %}
-<meta property="og:image" content="{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}">
-{% elif news_event.cover_image %}
-<meta property="og:image" content="{{ news_event.cover_image.url }}">
-{% elif news_event.cover_image_url %}
-<meta property="og:image" content="{{ news_event.cover_image_url }}">
-{% endif %}
+<meta property="og:description" content="{{ news_event.body|striptags|truncatechars:200|escape }}">
+<meta property="og:image" content="{% if news_event.cover_image_blob %}{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}{% elif news_event.cover_image %}{{ news_event.cover_image.url }}{% elif news_event.cover_image_url %}{{ news_event.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
+<meta name="twitter:title" content="{{ news_event.title|escape }}">
+<meta name="twitter:description" content="{{ news_event.body|striptags|truncatechars:200|escape }}">
+<meta name="twitter:image" content="{% if news_event.cover_image_blob %}{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}{% elif news_event.cover_image %}{{ news_event.cover_image.url }}{% elif news_event.cover_image_url %}{{ news_event.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
 {% endblock %}
 
 {% block canonical %}

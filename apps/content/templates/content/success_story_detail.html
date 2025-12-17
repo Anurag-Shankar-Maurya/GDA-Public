@@ -3,17 +3,14 @@
 {% load content_filters %}
 
 {% block title %}{% trans "GDA Success Story" %}: {{ success_story.title }}{% endblock %}
-{% block extra_meta %}
+{% block social_meta %}
 <meta name="description" content="{{ success_story.body|striptags|truncatechars:160|escape }}">
-<meta property="og:description" content="{{ success_story.body|striptags|truncatechars:200|escape }}">
 <meta property="og:title" content="{{ success_story.title|escape }}">
-{% if success_story.cover_image_blob %}
-<meta property="og:image" content="{% url 'content_serve_blob' 'success_story' success_story.pk 'cover_image_blob' %}">
-{% elif success_story.cover_image %}
-<meta property="og:image" content="{{ success_story.cover_image.url }}">
-{% elif success_story.cover_image_url %}
-<meta property="og:image" content="{{ success_story.cover_image_url }}">
-{% endif %}
+<meta property="og:description" content="{{ success_story.body|striptags|truncatechars:200|escape }}">
+<meta property="og:image" content="{% if success_story.cover_image_blob %}{% url 'content_serve_blob' 'success_story' success_story.pk 'cover_image_blob' %}{% elif success_story.cover_image %}{{ success_story.cover_image.url }}{% elif success_story.cover_image_url %}{{ success_story.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
+<meta name="twitter:title" content="{{ success_story.title|escape }}">
+<meta name="twitter:description" content="{{ success_story.body|striptags|truncatechars:200|escape }}">
+<meta name="twitter:image" content="{% if success_story.cover_image_blob %}{% url 'content_serve_blob' 'success_story' success_story.pk 'cover_image_blob' %}{% elif success_story.cover_image %}{{ success_story.cover_image.url }}{% elif success_story.cover_image_url %}{{ success_story.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
 {% endblock %}
 
 {% block canonical %}

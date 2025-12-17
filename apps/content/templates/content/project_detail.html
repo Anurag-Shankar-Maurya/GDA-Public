@@ -3,17 +3,14 @@
 {% load content_filters %}
 
 {% block title %}{% trans "GDA Project" %}: {{ project.title }}{% endblock %}
-{% block extra_meta %}
+{% block social_meta %}
 <meta name="description" content="{{ project.teaser|default:project.background_objectives|striptags|truncatechars:160|escape }}">
-<meta property="og:description" content="{{ project.teaser|default:project.background_objectives|striptags|truncatechars:200|escape }}">
 <meta property="og:title" content="{{ project.title|escape }}">
-{% if project.cover_image_blob %}
-<meta property="og:image" content="{% url 'content_serve_blob' 'project' project.pk 'cover_image_blob' %}">
-{% elif project.cover_image %}
-<meta property="og:image" content="{{ project.cover_image.url }}">
-{% elif project.cover_image_url %}
-<meta property="og:image" content="{{ project.cover_image_url }}">
-{% endif %}
+<meta property="og:description" content="{{ project.teaser|default:project.background_objectives|striptags|truncatechars:200|escape }}">
+<meta property="og:image" content="{% if project.cover_image_blob %}{% url 'content_serve_blob' 'project' project.pk 'cover_image_blob' %}{% elif project.cover_image %}{{ project.cover_image.url }}{% elif project.cover_image_url %}{{ project.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
+<meta name="twitter:title" content="{{ project.title|escape }}">
+<meta name="twitter:description" content="{{ project.teaser|default:project.background_objectives|striptags|truncatechars:200|escape }}">
+<meta name="twitter:image" content="{% if project.cover_image_blob %}{% url 'content_serve_blob' 'project' project.pk 'cover_image_blob' %}{% elif project.cover_image %}{{ project.cover_image.url }}{% elif project.cover_image_url %}{{ project.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
 {% endblock %}
 
 {% block canonical %}
