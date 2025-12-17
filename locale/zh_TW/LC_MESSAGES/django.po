@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-17 14:33+0530\n"
+"POT-Creation-Date: 2025-12-17 17:18+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -844,8 +844,13 @@ msgstr "18031 Irvine Blvd Unit 209, Tustin, CA 92780, USA"
 msgid "Get in Touch"
 msgstr "聯絡我們"
 
-#: .\apps\content\templates\content\earth_day.html:7
+#: .\apps\content\templates\content\earth_day.html:5
+#: .\apps\content\templates\content\earth_day.html:10
+msgid "Earth Day - Global Devotion Association"
+msgstr "世界地球日 - 全球奉獻協會"
+
 #: .\apps\content\templates\content\earth_day.html:8
+#: .\apps\content\templates\content\earth_day.html:9
 msgid ""
 "Earth Day Initiative – presentations, photos, and volunteer stories from "
 "GDA's Earth Day outreach in Zhongli and across Taiwan."
@@ -853,12 +858,7 @@ msgstr ""
 "世界地球日倡議 – 來自 GDA 在中壢及全台灣世界地球日推廣的簡報、照片和志工故"
 "事。"
 
-# Corrected: Make a Difference -> Save Preferences
-#: .\apps\content\templates\content\earth_day.html:9
-msgid "Earth Day - Global Devotion Association"
-msgstr "世界地球日 - 全球奉獻協會"
-
-#: .\apps\content\templates\content\earth_day.html:20
+#: .\apps\content\templates\content\earth_day.html:21
 #: .\apps\content\templates\content_base.html:301
 #: .\apps\content\templates\content_base.html:352
 #: .\apps\users\templates\users_base.html:274
@@ -866,11 +866,11 @@ msgstr "世界地球日 - 全球奉獻協會"
 msgid "Earth Day"
 msgstr "地球日"
 
-#: .\apps\content\templates\content\earth_day.html:20
+#: .\apps\content\templates\content\earth_day.html:21
 msgid "Initiative"
 msgstr "倡議"
 
-#: .\apps\content\templates\content\earth_day.html:24
+#: .\apps\content\templates\content\earth_day.html:25
 msgid ""
 "Do you remember that in July 2018, we launched an Earth Day event on Zhongli "
 "Street? At that time, our volunteers made some PPTs to introduce Earth Day "
@@ -882,23 +882,403 @@ msgstr ""
 "們的志工製作了 PPT 來向中壢市民介紹地球日。在這裡，我們收集並分享這些簡報，希"
 "望能夠傳播有關地球日以及保護我們星球重要性的意識。"
 
-#: .\apps\content\templates\content\earth_day.html:40
-#: .\apps\content\templates\content\earth_day.html:67
-#: .\apps\content\templates\content\earth_day.html:82
-#: .\apps\content\templates\content\earth_day.html:109
-#: .\apps\content\templates\content\earth_day.html:124
-#: .\apps\content\templates\content\earth_day.html:151
-#: .\apps\content\templates\content\earth_day.html:166
-#: .\apps\content\templates\content\earth_day.html:193
-#: .\apps\content\templates\content\earth_day.html:208
+#: .\apps\content\templates\content\earth_day.html:35
+msgid "Zhu Liqin, Yuda High School"
+msgstr "朱立芹，育達高中"
+
+#: .\apps\content\templates\content\earth_day.html:41
+#: .\apps\content\templates\content\earth_day.html:177
+#: .\apps\content\templates\content\earth_day.html:192
+#: .\apps\content\templates\content\earth_day.html:355
+#: .\apps\content\templates\content\earth_day.html:370
+#: .\apps\content\templates\content\earth_day.html:510
+#: .\apps\content\templates\content\earth_day.html:525
+#: .\apps\content\templates\content\earth_day.html:656
+#: .\apps\content\templates\content\earth_day.html:671
 msgid "Download PDF"
 msgstr "下載 PDF"
 
-#: .\apps\content\templates\content\earth_day.html:225
+#: .\apps\content\templates\content\earth_day.html:52
+msgid "Zhu Liqin, Yuda High School - Slide 1"
+msgstr "朱立芹，育達高中 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:55
+msgid "Zhu Liqin, Yuda High School - Slide 2"
+msgstr "朱立芹，育達高中 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:58
+msgid "Zhu Liqin, Yuda High School - Slide 3"
+msgstr "朱立芹，育達高中 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:61
+msgid "Zhu Liqin, Yuda High School - Slide 4"
+msgstr "朱立芹，育達高中 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:64
+msgid "Zhu Liqin, Yuda High School - Slide 5"
+msgstr "朱立芹，育達高中 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:67
+msgid "Zhu Liqin, Yuda High School - Slide 6"
+msgstr "朱立芹，育達高中 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:70
+msgid "Zhu Liqin, Yuda High School - Slide 7"
+msgstr "朱立芹，育達高中 - 投影片 7"
+
+#: .\apps\content\templates\content\earth_day.html:73
+msgid "Zhu Liqin, Yuda High School - Slide 8"
+msgstr "朱立芹，育達高中 - 投影片 8"
+
+#: .\apps\content\templates\content\earth_day.html:76
+msgid "Zhu Liqin, Yuda High School - Slide 9"
+msgstr "朱立芹，育達高中 - 投影片 9"
+
+#: .\apps\content\templates\content\earth_day.html:79
+msgid "Zhu Liqin, Yuda High School - Slide 10"
+msgstr "朱立芹，育達高中 - 投影片 10"
+
+#: .\apps\content\templates\content\earth_day.html:82
+msgid "Zhu Liqin, Yuda High School - Slide 11"
+msgstr "朱立芹，育達高中 - 投影片 11"
+
+#: .\apps\content\templates\content\earth_day.html:85
+msgid "Zhu Liqin, Yuda High School - Slide 12"
+msgstr "朱立芹，育達高中 - 投影片 12"
+
+#: .\apps\content\templates\content\earth_day.html:131
+msgid "Wuling High School - Slide 1"
+msgstr "武陵高中 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:134
+msgid "Wuling High School - Slide 2"
+msgstr "武陵高中 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:137
+msgid "Wuling High School - Slide 3"
+msgstr "武陵高中 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:140
+msgid "Wuling High School - Slide 4"
+msgstr "武陵高中 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:143
+msgid "Wuling High School - Slide 5"
+msgstr "武陵高中 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:146
+msgid "Wuling High School - Slide 6"
+msgstr "武陵高中 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:171
+msgid "Wuling High School Wang Yuning & Hong Yuheng"
+msgstr "武陵高中 王裕寧 & 洪裕恆"
+
+#: .\apps\content\templates\content\earth_day.html:186
+msgid "Liu Pinyu, Zhongli High School"
+msgstr "劉品妤，中壢高中"
+
+#: .\apps\content\templates\content\earth_day.html:203
+msgid "Liu Pinyu - Slide 1"
+msgstr "劉品妤 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:206
+msgid "Liu Pinyu - Slide 2"
+msgstr "劉品妤 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:209
+msgid "Liu Pinyu - Slide 3"
+msgstr "劉品妤 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:212
+msgid "Liu Pinyu - Slide 4"
+msgstr "劉品妤 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:215
+msgid "Liu Pinyu - Slide 5"
+msgstr "劉品妤 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:218
+msgid "Liu Pinyu - Slide 6"
+msgstr "劉品妤 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:221
+msgid "Liu Pinyu - Slide 7"
+msgstr "劉品妤 - 投影片 7"
+
+#: .\apps\content\templates\content\earth_day.html:224
+msgid "Liu Pinyu - Slide 8"
+msgstr "劉品妤 - 投影片 8"
+
+#: .\apps\content\templates\content\earth_day.html:227
+msgid "Liu Pinyu - Slide 9"
+msgstr "劉品妤 - 投影片 9"
+
+#: .\apps\content\templates\content\earth_day.html:265
+msgid "Ye Taijun - Slide 1"
+msgstr "葉泰君 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:268
+msgid "Ye Taijun - Slide 2"
+msgstr "葉泰君 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:271
+msgid "Ye Taijun - Slide 3"
+msgstr "葉泰君 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:274
+msgid "Ye Taijun - Slide 4"
+msgstr "葉泰君 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:277
+msgid "Ye Taijun - Slide 5"
+msgstr "葉泰君 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:280
+msgid "Ye Taijun - Slide 6"
+msgstr "葉泰君 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:283
+msgid "Ye Taijun - Slide 7"
+msgstr "葉泰君 - 投影片 7"
+
+#: .\apps\content\templates\content\earth_day.html:286
+msgid "Ye Taijun - Slide 8"
+msgstr "葉泰君 - 投影片 8"
+
+#: .\apps\content\templates\content\earth_day.html:289
+msgid "Ye Taijun - Slide 9"
+msgstr "葉泰君 - 投影片 9"
+
+#: .\apps\content\templates\content\earth_day.html:292
+msgid "Ye Taijun - Slide 10"
+msgstr "葉泰君 - 投影片 10"
+
+#: .\apps\content\templates\content\earth_day.html:295
+msgid "Ye Taijun - Slide 11"
+msgstr "葉泰君 - 投影片 11"
+
+#: .\apps\content\templates\content\earth_day.html:298
+msgid "Ye Taijun - Slide 12"
+msgstr "葉泰君 - 投影片 12"
+
+#: .\apps\content\templates\content\earth_day.html:301
+msgid "Ye Taijun - Slide 13"
+msgstr "葉泰君 - 投影片 13"
+
+#: .\apps\content\templates\content\earth_day.html:304
+msgid "Ye Taijun - Slide 14"
+msgstr "葉泰君 - 投影片 14"
+
+#: .\apps\content\templates\content\earth_day.html:307
+msgid "Ye Taijun - Slide 15"
+msgstr "葉泰君 - 投影片 15"
+
+#: .\apps\content\templates\content\earth_day.html:310
+msgid "Ye Taijun - Slide 16"
+msgstr "葉泰君 - 投影片 16"
+
+#: .\apps\content\templates\content\earth_day.html:313
+msgid "Ye Taijun - Slide 17"
+msgstr "葉泰君 - 投影片 17"
+
+#: .\apps\content\templates\content\earth_day.html:349
+msgid "Ye Taijun, Zhongli High School"
+msgstr "葉泰君，中壢高中"
+
+#: .\apps\content\templates\content\earth_day.html:364
+msgid "Dai Yuxiang from Fudan High School"
+msgstr "戴雨翔，復旦高中"
+
+#: .\apps\content\templates\content\earth_day.html:381
+msgid "Dai Yuxiang - Slide 1"
+msgstr "戴雨翔 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:384
+msgid "Dai Yuxiang - Slide 2"
+msgstr "戴雨翔 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:387
+msgid "Dai Yuxiang - Slide 3"
+msgstr "戴雨翔 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:390
+msgid "Dai Yuxiang - Slide 4"
+msgstr "戴雨翔 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:393
+msgid "Dai Yuxiang - Slide 5"
+msgstr "戴雨翔 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:396
+msgid "Dai Yuxiang - Slide 6"
+msgstr "戴雨翔 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:436
+msgid "Qiying High School - Slide 1"
+msgstr "琦英高中 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:439
+msgid "Qiying High School - Slide 2"
+msgstr "琦英高中 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:442
+msgid "Qiying High School - Slide 3"
+msgstr "琦英高中 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:445
+msgid "Qiying High School - Slide 4"
+msgstr "琦英高中 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:448
+msgid "Qiying High School - Slide 5"
+msgstr "琦英高中 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:451
+msgid "Qiying High School - Slide 6"
+msgstr "琦英高中 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:454
+msgid "Qiying High School - Slide 7"
+msgstr "琦英高中 - 投影片 7"
+
+#: .\apps\content\templates\content\earth_day.html:457
+msgid "Qiying High School - Slide 8"
+msgstr "琦英高中 - 投影片 8"
+
+#: .\apps\content\templates\content\earth_day.html:460
+msgid "Qiying High School - Slide 9"
+msgstr "琦英高中 - 投影片 9"
+
+#: .\apps\content\templates\content\earth_day.html:463
+msgid "Qiying High School - Slide 10"
+msgstr "琦英高中 - 投影片 10"
+
+#: .\apps\content\templates\content\earth_day.html:466
+msgid "Qiying High School - Slide 11"
+msgstr "琦英高中 - 投影片 11"
+
+#: .\apps\content\templates\content\earth_day.html:469
+msgid "Qiying High School - Slide 12"
+msgstr "琦英高中 - 投影片 12"
+
+#: .\apps\content\templates\content\earth_day.html:472
+msgid "Qiying High School - Slide 13"
+msgstr "琦英高中 - 投影片 13"
+
+#: .\apps\content\templates\content\earth_day.html:504
+msgid "Qiying High School Zheng Fuxin & Gu Boyuan"
+msgstr "琦英高中 鄭富心 & 顧柏元"
+
+#: .\apps\content\templates\content\earth_day.html:519
+msgid "Lin Zhankai from Zhiping High School"
+msgstr "林展凱，治平高中"
+
+#: .\apps\content\templates\content\earth_day.html:536
+msgid "Lin Zhankai - Slide 1"
+msgstr "林展凱 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:539
+msgid "Lin Zhankai - Slide 2"
+msgstr "林展凱 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:542
+msgid "Lin Zhankai - Slide 3"
+msgstr "林展凱 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:545
+msgid "Lin Zhankai - Slide 4"
+msgstr "林展凱 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:548
+msgid "Lin Zhankai - Slide 5"
+msgstr "林展凱 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:551
+msgid "Lin Zhankai - Slide 6"
+msgstr "林展凱 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:554
+msgid "Lin Zhankai - Slide 7"
+msgstr "林展凱 - 投影片 7"
+
+#: .\apps\content\templates\content\earth_day.html:557
+msgid "Lin Zhankai - Slide 8"
+msgstr "林展凱 - 投影片 8"
+
+#: .\apps\content\templates\content\earth_day.html:560
+msgid "Lin Zhankai - Slide 9"
+msgstr "林展凱 - 投影片 9"
+
+#: .\apps\content\templates\content\earth_day.html:563
+msgid "Lin Zhankai - Slide 10"
+msgstr "林展凱 - 投影片 10"
+
+#: .\apps\content\templates\content\earth_day.html:566
+msgid "Lin Zhankai - Slide 11"
+msgstr "林展凱 - 投影片 11"
+
+#: .\apps\content\templates\content\earth_day.html:569
+msgid "Lin Zhankai - Slide 12"
+msgstr "林展凱 - 投影片 12"
+
+#: .\apps\content\templates\content\earth_day.html:610
+msgid "Chen Congyu - Slide 1"
+msgstr "陳慶宇 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:613
+msgid "Chen Congyu - Slide 2"
+msgstr "陳慶宇 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:616
+msgid "Chen Congyu - Slide 3"
+msgstr "陳慶宇 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:619
+msgid "Chen Congyu - Slide 4"
+msgstr "陳慶宇 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:622
+msgid "Chen Congyu - Slide 5"
+msgstr "陳慶宇 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:625
+msgid "Chen Congyu - Slide 6"
+msgstr "陳慶宇 - 投影片 6"
+
+#: .\apps\content\templates\content\earth_day.html:650
+msgid "Chen Congyu, Fudan High School"
+msgstr "陳慶宇，復旦高中"
+
+#: .\apps\content\templates\content\earth_day.html:665
+msgid "Lai Yunting from Fudan High School"
+msgstr "賴映庭，復旦高中"
+
+#: .\apps\content\templates\content\earth_day.html:682
+msgid "Lai Yunting - Slide 1"
+msgstr "賴映庭 - 投影片 1"
+
+#: .\apps\content\templates\content\earth_day.html:685
+msgid "Lai Yunting - Slide 2"
+msgstr "賴映庭 - 投影片 2"
+
+#: .\apps\content\templates\content\earth_day.html:688
+msgid "Lai Yunting - Slide 3"
+msgstr "賴映庭 - 投影片 3"
+
+#: .\apps\content\templates\content\earth_day.html:691
+msgid "Lai Yunting - Slide 4"
+msgstr "賴映庭 - 投影片 4"
+
+#: .\apps\content\templates\content\earth_day.html:694
+msgid "Lai Yunting - Slide 5"
+msgstr "賴映庭 - 投影片 5"
+
+#: .\apps\content\templates\content\earth_day.html:724
 msgid "World Map"
 msgstr "世界地圖"
 
-#: .\apps\content\templates\content\earth_day.html:228
+#: .\apps\content\templates\content\earth_day.html:727
 msgid "Protecting our planet, one step at a time."
 msgstr "一步一腳印地保護我們的星球。"
 
