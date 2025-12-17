@@ -2,13 +2,14 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}Earth Day - Global Devotion Association{% endblock %}
+{% block title %}{% trans "Earth Day - Global Devotion Association" %}{% endblock %}
+
 {% block extra_meta %}
 <meta name="description" content="{% trans "Earth Day Initiative – presentations, photos, and volunteer stories from GDA's Earth Day outreach in Zhongli and across Taiwan." %}">
 <meta property="og:description" content="{% trans "Earth Day Initiative – presentations, photos, and volunteer stories from GDA's Earth Day outreach in Zhongli and across Taiwan." %}">
 <meta property="og:title" content="{% trans "Earth Day - Global Devotion Association" %}">
 <meta property="og:image" content="{% static 'images/logo.png' %}">
-{% endblock %} 
+{% endblock %}
 
 {% block content %}
 <div class="bg-gray-50 dark:bg-gray-900 min-h-screen py-16 transition-colors duration-300">
@@ -28,10 +29,10 @@
         <!-- Content List -->
         <div class="space-y-24 mb-24">
             
-            <!-- 1. Zhu Liqin, Yuda High School (Left Text, Right Image) -->
+            <!-- 1. Zhu Liqin, Yuda High School (Left Text, Right Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 space-y-6 order-2 md:order-1">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Zhu Liqin, Yuda High School</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Zhu Liqin, Yuda High School" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> earth day.pdf
                     </div>
@@ -42,23 +43,132 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 order-1 md:order-2">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/147cc0_20944944949e4b2d9fdb3332c013a393~mv2.jpg" alt="Zhu Liqin, Yuda High School" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="zhu-liqin">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0001.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0002.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0003.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0004.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0005.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0006.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="7">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0007.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 7' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="8">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0008.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 8' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="9">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0009.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 9' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="10">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0010.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 10' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="11">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0011.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 11' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="12">
+                                    <img src="{% static 'images/earth_day/Zhu_Liqin/Earth Day_GDA-1-12_page-0012.jpg' %}" alt="{% trans 'Zhu Liqin, Yuda High School - Slide 12' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="7"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="8"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="9"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="10"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="11"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="12"></button>
+                            </div>
+                            
+                            <!-- Slide Counter -->
+                            <div class="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm z-10">
+                                <span class="current-slide">1</span> / <span class="total-slides">12</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. Wuling High School Wang Yuning & Hong Yuheng (Right Text, Left Image) -->
+            <!-- 2. Wuling High School Wang Yuning & Hong Yuheng (Right Text, Left Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 order-1">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/147cc0_284964a6d1144665b6758297928ac37c~mv2.jpg" alt="Wuling High School Wang Yuning & Hong Yuheng" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="wuling-high">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/wiling_high/Wang yu ning_page-0001.jpg' %}" alt="{% trans 'Wuling High School - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/wiling_high/Wang yu ning_page-0002.jpg' %}" alt="{% trans 'Wuling High School - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/wiling_high/Wang yu ning_page-0003.jpg' %}" alt="{% trans 'Wuling High School - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/wiling_high/Wang yu ning_page-0004.jpg' %}" alt="{% trans 'Wuling High School - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/wiling_high/Wang yu ning_page-0005.jpg' %}" alt="{% trans 'Wuling High School - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/wiling_high/Wang yu ning_page-0006.jpg' %}" alt="{% trans 'Wuling High School - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="md:w-1/2 space-y-6 order-2">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Wuling High School Wang Yuning &amp; Hong Yuheng</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Wuling High School Wang Yuning & Hong Yuheng" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> EARTH DAY (1).pdf
                     </div>
@@ -70,10 +180,10 @@
                 </div>
             </div>
 
-            <!-- 3. Liu Pinyu, Zhongli High School (Left Text, Right Image) -->
+            <!-- 3. Liu Pinyu, Zhongli High School (Left Text, Right Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 space-y-6 order-2 md:order-1">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Liu Pinyu, Zhongli High School</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Liu Pinyu, Zhongli High School" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> Earth Day (2).pdf
                     </div>
@@ -84,23 +194,159 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 order-1 md:order-2">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/147cc0_75ae56bcc98b43acb10f8ce7c13ef73a~mv2.jpg" alt="Liu Pinyu, Zhongli High School" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="liu-pinyu">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0001.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0002.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0003.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0004.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0005.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0006.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="7">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0007.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 7' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="8">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0008.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 8' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="9">
+                                    <img src="{% static 'images/earth_day/liu/The Ocean Cleanup_page-0009.jpg' %}" alt="{% trans 'Liu Pinyu - Slide 9' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="7"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="8"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="9"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. Ye Taijun, Zhongli High School (Right Text, Left Image) -->
+            <!-- 4. Ye Taijun, Zhongli High School (Right Text, Left Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 order-1">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/147cc0_c6d14b2f0a914abc81dc8df36d474d42~mv2.jpg" alt="Ye Taijun, Zhongli High School" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="ye-taijun">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0001.jpg' %}" alt="{% trans 'Ye Taijun - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0002.jpg' %}" alt="{% trans 'Ye Taijun - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0003.jpg' %}" alt="{% trans 'Ye Taijun - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0004.jpg' %}" alt="{% trans 'Ye Taijun - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0005.jpg' %}" alt="{% trans 'Ye Taijun - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0006.jpg' %}" alt="{% trans 'Ye Taijun - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="7">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0007.jpg' %}" alt="{% trans 'Ye Taijun - Slide 7' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="8">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0008.jpg' %}" alt="{% trans 'Ye Taijun - Slide 8' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="9">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0009.jpg' %}" alt="{% trans 'Ye Taijun - Slide 9' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="10">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0010.jpg' %}" alt="{% trans 'Ye Taijun - Slide 10' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="11">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0011.jpg' %}" alt="{% trans 'Ye Taijun - Slide 11' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="12">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0012.jpg' %}" alt="{% trans 'Ye Taijun - Slide 12' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="13">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0013.jpg' %}" alt="{% trans 'Ye Taijun - Slide 13' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="14">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0014.jpg' %}" alt="{% trans 'Ye Taijun - Slide 14' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="15">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0015.jpg' %}" alt="{% trans 'Ye Taijun - Slide 15' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="16">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0016.jpg' %}" alt="{% trans 'Ye Taijun - Slide 16' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="17">
+                                    <img src="{% static 'images/earth_day/ye_taijun/Ye_Taijun_page-0017.jpg' %}" alt="{% trans 'Ye Taijun - Slide 17' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="7"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="8"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="9"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="10"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="11"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="12"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="13"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="14"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="15"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="16"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="17"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="md:w-1/2 space-y-6 order-2">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Ye Taijun, Zhongli High School</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Ye Taijun, Zhongli High School" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> Earth day (3).pdf
                     </div>
@@ -112,10 +358,10 @@
                 </div>
             </div>
 
-            <!-- 5. Dai Yuxiang from Fudan High School (Left Text, Right Image) -->
+            <!-- 5. Dai Yuxiang from Fudan High School (Left Text, Right Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 space-y-6 order-2 md:order-1">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Dai Yuxiang from Fudan High School</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Dai Yuxiang from Fudan High School" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> D085戴于翔.pdf
                     </div>
@@ -126,23 +372,136 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 order-1 md:order-2">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/5150f3_7a523466cedf466ca37c388c62789798~mv2.jpg" alt="Dai Yuxiang from Fudan High School" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="dai-yuxiang">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/dia/Dia_page-0001.jpg' %}" alt="{% trans 'Dai Yuxiang - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/dia/Dia_page-0002.jpg' %}" alt="{% trans 'Dai Yuxiang - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/dia/Dia_page-0003.jpg' %}" alt="{% trans 'Dai Yuxiang - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/dia/Dia_page-0004.jpg' %}" alt="{% trans 'Dai Yuxiang - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/dia/Dia_page-0005.jpg' %}" alt="{% trans 'Dai Yuxiang - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/dia/Dia_page-0006.jpg' %}" alt="{% trans 'Dai Yuxiang - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                            </div>
+                            
+                            <!-- Slide Counter -->
+                            <div class="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm z-10">
+                                <span class="current-slide">1</span> / <span class="total-slides">6</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 6. Qiying High School Zheng Fuxin & Gu Boyuan (Right Text, Left Image) -->
+            <!-- 6. Qiying High School Zheng Fuxin & Gu Boyuan (Right Text, Left Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 order-1">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/5150f3_d88dd564ea2640978e4f512581c80b02~mv2.jpg" alt="Qiying High School Zheng Fuxin & Gu Boyuan" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="qiying-high">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0001.jpg' %}" alt="{% trans 'Qiying High School - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0002.jpg' %}" alt="{% trans 'Qiying High School - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0003.jpg' %}" alt="{% trans 'Qiying High School - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0004.jpg' %}" alt="{% trans 'Qiying High School - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0005.jpg' %}" alt="{% trans 'Qiying High School - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0006.jpg' %}" alt="{% trans 'Qiying High School - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="7">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0007.jpg' %}" alt="{% trans 'Qiying High School - Slide 7' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="8">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0008.jpg' %}" alt="{% trans 'Qiying High School - Slide 8' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="9">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0009.jpg' %}" alt="{% trans 'Qiying High School - Slide 9' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="10">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0010.jpg' %}" alt="{% trans 'Qiying High School - Slide 10' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="11">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0011.jpg' %}" alt="{% trans 'Qiying High School - Slide 11' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="12">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0012.jpg' %}" alt="{% trans 'Qiying High School - Slide 12' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="13">
+                                    <img src="{% static 'images/earth_day/qiying/Qiying_page-0013.jpg' %}" alt="{% trans 'Qiying High School - Slide 13' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="7"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="8"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="9"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="10"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="11"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="12"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="13"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="md:w-1/2 space-y-6 order-2">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Qiying High School Zheng Fuxin &amp; Gu Boyuan</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Qiying High School Zheng Fuxin & Gu Boyuan" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 正負新 古柏園.pdf
                     </div>
@@ -154,10 +513,10 @@
                 </div>
             </div>
 
-            <!-- 7. Lin Zhankai from Zhiping High School (Left Text, Right Image) -->
+            <!-- 7. Lin Zhankai from Zhiping High School (Left Text, Right Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 space-y-6 order-2 md:order-1">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Lin Zhankai from Zhiping High School</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Lin Zhankai from Zhiping High School" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 林站凱.pdf
                     </div>
@@ -168,23 +527,127 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 order-1 md:order-2">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/5150f3_1b4c93a7bde346169992b9cc0cb2c976~mv2.jpg" alt="Lin Zhankai from Zhiping High School" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="lin-zhankai">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0001.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0002.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0003.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0004.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0005.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0006.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="7">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0007.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 7' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="8">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0008.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 8' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="9">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0009.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 9' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="10">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0010.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 10' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="11">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0011.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 11' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="12">
+                                    <img src="{% static 'images/earth_day/lin_zhankai/LinZHA_page-0012.jpg' %}" alt="{% trans 'Lin Zhankai - Slide 12' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="7"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="8"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="9"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="10"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="11"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="12"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 8. Chen Congyu, Fudan High School (Right Text, Left Image) -->
+            <!-- 8. Chen Congyu, Fudan High School (Right Text, Left Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 order-1">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/5150f3_1b4ae2008c4f4ee6afce9550a2c6c8ae~mv2.jpg" alt="Chen Congyu, Fudan High School" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="chen-congyu">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/chen/Chen_page-0001.jpg' %}" alt="{% trans 'Chen Congyu - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/chen/Chen_page-0002.jpg' %}" alt="{% trans 'Chen Congyu - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/chen/Chen_page-0003.jpg' %}" alt="{% trans 'Chen Congyu - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/chen/Chen_page-0004.jpg' %}" alt="{% trans 'Chen Congyu - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/chen/Chen_page-0005.jpg' %}" alt="{% trans 'Chen Congyu - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="6">
+                                    <img src="{% static 'images/earth_day/chen/Chen_page-0006.jpg' %}" alt="{% trans 'Chen Congyu - Slide 6' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="6"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="md:w-1/2 space-y-6 order-2">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Chen Congyu, Fudan High School</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Chen Congyu, Fudan High School" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 陳從愈.pdf
                     </div>
@@ -196,10 +659,10 @@
                 </div>
             </div>
             
-            <!-- 9. Lai Yunting from Fudan High School (Left Text, Right Image) -->
+            <!-- 9. Lai Yunting from Fudan High School (Left Text, Right Carousel) -->
             <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20 group">
                 <div class="md:w-1/2 space-y-6 order-2 md:order-1">
-                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">Lai Yunting from Fudan High School</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-primary-blue transition-colors">{% trans "Lai Yunting from Fudan High School" %}</h3>
                     <div class="flex items-center text-gray-600 dark:text-gray-400 text-lg">
                         <i class="far fa-file-pdf mr-3 text-red-500 text-xl"></i> 賴韻婷.pdf
                     </div>
@@ -210,9 +673,45 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 order-1 md:order-2">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-500">
-                        <img src="https://static.wixstatic.com/media/5150f3_cce6a861418f47498a6e5df2be13353f~mv2.jpg" alt="Lai Yunting from Fudan High School" class="w-full h-auto object-cover">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Carousel Container -->
+                        <div class="carousel-container relative" data-carousel="lai-yunting">
+                            <!-- Images -->
+                            <div class="carousel-images">
+                                <div class="carousel-slide active" data-slide="1">
+                                    <img src="{% static 'images/earth_day/linY/Lai_page-0001.jpg' %}" alt="{% trans 'Lai Yunting - Slide 1' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="2">
+                                    <img src="{% static 'images/earth_day/linY/Lai_page-0002.jpg' %}" alt="{% trans 'Lai Yunting - Slide 2' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="3">
+                                    <img src="{% static 'images/earth_day/linY/Lai_page-0003.jpg' %}" alt="{% trans 'Lai Yunting - Slide 3' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="4">
+                                    <img src="{% static 'images/earth_day/linY/Lai_page-0004.jpg' %}" alt="{% trans 'Lai Yunting - Slide 4' %}" class="w-full h-auto object-cover">
+                                </div>
+                                <div class="carousel-slide" data-slide="5">
+                                    <img src="{% static 'images/earth_day/linY/Lai_page-0005.jpg' %}" alt="{% trans 'Lai Yunting - Slide 5' %}" class="w-full h-auto object-cover">
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Arrows -->
+                            <button class="carousel-prev absolute left-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-left text-4xl"></i>
+                            </button>
+                            <button class="carousel-next absolute right-3 top-1/2 -translate-y-1/2 text-accent-blue hover:text-primary-blue transition-all duration-300 hover:scale-125 z-10 drop-shadow-lg">
+                                <i class="fa-solid fa-angle-right text-4xl"></i>
+                            </button>
+                            
+                            <!-- Slide Indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300 active bg-white" data-slide="1"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="2"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="3"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="4"></button>
+                                <button class="carousel-indicator w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all duration-300" data-slide="5"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -222,7 +721,7 @@
         <!-- Footer Image -->
         <div class="max-w-5xl mx-auto mt-24 mb-12">
             <div class="relative rounded-3xl overflow-hidden shadow-2xl group">
-                <img src="https://static.wixstatic.com/media/99728a_481f145423a045f4bf4126655dd57bd7~mv2.jpg/v1/fill/w_640,h_357,al_c,q_80,enc_avif,quality_auto/pngtree-black-and-white-world-map-illust.jpg" alt="{% trans "World Map" %}" class="w-full h-auto transform group-hover:scale-105 transition-transform duration-700">
+                <img src="https://static.wixstatic.com/media/99728a_481f145423a045f4bf4126655dd57bd7~mv2.jpg/v1/fill/w_640,h_357,al_c,q_80,enc_avif,quality_auto/pngtree-black-and-white-world-map-illust.jpg" alt="{% trans 'World Map' %}" class="w-full h-auto transform group-hover:scale-105 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-8 text-center">
                     <p class="text-white text-xl font-medium opacity-90 tracking-wide">{% trans "Protecting our planet, one step at a time." %}</p>
@@ -232,4 +731,169 @@
 
     </div>
 </div>
+
+<style>
+    /* Carousel Styles */
+    .carousel-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .carousel-images {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .carousel-slide {
+        display: none;
+        width: 100%;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    .carousel-slide.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    .carousel-indicator.active {
+        background-color: white;
+        width: 2.5rem;
+    }
+    
+    .carousel-prev:hover,
+    .carousel-next:hover {
+        transform: translateY(-50%) scale(1.25);
+        filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.8));
+    }
+    
+    /* Hide slide counters */
+    .carousel-container .absolute.top-4.right-4 {
+        display: none !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all carousels
+        const carousels = document.querySelectorAll('[data-carousel]');
+        
+        carousels.forEach(carousel => {
+            let currentSlide = 1;
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const totalSlides = slides.length;
+            const indicators = carousel.querySelectorAll('.carousel-indicator');
+            const prevBtn = carousel.querySelector('.carousel-prev');
+            const nextBtn = carousel.querySelector('.carousel-next');
+            const currentSlideDisplay = carousel.querySelector('.current-slide');
+            const totalSlidesDisplay = carousel.querySelector('.total-slides');
+            
+            if (totalSlidesDisplay) {
+                totalSlidesDisplay.textContent = totalSlides;
+            }
+            
+            function showSlide(n) {
+                if (n > totalSlides) {
+                    currentSlide = 1;
+                } else if (n < 1) {
+                    currentSlide = totalSlides;
+                } else {
+                    currentSlide = n;
+                }
+                
+                // Hide all slides
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                });
+                
+                // Show current slide
+                slides[currentSlide - 1].classList.add('active');
+                
+                // Update indicators
+                indicators.forEach((indicator, index) => {
+                    if (index === currentSlide - 1) {
+                        indicator.classList.add('active', 'bg-white');
+                    } else {
+                        indicator.classList.remove('active', 'bg-white');
+                    }
+                });
+                
+                // Update slide counter
+                if (currentSlideDisplay) {
+                    currentSlideDisplay.textContent = currentSlide;
+                }
+            }
+            
+            // Previous button
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    showSlide(currentSlide - 1);
+                });
+            }
+            
+            // Next button
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    showSlide(currentSlide + 1);
+                });
+            }
+            
+            // Indicator buttons
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    showSlide(index + 1);
+                });
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    showSlide(currentSlide - 1);
+                } else if (e.key === 'ArrowRight') {
+                    showSlide(currentSlide + 1);
+                }
+            });
+            
+            // Auto-play (optional - uncomment to enable)
+            // setInterval(() => {
+            //     showSlide(currentSlide + 1);
+            // }, 5000);
+            
+            // Touch/Swipe support for mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                if (touchEndX < touchStartX - 50) {
+                    // Swipe left
+                    showSlide(currentSlide + 1);
+                }
+                if (touchEndX > touchStartX + 50) {
+                    // Swipe right
+                    showSlide(currentSlide - 1);
+                }
+            }
+        });
+    });
+</script>
+
 {% endblock %}
