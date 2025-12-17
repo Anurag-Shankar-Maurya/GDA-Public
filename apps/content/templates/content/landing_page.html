@@ -3,6 +3,16 @@
 {% load static %}
 
 {% block title %}GDA - Global Devotion Association{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news, and programs connecting volunteers with community and environmental projects across Taiwan and worldwide." %}">
+<meta property="og:description" content="{% trans "Global Devotion Association (GDA) — volunteer projects, news, and programs connecting volunteers with community and environmental projects across Taiwan and worldwide." %}">
+<meta property="og:title" content="GDA - Global Devotion Association">
+<meta property="og:image" content="{% static 'images/landing/hero-bg.png' %}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{% if request %}{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}{% url 'landing_page' %}{% endif %}">
+{% endblock %}
 
 {% block hero %}
     <!-- Hero Section -->

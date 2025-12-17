@@ -3,6 +3,12 @@
 {% load static %}
 
 {% block title %}Taiwan Cultural Experience - GDA{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Taiwan Cultural Experience — hands-on workshops, traditional crafts, and educational programs hosted by GDA and partners." %}">
+<meta property="og:description" content="{% trans "Taiwan Cultural Experience — hands-on workshops, traditional crafts, and educational programs hosted by GDA and partners." %}">
+<meta property="og:title" content="{% trans "Taiwan Cultural Experience - GDA" %}">
+<meta property="og:image" content="{% static 'images/taiwan_cultural_experience/card-image-1.png' %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

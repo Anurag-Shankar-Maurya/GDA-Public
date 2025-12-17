@@ -1,7 +1,21 @@
 {% extends "content_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "GDA: Projects" %}{% endblock %}
+{% block social_meta %}
+<meta name="description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+<meta property="og:title" content="{% trans "GDA: Projects" %}">
+<meta property="og:description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+<meta name="twitter:title" content="{% trans "GDA: Projects" %}">
+<meta name="twitter:description" content="{% trans "Browse GDA volunteer projects — find opportunities worldwide focusing on community and environmental impact." %}">
+<meta name="twitter:image" content="{% static 'images/logo.png' %}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{% if request %}{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}{% url 'content_project_list' %}{% endif %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

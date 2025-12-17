@@ -1,7 +1,21 @@
 {% extends "content_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "GDA: Success Stories" %}{% endblock %}
+{% block social_meta %}
+<meta name="description" content="{% trans "Read inspiring success stories from GDA — real impact achieved through volunteer projects and community action." %}">
+<meta property="og:title" content="{% trans "GDA: Success Stories" %}">
+<meta property="og:description" content="{% trans "Read inspiring success stories from GDA — real impact achieved through volunteer projects and community action." %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+<meta name="twitter:title" content="{% trans "GDA: Success Stories" %}">
+<meta name="twitter:description" content="{% trans "Read inspiring success stories from GDA — real impact achieved through volunteer projects and community action." %}">
+<meta name="twitter:image" content="{% static 'images/logo.png' %}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{% if request %}{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}{% url 'content_success_story_list' %}{% endif %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

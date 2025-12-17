@@ -1,7 +1,21 @@
 {% extends "content_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "GDA: News" %}{% endblock %}
+{% block social_meta %}
+<meta name="description" content="{% trans "Latest news and events from Global Devotion Association — announcements, updates, and community stories." %}">
+<meta property="og:title" content="{% trans "GDA: News" %}">
+<meta property="og:description" content="{% trans "Latest news and events from Global Devotion Association — announcements, updates, and community stories." %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+<meta name="twitter:title" content="{% trans "GDA: News" %}">
+<meta name="twitter:description" content="{% trans "Latest news and events from Global Devotion Association — announcements, updates, and community stories." %}">
+<meta name="twitter:image" content="{% static 'images/logo.png' %}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{% if request %}{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}{% url 'content_news_event_list' %}{% endif %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

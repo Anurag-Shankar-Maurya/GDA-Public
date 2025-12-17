@@ -3,6 +3,12 @@
 {% load i18n %}
 
 {% block title %}{% trans "About the Association" %}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Global Devotion Association — mission, leadership, and organizational structure supporting community and volunteer programs across Taiwan." %}">
+<meta property="og:description" content="{% trans "Global Devotion Association — mission, leadership, and organizational structure supporting community and volunteer programs across Taiwan." %}">
+<meta property="og:title" content="{% trans "About the Association - GDA" %}">
+<meta property="og:image" content="{% static 'images/organization/organization_str.png' %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

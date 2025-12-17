@@ -1,7 +1,14 @@
 {% extends "content_base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "Terms of Service" %} - GDA{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Terms of Service for Global Devotion Association — rules, responsibilities, and legal terms for using our site and services." %}">
+<meta property="og:description" content="{% trans "Terms of Service for Global Devotion Association — rules, responsibilities, and legal terms for using our site and services." %}">
+<meta property="og:title" content="{% trans "Terms of Service - GDA" %}">
+<meta property="og:image" content="{% static 'images/logo.png' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-12">

@@ -3,6 +3,12 @@
 {% load i18n %}
 
 {% block title %}{{ page_title }}{% endblock %}
+{% block extra_meta %}
+<meta name="description" content="{% trans "Explore Amazing Taiwan with GDA — regional highlights, cultural experiences, and volunteer programs showcasing Taiwan's beauty and traditions." %}">
+<meta property="og:description" content="{% trans "Explore Amazing Taiwan with GDA — regional highlights, cultural experiences, and volunteer programs showcasing Taiwan's beauty and traditions." %}">
+<meta property="og:title" content="{{ page_title|default:'Amazing Taiwan'|escape }}">
+<meta property="og:image" content="{% static 'images/amazing_taiwan/amazing-taiwan-1.png' %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">

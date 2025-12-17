@@ -1,8 +1,22 @@
 {% extends "content_base.html" %}
 {% load i18n %}
 {% load content_filters %}
+{% load static %}
 
 {% block title %}{% trans "GDA News" %}: {{ news_event.title }}{% endblock %}
+{% block social_meta %}
+<meta name="description" content="{{ news_event.body|striptags|truncatechars:160|escape }}">
+<meta property="og:title" content="{{ news_event.title|escape }}">
+<meta property="og:description" content="{{ news_event.body|striptags|truncatechars:200|escape }}">
+<meta property="og:image" content="{% if news_event.cover_image_blob %}{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}{% elif news_event.cover_image %}{{ news_event.cover_image.url }}{% elif news_event.cover_image_url %}{{ news_event.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
+<meta name="twitter:title" content="{{ news_event.title|escape }}">
+<meta name="twitter:description" content="{{ news_event.body|striptags|truncatechars:200|escape }}">
+<meta name="twitter:image" content="{% if news_event.cover_image_blob %}{% url 'content_serve_blob' 'news_event' news_event.pk 'cover_image_blob' %}{% elif news_event.cover_image %}{{ news_event.cover_image.url }}{% elif news_event.cover_image_url %}{{ news_event.cover_image_url }}{% else %}{% static 'images/logo.png' %}{% endif %}">
+{% endblock %}
+
+{% block canonical %}
+    <link rel="canonical" href="{% if request %}{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}{% url 'content_news_event_detail' news_event.pk %}{% endif %}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="flex items-center">
