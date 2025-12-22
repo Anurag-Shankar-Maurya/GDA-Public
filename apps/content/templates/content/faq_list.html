@@ -121,44 +121,50 @@
         </form>
 
         {% if faqs %}
-            <div class="max-w-4xl mx-auto space-y-4">
+            <div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-white dark:bg-gray-900" data-inactive-classes="text-gray-500 dark:text-gray-400" class="max-w-4xl mx-auto">
                 {% for faq in faqs %}
-                    <div class="faq-item bg-light-bg dark:bg-dark-secondary-bg border border-border-light dark:border-border-dark rounded-xl overflow-hidden transition-all duration-300 animate-on-scroll shadow-sm hover:shadow-md">
-                        <button class="faq-question w-full px-6 py-4 text-left flex items-center justify-between cursor-pointer group hover:bg-light-secondary-bg dark:hover:bg-dark-bg/50 transition-colors duration-200">
-                            <h3 class="text-lg font-bold text-primary-blue dark:text-accent-light group-hover:text-accent-dark dark:group-hover:text-accent-blue transition-colors duration-200">{{ faq.question }}</h3>
-                            <svg class="faq-icon w-6 h-6 text-primary-blue dark:text-accent-light transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    <h2 id="accordion-flush-heading-{{ forloop.counter }}">
+                        <button type="button" class="flex items-center justify-between w-full py-5 px-6 font-medium rtl:text-right text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 {% if forloop.first %}rounded-t-xl{% endif %} {% if forloop.last and not forloop.first %}rounded-b-xl{% endif %} hover:bg-gray-100 dark:hover:bg-gray-800 gap-3 transition-all duration-300 animate__animated animate__fadeInUp" data-accordion-target="#accordion-flush-body-{{ forloop.counter }}" aria-expanded="false" aria-controls="accordion-flush-body-{{ forloop.counter }}">
+                            <span class="flex items-center">
+                                <svg class="flex-shrink-0 me-3 h-5 w-5 text-accent-blue" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-left">{{ faq.question }}</span>
+                            </span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                             </svg>
                         </button>
-                        <div class="faq-answer px-6 overflow-hidden max-h-0 transition-all duration-300 ease-in-out bg-light-bg dark:bg-dark-secondary-bg">
-                            <p class="text-text-light-secondary dark:text-text-dark-secondary text-base pb-4 pt-2 leading-relaxed">
-                                {{ faq.answer }}
-                            </p>
-                            <!-- Voting Section -->
-                            <div class="flex items-center justify-between pb-6">
-                                <div class="flex items-center space-x-4">
+                    </h2>
+                    <div id="accordion-flush-body-{{ forloop.counter }}" class="hidden" aria-labelledby="accordion-flush-heading-{{ forloop.counter }}">
+                        <div class="py-5 px-6 border border-t-0 border-gray-200 dark:border-gray-700">
+                            <p class="mb-6 text-gray-600 dark:text-gray-400 leading-relaxed">{{ faq.answer }}</p>
+                            
+                            <!-- Voting Section with modern Flowbite badges -->
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <div class="flex items-center gap-3">
                                     {% if user.is_authenticated %}
-                                        <button class="vote-btn flex items-center space-x-1 {% if faq.user_vote == 'UP' %}text-success{% else %}text-gray-400 hover:text-success{% endif %} transition-colors duration-200" data-faq-id="{{ faq.id }}" data-vote="up">
-                                            <i class="fas fa-thumbs-up"></i>
-                                            <span class="thumbs-up-count">{{ faq.thumbs_up }}</span>
+                                        <button class="vote-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 hover:scale-110 {% if faq.user_vote == 'UP' %}text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800{% else %}text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700{% endif %}" data-faq-id="{{ faq.id }}" data-vote="up">
+                                            <svg class="w-4 h-4 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
+                                            <span class="thumbs-up-count font-semibold">{{ faq.thumbs_up }}</span>
                                         </button>
-                                        <button class="vote-btn flex items-center space-x-1 {% if faq.user_vote == 'DOWN' %}text-error{% else %}text-gray-400 hover:text-error{% endif %} transition-colors duration-200" data-faq-id="{{ faq.id }}" data-vote="down">
-                                            <i class="fas fa-thumbs-down"></i>
-                                            <span class="thumbs-down-count">{{ faq.thumbs_down }}</span>
+                                        <button class="vote-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 hover:scale-110 {% if faq.user_vote == 'DOWN' %}text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900{% else %}text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700{% endif %}" data-faq-id="{{ faq.id }}" data-vote="down">
+                                            <svg class="w-4 h-4 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"></path></svg>
+                                            <span class="thumbs-down-count font-semibold">{{ faq.thumbs_down }}</span>
                                         </button>
                                     {% else %}
-                                        <div class="flex items-center space-x-4 text-text-light-secondary dark:text-text-dark-secondary">
-                                            <span class="flex items-center space-x-1">
-                                                <i class="fas fa-thumbs-up"></i>
-                                                <span>{{ faq.thumbs_up }}</span>
+                                        <div class="inline-flex items-center gap-3">
+                                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600">
+                                                <svg class="w-4 h-4 me-2 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
+                                                <span class="font-semibold">{{ faq.thumbs_up }}</span>
                                             </span>
-                                            <span class="flex items-center space-x-1">
-                                                <i class="fas fa-thumbs-down"></i>
-                                                <span>{{ faq.thumbs_down }}</span>
+                                            <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600">
+                                                <svg class="w-4 h-4 me-2 text-red-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z"></path></svg>
+                                                <span class="font-semibold">{{ faq.thumbs_down }}</span>
                                             </span>
                                         </div>
-                                        <p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">
-                                            <a href="{% url 'login' %}" class="text-primary-blue hover:text-accent-blue">{% trans "Login to vote" %}</a>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                                            <a href="{% url 'login' %}" class="text-accent-blue hover:text-accent-dark font-medium hover:underline">{% trans "Login to vote" %}</a>
                                         </p>
                                     {% endif %}
                                 </div>
@@ -340,33 +346,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // FAQ Accordion functionality
-            const faqItems = document.querySelectorAll('.faq-item');
-            
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                const answer = item.querySelector('.faq-answer');
-                const icon = item.querySelector('.faq-icon');
-                
-                question.addEventListener('click', () => {
-                    const isOpen = answer.style.maxHeight;
-                    
-                    // Close all FAQ items
-                    faqItems.forEach(otherItem => {
-                        const otherAnswer = otherItem.querySelector('.faq-answer');
-                        const otherIcon = otherItem.querySelector('.faq-icon');
-                        
-                        otherAnswer.style.maxHeight = null;
-                        otherIcon.style.transform = 'rotate(0deg)';
-                    });
-                    
-                    // Toggle clicked item
-                    if (!isOpen) {
-                        answer.style.maxHeight = answer.scrollHeight + 'px';
-                        icon.style.transform = 'rotate(180deg)';
-                    }
-                });
-            });
+            // Flowbite will automatically handle accordion functionality
 
             // Smooth scroll for hero section button
             const exploreButton = document.querySelector('a[href="#faq-section"]');
