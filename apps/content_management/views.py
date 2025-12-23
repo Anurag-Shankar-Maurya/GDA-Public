@@ -664,7 +664,7 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
         context['popular_projects'] = Project.objects.filter(headcount__gt=0).order_by('-headcount')[:10]
 
         # Projects by Theme with enrollment counts
-        context['enrollments_by_theme'] = (
+        context['enrollments_by_theme'] = list(
             Project.objects
             .values('theme')
             .annotate(total_enrollments=Sum('headcount'), project_count=Count('id'))
@@ -672,7 +672,7 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
         )
 
         # Projects by Country with enrollment counts
-        context['enrollments_by_country'] = (
+        context['enrollments_by_country'] = list(
             Project.objects
             .values('country')
             .annotate(total_enrollments=Sum('headcount'), project_count=Count('id'))
