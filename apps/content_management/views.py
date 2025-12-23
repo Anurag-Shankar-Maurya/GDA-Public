@@ -468,6 +468,21 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
             total=Count('video_urls', filter=Q(video_urls__isnull=False) & ~Q(video_urls='[]'))
         )['total'] or 0
 
+        # --- Image & Cover URLs ---
+        projects_with_urls = Project.objects.filter(image_urls__isnull=False).exclude(image_urls='[]').values_list('image_urls', flat=True)
+        news_with_urls = NewsEvent.objects.filter(image_urls__isnull=False).exclude(image_urls='[]').values_list('image_urls', flat=True)
+        stories_with_urls = SuccessStory.objects.filter(image_urls__isnull=False).exclude(image_urls='[]').values_list('image_urls', flat=True)
+
+        context['total_gallery_image_urls'] = sum(len(urls) for urls in projects_with_urls) + \
+                                              sum(len(urls) for urls in news_with_urls) + \
+                                              sum(len(urls) for urls in stories_with_urls)
+
+        context['total_cover_image_urls'] = (
+            Project.objects.filter(cover_image_url__isnull=False).exclude(cover_image_url__exact='').count() +
+            NewsEvent.objects.filter(cover_image_url__isnull=False).exclude(cover_image_url__exact='').count() +
+            SuccessStory.objects.filter(cover_image_url__isnull=False).exclude(cover_image_url__exact='').count()
+        )
+
 
         # --- Recent Content ---
         context['recent_projects'] = Project.objects.order_by('-created_at')[:5]

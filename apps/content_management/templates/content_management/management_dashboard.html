@@ -182,11 +182,19 @@
             <div class="grid grid-cols-2 gap-3 text-sm">
                 <div>
                     <p class="font-medium">{{ total_gallery_images }}</p>
-                    <p class="opacity-80">{% trans "Gallery Images" %}</p>
+                    <p class="opacity-80">{% trans "Gallery Blobs" %}</p>
                 </div>
                 <div>
                     <p class="font-medium">{{ total_cover_images }}</p>
-                    <p class="opacity-80">{% trans "Cover Images" %}</p>
+                    <p class="opacity-80">{% trans "Cover Blobs" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_gallery_image_urls }}</p>
+                    <p class="opacity-80">{% trans "Gallery URLs" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_cover_image_urls }}</p>
+                    <p class="opacity-80">{% trans "Cover URLs" %}</p>
                 </div>
                 <div>
                     <p class="font-medium">{{ total_videos }}</p>
