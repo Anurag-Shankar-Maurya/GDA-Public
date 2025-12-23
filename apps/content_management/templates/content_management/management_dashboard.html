@@ -12,7 +12,7 @@
 
 {% block content %}
 <!-- Modern Gradient Header Section -->
-<div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-800 rounded-xl shadow-2xl p-8 mb-8 text-white relative overflow-hidden">
+<div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-800 rounded-xl shadow-2xl p-8 mb-0 text-white relative overflow-hidden">
     <div class="absolute inset-0 bg-black bg-opacity-20"></div>
     <div class="relative z-10">
         <div class="flex items-center justify-between flex-wrap gap-4">
@@ -35,7 +35,7 @@
         </div>
 
         <!-- Quick Stats Row -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white border-opacity-20">
+        <!-- <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white border-opacity-20">
             <div class="text-center">
                 <div class="text-2xl md:text-3xl font-bold text-yellow-300">{{ total_projects }}</div>
                 <div class="text-sm text-blue-200">{% trans "Projects" %}</div>
@@ -52,34 +52,11 @@
                 <div class="text-2xl md:text-3xl font-bold text-pink-300">{{ total_gallery_images }}</div>
                 <div class="text-sm text-blue-200">{% trans "Gallery Images" %}</div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 
 <div class="container max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-
-    <!-- Enhanced Analytics Navigation -->
-    <div class="mb-8">
-        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-lg p-6">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <i class="fas fa-chart-bar mr-3 text-primary-blue"></i>
-                {% trans "Detailed Analytics" %}
-            </h2>
-            <div class="flex flex-wrap gap-4">
-                <a href="{% url 'user_analytics' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    <i class="fas fa-users mr-3"></i>
-                    {% trans "User Analytics" %}
-                    <i class="fas fa-arrow-right ml-3"></i>
-                </a>
-                <a href="{% url 'application_analytics' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    <i class="fas fa-chart-pie mr-3"></i>
-                    {% trans "Application Analytics" %}
-                    <i class="fas fa-arrow-right ml-3"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
     <!-- Enhanced Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
         <!-- Users Card -->
