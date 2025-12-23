@@ -309,44 +309,27 @@
     </div>
 
     <!-- User Demographics & Additional Stats Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <!-- User Demographics -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
+        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6 chart-container">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Demographics" %}</h3>
-            <div class="space-y-4">
-                <div>
-                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Gender Distribution" %}</h4>
-                    {% for item in users_by_gender %}
-                    <div class="flex justify-between mb-1">
-                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ item.gender|default:"Not specified" }}</span>
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div>
-                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Top Countries" %}</h4>
-                    {% for item in users_by_country %}
-                    <div class="flex justify-between mb-1">
-                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ item.country_code|upper }}</span>
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
-                    </div>
-                    {% endfor %}
+            <div>
+                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Top User Countries" %}</h4>
+                <div class="relative h-72">
+                    <canvas id="userCountryBarChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- Login Methods & Engagement -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
+        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6 chart-container">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Engagement" %}</h3>
-            <div class="space-y-4">
+            <div class="space-y-6">
                 <div>
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Login Methods" %}</h4>
-                    {% for item in login_methods %}
-                    <div class="flex justify-between mb-1">
-                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ item.login_method|title }}</span>
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
+                    <div class="relative h-48">
+                        <canvas id="loginMethodPieChart"></canvas>
                     </div>
-                    {% endfor %}
                 </div>
                 <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                     <div class="flex justify-between items-center">
@@ -360,36 +343,36 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Content & Impact Summary -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Content & Impact Summary" %}</h3>
-            <div class="space-y-4">
+    <!-- Content & Impact Summary -->
+    <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6 mb-12 chart-container">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Content & Impact Summary" %}</h3>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Project Duration" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_project_duration }} {% trans "days" %}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Beneficiaries/Story" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_beneficiaries_per_story }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Hours/Story" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_hours_per_story }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Unique Enrolled Users" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ unique_enrolled_users }}</span>
+            </div>
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Project Duration" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_project_duration }} {% trans "days" %}</span>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Published Stories" %}</span>
+                    <span class="text-sm font-medium text-green-600">{{ published_stories }}</span>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Beneficiaries/Story" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_beneficiaries_per_story }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Hours/Story" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_hours_per_story }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Unique Enrolled Users" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ unique_enrolled_users }}</span>
-                </div>
-                <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Published Stories" %}</span>
-                        <span class="text-sm font-medium text-green-600">{{ published_stories }}</span>
-                    </div>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Hero Highlights" %}</span>
-                        <span class="text-sm font-medium text-yellow-600">{{ hero_projects|add:hero_news|add:hero_stories }}</span>
-                    </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Hero Highlights" %}</span>
+                    <span class="text-sm font-medium text-yellow-600">{{ hero_projects|add:hero_news|add:hero_stories }}</span>
                 </div>
             </div>
         </div>
@@ -753,6 +736,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }, {
             indexAxis: 'y',
             scales: commonScales
+        });
+
+        // 8. User Countries (Bar)
+        updateChart('userCountryBarChart', 'bar', {
+            labels: data.demographics.countries.labels,
+            datasets: [{
+                label: '{% trans "Users" %}',
+                data: data.demographics.countries.data,
+                backgroundColor: '#6366f1',
+                borderRadius: 4
+            }]
+        }, { scales: commonScales });
+
+        // 9. Login Methods (Doughnut)
+        updateChart('loginMethodPieChart', 'doughnut', {
+            labels: data.demographics.login_methods.labels,
+            datasets: [{
+                data: data.demographics.login_methods.data,
+                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+                borderWidth: 0
+            }]
+        }, {
+            plugins: { legend: { position: 'right', labels: { boxWidth: 12 } } },
+            scales: {} 
         });
     }
 

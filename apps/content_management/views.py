@@ -276,6 +276,27 @@ class DashboardDataView(LoginRequiredMixin, UserPassesTestMixin, View):
         )
         difficulty_labels = [item['difficulty'] for item in difficulty_dist]
         difficulty_data = [item['count'] for item in difficulty_dist]
+
+        # 8. User Countries (Top 5)
+        user_countries = (
+            CustomUser.objects
+            .exclude(country_code='')
+            .values('country_code')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:5]
+        )
+        user_country_labels = [item['country_code'] for item in user_countries]
+        user_country_data = [item['count'] for item in user_countries]
+
+        # 9. Login Methods
+        login_methods = (
+            CustomUser.objects
+            .values('login_method')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        login_method_labels = [item['login_method'] for item in login_methods]
+        login_method_data = [item['count'] for item in login_methods]
         
         data = {
             'user_growth': {
@@ -306,6 +327,14 @@ class DashboardDataView(LoginRequiredMixin, UserPassesTestMixin, View):
                 'gender': {
                     'labels': gender_labels,
                     'data': gender_data
+                },
+                'countries': {
+                    'labels': user_country_labels,
+                    'data': user_country_data
+                },
+                'login_methods': {
+                    'labels': login_method_labels,
+                    'data': login_method_data
                 }
             },
             'project_difficulty': {
