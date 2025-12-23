@@ -10,11 +10,6 @@
 </li>
 {% endblock %}
 
-{% block extra_head %}
-<!-- Chart.js for data visualization -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-{% endblock %}
-
 {% block content %}
 <!-- Modern Gradient Header Section -->
 <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-800 rounded-xl shadow-2xl p-8 mb-8 text-white relative overflow-hidden">
@@ -584,8 +579,19 @@
 {% endblock %}
 
 {% block static_js %}
+<!-- Ensure Chart.js is loaded explicitly here -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("Dashboard script loaded");
+
+    // 1. Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.error("Chart.js is not loaded!");
+        return;
+    }
+
     // Chart instances storage
     let chartInstances = {};
 
@@ -600,11 +606,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     usePointStyle: true,
                     padding: 20
                 }
+            },
+            tooltip: {
+                mode: 'index',
+                intersect: false,
             }
         }
     };
 
-    // Dark Mode Awareness
     function isDarkMode() {
         return document.documentElement.classList.contains('dark');
     }
@@ -617,44 +626,53 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Initialize Charts
+    // Initialize
+    initCharts();
+
     function initCharts() {
         fetchData();
     }
 
-    // Fetch Data from API
     async function fetchData() {
         const range = document.getElementById('timeRange').value;
         const frequency = document.getElementById('frequency').value;
         const btn = document.getElementById('refreshData');
-        const originalIcon = btn.innerHTML;
         
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> {% trans "Loading..." %}';
+        // Save original icon to restore later
+        const originalContent = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>';
         btn.disabled = true;
 
         try {
-            const response = await fetch(`{% url 'dashboard_data' %}?range=${range}&frequency=${frequency}`);
+            const url = `{% url 'dashboard_data' %}?range=${range}&frequency=${frequency}`;
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
             updateCharts(data);
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
+            btn.classList.add('bg-red-600'); // Visual error indication
         } finally {
-            btn.innerHTML = originalIcon;
+            btn.innerHTML = originalContent;
             btn.disabled = false;
         }
     }
 
-    // Create or Update Charts
     function updateCharts(data) {
         const colors = getChartColors();
         const commonScales = {
             y: {
                 beginAtZero: true,
-                grid: { color: colors.grid },
+                grid: { color: colors.grid, borderColor: colors.grid },
                 ticks: { color: colors.text }
             },
             x: {
-                grid: { color: colors.grid },
+                grid: { color: colors.grid, borderColor: colors.grid },
                 ticks: { color: colors.text }
             }
         };
@@ -668,9 +686,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 borderColor: '#3b82f6',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
                 fill: true,
-                tension: 0.4
+                tension: 0.4,
+                pointRadius: 6, // Fix: Make points visible for single data points
+                pointHoverRadius: 8
             }]
-        }, commonScales);
+        }, { scales: commonScales });
 
         // 2. Content Activity Chart
         updateChart('contentActivityChart', 'bar', {
@@ -692,7 +712,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: '#8b5cf6',
                 }
             ]
-        }, { ...commonScales, x: { ...commonScales.x, stacked: true }, y: { ...commonScales.y, stacked: true } });
+        }, { 
+            scales: {
+                x: { ...commonScales.x, stacked: true },
+                y: { ...commonScales.y, stacked: true }
+            }
+        });
 
         // 3. Projects by Theme
         updateChart('projectThemeChart', 'doughnut', {
@@ -704,9 +729,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 ],
                 borderWidth: 0
             }]
-        }, {
-            ...commonScales,
-            scales: {} // No scales for doughnut
+        }, { 
+            plugins: {
+                legend: { position: 'right' }
+            },
+            scales: {} // Disable axes for doughnut
         });
 
         // 4. Projects by Country
@@ -718,9 +745,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 backgroundColor: '#6366f1',
                 borderRadius: 4
             }]
-        }, commonScales);
+        }, { scales: commonScales });
         
-        // 5. Impact Chart (Horizontal Bar)
+        // 5. Impact Chart
         updateChart('impactChart', 'bar', {
             labels: data.impact.labels,
             datasets: [{
@@ -731,58 +758,66 @@ document.addEventListener('DOMContentLoaded', function() {
             }]
         }, {
             indexAxis: 'y',
-            x: { ...commonScales.x },
-            y: { ...commonScales.y }
+            scales: commonScales
         });
     }
 
-    function updateChart(canvasId, type, data, scales) {
-        const ctx = document.getElementById(canvasId).getContext('2d');
+    function updateChart(canvasId, type, data, optionsOverrides = {}) {
+        const ctxElement = document.getElementById(canvasId);
+        
+        if (!ctxElement) {
+            console.warn(`Canvas element with id '${canvasId}' not found.`);
+            return;
+        }
+        
+        const ctx = ctxElement.getContext('2d');
         const colors = getChartColors();
 
         if (chartInstances[canvasId]) {
             chartInstances[canvasId].destroy();
         }
 
+        // Safer options merging
+        const finalOptions = JSON.parse(JSON.stringify(baseOptions)); // Deep clone base
+        
+        // Manually merge overrides
+        if(optionsOverrides.scales) finalOptions.scales = optionsOverrides.scales;
+        if(optionsOverrides.indexAxis) finalOptions.indexAxis = optionsOverrides.indexAxis;
+        
+        // Merge plugins logic
+        if(optionsOverrides.plugins) {
+            if(optionsOverrides.plugins.legend) {
+                // Ensure base plugins exist if not already present (deep clone handles it usually)
+                if(!finalOptions.plugins) finalOptions.plugins = {};
+                if(!finalOptions.plugins.legend) finalOptions.plugins.legend = {};
+                
+                Object.assign(finalOptions.plugins.legend, optionsOverrides.plugins.legend);
+            }
+        }
+        
+        // Update text colors for dark mode
+        if(finalOptions.plugins && finalOptions.plugins.legend && finalOptions.plugins.legend.labels) {
+            finalOptions.plugins.legend.labels.color = colors.text;
+        }
+
         chartInstances[canvasId] = new Chart(ctx, {
             type: type,
             data: data,
-            options: {
-                ...baseOptions,
-                scales: scales || {},
-                plugins: {
-                    ...baseOptions.plugins,
-                    legend: {
-                        ...baseOptions.plugins.legend,
-                        labels: {
-                            ...baseOptions.plugins.legend.labels,
-                            color: colors.text
-                        }
-                    }
-                }
-            }
+            options: finalOptions
         });
     }
 
     // Event Listeners
-    document.getElementById('refreshData').addEventListener('click', fetchData);
-    document.getElementById('timeRange').addEventListener('change', fetchData);
-    document.getElementById('frequency').addEventListener('change', fetchData);
-
-    // Initial load
-    initCharts();
-
-    // Theme toggle listener to update chart colors
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            setTimeout(() => {
-                fetchData(); // Reload charts to update colors
-            }, 100);
-        });
-    }
+    const refreshBtn = document.getElementById('refreshData');
+    if(refreshBtn) refreshBtn.addEventListener('click', fetchData);
     
-    // Existing animations...
+    const timeRangeSelect = document.getElementById('timeRange');
+    if(timeRangeSelect) timeRangeSelect.addEventListener('change', fetchData);
+    
+    const freqSelect = document.getElementById('frequency');
+    if(freqSelect) freqSelect.addEventListener('change', fetchData);
+
+    // Initial animations
     const chartContainers = document.querySelectorAll('.chart-container');
     chartContainers.forEach(container => {
         container.style.opacity = '0';
