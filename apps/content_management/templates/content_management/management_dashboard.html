@@ -308,52 +308,6 @@
         </div>
     </div>
 
-    <!-- Project Insights Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        <!-- Projects by Difficulty -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Difficulty" %}</h3>
-            <div class="space-y-4">
-                {% for item in projects_by_difficulty %}
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ item.difficulty }}</span>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {% widthratio item.count total_projects 100 %}%"></div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Projects by Theme -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Theme" %}</h3>
-            <div class="flex flex-wrap gap-2">
-                {% for item in projects_by_theme %}
-                <span class="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-                    {{ item.theme }} ({{ item.count }})
-                </span>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Projects by Country -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Country" %}</h3>
-            <div class="space-y-2">
-                {% for item in projects_by_country %}
-                <div class="flex justify-between items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ item.country }}</span>
-                    <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-indigo-100 bg-indigo-600 rounded-full">{{ item.count }}</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
     <!-- User Demographics & Additional Stats Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         <!-- User Demographics -->
