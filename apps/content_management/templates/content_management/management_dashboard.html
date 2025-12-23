@@ -281,6 +281,22 @@
                     <canvas id="projectCountryChart"></canvas>
                 </div>
             </div>
+
+            <!-- User Gender Distribution -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Gender Distribution" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="userGenderChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Project Difficulty -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Difficulty" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="projectDifficultyChart"></canvas>
+                </div>
+            </div>
             
             <!-- Beneficiaries Impact -->
             <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 lg:col-span-2">
@@ -743,6 +759,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 label: '{% trans "Projects" %}',
                 data: data.countries.data,
                 backgroundColor: '#6366f1',
+                borderRadius: 4
+            }]
+        }, { scales: commonScales });
+
+        // 6. User Gender Chart
+        updateChart('userGenderChart', 'doughnut', {
+            labels: data.demographics.gender.labels,
+            datasets: [{
+                data: data.demographics.gender.data,
+                backgroundColor: ['#3b82f6', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6'],
+                borderWidth: 0
+            }]
+        }, {
+            plugins: { legend: { position: 'right' } },
+            scales: {} 
+        });
+
+        // 7. Project Difficulty Chart
+        updateChart('projectDifficultyChart', 'bar', {
+            labels: data.project_difficulty.labels,
+            datasets: [{
+                label: '{% trans "Projects" %}',
+                data: data.project_difficulty.data,
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], // Green, Yellow, Red logic roughly
                 borderRadius: 4
             }]
         }, { scales: commonScales });

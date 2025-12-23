@@ -252,6 +252,30 @@ class DashboardDataView(LoginRequiredMixin, UserPassesTestMixin, View):
         )
         impact_labels = [item['title'][:20] + '...' for item in top_projects_impact]
         impact_data = [item['headcount'] for item in top_projects_impact]
+
+        # 6. User Demographics (Gender)
+        # Note: Not filtered by date range as demographics are usually "current state"
+        gender_dist = (
+            CustomUser.objects
+            .exclude(gender='')
+            .values('gender')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        gender_labels = [item['gender'] for item in gender_dist]
+        gender_data = [item['count'] for item in gender_dist]
+
+        # 7. Projects by Difficulty
+        # Filtered by date range to show mix of recent projects
+        difficulty_dist = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .values('difficulty')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        difficulty_labels = [item['difficulty'] for item in difficulty_dist]
+        difficulty_data = [item['count'] for item in difficulty_dist]
         
         data = {
             'user_growth': {
@@ -277,6 +301,16 @@ class DashboardDataView(LoginRequiredMixin, UserPassesTestMixin, View):
             'impact': {
                 'labels': impact_labels,
                 'data': impact_data
+            },
+            'demographics': {
+                'gender': {
+                    'labels': gender_labels,
+                    'data': gender_data
+                }
+            },
+            'project_difficulty': {
+                'labels': difficulty_labels,
+                'data': difficulty_data
             }
         }
         
