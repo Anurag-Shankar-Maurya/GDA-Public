@@ -57,137 +57,117 @@
 </div>
 
 <div class="container max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-    <!-- Enhanced Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-        <!-- Users Card -->
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total Users" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_users }}</p>
-                <p class="text-sm opacity-80 mt-1">+{{ new_users_30d }} {% trans "new (30d)" %}</p>
+    <!-- Compact Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+        <!-- User Metrics Card -->
+        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "User Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-users"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-users"></i>
-            </div>
-        </div>
-
-        <!-- Projects Card -->
-        <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Active Projects" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ active_projects }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ utilization_rate }}% {% trans "Utilization" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-play-circle"></i>
-            </div>
-        </div>
-
-        <!-- News Card -->
-        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "News & Events" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_news_events }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ published_news_events }} {% trans "Published" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-newspaper"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ total_users }}</p>
+                    <p class="opacity-80">{% trans "Total Users" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">+{{ new_users_30d }}</p>
+                    <p class="opacity-80">{% trans "New (30d)" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ active_users_30d }}</p>
+                    <p class="opacity-80">{% trans "Active (30d)" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ onboarding_rate }}%</p>
+                    <p class="opacity-80">{% trans "Onboarded" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Stories Card -->
-        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Success Stories" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_success_stories }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Impact stories" %}</p>
+        <!-- Content Metrics Card -->
+        <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Content Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-file-alt"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-trophy"></i>
-            </div>
-        </div>
-
-        <!-- FAQs Card -->
-        <div class="bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total FAQs" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_faqs }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Help content" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-question-circle"></i>
-            </div>
-        </div>
-
-        <!-- Beneficiaries Card -->
-        <div class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total Beneficiaries" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_beneficiaries }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "People helped" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-users"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ active_projects }}</p>
+                    <p class="opacity-80">{% trans "Projects" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_news_events }}</p>
+                    <p class="opacity-80">{% trans "News & Events" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_success_stories }}</p>
+                    <p class="opacity-80">{% trans "Stories" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_faqs }}</p>
+                    <p class="opacity-80">{% trans "FAQs" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Hours Card -->
-        <div class="bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Hours Contributed" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_hours_contributed }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Community effort" %}</p>
+        <!-- Impact Metrics Card -->
+        <div class="bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Impact Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-chart-line"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-hourglass-half"></i>
-            </div>
-        </div>
-        
-        <!-- Capacity Card -->
-        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total Capacity" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_capacity }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ total_enrolled }} {% trans "Enrolled" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-chair"></i>
-            </div>
-        </div>
-
-        <!-- Upcoming Deadlines Card -->
-        <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Upcoming Deadlines" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ upcoming_deadlines }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Next 30 days" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-calendar-alt"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ total_beneficiaries }}</p>
+                    <p class="opacity-80">{% trans "Beneficiaries" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_hours_contributed }}</p>
+                    <p class="opacity-80">{% trans "Hours" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_capacity }}</p>
+                    <p class="opacity-80">{% trans "Capacity" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_enrolled }}</p>
+                    <p class="opacity-80">{% trans "Enrolled" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Featured Content Card -->
-        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Featured Content" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ featured_projects|add:featured_news|add:featured_stories }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Projects, News & Stories" %}</p>
+        <!-- Engagement Metrics Card -->
+        <div class="bg-gradient-to-br from-orange-500 to-red-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Engagement Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-bolt"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-star"></i>
-            </div>
-        </div>
-
-        <!-- User Engagement Card -->
-        <div class="bg-gradient-to-r from-teal-500 to-green-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Active Users (30d)" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ active_users_30d }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ onboarding_rate }}% {% trans "Onboarded" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-user-check"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ utilization_rate }}%</p>
+                    <p class="opacity-80">{% trans "Utilization" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ upcoming_deadlines }}</p>
+                    <p class="opacity-80">{% trans "Deadlines" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ published_news_events }}</p>
+                    <p class="opacity-80">{% trans "Published" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ featured_projects|add:featured_news|add:featured_stories }}</p>
+                    <p class="opacity-80">{% trans "Featured" %}</p>
+                </div>
             </div>
         </div>
     </div>
