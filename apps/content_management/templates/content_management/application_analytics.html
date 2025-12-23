@@ -123,9 +123,8 @@
                 <i class="fas fa-globe-americas mr-3 text-green-500"></i>
                 {% trans "Geographic Distribution" %}
             </h3>
-            <div class="relative">
-                <canvas id="countryEnrollChart" width="400" height="300"></canvas>
-            </div>
+            <!-- Map Container -->
+            <div id="countryEnrollMap" class="w-full h-[300px]"></div>
         </div>
     </div>
 
@@ -229,6 +228,8 @@
 <!-- Export Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Google Charts -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -275,14 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     label: transTotalEnrollments,
                     data: themeCounts,
                     backgroundColor: [
-                        '#3b82f6', // Blue
-                        '#8b5cf6', // Purple
-                        '#10b981', // Green
-                        '#f59e0b', // Yellow
-                        '#ef4444', // Red
-                        '#ec4899', // Pink
-                        '#6366f1', // Indigo
-                        '#14b8a6'  // Teal
+                        '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#6366f1', '#14b8a6'
                     ].slice(0, themeLabels.length),
                     borderColor: '#ffffff',
                     borderWidth: 1,
@@ -303,42 +297,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Country Enrollment Chart
-    const countryCtx = document.getElementById('countryEnrollChart');
-    if (countryCtx) {
-        const countryEnrollLabels = countryEnrollData.map(item => item.country);
-        const countryEnrollCounts = countryEnrollData.map(item => item.total_enrollments);
+    // Country Enrollment Map (Google Charts)
+    google.charts.load('current', {
+        'packages': ['geochart'],
+    });
+    
+    google.charts.setOnLoadCallback(drawRegionsMap);
 
-        new Chart(countryCtx, {
-            type: 'doughnut',
-            data: {
-                labels: countryEnrollLabels,
-                datasets: [{
-                    data: countryEnrollCounts,
-                    backgroundColor: [
-                        '#3b82f6', // Blue
-                        '#8b5cf6', // Purple
-                        '#10b981', // Green
-                        '#f59e0b', // Yellow
-                        '#ef4444', // Red
-                        '#ec4899', // Pink
-                        '#6366f1', // Indigo
-                        '#14b8a6'  // Teal
-                    ].slice(0, countryEnrollLabels.length),
-                    borderColor: '#ffffff',
-                    borderWidth: 2,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '60%',
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
+    function drawRegionsMap() {
+        if (!countryEnrollData || countryEnrollData.length === 0) return;
+
+        const mapData = [['Country', 'Enrollments']];
+        countryEnrollData.forEach(item => {
+            mapData.push([item.country, item.total_enrollments]);
         });
+
+        const data = google.visualization.arrayToDataTable(mapData);
+
+        const isDark = document.documentElement.classList.contains('dark');
+        
+        const options = {
+            backgroundColor: 'transparent',
+            datalessRegionColor: isDark ? '#374151' : '#f3f4f6', 
+            defaultColor: '#f5f5f5',
+            colorAxis: {
+                colors: ['#a7f3d0', '#059669'] 
+            },
+            legend: {textStyle: {color: isDark ? '#e5e7eb' : '#374151', fontSize: 12}},
+            tooltip: {textStyle: {color: '#374151'}, showColorCode: true},
+            keepAspectRatio: true,
+        };
+
+        const chart = new google.visualization.GeoChart(document.getElementById('countryEnrollMap'));
+
+        chart.draw(data, options);
+        
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            chart.draw(data, options);
+        });
+        
+        // Handle Theme Change Re-render
+        const themeBtn = document.getElementById('theme-toggle');
+        if(themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                setTimeout(() => {
+                    const newIsDark = document.documentElement.classList.contains('dark');
+                    options.datalessRegionColor = newIsDark ? '#374151' : '#f3f4f6';
+                    options.legend.textStyle.color = newIsDark ? '#e5e7eb' : '#374151';
+                    chart.draw(data, options);
+                }, 100);
+            });
+        }
     }
 
     // Chart Animations
@@ -384,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (exportCSVBtn) exportCSVBtn.addEventListener('click', () => {
         let csvContent = "data:text/csv;charset=utf-8,";
 
-        // Theme Data
         csvContent += "Theme,Enrollments\n";
         themeData.forEach(item => {
             csvContent += `"${item.theme}",${item.total_enrollments}\n`;
