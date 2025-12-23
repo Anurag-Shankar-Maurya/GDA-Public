@@ -245,6 +245,25 @@
                 <button id="refreshData" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-200">
                     <i class="fas fa-sync-alt mr-2"></i> {% trans "Refresh" %}
                 </button>
+                
+                <!-- Export Dropdown -->
+                <div class="relative inline-block text-left">
+                    <button type="button" id="exportMenuBtn" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 transition-colors duration-200" aria-expanded="false" aria-haspopup="true">
+                        <i class="fas fa-download mr-2"></i> {% trans "Export" %}
+                        <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div id="exportMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all duration-200 ease-out transform opacity-0 scale-95">
+                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="exportMenuBtn">
+                            <button id="exportPDF" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150" role="menuitem">
+                                <i class="fas fa-file-pdf mr-2 text-red-500"></i> {% trans "Export as PDF" %}
+                            </button>
+                            <button id="exportCSV" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150" role="menuitem">
+                                <i class="fas fa-file-csv mr-2 text-green-500"></i> {% trans "Export as CSV" %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -534,6 +553,9 @@
 {% block static_js %}
 <!-- Ensure Chart.js is loaded explicitly here -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<!-- Export Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -547,6 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Chart instances storage
     let chartInstances = {};
+    let currentDashboardData = null; // Store data for CSV export
 
     // Base Chart Options
     const baseOptions = {
@@ -606,6 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const data = await response.json();
+            currentDashboardData = data; // Store for export
             updateCharts(data);
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
@@ -841,6 +865,150 @@ document.addEventListener('DOMContentLoaded', function() {
             header.style.transform = 'translateY(0)';
         }, 100);
     }
+
+    // --- Export Functionality ---
+    const exportMenuBtn = document.getElementById('exportMenuBtn');
+    const exportMenu = document.getElementById('exportMenu');
+    
+    if (exportMenuBtn && exportMenu) {
+        exportMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            exportMenu.classList.toggle('hidden');
+            exportMenu.classList.toggle('opacity-0');
+            exportMenu.classList.toggle('scale-95');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!exportMenuBtn.contains(e.target) && !exportMenu.contains(e.target)) {
+                exportMenu.classList.add('hidden');
+                exportMenu.classList.add('opacity-0');
+                exportMenu.classList.add('scale-95');
+            }
+        });
+    }
+
+    // PDF Export
+    document.getElementById('exportPDF').addEventListener('click', async () => {
+        const { jsPDF } = window.jspdf;
+        const btn = document.getElementById('exportPDF');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> {% trans "Generating..." %}';
+        
+        try {
+            // Capture the entire dashboard or specific sections
+            // We'll target the main container for charts
+            const chartsContainer = document.querySelector('.container.max-w-7xl'); // Adjust selector as needed
+            
+            if (!chartsContainer) throw new Error("Dashboard container not found");
+
+            const canvas = await html2canvas(chartsContainer, {
+                scale: 2, // Improve quality
+                useCORS: true,
+                logging: false,
+                backgroundColor: isDarkMode() ? '#1f2937' : '#ffffff' // Respect theme
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            
+            const imgWidth = pdfWidth;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            // First page
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            // Additional pages
+            while (heightLeft > 0) {
+                position = position - pdfHeight; // Move image up
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
+
+            pdf.save('dashboard-analytics.pdf');
+            
+        } catch (error) {
+            console.error("PDF Generation Error:", error);
+            alert("{% trans 'Failed to generate PDF. Please try again.' %}");
+        } finally {
+            btn.innerHTML = originalText;
+            exportMenu.classList.add('hidden');
+        }
+    });
+
+    // CSV Export
+    document.getElementById('exportCSV').addEventListener('click', () => {
+        if (!currentDashboardData) {
+            alert("{% trans 'No data available to export.' %}");
+            return;
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+        
+        // Helper to add sections
+        const addSection = (title, headers, rows) => {
+            csvContent += `\n${title}\n`;
+            csvContent += headers.join(",") + "\n";
+            rows.forEach(row => {
+                csvContent += row.join(",") + "\n";
+            });
+        };
+
+        // 1. User Growth
+        if (currentDashboardData.user_growth) {
+            const rows = currentDashboardData.user_growth.labels.map((label, index) => [label, currentDashboardData.user_growth.data[index]]);
+            addSection("User Growth", ["Date", "New Users"], rows);
+        }
+
+        // 2. Content Activity
+        if (currentDashboardData.content_activity) {
+            const d = currentDashboardData.content_activity;
+            const rows = d.labels.map((label, index) => [
+                label, 
+                d.datasets.projects[index],
+                d.datasets.news[index],
+                d.datasets.stories[index]
+            ]);
+            addSection("Content Activity", ["Date", "Projects", "News/Events", "Stories"], rows);
+        }
+
+        // 3. Projects by Theme
+        if (currentDashboardData.themes) {
+            const rows = currentDashboardData.themes.labels.map((label, index) => [label, currentDashboardData.themes.data[index]]);
+            addSection("Projects by Theme", ["Theme", "Count"], rows);
+        }
+
+        // 4. Projects by Country
+        if (currentDashboardData.countries) {
+            const rows = currentDashboardData.countries.labels.map((label, index) => [label, currentDashboardData.countries.data[index]]);
+            addSection("Projects by Country", ["Country", "Count"], rows);
+        }
+        
+        // 5. Demographics (Gender)
+        if (currentDashboardData.demographics && currentDashboardData.demographics.gender) {
+            const d = currentDashboardData.demographics.gender;
+            const rows = d.labels.map((label, index) => [label, d.data[index]]);
+            addSection("User Gender", ["Gender", "Count"], rows);
+        }
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "dashboard_data.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        exportMenu.classList.add('hidden');
+    });
 });
 </script>
 {% endblock %}
