@@ -483,6 +483,28 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
             SuccessStory.objects.filter(cover_image_url__isnull=False).exclude(cover_image_url__exact='').count()
         )
 
+        # --- Additional Engagement Metrics ---
+        context['avg_enrollment_per_project'] = round(context['total_enrolled'] / context['total_projects'], 1) if context['total_projects'] > 0 else 0
+        context['content_completion_rate'] = round((context['published_stories'] + context['published_news_events']) * 100 / (context['total_success_stories'] + context['total_news_events']), 1) if (context['total_success_stories'] + context['total_news_events']) > 0 else 0
+
+        # --- Additional Media Metrics ---
+        context['total_media_items'] = (
+            context['total_gallery_images'] + context['total_cover_images'] + 
+            context['total_gallery_image_urls'] + context['total_cover_image_urls'] + 
+            context['total_videos']
+        )
+
+        # --- Additional System Health Metrics ---
+        context['total_database_records'] = (
+            context['total_users'] + context['total_projects'] + 
+            context['total_news_events'] + context['total_success_stories'] + 
+            context['total_faqs'] + context['total_gallery_images']
+        )
+        context['data_integrity_score'] = round(
+            (context['kicc_synced_projects'] * 100 / context['total_projects']) if context['total_projects'] > 0 else 0, 1
+        )
+        context['content_freshness_days'] = (timezone.now().date() - Project.objects.aggregate(latest=Max('updated_at'))['latest'].date()).days if Project.objects.exists() else 0
+
 
         # --- Recent Content ---
         context['recent_projects'] = Project.objects.order_by('-created_at')[:5]

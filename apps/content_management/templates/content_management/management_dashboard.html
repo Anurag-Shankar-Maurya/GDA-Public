@@ -168,6 +168,14 @@
                     <p class="font-medium">{{ featured_projects|add:featured_news|add:featured_stories }}</p>
                     <p class="opacity-80">{% trans "Featured" %}</p>
                 </div>
+                <div>
+                    <p class="font-medium">{{ avg_enrollment_per_project }}</p>
+                    <p class="opacity-80">{% trans "Avg Enrollment" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ content_completion_rate }}%</p>
+                    <p class="opacity-80">{% trans "Content Complete" %}</p>
+                </div>
             </div>
         </div>
 
@@ -200,6 +208,10 @@
                     <p class="font-medium">{{ total_videos }}</p>
                     <p class="opacity-80">{% trans "Videos" %}</p>
                 </div>
+                <div>
+                    <p class="font-medium">{{ total_media_items }}</p>
+                    <p class="opacity-80">{% trans "Total Media" %}</p>
+                </div>
             </div>
         </div>
 
@@ -223,6 +235,18 @@
                 <div>
                     <p class="font-medium">{{ admin_user_count }}</p>
                     <p class="opacity-80">{% trans "Admins" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_database_records }}</p>
+                    <p class="opacity-80">{% trans "DB Records" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ data_integrity_score }}%</p>
+                    <p class="opacity-80">{% trans "Data Integrity" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ content_freshness_days }}</p>
+                    <p class="opacity-80">{% trans "Days Since Update" %}</p>
                 </div>
             </div>
         </div>
