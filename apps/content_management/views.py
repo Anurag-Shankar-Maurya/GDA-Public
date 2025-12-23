@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from apps.content.models import Project, NewsEvent, SuccessStory, SuccessStoryGalleryImage, ProjectGalleryImage, NewsEventGalleryImage, FAQ
 from django.views.generic import TemplateView
@@ -8,8 +10,9 @@ from django.utils import timezone
 import logging
 import mimetypes
 import os
+from datetime import timedelta
 from apps.users.models import CustomUser
-from django.db.models.functions import TruncMonth, TruncYear
+from django.db.models.functions import TruncMonth, TruncYear, TruncDay, TruncWeek
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import SuccessStoryForm, ProjectForm, NewsEventForm, FAQForm
 
@@ -121,6 +124,164 @@ def handle_news_event_gallery_image_uploads(request, news_event_instance):
 
 
 # --- Dashboard Views --- 
+class DashboardDataView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    JSON API view to serve aggregated data for dashboard charts.
+    Accepts GET parameters:
+    - range: '30d', '90d', '6m', '1y', 'all'
+    - frequency: 'day', 'week', 'month'
+    """
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get(self, request, *args, **kwargs):
+        range_param = request.GET.get('range', '6m')
+        freq_param = request.GET.get('frequency', 'month')
+        
+        # Calculate start date
+        today = timezone.now()
+        start_date = today - timedelta(days=180) # Default 6m
+        
+        if range_param == '30d':
+            start_date = today - timedelta(days=30)
+        elif range_param == '90d':
+            start_date = today - timedelta(days=90)
+        elif range_param == '6m':
+            start_date = today - timedelta(days=180)
+        elif range_param == '1y':
+            start_date = today - timedelta(days=365)
+        elif range_param == 'all':
+            start_date = today - timedelta(days=365*5) # Cap at 5 years for 'all' to avoid crazy loads
+        
+        # Determine Trunc function
+        if freq_param == 'day':
+            trunc_func = TruncDay
+        elif freq_param == 'week':
+            trunc_func = TruncWeek
+        else:
+            trunc_func = TruncMonth
+            
+        # 1. User Growth Over Time
+        user_growth = (
+            CustomUser.objects
+            .filter(date_joined__gte=start_date)
+            .annotate(period=trunc_func('date_joined'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        user_labels = [item['period'].strftime('%Y-%m-%d') for item in user_growth]
+        user_data = [item['count'] for item in user_growth]
+        
+        # 2. Content Creation Activity (Stacked)
+        # We need to normalize dates across all 3 content types
+        projects = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .annotate(period=trunc_func('created_at'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        news = (
+            NewsEvent.objects
+            .filter(publish_date__gte=start_date)
+            .annotate(period=trunc_func('publish_date'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        stories = (
+            SuccessStory.objects
+            .filter(published_at__gte=start_date)
+            .annotate(period=trunc_func('published_at'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        # Create a set of all periods found
+        all_periods = set()
+        for qs in [projects, news, stories]:
+            for item in qs:
+                all_periods.add(item['period'])
+        
+        sorted_periods = sorted(list(all_periods))
+        content_labels = [p.strftime('%Y-%m-%d') for p in sorted_periods]
+        
+        # Map data to periods
+        def map_data(qs_data, periods):
+            data_map = {item['period']: item['count'] for item in qs_data}
+            return [data_map.get(p, 0) for p in periods]
+            
+        project_data = map_data(projects, sorted_periods)
+        news_data = map_data(news, sorted_periods)
+        story_data = map_data(stories, sorted_periods)
+        
+        # 3. Projects by Theme (Pie/Doughnut)
+        themes = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .values('theme')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        theme_labels = [item['theme'] for item in themes]
+        theme_data = [item['count'] for item in themes]
+        
+        # 4. Projects by Country (Bar)
+        countries = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .values('country')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        country_labels = [item['country'] for item in countries]
+        country_data = [item['count'] for item in countries]
+
+        # 5. Beneficiaries Impact (Top 5 Projects created in range)
+        top_projects_impact = (
+             Project.objects
+             .filter(created_at__gte=start_date, headcount__gt=0)
+             .order_by('-headcount')[:5]
+             .values('title', 'headcount')
+        )
+        impact_labels = [item['title'][:20] + '...' for item in top_projects_impact]
+        impact_data = [item['headcount'] for item in top_projects_impact]
+        
+        data = {
+            'user_growth': {
+                'labels': user_labels,
+                'data': user_data
+            },
+            'content_activity': {
+                'labels': content_labels,
+                'datasets': {
+                    'projects': project_data,
+                    'news': news_data,
+                    'stories': story_data
+                }
+            },
+            'themes': {
+                'labels': theme_labels,
+                'data': theme_data
+            },
+            'countries': {
+                'labels': country_labels,
+                'data': country_data
+            },
+            'impact': {
+                'labels': impact_labels,
+                'data': impact_data
+            }
+        }
+        
+        return JsonResponse(data)
+
 class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'content_management/management_dashboard.html'
     login_url = '/login/'

@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     # Dashboard
     path('', views.ManagementDashboardView.as_view(), name='management_dashboard'),
+    path('dashboard-data/', views.DashboardDataView.as_view(), name='dashboard_data'),
     path('user-analytics/', views.UserAnalyticsView.as_view(), name='user_analytics'),
     path('users/<int:pk>/', views.UserDetailView.as_view(), name='user_detail'),
     path('users/<int:pk>/update/', views.UserUpdateView.as_view(), name='user_update'),

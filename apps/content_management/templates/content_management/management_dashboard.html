@@ -221,26 +221,81 @@
     </div>
 
     <!-- Data Visualization & Content Analytics -->
-    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-                <i class="fas fa-chart-pie mr-3 text-primary-blue"></i>
-                {% trans "Content Distribution" %}
-            </h3>
-            <div class="relative" style="height: 300px;">
-                <canvas id="contentDistributionChart"></canvas>
+    <div class="mb-12">
+        <!-- Dashboard Filter Controls -->
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-md p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+                <i class="fas fa-chart-line mr-3 text-primary-blue"></i>
+                {% trans "Analytics Overview" %}
+            </h2>
+            <div class="flex flex-wrap gap-3">
+                <div class="flex items-center space-x-2">
+                    <label for="timeRange" class="text-sm font-medium text-gray-700 dark:text-gray-300">{% trans "Range:" %}</label>
+                    <select id="timeRange" class="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-blue focus:border-primary-blue sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="30d">{% trans "Last 30 Days" %}</option>
+                        <option value="90d">{% trans "Last 90 Days" %}</option>
+                        <option value="6m" selected>{% trans "Last 6 Months" %}</option>
+                        <option value="1y">{% trans "Last Year" %}</option>
+                        <option value="all">{% trans "All Time" %}</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="frequency" class="text-sm font-medium text-gray-700 dark:text-gray-300">{% trans "Freq:" %}</label>
+                    <select id="frequency" class="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-blue focus:border-primary-blue sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="day">{% trans "Daily" %}</option>
+                        <option value="week">{% trans "Weekly" %}</option>
+                        <option value="month" selected>{% trans "Monthly" %}</option>
+                    </select>
+                </div>
+                <button id="refreshData" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-200">
+                    <i class="fas fa-sync-alt mr-2"></i> {% trans "Refresh" %}
+                </button>
             </div>
         </div>
-        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-                <i class="fas fa-chart-line mr-3 text-green-500"></i>
-                {% trans "Monthly Activity Trend" %}
-            </h3>
-            <div class="relative" style="height: 300px;">
-                <canvas id="activityTrendChart"></canvas>
+
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- User Growth Chart -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Growth" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="userGrowthChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Content Activity Chart -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Content Creation Activity" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="contentActivityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Projects by Theme -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Theme" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="projectThemeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Projects by Country -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Country" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="projectCountryChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Beneficiaries Impact -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 lg:col-span-2">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Top 5 Projects by Impact (Headcount)" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="impactChart"></canvas>
+                </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Project Insights Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
@@ -530,195 +585,216 @@
 
 {% block static_js %}
 <script>
-// Content Distribution Pie Chart
-const contentDistributionCtx = document.getElementById('contentDistributionChart').getContext('2d');
-const contentDistributionChart = new Chart(contentDistributionCtx, {
-    type: 'doughnut',
-    data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-            data: {{ chart_data|safe }},
-            backgroundColor: [
-                'rgba(59, 130, 246, 0.8)',
-                'rgba(245, 158, 11, 0.8)',
-                'rgba(168, 85, 247, 0.8)',
-                'rgba(239, 68, 68, 0.8)'
-            ],
-            borderColor: [
-                'rgba(59, 130, 246, 1)',
-                'rgba(245, 158, 11, 1)',
-                'rgba(168, 85, 247, 1)',
-                'rgba(239, 68, 68, 1)'
-            ],
-            borderWidth: 2,
-            hoverOffset: 10
-        }]
-    },
-    options: {
+document.addEventListener('DOMContentLoaded', function() {
+    // Chart instances storage
+    let chartInstances = {};
+
+    // Base Chart Options
+    const baseOptions = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'bottom',
                 labels: {
-                    padding: 20,
-                    usePointStyle: true,
-                    font: {
-                        size: 12
-                    }
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.parsed || 0;
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                        return `${label}: ${value} (${percentage}%)`;
-                    }
-                }
-            }
-        },
-        animation: {
-            animateScale: true,
-            animateRotate: true
-        }
-    }
-});
-
-// Monthly Activity Trend Line Chart
-const activityTrendCtx = document.getElementById('activityTrendChart').getContext('2d');
-const activityTrendChart = new Chart(activityTrendCtx, {
-    type: 'line',
-    data: {
-        labels: {{ activity_months|safe }},
-        datasets: [{
-            label: '{% trans "Projects Created" %}',
-            data: {{ activity_project_data|safe }},
-            borderColor: 'rgba(59, 130, 246, 1)',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 8
-        }, {
-            label: '{% trans "News & Events" %}',
-            data: {{ activity_news_data|safe }},
-            borderColor: 'rgba(245, 158, 11, 1)',
-            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: 'rgba(245, 158, 11, 1)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 8
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-            intersect: false,
-            mode: 'index'
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
                     usePointStyle: true,
                     padding: 20
                 }
-            },
-            tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                titleColor: '#fff',
-                bodyColor: '#fff',
-                borderColor: 'rgba(59, 130, 246, 0.5)',
-                borderWidth: 1
             }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.1)'
-                },
-                ticks: {
-                    precision: 0
-                }
-            },
-            x: {
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.1)'
-                }
-            }
-        },
-        animation: {
-            duration: 2000,
-            easing: 'easeInOutQuart'
+        }
+    };
+
+    // Dark Mode Awareness
+    function isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+    }
+
+    function getChartColors() {
+        const dark = isDarkMode();
+        return {
+            grid: dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+            text: dark ? '#e5e7eb' : '#374151'
+        };
+    }
+
+    // Initialize Charts
+    function initCharts() {
+        fetchData();
+    }
+
+    // Fetch Data from API
+    async function fetchData() {
+        const range = document.getElementById('timeRange').value;
+        const frequency = document.getElementById('frequency').value;
+        const btn = document.getElementById('refreshData');
+        const originalIcon = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> {% trans "Loading..." %}';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(`{% url 'dashboard_data' %}?range=${range}&frequency=${frequency}`);
+            const data = await response.json();
+            updateCharts(data);
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+        } finally {
+            btn.innerHTML = originalIcon;
+            btn.disabled = false;
         }
     }
-});
 
-// Add loading animation for charts
-document.addEventListener('DOMContentLoaded', function() {
+    // Create or Update Charts
+    function updateCharts(data) {
+        const colors = getChartColors();
+        const commonScales = {
+            y: {
+                beginAtZero: true,
+                grid: { color: colors.grid },
+                ticks: { color: colors.text }
+            },
+            x: {
+                grid: { color: colors.grid },
+                ticks: { color: colors.text }
+            }
+        };
+
+        // 1. User Growth Chart
+        updateChart('userGrowthChart', 'line', {
+            labels: data.user_growth.labels,
+            datasets: [{
+                label: '{% trans "New Users" %}',
+                data: data.user_growth.data,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        }, commonScales);
+
+        // 2. Content Activity Chart
+        updateChart('contentActivityChart', 'bar', {
+            labels: data.content_activity.labels,
+            datasets: [
+                {
+                    label: '{% trans "Projects" %}',
+                    data: data.content_activity.datasets.projects,
+                    backgroundColor: '#10b981',
+                },
+                {
+                    label: '{% trans "News/Events" %}',
+                    data: data.content_activity.datasets.news,
+                    backgroundColor: '#f59e0b',
+                },
+                {
+                    label: '{% trans "Stories" %}',
+                    data: data.content_activity.datasets.stories,
+                    backgroundColor: '#8b5cf6',
+                }
+            ]
+        }, { ...commonScales, x: { ...commonScales.x, stacked: true }, y: { ...commonScales.y, stacked: true } });
+
+        // 3. Projects by Theme
+        updateChart('projectThemeChart', 'doughnut', {
+            labels: data.themes.labels,
+            datasets: [{
+                data: data.themes.data,
+                backgroundColor: [
+                    '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#6366f1'
+                ],
+                borderWidth: 0
+            }]
+        }, {
+            ...commonScales,
+            scales: {} // No scales for doughnut
+        });
+
+        // 4. Projects by Country
+        updateChart('projectCountryChart', 'bar', {
+            labels: data.countries.labels,
+            datasets: [{
+                label: '{% trans "Projects" %}',
+                data: data.countries.data,
+                backgroundColor: '#6366f1',
+                borderRadius: 4
+            }]
+        }, commonScales);
+        
+        // 5. Impact Chart (Horizontal Bar)
+        updateChart('impactChart', 'bar', {
+            labels: data.impact.labels,
+            datasets: [{
+                label: '{% trans "Beneficiaries (Headcount)" %}',
+                data: data.impact.data,
+                backgroundColor: '#ec4899',
+                borderRadius: 4
+            }]
+        }, {
+            indexAxis: 'y',
+            x: { ...commonScales.x },
+            y: { ...commonScales.y }
+        });
+    }
+
+    function updateChart(canvasId, type, data, scales) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        const colors = getChartColors();
+
+        if (chartInstances[canvasId]) {
+            chartInstances[canvasId].destroy();
+        }
+
+        chartInstances[canvasId] = new Chart(ctx, {
+            type: type,
+            data: data,
+            options: {
+                ...baseOptions,
+                scales: scales || {},
+                plugins: {
+                    ...baseOptions.plugins,
+                    legend: {
+                        ...baseOptions.plugins.legend,
+                        labels: {
+                            ...baseOptions.plugins.legend.labels,
+                            color: colors.text
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Event Listeners
+    document.getElementById('refreshData').addEventListener('click', fetchData);
+    document.getElementById('timeRange').addEventListener('change', fetchData);
+    document.getElementById('frequency').addEventListener('change', fetchData);
+
+    // Initial load
+    initCharts();
+
+    // Theme toggle listener to update chart colors
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            setTimeout(() => {
+                fetchData(); // Reload charts to update colors
+            }, 100);
+        });
+    }
+    
+    // Existing animations...
     const chartContainers = document.querySelectorAll('.chart-container');
     chartContainers.forEach(container => {
         container.style.opacity = '0';
         container.style.transform = 'translateY(20px)';
-
         setTimeout(() => {
             container.style.transition = 'all 0.6s ease-out';
             container.style.opacity = '1';
             container.style.transform = 'translateY(0)';
         }, 300);
     });
-
-    // Animate summary cards on scroll
-    const summaryCards = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-4 > div');
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }, index * 100);
-            }
-        });
-    }, observerOptions);
-
-    summaryCards.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = 'all 0.6s ease-out';
-        observer.observe(card);
-    });
-
-    // Add hover effects for quick action cards
-    const quickActionCards = document.querySelectorAll('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 a');
-    quickActionCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-4px) scale(1.02)';
-        });
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-
-    // Animate header gradient on load
+    
+    // Header gradient animation
     const header = document.querySelector('.bg-gradient-to-r.from-blue-600');
     if (header) {
         header.style.opacity = '0';
@@ -729,14 +805,6 @@ document.addEventListener('DOMContentLoaded', function() {
             header.style.transform = 'translateY(0)';
         }, 100);
     }
-
-    // Add pulse animation to key metrics in header
-    const headerStats = document.querySelectorAll('.bg-gradient-to-r.from-blue-600 .grid.grid-cols-2.md\\:grid-cols-4 .font-bold');
-    headerStats.forEach((stat, index) => {
-        setTimeout(() => {
-            stat.style.animation = 'pulse 2s ease-in-out';
-        }, 1000 + index * 200);
-    });
 });
 </script>
 {% endblock %}
