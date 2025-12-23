@@ -275,16 +275,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     label: transTotalEnrollments,
                     data: themeCounts,
                     backgroundColor: [
-                        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-                        'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-                        'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
+                        '#3b82f6', // Blue
+                        '#8b5cf6', // Purple
+                        '#10b981', // Green
+                        '#f59e0b', // Yellow
+                        '#ef4444', // Red
+                        '#ec4899', // Pink
+                        '#6366f1', // Indigo
+                        '#14b8a6'  // Teal
                     ].slice(0, themeLabels.length),
                     borderColor: '#ffffff',
-                    borderWidth: 2,
-                    borderRadius: 8
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false
                 }]
             },
             options: {
@@ -313,9 +316,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     data: countryEnrollCounts,
                     backgroundColor: [
-                        '#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#a8edea', '#ffecd2', '#a8c0ff'
+                        '#3b82f6', // Blue
+                        '#8b5cf6', // Purple
+                        '#10b981', // Green
+                        '#f59e0b', // Yellow
+                        '#ef4444', // Red
+                        '#ec4899', // Pink
+                        '#6366f1', // Indigo
+                        '#14b8a6'  // Teal
                     ].slice(0, countryEnrollLabels.length),
-                    borderWidth: 3
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                    hoverOffset: 10
                 }]
             },
             options: {
