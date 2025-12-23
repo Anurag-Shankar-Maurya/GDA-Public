@@ -58,7 +58,7 @@
 
 <div class="container max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
     <!-- Compact Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
         <!-- User Metrics Card -->
         <div class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
             <div class="flex items-center justify-between mb-4">
@@ -167,6 +167,54 @@
                 <div>
                     <p class="font-medium">{{ featured_projects|add:featured_news|add:featured_stories }}</p>
                     <p class="opacity-80">{% trans "Featured" %}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Media Metrics Card -->
+        <div class="bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Media Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-images"></i>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ total_gallery_images }}</p>
+                    <p class="opacity-80">{% trans "Gallery Images" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_cover_images }}</p>
+                    <p class="opacity-80">{% trans "Cover Images" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_videos }}</p>
+                    <p class="opacity-80">{% trans "Videos" %}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health Card -->
+        <div class="bg-gradient-to-br from-gray-500 to-slate-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "System Health" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ kicc_synced_projects }}</p>
+                    <p class="opacity-80">{% trans "KICC Synced" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ faq_helpfulness_ratio }}%</p>
+                    <p class="opacity-80">{% trans "FAQ Helpfulness" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ admin_user_count }}</p>
+                    <p class="opacity-80">{% trans "Admins" %}</p>
                 </div>
             </div>
         </div>

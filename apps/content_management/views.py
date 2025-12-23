@@ -438,6 +438,16 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
         # --- FAQs ---
         context['total_faqs'] = FAQ.objects.count()
 
+        # --- System Health & Info ---
+        context['kicc_synced_projects'] = Project.objects.filter(kicc_project_id__isnull=False).exclude(kicc_project_id='').count()
+        faq_votes = FAQ.objects.aggregate(
+            total_up=Sum('thumbs_up'),
+            total_down=Sum('thumbs_down')
+        )
+        total_faq_votes = (faq_votes['total_up'] or 0) + (faq_votes['total_down'] or 0)
+        context['faq_helpfulness_ratio'] = round((faq_votes['total_up'] or 0) * 100 / total_faq_votes, 1) if total_faq_votes > 0 else 100
+        context['admin_user_count'] = CustomUser.objects.filter(is_staff=True).count()
+
         # --- Gallery Images ---
         context['total_project_gallery_images'] = ProjectGalleryImage.objects.count()
         context['total_success_story_gallery_images'] = SuccessStoryGalleryImage.objects.count()
@@ -447,6 +457,17 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
             context['total_success_story_gallery_images'] + 
             context['total_news_event_gallery_images']
         )
+        
+        # --- Cover Images & Videos ---
+        context['total_cover_images'] = (
+            Project.objects.exclude(cover_image_blob__isnull=True).exclude(cover_image_blob__exact=b'').count() +
+            NewsEvent.objects.exclude(cover_image_blob__isnull=True).exclude(cover_image_blob__exact=b'').count() +
+            SuccessStory.objects.exclude(cover_image_blob__isnull=True).exclude(cover_image_blob__exact=b'').count()
+        )
+        context['total_videos'] = Project.objects.aggregate(
+            total=Count('video_urls', filter=Q(video_urls__isnull=False) & ~Q(video_urls='[]'))
+        )['total'] or 0
+
 
         # --- Recent Content ---
         context['recent_projects'] = Project.objects.order_by('-created_at')[:5]
