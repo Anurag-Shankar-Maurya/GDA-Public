@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from apps.content.models import Project, NewsEvent, SuccessStory, SuccessStoryGalleryImage, ProjectGalleryImage, NewsEventGalleryImage, FAQ
@@ -10,6 +10,7 @@ from django.utils import timezone
 import logging
 import mimetypes
 import os
+import csv
 from datetime import timedelta
 from apps.users.models import CustomUser
 from django.db.models.functions import TruncMonth, TruncYear, TruncDay, TruncWeek
@@ -601,6 +602,37 @@ class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
         return queryset
 
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('export') == 'csv':
+            return self.export_csv()
+        return super().get(request, *args, **kwargs)
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'Username', 'Email', 'First Name', 'Last Name', 'Country Code', 
+            'Gender', 'Date Joined', 'Is Active', 'Is Staff'
+        ])
+        
+        for user in queryset:
+            writer.writerow([
+                user.username,
+                user.email,
+                user.first_name,
+                user.last_name,
+                user.country_code,
+                user.gender,
+                user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
+                'Yes' if user.is_active else 'No',
+                'Yes' if user.is_staff else 'No'
+            ])
+        
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('search', '')
@@ -808,6 +840,37 @@ class ProjectListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
         return queryset
 
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('export') == 'csv':
+            return self.export_csv()
+        return super().get(request, *args, **kwargs)
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="projects.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'Title', 'Country', 'Theme', 'Difficulty', 'Headcount', 
+            'Start Date', 'Application Deadline', 'Is Active', 'Created At'
+        ])
+        
+        for project in queryset:
+            writer.writerow([
+                project.title,
+                project.country,
+                project.theme,
+                project.difficulty,
+                project.headcount,
+                project.start_date.strftime('%Y-%m-%d') if project.start_date else '',
+                project.application_deadline.strftime('%Y-%m-%d') if project.application_deadline else '',
+                'Yes' if project.is_active else 'No',
+                project.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('search', '')
@@ -995,6 +1058,35 @@ class NewsEventListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
         return queryset
 
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('export') == 'csv':
+            return self.export_csv()
+        return super().get(request, *args, **kwargs)
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="news_events.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'Title', 'Content Type', 'Publish Date', 'Is Published', 
+            'Is Featured', 'Is Hero Highlight', 'Created At'
+        ])
+        
+        for item in queryset:
+            writer.writerow([
+                item.title,
+                item.content_type,
+                item.publish_date.strftime('%Y-%m-%d') if item.publish_date else '',
+                'Yes' if item.is_published else 'No',
+                'Yes' if item.is_featured else 'No',
+                'Yes' if item.is_hero_highlight else 'No',
+                item.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('search', '')
@@ -1178,6 +1270,37 @@ class SuccessStoryListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             queryset = queryset.order_by('-published_at')
 
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('export') == 'csv':
+            return self.export_csv()
+        return super().get(request, *args, **kwargs)
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'Title', 'Related Project', 'Beneficiaries', 'Total Hours Contributed', 
+            'Published At', 'Is Published', 'Is Featured', 'Is Hero Highlight', 'Created At'
+        ])
+        
+        for story in queryset:
+            writer.writerow([
+                story.title,
+                story.related_project.title if story.related_project else '',
+                story.beneficiaries,
+                story.total_hours_contributed,
+                story.published_at.strftime('%Y-%m-%d') if story.published_at else '',
+                'Yes' if story.is_published else 'No',
+                'Yes' if story.is_featured else 'No',
+                'Yes' if story.is_hero_highlight else 'No',
+                story.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1378,6 +1501,36 @@ class FAQListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             queryset = queryset.order_by('order')
 
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        if request.GET.get('export') == 'csv':
+            return self.export_csv()
+        return super().get(request, *args, **kwargs)
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="faqs.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'Order', 'Question', 'Answer', 'Thumbs Up', 'Thumbs Down', 
+            'Usefulness %', 'Is Schema Ready', 'Created At'
+        ])
+        
+        for faq in queryset:
+            writer.writerow([
+                faq.order,
+                faq.question,
+                faq.answer,
+                faq.thumbs_up,
+                faq.thumbs_down,
+                f"{faq.usefulness:.1f}%" if hasattr(faq, 'usefulness') else '0.0%',
+                'Yes' if faq.is_schema_ready else 'No',
+                faq.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
