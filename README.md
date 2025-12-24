@@ -487,24 +487,32 @@ Fill out the configuration form with the following details:
 
 ### Option 3: Deploying to Vercel
 
-This project is configured for deployment on Vercel.
+Vercel provides a seamless deployment experience for Django projects. Here’s how to get your project live:
 
-#### Prerequisites
+#### 1. Create a New Project
+- From your Vercel dashboard, click the **"Add New..."** button and select **"Project"**.
 
-*   A Vercel account
-*   A Vercel project linked to your GitHub repository
+#### 2. Import Your Git Repository
+- Connect your GitHub account and select your repository (e.g., `Anurag-Shankar-Maurya/GDA-Public`).
+- Click the **"Import"** button.
 
-#### 1. Configure Environment Variables
+#### 3. Configure Your Project
+- **Project Name**: Vercel will automatically use your repository name, but you can customize it.
+- **Framework Preset**: Vercel should automatically detect that this is a Django project or leave at **others** to take every thing from `vercel.json` file.
+- **Root Directory**: Leave this as the default unless your project is in a subdirectory.
 
-In your Vercel project settings, add the following environment variables:
-*   `SECRET_KEY`: Your production secret key
-*   `DEBUG`: Set to `False`
-*   `DATABASE_URL`: Your PostgreSQL connection string
-*   Add other environment variables from `.env.example` as needed
+#### 4. Add Environment Variables
+- Expand the **"Environment Variables"** section.
+- You can add your secrets and configuration variables one by one or paste the contents of your `.env` file.
+- **Required variables for production:**
+    - `SECRET_KEY`: Your production secret key.
+    - `DEBUG`: Set to `False`.
+    - `DATABASE_URL`: Your production database connection string (e.g., from a Vercel Postgres database).
+    - `PYTHON_VERSION`: Specify your Python version, e.g., `3.11`.
 
-#### 2. Deploy
-
-Vercel will automatically deploy the application when you push changes to your GitHub repository. The `vercel.json` file configures the build and routing settings.
+#### 5. Deploy
+- Click the **"Deploy"** button. Vercel will start the build and deployment process.
+- The `vercel.json` file in the repository root is already configured to handle the build process and routing for the Django application.
 
 The current live demo is hosted on Vercel.
 
