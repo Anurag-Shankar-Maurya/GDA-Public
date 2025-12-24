@@ -11,11 +11,19 @@ import logging
 import mimetypes
 import os
 import csv
+import json
 from datetime import timedelta
 from apps.users.models import CustomUser
 from django.db.models.functions import TruncMonth, TruncYear, TruncDay, TruncWeek
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import SuccessStoryForm, ProjectForm, NewsEventForm, FAQForm
+from django.core.serializers.json import DjangoJSONEncoder
+try:
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+    XLSX_AVAILABLE = True
+except ImportError:
+    XLSX_AVAILABLE = False
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -603,9 +611,26 @@ class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('export') == 'csv':
-            return self.export_csv()
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
         return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            return self.export_csv()
 
     def export_csv(self):
         queryset = self.get_queryset()
@@ -646,6 +671,229 @@ class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else ''
             ])
         
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 
+            'Gender', 'Blood Group', 'Guardian Name', 'Guardian Relation', 'Address', 
+            'Contact', 'Country Code', 'Login Method', 'Onboarding Complete', 
+            'Email Verified', 'Is Active', 'Is Staff', 'Is Superuser', 'Date Joined', 
+            'Last Login'
+        ])
+        
+        for user in queryset:
+            writer.writerow([
+                user.id,
+                user.username,
+                user.email,
+                user.first_name,
+                user.last_name,
+                user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '',
+                user.gender,
+                user.blood_group,
+                user.guardian_name,
+                user.guardian_relation,
+                user.address,
+                user.contact,
+                user.country_code,
+                user.login_method,
+                'Yes' if user.onboarding_complete else 'No',
+                'Yes' if user.email_verified else 'No',
+                'Yes' if user.is_active else 'No',
+                'Yes' if user.is_staff else 'No',
+                'Yes' if user.is_superuser else 'No',
+                user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
+                user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else ''
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for user in queryset:
+            data.append({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'date_of_birth': user.date_of_birth.isoformat() if user.date_of_birth else None,
+                'gender': user.gender,
+                'blood_group': user.blood_group,
+                'guardian_name': user.guardian_name,
+                'guardian_relation': user.guardian_relation,
+                'address': user.address,
+                'contact': user.contact,
+                'country_code': user.country_code,
+                'login_method': user.login_method,
+                'onboarding_complete': user.onboarding_complete,
+                'email_verified': user.email_verified,
+                'is_active': user.is_active,
+                'is_staff': user.is_staff,
+                'is_superuser': user.is_superuser,
+                'date_joined': user.date_joined.isoformat(),
+                'last_login': user.last_login.isoformat() if user.last_login else None
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "User Analytics"
+        
+        headers = [
+            'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 
+            'Gender', 'Blood Group', 'Guardian Name', 'Guardian Relation', 'Address', 
+            'Contact', 'Country Code', 'Login Method', 'Onboarding Complete', 
+            'Email Verified', 'Is Active', 'Is Staff', 'Is Superuser', 'Date Joined', 
+            'Last Login'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, user in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=user.id)
+            ws.cell(row=row_num, column=2, value=user.username)
+            ws.cell(row=row_num, column=3, value=user.email)
+            ws.cell(row=row_num, column=4, value=user.first_name)
+            ws.cell(row=row_num, column=5, value=user.last_name)
+            ws.cell(row=row_num, column=6, value=user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '')
+            ws.cell(row=row_num, column=7, value=user.gender)
+            ws.cell(row=row_num, column=8, value=user.blood_group)
+            ws.cell(row=row_num, column=9, value=user.guardian_name)
+            ws.cell(row=row_num, column=10, value=user.guardian_relation)
+            ws.cell(row=row_num, column=11, value=user.address)
+            ws.cell(row=row_num, column=12, value=user.contact)
+            ws.cell(row=row_num, column=13, value=user.country_code)
+            ws.cell(row=row_num, column=14, value=user.login_method)
+            ws.cell(row=row_num, column=15, value='Yes' if user.onboarding_complete else 'No')
+            ws.cell(row=row_num, column=16, value='Yes' if user.email_verified else 'No')
+            ws.cell(row=row_num, column=17, value='Yes' if user.is_active else 'No')
+            ws.cell(row=row_num, column=18, value='Yes' if user.is_staff else 'No')
+            ws.cell(row=row_num, column=19, value='Yes' if user.is_superuser else 'No')
+            ws.cell(row=row_num, column=20, value=user.date_joined.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=21, value=user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else '')
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>User Analytics Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>User Analytics Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Gender</th>
+                        <th>Blood Group</th>
+                        <th>Guardian Name</th>
+                        <th>Guardian Relation</th>
+                        <th>Address</th>
+                        <th>Contact</th>
+                        <th>Country Code</th>
+                        <th>Login Method</th>
+                        <th>Onboarding Complete</th>
+                        <th>Email Verified</th>
+                        <th>Is Active</th>
+                        <th>Is Staff</th>
+                        <th>Is Superuser</th>
+                        <th>Date Joined</th>
+                        <th>Last Login</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for user in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{user.id}</td>
+                        <td>{user.username}</td>
+                        <td>{user.email}</td>
+                        <td>{user.first_name}</td>
+                        <td>{user.last_name}</td>
+                        <td>{user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else ''}</td>
+                        <td>{user.gender}</td>
+                        <td>{user.blood_group}</td>
+                        <td>{user.guardian_name}</td>
+                        <td>{user.guardian_relation}</td>
+                        <td>{user.address}</td>
+                        <td>{user.contact}</td>
+                        <td>{user.country_code}</td>
+                        <td>{user.login_method}</td>
+                        <td>{'Yes' if user.onboarding_complete else 'No'}</td>
+                        <td>{'Yes' if user.email_verified else 'No'}</td>
+                        <td>{'Yes' if user.is_active else 'No'}</td>
+                        <td>{'Yes' if user.is_staff else 'No'}</td>
+                        <td>{'Yes' if user.is_superuser else 'No'}</td>
+                        <td>{user.date_joined.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else ''}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.html"'
         return response
 
     def get_context_data(self, **kwargs):
@@ -856,9 +1104,27 @@ class ProjectListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('export') == 'csv':
-            return self.export_csv()
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
         return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            # Default to CSV
+            return self.export_csv()
 
     def export_csv(self):
         queryset = self.get_queryset()
@@ -903,6 +1169,252 @@ class ProjectListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 project.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="projects.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'Project ID', 'KICC Project ID', 'Title', 'Teaser', 'Background Objectives', 
+            'Tasks Eligibility', 'Country', 'Theme', 'Duration', 'Difficulty', 'Headcount', 
+            'Total Headcount', 'Cover Image URL', 'Video URLs', 'Image URLs', 
+            'Application Deadline', 'Start Date', 'End Date', 'Is Active', 'Is Hero Highlight', 
+            'Is Featured', 'Enrolled Users Count', 'Created At', 'Updated At'
+        ])
+        
+        for project in queryset:
+            writer.writerow([
+                project.id,
+                project.project_id,
+                project.kicc_project_id or '',
+                project.title,
+                project.teaser,
+                project.background_objectives,
+                project.tasks_eligibility,
+                project.country,
+                project.theme,
+                project.duration,
+                project.difficulty,
+                project.headcount or 0,
+                project.total_headcount,
+                project.cover_image_url or '',
+                ', '.join(project.video_urls) if project.video_urls else '',
+                ', '.join(project.image_urls) if project.image_urls else '',
+                project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else '',
+                project.start_date.strftime('%Y-%m-%d') if project.start_date else '',
+                project.end_date.strftime('%Y-%m-%d') if project.end_date else '',
+                'Yes' if project.is_active else 'No',
+                'Yes' if project.is_hero_highlight else 'No',
+                'Yes' if project.is_featured else 'No',
+                project.enrolled_users.count(),
+                project.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                project.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for project in queryset:
+            data.append({
+                'id': project.id,
+                'project_id': project.project_id,
+                'kicc_project_id': project.kicc_project_id,
+                'title': project.title,
+                'teaser': project.teaser,
+                'background_objectives': project.background_objectives,
+                'tasks_eligibility': project.tasks_eligibility,
+                'country': project.country,
+                'theme': project.theme,
+                'duration': project.duration,
+                'difficulty': project.difficulty,
+                'headcount': project.headcount,
+                'total_headcount': project.total_headcount,
+                'cover_image_url': project.cover_image_url,
+                'video_urls': project.video_urls,
+                'image_urls': project.image_urls,
+                'application_deadline': project.application_deadline.isoformat() if project.application_deadline else None,
+                'start_date': project.start_date.isoformat() if project.start_date else None,
+                'end_date': project.end_date.isoformat() if project.end_date else None,
+                'is_active': project.is_active,
+                'is_hero_highlight': project.is_hero_highlight,
+                'is_featured': project.is_featured,
+                'enrolled_users_count': project.enrolled_users.count(),
+                'created_at': project.created_at.isoformat(),
+                'updated_at': project.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="projects.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Projects"
+        
+        # Header row with styling
+        headers = [
+            'ID', 'Project ID', 'KICC Project ID', 'Title', 'Teaser', 'Background Objectives', 
+            'Tasks Eligibility', 'Country', 'Theme', 'Duration', 'Difficulty', 'Headcount', 
+            'Total Headcount', 'Cover Image URL', 'Video URLs', 'Image URLs', 
+            'Application Deadline', 'Start Date', 'End Date', 'Is Active', 'Is Hero Highlight', 
+            'Is Featured', 'Enrolled Users Count', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        # Data rows
+        for row_num, project in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=project.id)
+            ws.cell(row=row_num, column=2, value=project.project_id)
+            ws.cell(row=row_num, column=3, value=project.kicc_project_id)
+            ws.cell(row=row_num, column=4, value=project.title)
+            ws.cell(row=row_num, column=5, value=project.teaser)
+            ws.cell(row=row_num, column=6, value=project.background_objectives)
+            ws.cell(row=row_num, column=7, value=project.tasks_eligibility)
+            ws.cell(row=row_num, column=8, value=project.country)
+            ws.cell(row=row_num, column=9, value=project.theme)
+            ws.cell(row=row_num, column=10, value=project.duration)
+            ws.cell(row=row_num, column=11, value=project.difficulty)
+            ws.cell(row=row_num, column=12, value=project.headcount or 0)
+            ws.cell(row=row_num, column=13, value=project.total_headcount)
+            ws.cell(row=row_num, column=14, value=project.cover_image_url)
+            ws.cell(row=row_num, column=15, value=', '.join(project.video_urls) if project.video_urls else '')
+            ws.cell(row=row_num, column=16, value=', '.join(project.image_urls) if project.image_urls else '')
+            ws.cell(row=row_num, column=17, value=project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else '')
+            ws.cell(row=row_num, column=18, value=project.start_date.strftime('%Y-%m-%d') if project.start_date else '')
+            ws.cell(row=row_num, column=19, value=project.end_date.strftime('%Y-%m-%d') if project.end_date else '')
+            ws.cell(row=row_num, column=20, value='Yes' if project.is_active else 'No')
+            ws.cell(row=row_num, column=21, value='Yes' if project.is_hero_highlight else 'No')
+            ws.cell(row=row_num, column=22, value='Yes' if project.is_featured else 'No')
+            ws.cell(row=row_num, column=23, value=project.enrolled_users.count())
+            ws.cell(row=row_num, column=24, value=project.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=25, value=project.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        # Auto-adjust column widths
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)  # Max width of 50
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="projects.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Projects Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Projects Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Project ID</th>
+                        <th>KICC Project ID</th>
+                        <th>Title</th>
+                        <th>Teaser</th>
+                        <th>Background Objectives</th>
+                        <th>Tasks Eligibility</th>
+                        <th>Country</th>
+                        <th>Theme</th>
+                        <th>Duration</th>
+                        <th>Difficulty</th>
+                        <th>Headcount</th>
+                        <th>Total Headcount</th>
+                        <th>Cover Image URL</th>
+                        <th>Video URLs</th>
+                        <th>Image URLs</th>
+                        <th>Application Deadline</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Is Active</th>
+                        <th>Is Hero Highlight</th>
+                        <th>Is Featured</th>
+                        <th>Enrolled Users Count</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for project in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{project.id}</td>
+                        <td>{project.project_id}</td>
+                        <td>{project.kicc_project_id or ''}</td>
+                        <td>{project.title}</td>
+                        <td>{project.teaser}</td>
+                        <td>{project.background_objectives}</td>
+                        <td>{project.tasks_eligibility}</td>
+                        <td>{project.country}</td>
+                        <td>{project.theme}</td>
+                        <td>{project.duration}</td>
+                        <td>{project.difficulty}</td>
+                        <td>{project.headcount or 0}</td>
+                        <td>{project.total_headcount}</td>
+                        <td>{project.cover_image_url or ''}</td>
+                        <td>{', '.join(project.video_urls) if project.video_urls else ''}</td>
+                        <td>{', '.join(project.image_urls) if project.image_urls else ''}</td>
+                        <td>{project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else ''}</td>
+                        <td>{project.start_date.strftime('%Y-%m-%d') if project.start_date else ''}</td>
+                        <td>{project.end_date.strftime('%Y-%m-%d') if project.end_date else ''}</td>
+                        <td>{'Yes' if project.is_active else 'No'}</td>
+                        <td>{'Yes' if project.is_hero_highlight else 'No'}</td>
+                        <td>{'Yes' if project.is_featured else 'No'}</td>
+                        <td>{project.enrolled_users.count()}</td>
+                        <td>{project.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{project.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="projects.html"'
         return response
 
     def get_context_data(self, **kwargs):
@@ -1093,9 +1605,26 @@ class NewsEventListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('export') == 'csv':
-            return self.export_csv()
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
         return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            return self.export_csv()
 
     def export_csv(self):
         queryset = self.get_queryset()
@@ -1128,6 +1657,195 @@ class NewsEventListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 item.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="news_events.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'News Event ID', 'Title', 'Body', 'Content Type', 'Cover Image URL', 
+            'External Link', 'Video URLs', 'Image URLs', 'Publish Date', 'Is Published', 
+            'Is Hero Highlight', 'Is Featured', 'Created At', 'Updated At'
+        ])
+        
+        for item in queryset:
+            writer.writerow([
+                item.id,
+                item.news_event_id,
+                item.title,
+                item.body,
+                item.content_type,
+                item.cover_image_url or '',
+                item.external_link or '',
+                ', '.join(item.video_urls) if item.video_urls else '',
+                ', '.join(item.image_urls) if item.image_urls else '',
+                item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else '',
+                'Yes' if item.is_published else 'No',
+                'Yes' if item.is_hero_highlight else 'No',
+                'Yes' if item.is_featured else 'No',
+                item.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                item.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for item in queryset:
+            data.append({
+                'id': item.id,
+                'news_event_id': item.news_event_id,
+                'title': item.title,
+                'body': item.body,
+                'content_type': item.content_type,
+                'cover_image_url': item.cover_image_url,
+                'external_link': item.external_link,
+                'video_urls': item.video_urls,
+                'image_urls': item.image_urls,
+                'publish_date': item.publish_date.isoformat() if item.publish_date else None,
+                'is_published': item.is_published,
+                'is_hero_highlight': item.is_hero_highlight,
+                'is_featured': item.is_featured,
+                'created_at': item.created_at.isoformat(),
+                'updated_at': item.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="news_events.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "News Events"
+        
+        headers = [
+            'ID', 'News Event ID', 'Title', 'Body', 'Content Type', 'Cover Image URL', 
+            'External Link', 'Video URLs', 'Image URLs', 'Publish Date', 'Is Published', 
+            'Is Hero Highlight', 'Is Featured', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, item in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=item.id)
+            ws.cell(row=row_num, column=2, value=item.news_event_id)
+            ws.cell(row=row_num, column=3, value=item.title)
+            ws.cell(row=row_num, column=4, value=item.body)
+            ws.cell(row=row_num, column=5, value=item.content_type)
+            ws.cell(row=row_num, column=6, value=item.cover_image_url)
+            ws.cell(row=row_num, column=7, value=item.external_link)
+            ws.cell(row=row_num, column=8, value=', '.join(item.video_urls) if item.video_urls else '')
+            ws.cell(row=row_num, column=9, value=', '.join(item.image_urls) if item.image_urls else '')
+            ws.cell(row=row_num, column=10, value=item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else '')
+            ws.cell(row=row_num, column=11, value='Yes' if item.is_published else 'No')
+            ws.cell(row=row_num, column=12, value='Yes' if item.is_hero_highlight else 'No')
+            ws.cell(row=row_num, column=13, value='Yes' if item.is_featured else 'No')
+            ws.cell(row=row_num, column=14, value=item.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=15, value=item.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="news_events.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>News & Events Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>News & Events Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>News Event ID</th>
+                        <th>Title</th>
+                        <th>Body</th>
+                        <th>Content Type</th>
+                        <th>Cover Image URL</th>
+                        <th>External Link</th>
+                        <th>Video URLs</th>
+                        <th>Image URLs</th>
+                        <th>Publish Date</th>
+                        <th>Is Published</th>
+                        <th>Is Hero Highlight</th>
+                        <th>Is Featured</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for item in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{item.id}</td>
+                        <td>{item.news_event_id}</td>
+                        <td>{item.title}</td>
+                        <td>{item.body}</td>
+                        <td>{item.content_type}</td>
+                        <td>{item.cover_image_url or ''}</td>
+                        <td>{item.external_link or ''}</td>
+                        <td>{', '.join(item.video_urls) if item.video_urls else ''}</td>
+                        <td>{', '.join(item.image_urls) if item.image_urls else ''}</td>
+                        <td>{item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else ''}</td>
+                        <td>{'Yes' if item.is_published else 'No'}</td>
+                        <td>{'Yes' if item.is_hero_highlight else 'No'}</td>
+                        <td>{'Yes' if item.is_featured else 'No'}</td>
+                        <td>{item.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{item.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="news_events.html"'
         return response
 
     def get_context_data(self, **kwargs):
@@ -1315,9 +2033,26 @@ class SuccessStoryListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('export') == 'csv':
-            return self.export_csv()
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
         return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            return self.export_csv()
 
     def export_csv(self):
         queryset = self.get_queryset()
@@ -1351,6 +2086,200 @@ class SuccessStoryListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 story.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'Success Story ID', 'Title', 'Body', 'Related Project', 'Cover Image URL', 
+            'Is Hero Highlight', 'Is Featured', 'Image URLs', 'Video URLs', 'Beneficiaries', 
+            'Total Hours Contributed', 'Is Published', 'Published At', 'Created At', 'Updated At'
+        ])
+        
+        for story in queryset:
+            writer.writerow([
+                story.id,
+                story.success_story_id,
+                story.title,
+                story.body,
+                story.related_project.title if story.related_project else '',
+                story.cover_image_url or '',
+                'Yes' if story.is_hero_highlight else 'No',
+                'Yes' if story.is_featured else 'No',
+                ', '.join(story.image_urls) if story.image_urls else '',
+                ', '.join(story.video_urls) if story.video_urls else '',
+                story.beneficiaries or '',
+                story.total_hours_contributed or '',
+                'Yes' if story.is_published else 'No',
+                story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else '',
+                story.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                story.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for story in queryset:
+            data.append({
+                'id': story.id,
+                'success_story_id': story.success_story_id,
+                'title': story.title,
+                'body': story.body,
+                'related_project': story.related_project.title if story.related_project else None,
+                'cover_image_url': story.cover_image_url,
+                'is_hero_highlight': story.is_hero_highlight,
+                'is_featured': story.is_featured,
+                'image_urls': story.image_urls,
+                'video_urls': story.video_urls,
+                'beneficiaries': story.beneficiaries,
+                'total_hours_contributed': story.total_hours_contributed,
+                'is_published': story.is_published,
+                'published_at': story.published_at.isoformat() if story.published_at else None,
+                'created_at': story.created_at.isoformat(),
+                'updated_at': story.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Success Stories"
+        
+        headers = [
+            'ID', 'Success Story ID', 'Title', 'Body', 'Related Project', 'Cover Image URL', 
+            'Is Hero Highlight', 'Is Featured', 'Image URLs', 'Video URLs', 'Beneficiaries', 
+            'Total Hours Contributed', 'Is Published', 'Published At', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, story in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=story.id)
+            ws.cell(row=row_num, column=2, value=story.success_story_id)
+            ws.cell(row=row_num, column=3, value=story.title)
+            ws.cell(row=row_num, column=4, value=story.body)
+            ws.cell(row=row_num, column=5, value=story.related_project.title if story.related_project else '')
+            ws.cell(row=row_num, column=6, value=story.cover_image_url)
+            ws.cell(row=row_num, column=7, value='Yes' if story.is_hero_highlight else 'No')
+            ws.cell(row=row_num, column=8, value='Yes' if story.is_featured else 'No')
+            ws.cell(row=row_num, column=9, value=', '.join(story.image_urls) if story.image_urls else '')
+            ws.cell(row=row_num, column=10, value=', '.join(story.video_urls) if story.video_urls else '')
+            ws.cell(row=row_num, column=11, value=story.beneficiaries)
+            ws.cell(row=row_num, column=12, value=story.total_hours_contributed)
+            ws.cell(row=row_num, column=13, value='Yes' if story.is_published else 'No')
+            ws.cell(row=row_num, column=14, value=story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else '')
+            ws.cell(row=row_num, column=15, value=story.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=16, value=story.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Success Stories Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Success Stories Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Success Story ID</th>
+                        <th>Title</th>
+                        <th>Body</th>
+                        <th>Related Project</th>
+                        <th>Cover Image URL</th>
+                        <th>Is Hero Highlight</th>
+                        <th>Is Featured</th>
+                        <th>Image URLs</th>
+                        <th>Video URLs</th>
+                        <th>Beneficiaries</th>
+                        <th>Total Hours Contributed</th>
+                        <th>Is Published</th>
+                        <th>Published At</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for story in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{story.id}</td>
+                        <td>{story.success_story_id}</td>
+                        <td>{story.title}</td>
+                        <td>{story.body}</td>
+                        <td>{story.related_project.title if story.related_project else ''}</td>
+                        <td>{story.cover_image_url or ''}</td>
+                        <td>{'Yes' if story.is_hero_highlight else 'No'}</td>
+                        <td>{'Yes' if story.is_featured else 'No'}</td>
+                        <td>{', '.join(story.image_urls) if story.image_urls else ''}</td>
+                        <td>{', '.join(story.video_urls) if story.video_urls else ''}</td>
+                        <td>{story.beneficiaries or ''}</td>
+                        <td>{story.total_hours_contributed or ''}</td>
+                        <td>{'Yes' if story.is_published else 'No'}</td>
+                        <td>{story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else ''}</td>
+                        <td>{story.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{story.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.html"'
         return response
 
     def get_context_data(self, **kwargs):
@@ -1554,9 +2483,26 @@ class FAQListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return queryset
 
     def get(self, request, *args, **kwargs):
-        if request.GET.get('export') == 'csv':
-            return self.export_csv()
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
         return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            return self.export_csv()
 
     def export_csv(self):
         queryset = self.get_queryset()
@@ -1585,6 +2531,178 @@ class FAQListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
                 faq.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="faqs.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'FAQ ID', 'Question', 'Answer', 'Order', 'Is Schema Ready', 
+            'Thumbs Up', 'Thumbs Down', 'Total Votes', 'Helpfulness Ratio %', 'Created At', 'Updated At'
+        ])
+        
+        for faq in queryset:
+            writer.writerow([
+                faq.id,
+                faq.faq_id,
+                faq.question,
+                faq.answer,
+                faq.order,
+                'Yes' if faq.is_schema_ready else 'No',
+                faq.thumbs_up,
+                faq.thumbs_down,
+                faq.total_votes,
+                f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%',
+                faq.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                faq.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for faq in queryset:
+            data.append({
+                'id': faq.id,
+                'faq_id': faq.faq_id,
+                'question': faq.question,
+                'answer': faq.answer,
+                'order': faq.order,
+                'is_schema_ready': faq.is_schema_ready,
+                'thumbs_up': faq.thumbs_up,
+                'thumbs_down': faq.thumbs_down,
+                'total_votes': faq.total_votes,
+                'helpfulness_ratio': faq.helpfulness_ratio,
+                'created_at': faq.created_at.isoformat(),
+                'updated_at': faq.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="faqs.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "FAQs"
+        
+        headers = [
+            'ID', 'FAQ ID', 'Question', 'Answer', 'Order', 'Is Schema Ready', 
+            'Thumbs Up', 'Thumbs Down', 'Total Votes', 'Helpfulness Ratio %', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, faq in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=faq.id)
+            ws.cell(row=row_num, column=2, value=faq.faq_id)
+            ws.cell(row=row_num, column=3, value=faq.question)
+            ws.cell(row=row_num, column=4, value=faq.answer)
+            ws.cell(row=row_num, column=5, value=faq.order)
+            ws.cell(row=row_num, column=6, value='Yes' if faq.is_schema_ready else 'No')
+            ws.cell(row=row_num, column=7, value=faq.thumbs_up)
+            ws.cell(row=row_num, column=8, value=faq.thumbs_down)
+            ws.cell(row=row_num, column=9, value=faq.total_votes)
+            ws.cell(row=row_num, column=10, value=f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%')
+            ws.cell(row=row_num, column=11, value=faq.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=12, value=faq.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="faqs.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>FAQs Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>FAQs Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>FAQ ID</th>
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>Order</th>
+                        <th>Is Schema Ready</th>
+                        <th>Thumbs Up</th>
+                        <th>Thumbs Down</th>
+                        <th>Total Votes</th>
+                        <th>Helpfulness Ratio %</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for faq in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{faq.id}</td>
+                        <td>{faq.faq_id}</td>
+                        <td>{faq.question}</td>
+                        <td>{faq.answer}</td>
+                        <td>{faq.order}</td>
+                        <td>{'Yes' if faq.is_schema_ready else 'No'}</td>
+                        <td>{faq.thumbs_up}</td>
+                        <td>{faq.thumbs_down}</td>
+                        <td>{faq.total_votes}</td>
+                        <td>{f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%'}</td>
+                        <td>{faq.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{faq.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="faqs.html"'
         return response
 
     def get_context_data(self, **kwargs):

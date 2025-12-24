@@ -42,10 +42,38 @@
                 {% trans "Add User" %}
             </a>
             
-            <!-- Export Button -->
-            <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=csv" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 transition-colors">
-                <i class="fas fa-file-csv mr-2 text-green-500"></i> {% trans "Export CSV" %}
-            </a>
+            <!-- Export Dropdown -->
+            <div class="relative">
+                <button type="button" id="export-dropdown-button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-download mr-2 text-blue-500"></i>
+                    {% trans "Export" %}
+                    <i class="fas fa-chevron-down ml-2"></i>
+                </button>
+                <div id="export-dropdown-menu" class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div class="py-1">
+                        <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=csv" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <i class="fas fa-file-csv mr-3 text-green-500"></i>
+                            {% trans "Export as CSV" %}
+                        </a>
+                        <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=tsv" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <i class="fas fa-file-alt mr-3 text-blue-500"></i>
+                            {% trans "Export as TSV" %}
+                        </a>
+                        <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=json" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <i class="fas fa-file-code mr-3 text-yellow-500"></i>
+                            {% trans "Export as JSON" %}
+                        </a>
+                        <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=xlsx" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <i class="fas fa-file-excel mr-3 text-green-600"></i>
+                            {% trans "Export as XLSX" %}
+                        </a>
+                        <a href="?{% for key, value in request.GET.items %}{% if key != 'export' %}{{ key }}={{ value }}&{% endif %}{% endfor %}export=html" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <i class="fas fa-file-code mr-3 text-orange-500"></i>
+                            {% trans "Export as HTML" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -340,47 +368,24 @@ document.addEventListener('DOMContentLoaded', function() {
         sortSelect.addEventListener('change', () => document.getElementById('filter-form').submit());
     }
 
-});
-
-function toggleSort(field) {
-    const sortSelect = document.getElementById('sort');
-    if (!sortSelect) return;
+    // Export dropdown functionality
+    const exportButton = document.getElementById('export-dropdown-button');
+    const exportMenu = document.getElementById('export-dropdown-menu');
     
-    const currentSort = sortSelect.value;
-    let newSort = field;
-    
-    if (currentSort === field) {
-        newSort = '-' + field;
-    } else if (currentSort === '-' + field) {
-        newSort = field;
-    }
-    
-    let optionExists = false;
-    for (let i = 0; i < sortSelect.options.length; i++) {
-        if (sortSelect.options[i].value === newSort) {
-            optionExists = true;
-            break;
-        }
-    }
-    
-    if (!optionExists) {
-        if (newSort.startsWith('-')) {
-             newSort = newSort.substring(1);
-        } else {
-             newSort = '-' + newSort;
-        }
-        for (let i = 0; i < sortSelect.options.length; i++) {
-            if (sortSelect.options[i].value === newSort) {
-                optionExists = true;
-                break;
+    if (exportButton && exportMenu) {
+        exportButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            exportMenu.classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!exportButton.contains(e.target) && !exportMenu.contains(e.target)) {
+                exportMenu.classList.add('hidden');
             }
-        }
+        });
     }
-    
-    if (optionExists) {
-        sortSelect.value = newSort;
-        document.getElementById('filter-form').submit();
-    }
-}
+
+});
 </script>
 {% endblock %}```
