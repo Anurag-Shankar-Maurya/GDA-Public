@@ -286,7 +286,47 @@ To enable social logins, you need to obtain API credentials from each provider a
 
 ### Database Seeding
 
-The project provides two seeding commands for populating the database:
+The project provides several commands to populate the database with sample data for development and testing. These commands are useful for quickly setting up a local environment with realistic content.
+
+#### All-in-One Development Seeding
+
+For a quick and comprehensive setup, you can use the main `seed` command. This will populate the database with a complete set of sample data, including users, projects, news, success stories, and FAQs.
+
+```bash
+python manage.py seed
+```
+
+This command creates:
+-   Sample user accounts (with the default password: `password123`)
+-   A variety of volunteer projects across different themes and countries
+-   News articles and events
+-   Success stories linked to projects
+-   Frequently asked questions
+
+#### Granular Seeding (Optional)
+
+If you need more control over the seeding process, you can run the following commands to seed specific types of content individually:
+
+-   **Seed Projects**:
+    ```bash
+    python manage.py seed_projects
+    ```
+-   **Seed News and Events**:
+    ```bash
+    python manage.py seed_news
+    ```
+-   **Seed Success Stories**:
+    ```bash
+    python manage.py seed_stories
+    ```
+-   **Seed FAQs**:
+    ```bash
+    python manage.py seed_faqs
+    ```
+-   **Create Superuser and Staff Accounts**:
+    ```bash
+    python manage.py seed_superuser
+    ```
 
 #### Production Data Seeding
 
@@ -300,30 +340,7 @@ python manage.py seed_production
 python manage.py seed_production --clear
 ```
 
-This command reads data from CSV files located in `apps/content/data/` and creates:
-- **42 Projects** - Volunteer opportunities with complete details
-- **28 NewsEvents** - News articles and event announcements
-- **52 SuccessStories** - Volunteer reflections and impact stories
-- **8 FAQs** - Frequently asked questions with voting data
-
-**Note:** The `--clear` option will delete all existing content data before seeding.
-
-#### Development Sample Data
-
-To populate the database with sample data for development and testing:
-
-```bash
-python manage.py seed
-```
-
-This command creates:
-- Sample user accounts (with default password: `password123`)
-- Example volunteer projects across different themes and countries
-- News articles and events
-- Success stories linked to projects
-- Frequently asked questions
-
-**Note:** Both seed commands use `get_or_create` to avoid duplicating data, so they're safe to run multiple times.
+This command reads data from CSV files located in `apps/content/data/` and is intended for setting up a production-like environment.
 
 ### Admin Panel Access
 
