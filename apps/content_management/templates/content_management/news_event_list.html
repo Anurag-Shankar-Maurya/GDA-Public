@@ -395,23 +395,5 @@ function toggleSort(field) {
         document.getElementById('filter-form').submit();
     }
 }
-
-    // Export dropdown functionality
-    const exportButton = document.getElementById('export-dropdown-button');
-    const exportMenu = document.getElementById('export-dropdown-menu');
-    
-    if (exportButton && exportMenu) {
-        exportButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            exportMenu.classList.toggle('hidden');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!exportButton.contains(e.target) && !exportMenu.contains(e.target)) {
-                exportMenu.classList.add('hidden');
-            }
-        });
-    }
 </script>
 {% endblock %}
