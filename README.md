@@ -1,6 +1,6 @@
 # 🌍 GDA - Global Development Alliance
 
-[![Django Version](https://img.shields.io/badge/Django-5.2-green.svg)](https://djangoproject.com/)
+[![Django Version](https://img.shields.io/badge/Django-5.2.6-green.svg)](https://djangoproject.com/)
 [![Python Version](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/Anurag-Shankar-Maurya/GDA/actions)
@@ -26,6 +26,7 @@
 - [📖 Usage Guide](#-usage-guide)
 - [🧪 Testing](#-testing)
 - [🚀 Deployment](#-deployment)
+- [🌐 Internationalization and Localization](#-internationalization-and-localization)
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 - [👥 Support](#-support)
@@ -47,28 +48,40 @@ To empower volunteer organizations with data-driven insights and streamlined man
 ## ✨ Key Features
 
 ### 🏗️ Project Management Suite
-- **Comprehensive Project Lifecycle**: From inception to completion tracking
-- **Advanced Enrollment System**: Automated capacity management and waitlist handling
-- **Multi-dimensional Filtering**: Theme, location, duration, and difficulty-based project discovery
-- **Performance Analytics**: Real-time enrollment tracking and utilization metrics
+- **Comprehensive Project Lifecycle**: From inception to completion tracking.
+- **Advanced Enrollment System**: Automated capacity management and waitlist handling.
+- **Multi-dimensional Filtering**: Theme, location, duration, and difficulty-based project discovery.
+- **Performance Analytics**: Real-time enrollment tracking and utilization metrics.
 
 ### 👥 User Management & Analytics
-- **Sophisticated User Profiles**: Detailed participant information with guardian verification
-- **Demographic Intelligence**: Gender, country, and engagement pattern analysis
-- **Behavioral Analytics**: User activity tracking and engagement scoring
-- **Advanced Search Engine**: Multi-criteria user discovery and management
+- **Sophisticated User Profiles**: Detailed participant information with guardian verification.
+- **Social Authentication**: Seamless login with Google, Facebook, and GitHub.
+- **Demographic Intelligence**: Gender, country, and engagement pattern analysis.
+- **Behavioral Analytics**: User activity tracking and engagement scoring.
+- **Advanced Search Engine**: Multi-criteria user discovery and management.
 
 ### 📝 Content Management System
-- **Dynamic News Platform**: Real-time news and event publication system
-- **Multimedia Success Stories**: Rich content creation with image and video integration
-- **Intelligent FAQ Management**: Categorized knowledge base with priority ordering
-- **SEO-Optimized Content**: Search engine friendly content structure
+- **Dynamic News Platform**: Real-time news and event publication system.
+- **Multimedia Success Stories**: Rich content creation with image and video integration.
+- **Intelligent FAQ Management**: Categorized knowledge base with priority ordering.
+- **SEO-Optimized Content**: Search engine friendly content structure.
 
 ### 📊 Business Intelligence Dashboard
-- **Executive Summary**: High-level organizational metrics and KPIs
-- **Interactive Data Visualization**: Chart.js-powered analytics with real-time updates
-- **Custom Reporting**: Exportable reports for stakeholder communication
-- **Performance Monitoring**: System health and user engagement tracking
+- **Executive Summary**: High-level organizational metrics and KPIs.
+- **Interactive Data Visualization**: Chart.js-powered analytics with real-time updates.
+- **Custom Reporting**: Exportable reports for stakeholder communication.
+- **Performance Monitoring**: System health and user engagement tracking.
+
+### 🌐 Internationalization and Localization
+- **Multi-language Support**: Full support for English and Traditional Chinese (zh_TW).
+- **Translatable Content**: All models and templates are designed for easy localization.
+- **Automated Translation Files**: `makemessages` and `compilemessages` for streamlined translation workflows.
+
+### 🚀 API and Integrations
+- **RESTful API**: A comprehensive REST API for projects, news, success stories, and user data.
+- **API Documentation**: Auto-generated Swagger and ReDoc documentation for all endpoints.
+- **External Service Integration**: KICC project data synchronization.
+- **Secure API Access**: Token-based authentication and permission classes.
 
 ## 🏗️ Architecture
 
@@ -104,7 +117,7 @@ graph TB
 
 ### System Components
 - **Frontend Layer**: Responsive Bootstrap 5 interface with Chart.js visualizations
-- **Application Layer**: Django 5.2 with modular app architecture
+- **Application Layer**: Django 5.2.6 with modular app architecture
 - **Data Layer**: PostgreSQL for production, SQLite for development
 - **API Layer**: Django REST Framework for RESTful services
 - **Media Layer**: Local storage with cloud storage capability
@@ -113,12 +126,12 @@ graph TB
 
 | Component | Technology | Version | Purpose |
 |-----------|------------|---------|---------|
-| **Backend** | Django | 5.2 | Web Framework |
+| **Backend** | Django | 5.2.6 | Web Framework |
 | **Database** | PostgreSQL/SQLite | 15+/3+ | Primary Data Store |
 | **Frontend** | Bootstrap | 5.3 | UI Framework |
 | **JavaScript** | Vanilla JS | ES6+ | Client-side Logic |
 | **Charts** | Chart.js | 4.0+ | Data Visualization |
-| **API** | Django REST | 3.15+ | RESTful Services |
+| **API** | Django REST | 3.16.1 | RESTful Services |
 | **Deployment** | Gunicorn/Vercel | 21+ | WSGI Server/Hosting |
 | **Container** | Docker | 24+ | Containerization |
 | **Web Server** | Nginx | 1.25+ | Reverse Proxy |
@@ -146,15 +159,15 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-*   Python 3.10+
+*   Python 3.11+
 *   Git
 *   A virtual environment manager (like `venv`)
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Anurag-Shankar-Maurya/GDA2.git
-cd GDA2
+git clone https://github.com/Anurag-Shankar-Maurya/GDA-Public.git
+cd GDA-Public
 ```
 
 ### 2. Set Up Virtual Environment
@@ -166,38 +179,6 @@ python -m venv venv
 venv\Scripts\activate
 # On macOS/Linux
 source venv/bin/activate
-```
->
-## Environment variables (local & production)
-
-This project reads configuration from environment variables. For local development you can copy the provided `.env.example` to `.env` and fill values. Sensitive information (SECRET_KEY, email passwords, DB credentials) must never be committed to source control.
-
-Important variables (set these in production):
-
-- `SECRET_KEY` — a long, random secret (50+ characters). Required for production.
-- `DEBUG` — `False` in production. Use `True` only in local development.
-- `DATABASE_URL` — connection string for the production database (e.g. PostgreSQL). The project uses `dj-database-url`.
-- `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` — email delivery settings.
-- `SECURE_SSL_REDIRECT`, `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` — enable these in production when serving over HTTPS.
-- `SECURE_HSTS_SECONDS`, `SECURE_HSTS_INCLUDE_SUBDOMAINS`, `SECURE_HSTS_PRELOAD` — HSTS settings (careful: irreversible browser behavior once enabled).
-
-For local development you can keep `DEBUG=True` and use the default `sqlite3` DB. For CI and production set `DEBUG=False` and provide a `SECRET_KEY` and `DATABASE_URL`.
-
-Example (.env):
-
-```
-DEBUG=False
-SECRET_KEY=your-production-secret-key
-DATABASE_URL=postgres://user:pass@hostname:5432/dbname
-EMAIL_HOST=smtp.example.com
-EMAIL_PORT=465
-EMAIL_HOST_USER=notification@example.com
-EMAIL_HOST_PASSWORD=supersecret
-DEFAULT_FROM_EMAIL=notification@example.com
-SECURE_SSL_REDIRECT=True
-SESSION_COOKIE_SECURE=True
-CSRF_COOKIE_SECURE=True
-SECURE_HSTS_SECONDS=31536000
 ```
 
 ### 3. Install Dependencies
@@ -236,8 +217,67 @@ python manage.py runserver
 ```
 
 You can now access the application:
-*   **Main Site:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+*   **Main Site:** [http://1227.0.0.1:8000/](http://127.0.0.1:8000/)
 *   **Management Dashboard:** [http://127.0.0.1:8000/management/](http://127.0.0.1:8000/management/)
+
+## ⚙️ Environment Variables
+
+This project uses a `.env` file to manage environment variables for both local development and production. To get started, copy the example file:
+
+```bash
+cp .env.example .env
+```
+
+Then, open the `.env` file and fill in the required values as described below.
+
+### Django Core Settings
+
+-   `SECRET_KEY`: A long, random string used for cryptographic signing. **Required for production.**
+-   `DEBUG`: Set to `True` for local development to get detailed error pages. **Must be `False` in production.**
+
+### Database Configuration
+
+-   `USE_POSTGRES`: Set to `True` to use a PostgreSQL database (recommended for production) or `False` to use the default `sqlite3` database (convenient for local development).
+-   `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`: Credentials for your PostgreSQL database. These are only required if `USE_POSTGRES` is set to `True`.
+
+*Note: For production deployments on services like Render or Vercel, you might use a single `DATABASE_URL` string instead, which `dj-database-url` will parse.*
+
+### Email Delivery
+
+These settings are required for features like email verification and password resets.
+
+-   `EMAIL_BACKEND`: The backend to use for sending emails. `django.core.mail.backends.smtp.EmailBackend` is standard.
+-   `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`: Your SMTP server credentials. For Gmail, consider using an "App Password" for better security.
+-   `EMAIL_USE_SSL`: Set to `True` for secure connections (e.g., port 465).
+-   `DEFAULT_FROM_EMAIL`: The default email address for automated messages.
+
+### Deployment Security
+
+These settings should be enabled when deploying your application over HTTPS in production.
+
+-   `SECURE_SSL_REDIRECT`: Set to `True` to redirect all HTTP requests to HTTPS.
+-   `SESSION_COOKIE_SECURE`: Set to `True` to only send session cookies over HTTPS.
+-   `CSRF_COOKIE_SECURE`: Set to `True` to only send the CSRF cookie over HTTPS.
+-   `SECURE_HSTS_SECONDS`, `SECURE_HSTS_INCLUDE_SUBDOMAINS`, `SECURE_HSTS_PRELOAD`: Settings for HTTP Strict Transport Security (HSTS). Be cautious when enabling these, as they can have long-term effects on browser behavior.
+
+### Social Authentication (OAuth)
+
+To enable social logins, you need to obtain API credentials from each provider and add them to your `.env` file.
+
+-   **Google**:
+    -   `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+    -   Get credentials from the [Google Cloud Console](https://console.cloud.google.com/).
+    -   Set the authorized redirect URI to: `http://127.0.0.1:8000/accounts/google/login/callback/` (for local development).
+
+-   **Facebook**:
+    -   `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`
+    -   Get credentials from [Meta for Developers](https://developers.facebook.com/).
+    -   Set the valid OAuth redirect URI to: `http://127.0.0.1:8000/accounts/facebook/login/callback/`.
+
+-   **GitHub**:
+    -   `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+    -   Get credentials from your [GitHub Developer settings](https://github.com/settings/developers).
+    -   Set the authorization callback URL to: `http://127.0.0.1:8000/accounts/github/login/callback/`.
 
 
 ## 📖 Usage Guide
@@ -441,7 +481,28 @@ In your Render project settings, add the following environment variables:
 
 Render will automatically handle the deployment process. The current live demo is hosted on Render at [https://gda-oy5s.onrender.com](https://gda-oy5s.onrender.com)
 
-### Option 3: Manual Deployment with WSGI/ASGI
+### Option 3: Deploying to Vercel
+
+This project is configured for deployment on Vercel.
+
+#### Prerequisites
+
+*   A Vercel account
+*   A Vercel project linked to your GitHub repository
+
+#### 1. Configure Environment Variables
+
+In your Vercel project settings, add the following environment variables:
+*   `SECRET_KEY`: Your production secret key
+*   `DEBUG`: Set to `False`
+*   `DATABASE_URL`: Your PostgreSQL connection string
+*   Add other environment variables from `.env.example` as needed
+
+#### 2. Deploy
+
+Vercel will automatically deploy the application when you push changes to your GitHub repository. The `vercel.json` file configures the build and routing settings.
+
+### Option 4: Manual Deployment with WSGI/ASGI
 
 For a more traditional deployment on a virtual machine or a bare-metal server, you can use a production-grade WSGI or ASGI server.
 
