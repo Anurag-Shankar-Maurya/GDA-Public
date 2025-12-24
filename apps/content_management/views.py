@@ -558,6 +558,314 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
 
         return context
 
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        context = self.get_context_data()
+        
+        if format_type == 'csv':
+            return self.export_csv(context)
+        elif format_type == 'tsv':
+            return self.export_tsv(context)
+        elif format_type == 'json':
+            return self.export_json(context)
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx(context)
+        elif format_type == 'html':
+            return self.export_html(context)
+        elif format_type == 'pdf':
+            return self.export_pdf(context)
+        else:
+            return self.export_csv(context)
+
+    def export_csv(self, context):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow(['Category', 'Metric', 'Value'])
+        
+        # User Stats
+        writer.writerow(['Users', 'Total Users', context['total_users']])
+        writer.writerow(['Users', 'New Users (30d)', context['new_users_30d']])
+        writer.writerow(['Users', 'Active Users (30d)', context['active_users_30d']])
+        writer.writerow(['Users', 'User Growth %', context['user_growth_pct']])
+        
+        # Project Stats
+        writer.writerow(['Projects', 'Total Projects', context['total_projects']])
+        writer.writerow(['Projects', 'Active Projects', context['active_projects']])
+        writer.writerow(['Projects', 'Completed Projects', context['completed_projects']])
+        writer.writerow(['Projects', 'Upcoming Projects', context['upcoming_projects']])
+        writer.writerow(['Projects', 'Featured Projects', context['featured_projects']])
+        writer.writerow(['Projects', 'Hero Projects', context['hero_projects']])
+        writer.writerow(['Projects', 'Total Capacity', context['total_capacity']])
+        writer.writerow(['Projects', 'Total Enrolled', context['total_enrolled']])
+        writer.writerow(['Projects', 'Utilization Rate %', context['utilization_rate']])
+        
+        # Content Stats
+        writer.writerow(['Content', 'Total News & Events', context['total_news_events']])
+        writer.writerow(['Content', 'Published News & Events', context['published_news_events']])
+        writer.writerow(['Content', 'Total Success Stories', context['total_success_stories']])
+        writer.writerow(['Content', 'Published Stories', context['published_stories']])
+        writer.writerow(['Content', 'Total FAQs', context['total_faqs']])
+        
+        # Impact Stats
+        writer.writerow(['Impact', 'Total Beneficiaries', context['total_beneficiaries']])
+        writer.writerow(['Impact', 'Total Hours Contributed', context['total_hours_contributed']])
+        writer.writerow(['Impact', 'Avg Beneficiaries per Story', context['avg_beneficiaries_per_story']])
+        writer.writerow(['Impact', 'Avg Hours per Story', context['avg_hours_per_story']])
+        
+        return response
+
+    def export_tsv(self, context):
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow(['Category', 'Metric', 'Value'])
+        
+        # User Stats
+        writer.writerow(['Users', 'Total Users', context['total_users']])
+        writer.writerow(['Users', 'New Users (30d)', context['new_users_30d']])
+        writer.writerow(['Users', 'Active Users (30d)', context['active_users_30d']])
+        writer.writerow(['Users', 'User Growth %', context['user_growth_pct']])
+        
+        # Project Stats
+        writer.writerow(['Projects', 'Total Projects', context['total_projects']])
+        writer.writerow(['Projects', 'Active Projects', context['active_projects']])
+        writer.writerow(['Projects', 'Completed Projects', context['completed_projects']])
+        writer.writerow(['Projects', 'Upcoming Projects', context['upcoming_projects']])
+        writer.writerow(['Projects', 'Featured Projects', context['featured_projects']])
+        writer.writerow(['Projects', 'Hero Projects', context['hero_projects']])
+        writer.writerow(['Projects', 'Total Capacity', context['total_capacity']])
+        writer.writerow(['Projects', 'Total Enrolled', context['total_enrolled']])
+        writer.writerow(['Projects', 'Utilization Rate %', context['utilization_rate']])
+        
+        # Content Stats
+        writer.writerow(['Content', 'Total News & Events', context['total_news_events']])
+        writer.writerow(['Content', 'Published News & Events', context['published_news_events']])
+        writer.writerow(['Content', 'Total Success Stories', context['total_success_stories']])
+        writer.writerow(['Content', 'Published Stories', context['published_stories']])
+        writer.writerow(['Content', 'Total FAQs', context['total_faqs']])
+        
+        # Impact Stats
+        writer.writerow(['Impact', 'Total Beneficiaries', context['total_beneficiaries']])
+        writer.writerow(['Impact', 'Total Hours Contributed', context['total_hours_contributed']])
+        writer.writerow(['Impact', 'Avg Beneficiaries per Story', context['avg_beneficiaries_per_story']])
+        writer.writerow(['Impact', 'Avg Hours per Story', context['avg_hours_per_story']])
+        
+        return response
+
+    def export_json(self, context):
+        data = {
+            'users': {
+                'total_users': context['total_users'],
+                'new_users_30d': context['new_users_30d'],
+                'active_users_30d': context['active_users_30d'],
+                'user_growth_pct': context['user_growth_pct']
+            },
+            'projects': {
+                'total_projects': context['total_projects'],
+                'active_projects': context['active_projects'],
+                'completed_projects': context['completed_projects'],
+                'upcoming_projects': context['upcoming_projects'],
+                'featured_projects': context['featured_projects'],
+                'hero_projects': context['hero_projects'],
+                'total_capacity': context['total_capacity'],
+                'total_enrolled': context['total_enrolled'],
+                'utilization_rate': context['utilization_rate']
+            },
+            'content': {
+                'total_news_events': context['total_news_events'],
+                'published_news_events': context['published_news_events'],
+                'total_success_stories': context['total_success_stories'],
+                'published_stories': context['published_stories'],
+                'total_faqs': context['total_faqs']
+            },
+            'impact': {
+                'total_beneficiaries': context['total_beneficiaries'],
+                'total_hours_contributed': context['total_hours_contributed'],
+                'avg_beneficiaries_per_story': context['avg_beneficiaries_per_story'],
+                'avg_hours_per_story': context['avg_hours_per_story']
+            }
+        }
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.json"'
+        return response
+
+    def export_xlsx(self, context):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Dashboard Summary"
+        
+        headers = ['Category', 'Metric', 'Value']
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+        
+        data = [
+            ['Users', 'Total Users', context['total_users']],
+            ['Users', 'New Users (30d)', context['new_users_30d']],
+            ['Users', 'Active Users (30d)', context['active_users_30d']],
+            ['Users', 'User Growth %', context['user_growth_pct']],
+            ['Projects', 'Total Projects', context['total_projects']],
+            ['Projects', 'Active Projects', context['active_projects']],
+            ['Projects', 'Completed Projects', context['completed_projects']],
+            ['Projects', 'Upcoming Projects', context['upcoming_projects']],
+            ['Projects', 'Featured Projects', context['featured_projects']],
+            ['Projects', 'Hero Projects', context['hero_projects']],
+            ['Projects', 'Total Capacity', context['total_capacity']],
+            ['Projects', 'Total Enrolled', context['total_enrolled']],
+            ['Projects', 'Utilization Rate %', context['utilization_rate']],
+            ['Content', 'Total News & Events', context['total_news_events']],
+            ['Content', 'Published News & Events', context['published_news_events']],
+            ['Content', 'Total Success Stories', context['total_success_stories']],
+            ['Content', 'Published Stories', context['published_stories']],
+            ['Content', 'Total FAQs', context['total_faqs']],
+            ['Impact', 'Total Beneficiaries', context['total_beneficiaries']],
+            ['Impact', 'Total Hours Contributed', context['total_hours_contributed']],
+            ['Impact', 'Avg Beneficiaries per Story', context['avg_beneficiaries_per_story']],
+            ['Impact', 'Avg Hours per Story', context['avg_hours_per_story']]
+        ]
+        
+        for row_num, row in enumerate(data, 2):
+            for col_num, value in enumerate(row, 1):
+                ws.cell(row=row_num, column=col_num, value=value)
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self, context):
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Management Dashboard Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Management Dashboard Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Users</td><td>Total Users</td><td>{context['total_users']}</td></tr>
+                    <tr><td>Users</td><td>New Users (30d)</td><td>{context['new_users_30d']}</td></tr>
+                    <tr><td>Users</td><td>Active Users (30d)</td><td>{context['active_users_30d']}</td></tr>
+                    <tr><td>Users</td><td>User Growth %</td><td>{context['user_growth_pct']}</td></tr>
+                    <tr><td>Projects</td><td>Total Projects</td><td>{context['total_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Active Projects</td><td>{context['active_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Completed Projects</td><td>{context['completed_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Upcoming Projects</td><td>{context['upcoming_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Featured Projects</td><td>{context['featured_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Hero Projects</td><td>{context['hero_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Total Capacity</td><td>{context['total_capacity']}</td></tr>
+                    <tr><td>Projects</td><td>Total Enrolled</td><td>{context['total_enrolled']}</td></tr>
+                    <tr><td>Projects</td><td>Utilization Rate %</td><td>{context['utilization_rate']}</td></tr>
+                    <tr><td>Content</td><td>Total News & Events</td><td>{context['total_news_events']}</td></tr>
+                    <tr><td>Content</td><td>Published News & Events</td><td>{context['published_news_events']}</td></tr>
+                    <tr><td>Content</td><td>Total Success Stories</td><td>{context['total_success_stories']}</td></tr>
+                    <tr><td>Content</td><td>Published Stories</td><td>{context['published_stories']}</td></tr>
+                    <tr><td>Content</td><td>Total FAQs</td><td>{context['total_faqs']}</td></tr>
+                    <tr><td>Impact</td><td>Total Beneficiaries</td><td>{context['total_beneficiaries']}</td></tr>
+                    <tr><td>Impact</td><td>Total Hours Contributed</td><td>{context['total_hours_contributed']}</td></tr>
+                    <tr><td>Impact</td><td>Avg Beneficiaries per Story</td><td>{context['avg_beneficiaries_per_story']}</td></tr>
+                    <tr><td>Impact</td><td>Avg Hours per Story</td><td>{context['avg_hours_per_story']}</td></tr>
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.html"'
+        return response
+
+    def export_pdf(self, context):
+        try:
+            from reportlab.lib import colors
+            from reportlab.lib.pagesizes import letter
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.lib.styles import getSampleStyleSheet
+        except ImportError:
+            return HttpResponse("PDF export not available. Please install reportlab.", status=400)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.pdf"'
+        
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        elements = []
+        styles = getSampleStyleSheet()
+        
+        elements.append(Paragraph("Management Dashboard Export", styles['Heading1']))
+        elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
+        elements.append(Spacer(1, 12))
+        
+        data = [
+            ['Category', 'Metric', 'Value'],
+            ['Users', 'Total Users', str(context['total_users'])],
+            ['Users', 'New Users (30d)', str(context['new_users_30d'])],
+            ['Users', 'Active Users (30d)', str(context['active_users_30d'])],
+            ['Users', 'User Growth %', str(context['user_growth_pct'])],
+            ['Projects', 'Total Projects', str(context['total_projects'])],
+            ['Projects', 'Active Projects', str(context['active_projects'])],
+            ['Projects', 'Completed Projects', str(context['completed_projects'])],
+            ['Projects', 'Upcoming Projects', str(context['upcoming_projects'])],
+            ['Projects', 'Featured Projects', str(context['featured_projects'])],
+            ['Projects', 'Hero Projects', str(context['hero_projects'])],
+            ['Projects', 'Total Capacity', str(context['total_capacity'])],
+            ['Projects', 'Total Enrolled', str(context['total_enrolled'])],
+            ['Projects', 'Utilization Rate %', str(context['utilization_rate'])],
+            ['Content', 'Total News & Events', str(context['total_news_events'])],
+            ['Content', 'Published News & Events', str(context['published_news_events'])],
+            ['Content', 'Total Success Stories', str(context['total_success_stories'])],
+            ['Content', 'Published Stories', str(context['published_stories'])],
+            ['Content', 'Total FAQs', str(context['total_faqs'])],
+            ['Impact', 'Total Beneficiaries', str(context['total_beneficiaries'])],
+            ['Impact', 'Total Hours Contributed', str(context['total_hours_contributed'])],
+            ['Impact', 'Avg Beneficiaries per Story', str(context['avg_beneficiaries_per_story'])],
+            ['Impact', 'Avg Hours per Story', str(context['avg_hours_per_story'])]
+        ]
+        
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        elements.append(table)
+        
+        doc.build(elements)
+        return response
+
 
 class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = CustomUser
@@ -629,6 +937,8 @@ class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             return self.export_xlsx()
         elif format_type == 'html':
             return self.export_html()
+        elif format_type == 'pdf':
+            return self.export_pdf()
         else:
             return self.export_csv()
 
@@ -896,6 +1206,64 @@ class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         response['Content-Disposition'] = 'attachment; filename="user_analytics.html"'
         return response
 
+    def export_pdf(self):
+        queryset = self.get_queryset()
+        try:
+            from reportlab.lib import colors
+            from reportlab.lib.pagesizes import letter
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.lib.styles import getSampleStyleSheet
+        except ImportError:
+            return HttpResponse("PDF export not available. Please install reportlab.", status=400)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.pdf"'
+        
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        elements = []
+        styles = getSampleStyleSheet()
+        
+        elements.append(Paragraph("User Analytics Export", styles['Heading1']))
+        elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
+        elements.append(Paragraph(f"Total records: {queryset.count()}", styles['Normal']))
+        elements.append(Spacer(1, 12))
+        
+        data = [
+            ['ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 'Gender', 'Country Code', 'Login Method', 'Is Active', 'Date Joined']
+        ]
+        
+        for user in queryset[:100]:  # Limit to 100 for PDF
+            data.append([
+                str(user.id),
+                user.username,
+                user.email,
+                user.first_name,
+                user.last_name,
+                user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '',
+                user.gender,
+                user.country_code,
+                user.login_method,
+                'Yes' if user.is_active else 'No',
+                user.date_joined.strftime('%Y-%m-%d')
+            ])
+        
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTSIZE', (0, 1), (-1, -1), 8)
+        ]))
+        elements.append(table)
+        
+        doc.build(elements)
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('search', '')
@@ -1048,6 +1416,305 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
         context['recent_enrollments'] = Project.objects.filter(headcount__gt=0).order_by('-updated_at')[:10]
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        context = self.get_context_data()
+        
+        if format_type == 'csv':
+            return self.export_csv(context)
+        elif format_type == 'tsv':
+            return self.export_tsv(context)
+        elif format_type == 'json':
+            return self.export_json(context)
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx(context)
+        elif format_type == 'html':
+            return self.export_html(context)
+        elif format_type == 'pdf':
+            return self.export_pdf(context)
+        else:
+            return self.export_csv(context)
+
+    def export_csv(self, context):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow(['Metric', 'Value'])
+        
+        writer.writerow(['Total Enrollments', context['total_enrollments']])
+        writer.writerow(['Projects with Enrollments', context['projects_with_enrollments']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Theme'])
+        writer.writerow(['Theme', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_theme']:
+            writer.writerow([item['theme'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Country'])
+        writer.writerow(['Country', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_country']:
+            writer.writerow([item['country'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Popular Projects'])
+        writer.writerow(['Title', 'Enrollments'])
+        for project in context['popular_projects']:
+            writer.writerow([project.title, project.headcount])
+        
+        writer.writerow([])
+        writer.writerow(['Capacity Utilization'])
+        writer.writerow(['Project Title', 'Enrolled', 'Capacity', 'Utilization %'])
+        for item in context['capacity_data']:
+            writer.writerow([item['title'], item['enrolled'], item['capacity'], round(item['utilization'], 1)])
+        
+        return response
+
+    def export_tsv(self, context):
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow(['Metric', 'Value'])
+        
+        writer.writerow(['Total Enrollments', context['total_enrollments']])
+        writer.writerow(['Projects with Enrollments', context['projects_with_enrollments']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Theme'])
+        writer.writerow(['Theme', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_theme']:
+            writer.writerow([item['theme'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Country'])
+        writer.writerow(['Country', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_country']:
+            writer.writerow([item['country'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Popular Projects'])
+        writer.writerow(['Title', 'Enrollments'])
+        for project in context['popular_projects']:
+            writer.writerow([project.title, project.headcount])
+        
+        writer.writerow([])
+        writer.writerow(['Capacity Utilization'])
+        writer.writerow(['Project Title', 'Enrolled', 'Capacity', 'Utilization %'])
+        for item in context['capacity_data']:
+            writer.writerow([item['title'], item['enrolled'], item['capacity'], round(item['utilization'], 1)])
+        
+        return response
+
+    def export_json(self, context):
+        data = {
+            'total_enrollments': context['total_enrollments'],
+            'projects_with_enrollments': context['projects_with_enrollments'],
+            'enrollments_by_theme': context['enrollments_by_theme'],
+            'enrollments_by_country': context['enrollments_by_country'],
+            'popular_projects': [{'title': p.title, 'enrollments': p.headcount} for p in context['popular_projects']],
+            'capacity_data': context['capacity_data'],
+            'recent_enrollments': [{'title': p.title, 'enrollments': p.headcount, 'updated_at': p.updated_at.isoformat()} for p in context['recent_enrollments']]
+        }
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.json"'
+        return response
+
+    def export_xlsx(self, context):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        wb = Workbook()
+        
+        # Summary Sheet
+        ws_summary = wb.active
+        ws_summary.title = "Summary"
+        ws_summary['A1'] = 'Metric'
+        ws_summary['B1'] = 'Value'
+        ws_summary['A1'].font = Font(bold=True)
+        ws_summary['B1'].font = Font(bold=True)
+        ws_summary['A2'] = 'Total Enrollments'
+        ws_summary['B2'] = context['total_enrollments']
+        ws_summary['A3'] = 'Projects with Enrollments'
+        ws_summary['B3'] = context['projects_with_enrollments']
+        
+        # Theme Sheet
+        ws_theme = wb.create_sheet("Enrollments by Theme")
+        ws_theme['A1'] = 'Theme'
+        ws_theme['B1'] = 'Total Enrollments'
+        ws_theme['C1'] = 'Project Count'
+        for cell in [ws_theme['A1'], ws_theme['B1'], ws_theme['C1']]:
+            cell.font = Font(bold=True)
+        for row_num, item in enumerate(context['enrollments_by_theme'], 2):
+            ws_theme.cell(row=row_num, column=1, value=item['theme'])
+            ws_theme.cell(row=row_num, column=2, value=item['total_enrollments'])
+            ws_theme.cell(row=row_num, column=3, value=item['project_count'])
+        
+        # Country Sheet
+        ws_country = wb.create_sheet("Enrollments by Country")
+        ws_country['A1'] = 'Country'
+        ws_country['B1'] = 'Total Enrollments'
+        ws_country['C1'] = 'Project Count'
+        for cell in [ws_country['A1'], ws_country['B1'], ws_country['C1']]:
+            cell.font = Font(bold=True)
+        for row_num, item in enumerate(context['enrollments_by_country'], 2):
+            ws_country.cell(row=row_num, column=1, value=item['country'])
+            ws_country.cell(row=row_num, column=2, value=item['total_enrollments'])
+            ws_country.cell(row=row_num, column=3, value=item['project_count'])
+        
+        # Popular Projects Sheet
+        ws_popular = wb.create_sheet("Popular Projects")
+        ws_popular['A1'] = 'Title'
+        ws_popular['B1'] = 'Enrollments'
+        for cell in [ws_popular['A1'], ws_popular['B1']]:
+            cell.font = Font(bold=True)
+        for row_num, project in enumerate(context['popular_projects'], 2):
+            ws_popular.cell(row=row_num, column=1, value=project.title)
+            ws_popular.cell(row=row_num, column=2, value=project.headcount)
+        
+        # Capacity Sheet
+        ws_capacity = wb.create_sheet("Capacity Utilization")
+        ws_capacity['A1'] = 'Project Title'
+        ws_capacity['B1'] = 'Enrolled'
+        ws_capacity['C1'] = 'Capacity'
+        ws_capacity['D1'] = 'Utilization %'
+        for cell in [ws_capacity['A1'], ws_capacity['B1'], ws_capacity['C1'], ws_capacity['D1']]:
+            cell.font = Font(bold=True)
+        for row_num, item in enumerate(context['capacity_data'], 2):
+            ws_capacity.cell(row=row_num, column=1, value=item['title'])
+            ws_capacity.cell(row=row_num, column=2, value=item['enrolled'])
+            ws_capacity.cell(row=row_num, column=3, value=item['capacity'])
+            ws_capacity.cell(row=row_num, column=4, value=round(item['utilization'], 1))
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self, context):
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Application Analytics Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; margin-bottom: 20px; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1, h2 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Application Analytics Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            
+            <h2>Summary</h2>
+            <table>
+                <tr><th>Metric</th><th>Value</th></tr>
+                <tr><td>Total Enrollments</td><td>{context['total_enrollments']}</td></tr>
+                <tr><td>Projects with Enrollments</td><td>{context['projects_with_enrollments']}</td></tr>
+            </table>
+            
+            <h2>Enrollments by Theme</h2>
+            <table>
+                <tr><th>Theme</th><th>Total Enrollments</th><th>Project Count</th></tr>
+                {"".join(f"<tr><td>{item['theme']}</td><td>{item['total_enrollments']}</td><td>{item['project_count']}</td></tr>" for item in context['enrollments_by_theme'])}
+            </table>
+            
+            <h2>Enrollments by Country</h2>
+            <table>
+                <tr><th>Country</th><th>Total Enrollments</th><th>Project Count</th></tr>
+                {"".join(f"<tr><td>{item['country']}</td><td>{item['total_enrollments']}</td><td>{item['project_count']}</td></tr>" for item in context['enrollments_by_country'])}
+            </table>
+            
+            <h2>Popular Projects</h2>
+            <table>
+                <tr><th>Title</th><th>Enrollments</th></tr>
+                {"".join(f"<tr><td>{project.title}</td><td>{project.headcount}</td></tr>" for project in context['popular_projects'])}
+            </table>
+            
+            <h2>Capacity Utilization</h2>
+            <table>
+                <tr><th>Project Title</th><th>Enrolled</th><th>Capacity</th><th>Utilization %</th></tr>
+                {"".join(f"<tr><td>{item['title']}</td><td>{item['enrolled']}</td><td>{item['capacity']}</td><td>{round(item['utilization'], 1)}</td></tr>" for item in context['capacity_data'])}
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.html"'
+        return response
+
+    def export_pdf(self, context):
+        try:
+            from reportlab.lib import colors
+            from reportlab.lib.pagesizes import letter
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.lib.styles import getSampleStyleSheet
+        except ImportError:
+            return HttpResponse("PDF export not available. Please install reportlab.", status=400)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.pdf"'
+        
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        elements = []
+        styles = getSampleStyleSheet()
+        
+        elements.append(Paragraph("Application Analytics Export", styles['Heading1']))
+        elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
+        elements.append(Spacer(1, 12))
+        
+        # Summary
+        elements.append(Paragraph("Summary", styles['Heading2']))
+        summary_data = [
+            ['Metric', 'Value'],
+            ['Total Enrollments', str(context['total_enrollments'])],
+            ['Projects with Enrollments', str(context['projects_with_enrollments'])]
+        ]
+        summary_table = Table(summary_data)
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 14),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        elements.append(summary_table)
+        elements.append(Spacer(1, 12))
+        
+        # Themes
+        elements.append(Paragraph("Enrollments by Theme", styles['Heading2']))
+        theme_data = [['Theme', 'Total Enrollments', 'Project Count']]
+        for item in context['enrollments_by_theme']:
+            theme_data.append([item['theme'], str(item['total_enrollments']), str(item['project_count'])])
+        theme_table = Table(theme_data)
+        theme_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+        elements.append(theme_table)
+        elements.append(Spacer(1, 12))
+        
+        doc.build(elements)
+        return response
 
 
 
