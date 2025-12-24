@@ -780,21 +780,6 @@ class Command(BaseCommand):
                 "image_urls": [],
                 "is_featured": True
             },
-            {
-                "content_type": NewsEvent.Type.NEWS,
-                "title_en": "Celebrating 10 Years of Making a Difference",
-                "body_en": "This month marks our 10th anniversary. We look back at a decade of impact and look forward to the future.",
-                "title_zh_tw": "慶祝十年來的改變",
-                "body_zh_tw": "這個月是我們的十週年紀念。我們回顧十年來的影響力，並展望未來。",
-                "publish_date": timezone.now(),
-                "cover_image_url": "https://loremflickr.com/800/600/anniversary,celebration,impact",
-                "video_urls": [
-                    "https://www.youtube.com/watch?v=Q9oy13DNCg8",
-                    "https://www.youtube.com/watch?v=Cr7Se5revOk"
-                ],
-                "image_urls": [],
-                "is_featured": True
-            }
         ]
 
         for n_data in news_data:
