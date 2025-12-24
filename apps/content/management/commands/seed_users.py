@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.db import connection
 from apps.users.models import CustomUser
 from datetime import datetime, timedelta
 import random
@@ -20,6 +21,10 @@ class Command(BaseCommand):
         if kwargs.get('clear'):
             CustomUser.objects.all().delete()
             self.stdout.write(self.style.SUCCESS('Cleared all existing users'))
+            
+            # Reset auto-increment ID
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM sqlite_sequence WHERE name='users_customuser'")
 
         # List of realistic user data (40+ users)
         users_data = [

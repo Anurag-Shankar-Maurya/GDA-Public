@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.db import connection
 from apps.content.models import NewsEvent
 
 class Command(BaseCommand):
@@ -18,6 +19,10 @@ class Command(BaseCommand):
         if kwargs.get('clear'):
             NewsEvent.objects.all().delete()
             self.stdout.write(self.style.SUCCESS('Cleared all existing news & events'))
+            
+            # Reset auto-increment ID
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM sqlite_sequence WHERE name='content_newsevent'")
 
         news_data = [
             {

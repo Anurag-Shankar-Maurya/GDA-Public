@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.db import connection
 from apps.content.models import Project
 from datetime import timedelta
 import random
@@ -20,6 +21,10 @@ class Command(BaseCommand):
         if kwargs.get('clear'):
             Project.objects.all().delete()
             self.stdout.write(self.style.SUCCESS('Cleared all existing projects'))
+            
+            # Reset auto-increment ID
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM sqlite_sequence WHERE name='content_project'")
 
         # Common video from the Kingslish channel for seeding
         # Note: In a real scenario, you would pick specific video IDs from the channel.

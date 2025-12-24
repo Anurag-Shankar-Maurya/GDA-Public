@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.db import connection
 from apps.content.models import SuccessStory, Project
 import random
 
@@ -19,6 +20,10 @@ class Command(BaseCommand):
         if kwargs.get('clear'):
             SuccessStory.objects.all().delete()
             self.stdout.write(self.style.SUCCESS('Cleared all existing success stories'))
+            
+            # Reset auto-increment ID
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM sqlite_sequence WHERE name='content_successstory'")
 
         # Try to fetch a project to link to
         projects = Project.objects.all()

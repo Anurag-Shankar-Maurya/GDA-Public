@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+from django.db import connection
 from apps.content.models import FAQ
 
 
@@ -15,6 +16,14 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        if options.get('clear'):
+            FAQ.objects.all().delete()
+            self.stdout.write(self.style.SUCCESS('Cleared all existing FAQs'))
+            
+            # Reset auto-increment ID
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM sqlite_sequence WHERE name='content_faq'")
+            
         # Complete FAQ data with all 40 entries
         faq_data = [
             {
