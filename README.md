@@ -175,8 +175,10 @@ cd GDA-Public
 ```bash
 # Create and activate a virtual environment
 python -m venv venv
-# On Windows
+# On Windows Powershell
 venv\Scripts\activate
+# On Windows Bash
+source venv/Scripts/activate
 # On macOS/Linux
 source venv/bin/activate
 ```
