@@ -803,4 +803,4 @@ class Command(BaseCommand):
                 NewsEvent.objects.create(**n_data)
                 self.stdout.write(self.style.SUCCESS(f"Created news: {n_data['title_en']}"))
             else:
-                self.stdout.write(f"News '{n_data['title_en']}' already exists.")
+                self.stdout.write(f"News: {n_data['title_en']}' already exists.")

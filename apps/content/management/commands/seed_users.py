@@ -753,6 +753,6 @@ class Command(BaseCommand):
                 user = CustomUser.objects.create_user(**u_data, password=password)
                 self.stdout.write(self.style.SUCCESS(f"Created user: {user.get_full_name()} ({user.username})"))
             else:
-                self.stdout.write(f"User '{u_data['username']}' already exists.")
+                self.stdout.write(f"User: {u_data['username']}' already exists.")
 
         self.stdout.write(self.style.SUCCESS("User seeding completed successfully!"))

@@ -1159,4 +1159,4 @@ class Command(BaseCommand):
                 Project.objects.create(**p_data)
                 self.stdout.write(self.style.SUCCESS(f"Created project: {p_data['title_en']}"))
             else:
-                self.stdout.write(f"Project {p_data['kicc_project_id']} already exists.")
+                self.stdout.write(f"Project: {p_data['title_en']} already exists.")
