@@ -454,32 +454,36 @@ The application will be available at `http://localhost`. Nginx is configured to 
 
 ### Option 2: Deploying to Render
 
-This project is configured for deployment on Render.com.
+Deploying to Render is a straightforward process. Here are the detailed steps to get your web service live:
 
-#### Prerequisites
+#### 1. Create a New Web Service
+- From your Render dashboard, click the **"New"** button and select **"Web Service"**.
 
-*   A Render account
-*   PostgreSQL database service on Render (or external PostgreSQL database)
+#### 2. Connect Your Repository
+- Connect your GitHub account and select your repository (e.g., `Anurag-Shankar-Maurya/GDA-Public`).
 
-#### 1. Configure Environment Variables
+#### 3. Configure Service Settings
+Fill out the configuration form with the following details:
+- **Name**: A unique name for your web service (e.g., `gda-production`).
+- **Region**: Choose a region that is geographically close to your users (e.g., Oregon (US West)).
+- **Branch**: Select the Git branch to build and deploy from (e.g., `main`).
+- **Root Directory**: Leave this blank unless you are using a monorepo structure.
+- **Runtime**: Select **Python 3**.
+- **Build Command**: Set this to `pip install -r requirements.txt`.
+- **Start Command**: Use `python manage.py collectstatic --noinput && gunicorn gda.wsgi:application`.
+- **Instance Type**: For hobby projects or testing, you can start with the **Free** instance type. For production use, consider a paid instance for better performance and features like zero-downtime deploys.
 
-In your Render project settings, add the following environment variables:
-*   `SECRET_KEY`: Your production secret key
-*   `DEBUG`: Set to `False`
-*   `USE_POSTGRES`: Set to `True`
-*   `DATABASE_URL`: Your PostgreSQL connection string
-*   Add other environment variables from `.env.example` as needed
+#### 4. Add Environment Variables
+- Under the **"Environment Variables"** section, you can add your secrets and configuration.
+- You can add them one by one or use the **"Add from .env"** option to bulk-upload them from your local `.env` file.
+- **Required variables for production:**
+    - `SECRET_KEY`: Your production secret key.
+    - `DEBUG`: Set to `False`.
+    - `DATABASE_URL`: Your Render PostgreSQL database connection string.
+    - `PYTHON_VERSION`: Specify your Python version, e.g., `3.11.0`.
 
-#### 2. Deploy
-
-1. Connect your GitHub repository to Render
-2. Create a new Web Service
-3. Select the repository and branch
-4. Configure build settings:
-   - Build Command: `./build.sh`
-   - Start Command: `gunicorn gda.wsgi:application --bind 0.0.0.0:$PORT`
-
-Render will automatically handle the deployment process.
+#### 5. Create Web Service
+- Click the **"Create Web Service"** button at the bottom of the page. Render will automatically start the build and deployment process.
 
 ### Option 3: Deploying to Vercel
 
