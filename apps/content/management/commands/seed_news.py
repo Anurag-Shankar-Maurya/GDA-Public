@@ -5,8 +5,19 @@ from apps.content.models import NewsEvent
 class Command(BaseCommand):
     help = 'Seeds the database with News & Event data (EN & ZH-TW)'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--clear',
+            action='store_true',
+            help='Clear all existing news/events before seeding',
+        )
+
     def handle(self, *args, **kwargs):
         self.stdout.write('Seeding News & Events...')
+
+        if kwargs.get('clear'):
+            NewsEvent.objects.all().delete()
+            self.stdout.write(self.style.SUCCESS('Cleared all existing news & events'))
 
         news_data = [
             {

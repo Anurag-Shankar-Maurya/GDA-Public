@@ -7,8 +7,19 @@ import random
 class Command(BaseCommand):
     help = 'Seeds the database with test users for volunteer platform'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--clear',
+            action='store_true',
+            help='Clear all existing users before seeding',
+        )
+
     def handle(self, *args, **kwargs):
         self.stdout.write('Seeding Users...')
+
+        if kwargs.get('clear'):
+            CustomUser.objects.all().delete()
+            self.stdout.write(self.style.SUCCESS('Cleared all existing users'))
 
         # List of realistic user data (40+ users)
         users_data = [

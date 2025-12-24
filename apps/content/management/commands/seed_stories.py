@@ -6,8 +6,19 @@ import random
 class Command(BaseCommand):
     help = 'Seeds the database with Success Stories (EN & ZH-TW)'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--clear',
+            action='store_true',
+            help='Clear all existing success stories before seeding',
+        )
+
     def handle(self, *args, **kwargs):
         self.stdout.write('Seeding Success Stories...')
+
+        if kwargs.get('clear'):
+            SuccessStory.objects.all().delete()
+            self.stdout.write(self.style.SUCCESS('Cleared all existing success stories'))
 
         # Try to fetch a project to link to
         projects = Project.objects.all()

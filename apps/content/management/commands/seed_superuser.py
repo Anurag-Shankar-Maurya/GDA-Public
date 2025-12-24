@@ -7,8 +7,19 @@ from apps.users.models import CustomUser
 class Command(BaseCommand):
     help = 'Create a superuser, a staff user, and a superuser-only user with specified details'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--clear',
+            action='store_true',
+            help='Clear all existing users before seeding',
+        )
+
     def handle(self, *args, **options):
         self.stdout.write('Creating superuser, staff user, and superuser-only user...')
+
+        if options.get('clear'):
+            CustomUser.objects.all().delete()
+            self.stdout.write(self.style.SUCCESS('Cleared all existing users'))
 
         # Create superuser
         superuser_data = {

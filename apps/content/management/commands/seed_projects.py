@@ -7,8 +7,19 @@ import random
 class Command(BaseCommand):
     help = 'Seeds the database with Project data (EN & ZH-TW) using LoremFlickr and Kingslish Video'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--clear',
+            action='store_true',
+            help='Clear all existing projects before seeding',
+        )
+
     def handle(self, *args, **kwargs):
         self.stdout.write('Seeding Projects...')
+
+        if kwargs.get('clear'):
+            Project.objects.all().delete()
+            self.stdout.write(self.style.SUCCESS('Cleared all existing projects'))
 
         # Common video from the Kingslish channel for seeding
         # Note: In a real scenario, you would pick specific video IDs from the channel.
