@@ -26,6 +26,8 @@ class Command(BaseCommand):
                 "country_code": "TW",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "david_kim",
@@ -41,6 +43,8 @@ class Command(BaseCommand):
                 "country_code": "KR",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "maria_santos",
@@ -56,6 +60,8 @@ class Command(BaseCommand):
                 "country_code": "PH",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "james_wilson",
@@ -71,6 +77,8 @@ class Command(BaseCommand):
                 "country_code": "GB",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "priya_patel",
@@ -86,6 +94,8 @@ class Command(BaseCommand):
                 "country_code": "IN",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "alex_moreno",
@@ -101,6 +111,8 @@ class Command(BaseCommand):
                 "country_code": "AR",
                 "login_method": "github",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "emma_white",
@@ -116,6 +128,8 @@ class Command(BaseCommand):
                 "country_code": "AU",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "mustafa_ahmed",
@@ -131,6 +145,8 @@ class Command(BaseCommand):
                 "country_code": "EG",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "yuki_tanaka",
@@ -146,6 +162,8 @@ class Command(BaseCommand):
                 "country_code": "JP",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "carlos_rodriguez",
@@ -161,6 +179,8 @@ class Command(BaseCommand):
                 "country_code": "MX",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "nina_petrov",
@@ -176,6 +196,8 @@ class Command(BaseCommand):
                 "country_code": "RU",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "liam_oconnor",
@@ -191,6 +213,8 @@ class Command(BaseCommand):
                 "country_code": "IE",
                 "login_method": "github",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "sophia_diaz",
@@ -206,6 +230,8 @@ class Command(BaseCommand):
                 "country_code": "ES",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "lucas_costa",
@@ -221,6 +247,8 @@ class Command(BaseCommand):
                 "country_code": "BR",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "aisha_malik",
@@ -236,6 +264,8 @@ class Command(BaseCommand):
                 "country_code": "PK",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "oliver_mueller",
@@ -251,6 +281,8 @@ class Command(BaseCommand):
                 "country_code": "DE",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "chloe_martin",
@@ -266,6 +298,8 @@ class Command(BaseCommand):
                 "country_code": "FR",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "antonio_gomes",
@@ -281,6 +315,8 @@ class Command(BaseCommand):
                 "country_code": "PT",
                 "login_method": "github",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "isabella_rossi",
@@ -296,6 +332,8 @@ class Command(BaseCommand):
                 "country_code": "IT",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "marcus_johnson",
@@ -311,6 +349,8 @@ class Command(BaseCommand):
                 "country_code": "US",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "lily_thompson",
@@ -326,6 +366,8 @@ class Command(BaseCommand):
                 "country_code": "CA",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "ming_zhang",
@@ -341,6 +383,8 @@ class Command(BaseCommand):
                 "country_code": "CN",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "ngozi_adeyemi",
@@ -356,6 +400,8 @@ class Command(BaseCommand):
                 "country_code": "NG",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "ravi_kapoor",
@@ -371,6 +417,8 @@ class Command(BaseCommand):
                 "country_code": "IN",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "fatima_hassan",
@@ -386,6 +434,8 @@ class Command(BaseCommand):
                 "country_code": "KE",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "bangkok_volunteer",
@@ -401,6 +451,8 @@ class Command(BaseCommand):
                 "country_code": "TH",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "hannah_berg",
@@ -416,6 +468,8 @@ class Command(BaseCommand):
                 "country_code": "DK",
                 "login_method": "github",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "jean_dubois",
@@ -431,6 +485,8 @@ class Command(BaseCommand):
                 "country_code": "CH",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "jessica_nguyen",
@@ -446,6 +502,8 @@ class Command(BaseCommand):
                 "country_code": "VN",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "nicholas_larson",
@@ -461,6 +519,8 @@ class Command(BaseCommand):
                 "country_code": "SE",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "amara_diop",
@@ -476,6 +536,8 @@ class Command(BaseCommand):
                 "country_code": "SN",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "rafael_santos",
@@ -491,6 +553,8 @@ class Command(BaseCommand):
                 "country_code": "PE",
                 "login_method": "github",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "elena_kowalski",
@@ -506,6 +570,8 @@ class Command(BaseCommand):
                 "country_code": "PL",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "tom_anderson",
@@ -521,6 +587,8 @@ class Command(BaseCommand):
                 "country_code": "NZ",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "diana_cruz",
@@ -536,6 +604,8 @@ class Command(BaseCommand):
                 "country_code": "CO",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "marco_volkov",
@@ -551,6 +621,8 @@ class Command(BaseCommand):
                 "country_code": "RU",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "yasmin_ghani",
@@ -566,6 +638,8 @@ class Command(BaseCommand):
                 "country_code": "AE",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "leo_magnusson",
@@ -581,6 +655,8 @@ class Command(BaseCommand):
                 "country_code": "IS",
                 "login_method": "github",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "gloria_torres",
@@ -596,6 +672,8 @@ class Command(BaseCommand):
                 "country_code": "CL",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "vincenzo_rossi",
@@ -611,6 +689,8 @@ class Command(BaseCommand):
                 "country_code": "IT",
                 "login_method": "google",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "samira_khan",
@@ -626,6 +706,8 @@ class Command(BaseCommand):
                 "country_code": "BD",
                 "login_method": "facebook",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
             {
                 "username": "oscar_williams",
@@ -641,6 +723,8 @@ class Command(BaseCommand):
                 "country_code": "US",
                 "login_method": "email",
                 "is_active": True,
+                "onboarding_complete": True,
+                "email_verified": True,
             },
         ]
 
@@ -651,16 +735,6 @@ class Command(BaseCommand):
             # Check if user already exists
             if not CustomUser.objects.filter(username=u_data['username']).exists():
                 user = CustomUser.objects.create_user(**u_data, password=password)
-                # Randomly set email_verified for some users
-                if random.choice([True, False]):
-                    user.email_verified = True
-                    user.save()
-                
-                # Randomly set onboarding_complete for some users
-                if random.choice([True, False]):
-                    user.onboarding_complete = True
-                    user.save()
-                
                 self.stdout.write(self.style.SUCCESS(f"Created user: {user.get_full_name()} ({user.username})"))
             else:
                 self.stdout.write(f"User '{u_data['username']}' already exists.")
