@@ -23,6 +23,7 @@ class Command(BaseCommand):
             'seed_news',
             'seed_projects',
             'seed_stories',
+            'seed_activities',
         ]
 
         if clear_flag:
