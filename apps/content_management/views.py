@@ -614,21 +614,36 @@ class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         
         writer = csv.writer(response)
         writer.writerow([
-            'Username', 'Email', 'First Name', 'Last Name', 'Country Code', 
-            'Gender', 'Date Joined', 'Is Active', 'Is Staff'
+            'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 
+            'Gender', 'Blood Group', 'Guardian Name', 'Guardian Relation', 'Address', 
+            'Contact', 'Country Code', 'Login Method', 'Onboarding Complete', 
+            'Email Verified', 'Is Active', 'Is Staff', 'Is Superuser', 'Date Joined', 
+            'Last Login'
         ])
         
         for user in queryset:
             writer.writerow([
+                user.id,
                 user.username,
                 user.email,
                 user.first_name,
                 user.last_name,
-                user.country_code,
+                user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '',
                 user.gender,
-                user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
+                user.blood_group,
+                user.guardian_name,
+                user.guardian_relation,
+                user.address,
+                user.contact,
+                user.country_code,
+                user.login_method,
+                'Yes' if user.onboarding_complete else 'No',
+                'Yes' if user.email_verified else 'No',
                 'Yes' if user.is_active else 'No',
-                'Yes' if user.is_staff else 'No'
+                'Yes' if user.is_staff else 'No',
+                'Yes' if user.is_superuser else 'No',
+                user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
+                user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else ''
             ])
         
         return response
@@ -852,21 +867,40 @@ class ProjectListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         
         writer = csv.writer(response)
         writer.writerow([
-            'Title', 'Country', 'Theme', 'Difficulty', 'Headcount', 
-            'Start Date', 'Application Deadline', 'Is Active', 'Created At'
+            'ID', 'Project ID', 'KICC Project ID', 'Title', 'Teaser', 'Background Objectives', 
+            'Tasks Eligibility', 'Country', 'Theme', 'Duration', 'Difficulty', 'Headcount', 
+            'Total Headcount', 'Cover Image URL', 'Video URLs', 'Image URLs', 
+            'Application Deadline', 'Start Date', 'End Date', 'Is Active', 'Is Hero Highlight', 
+            'Is Featured', 'Enrolled Users Count', 'Created At', 'Updated At'
         ])
         
         for project in queryset:
             writer.writerow([
+                project.id,
+                project.project_id,
+                project.kicc_project_id or '',
                 project.title,
+                project.teaser,
+                project.background_objectives,
+                project.tasks_eligibility,
                 project.country,
                 project.theme,
+                project.duration,
                 project.difficulty,
-                project.headcount,
+                project.headcount or 0,
+                project.total_headcount,
+                project.cover_image_url or '',
+                ', '.join(project.video_urls) if project.video_urls else '',
+                ', '.join(project.image_urls) if project.image_urls else '',
+                project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else '',
                 project.start_date.strftime('%Y-%m-%d') if project.start_date else '',
-                project.application_deadline.strftime('%Y-%m-%d') if project.application_deadline else '',
+                project.end_date.strftime('%Y-%m-%d') if project.end_date else '',
                 'Yes' if project.is_active else 'No',
-                project.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                'Yes' if project.is_hero_highlight else 'No',
+                'Yes' if project.is_featured else 'No',
+                project.enrolled_users.count(),
+                project.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                project.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
         return response
@@ -1070,19 +1104,28 @@ class NewsEventListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         
         writer = csv.writer(response)
         writer.writerow([
-            'Title', 'Content Type', 'Publish Date', 'Is Published', 
-            'Is Featured', 'Is Hero Highlight', 'Created At'
+            'ID', 'News Event ID', 'Title', 'Body', 'Content Type', 'Cover Image URL', 
+            'External Link', 'Video URLs', 'Image URLs', 'Publish Date', 'Is Published', 
+            'Is Hero Highlight', 'Is Featured', 'Created At', 'Updated At'
         ])
         
         for item in queryset:
             writer.writerow([
+                item.id,
+                item.news_event_id,
                 item.title,
+                item.body,
                 item.content_type,
-                item.publish_date.strftime('%Y-%m-%d') if item.publish_date else '',
+                item.cover_image_url or '',
+                item.external_link or '',
+                ', '.join(item.video_urls) if item.video_urls else '',
+                ', '.join(item.image_urls) if item.image_urls else '',
+                item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else '',
                 'Yes' if item.is_published else 'No',
-                'Yes' if item.is_featured else 'No',
                 'Yes' if item.is_hero_highlight else 'No',
-                item.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                'Yes' if item.is_featured else 'No',
+                item.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                item.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
         return response
@@ -1283,21 +1326,29 @@ class SuccessStoryListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         
         writer = csv.writer(response)
         writer.writerow([
-            'Title', 'Related Project', 'Beneficiaries', 'Total Hours Contributed', 
-            'Published At', 'Is Published', 'Is Featured', 'Is Hero Highlight', 'Created At'
+            'ID', 'Success Story ID', 'Title', 'Body', 'Related Project', 'Cover Image URL', 
+            'Is Hero Highlight', 'Is Featured', 'Image URLs', 'Video URLs', 'Beneficiaries', 
+            'Total Hours Contributed', 'Is Published', 'Published At', 'Created At', 'Updated At'
         ])
         
         for story in queryset:
             writer.writerow([
+                story.id,
+                story.success_story_id,
                 story.title,
+                story.body,
                 story.related_project.title if story.related_project else '',
-                story.beneficiaries,
-                story.total_hours_contributed,
-                story.published_at.strftime('%Y-%m-%d') if story.published_at else '',
-                'Yes' if story.is_published else 'No',
-                'Yes' if story.is_featured else 'No',
+                story.cover_image_url or '',
                 'Yes' if story.is_hero_highlight else 'No',
-                story.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                'Yes' if story.is_featured else 'No',
+                ', '.join(story.image_urls) if story.image_urls else '',
+                ', '.join(story.video_urls) if story.video_urls else '',
+                story.beneficiaries or '',
+                story.total_hours_contributed or '',
+                'Yes' if story.is_published else 'No',
+                story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else '',
+                story.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                story.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
         return response
@@ -1514,20 +1565,24 @@ class FAQListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         
         writer = csv.writer(response)
         writer.writerow([
-            'Order', 'Question', 'Answer', 'Thumbs Up', 'Thumbs Down', 
-            'Usefulness %', 'Is Schema Ready', 'Created At'
+            'ID', 'FAQ ID', 'Question', 'Answer', 'Order', 'Is Schema Ready', 
+            'Thumbs Up', 'Thumbs Down', 'Total Votes', 'Helpfulness Ratio %', 'Created At', 'Updated At'
         ])
         
         for faq in queryset:
             writer.writerow([
-                faq.order,
+                faq.id,
+                faq.faq_id,
                 faq.question,
                 faq.answer,
+                faq.order,
+                'Yes' if faq.is_schema_ready else 'No',
                 faq.thumbs_up,
                 faq.thumbs_down,
-                f"{faq.usefulness:.1f}%" if hasattr(faq, 'usefulness') else '0.0%',
-                'Yes' if faq.is_schema_ready else 'No',
-                faq.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                faq.total_votes,
+                f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%',
+                faq.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                faq.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
         return response
