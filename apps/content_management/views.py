@@ -577,8 +577,6 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
             return self.export_xlsx(context)
         elif format_type == 'html':
             return self.export_html(context)
-        elif format_type == 'pdf':
-            return self.export_pdf(context)
         else:
             return self.export_csv(context)
 
@@ -802,68 +800,6 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
         
         response = HttpResponse(html_content, content_type='text/html')
         response['Content-Disposition'] = 'attachment; filename="management_dashboard.html"'
-        return response
-
-    def export_pdf(self, context):
-        try:
-            from reportlab.lib import colors
-            from reportlab.lib.pagesizes import letter
-            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-            from reportlab.lib.styles import getSampleStyleSheet
-        except ImportError:
-            return HttpResponse("PDF export not available. Please install reportlab.", status=400)
-        
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="management_dashboard.pdf"'
-        
-        doc = SimpleDocTemplate(response, pagesize=letter)
-        elements = []
-        styles = getSampleStyleSheet()
-        
-        elements.append(Paragraph("Management Dashboard Export", styles['Heading1']))
-        elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
-        elements.append(Spacer(1, 12))
-        
-        data = [
-            ['Category', 'Metric', 'Value'],
-            ['Users', 'Total Users', str(context['total_users'])],
-            ['Users', 'New Users (30d)', str(context['new_users_30d'])],
-            ['Users', 'Active Users (30d)', str(context['active_users_30d'])],
-            ['Users', 'User Growth %', str(context['user_growth_pct'])],
-            ['Projects', 'Total Projects', str(context['total_projects'])],
-            ['Projects', 'Active Projects', str(context['active_projects'])],
-            ['Projects', 'Completed Projects', str(context['completed_projects'])],
-            ['Projects', 'Upcoming Projects', str(context['upcoming_projects'])],
-            ['Projects', 'Featured Projects', str(context['featured_projects'])],
-            ['Projects', 'Hero Projects', str(context['hero_projects'])],
-            ['Projects', 'Total Capacity', str(context['total_capacity'])],
-            ['Projects', 'Total Enrolled', str(context['total_enrolled'])],
-            ['Projects', 'Utilization Rate %', str(context['utilization_rate'])],
-            ['Content', 'Total News & Events', str(context['total_news_events'])],
-            ['Content', 'Published News & Events', str(context['published_news_events'])],
-            ['Content', 'Total Success Stories', str(context['total_success_stories'])],
-            ['Content', 'Published Stories', str(context['published_stories'])],
-            ['Content', 'Total FAQs', str(context['total_faqs'])],
-            ['Impact', 'Total Beneficiaries', str(context['total_beneficiaries'])],
-            ['Impact', 'Total Hours Contributed', str(context['total_hours_contributed'])],
-            ['Impact', 'Avg Beneficiaries per Story', str(context['avg_beneficiaries_per_story'])],
-            ['Impact', 'Avg Hours per Story', str(context['avg_hours_per_story'])]
-        ]
-        
-        table = Table(data)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 14),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
-        elements.append(table)
-        
-        doc.build(elements)
         return response
 
 
@@ -1436,8 +1372,6 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
             return self.export_xlsx(context)
         elif format_type == 'html':
             return self.export_html(context)
-        elif format_type == 'pdf':
-            return self.export_pdf(context)
         else:
             return self.export_csv(context)
 
@@ -1654,66 +1588,6 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
         
         response = HttpResponse(html_content, content_type='text/html')
         response['Content-Disposition'] = 'attachment; filename="application_analytics.html"'
-        return response
-
-    def export_pdf(self, context):
-        try:
-            from reportlab.lib import colors
-            from reportlab.lib.pagesizes import letter
-            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-            from reportlab.lib.styles import getSampleStyleSheet
-        except ImportError:
-            return HttpResponse("PDF export not available. Please install reportlab.", status=400)
-        
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="application_analytics.pdf"'
-        
-        doc = SimpleDocTemplate(response, pagesize=letter)
-        elements = []
-        styles = getSampleStyleSheet()
-        
-        elements.append(Paragraph("Application Analytics Export", styles['Heading1']))
-        elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
-        elements.append(Spacer(1, 12))
-        
-        # Summary
-        elements.append(Paragraph("Summary", styles['Heading2']))
-        summary_data = [
-            ['Metric', 'Value'],
-            ['Total Enrollments', str(context['total_enrollments'])],
-            ['Projects with Enrollments', str(context['projects_with_enrollments'])]
-        ]
-        summary_table = Table(summary_data)
-        summary_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 14),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
-        elements.append(summary_table)
-        elements.append(Spacer(1, 12))
-        
-        # Themes
-        elements.append(Paragraph("Enrollments by Theme", styles['Heading2']))
-        theme_data = [['Theme', 'Total Enrollments', 'Project Count']]
-        for item in context['enrollments_by_theme']:
-            theme_data.append([item['theme'], str(item['total_enrollments']), str(item['project_count'])])
-        theme_table = Table(theme_data)
-        theme_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
-        elements.append(theme_table)
-        elements.append(Spacer(1, 12))
-        
-        doc.build(elements)
         return response
 
 
