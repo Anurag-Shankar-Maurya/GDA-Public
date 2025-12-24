@@ -755,4 +755,4 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(f"User: {u_data['username']}' already exists.")
 
-        self.stdout.write(self.style.SUCCESS("User seeding completed successfully!"))
+        self.stdout.write(self.style.SUCCESS(f'Users seeding completed successfully! Total users: {len(users_data)}'))

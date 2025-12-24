@@ -1160,3 +1160,5 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Created project: {p_data['title_en']}"))
             else:
                 self.stdout.write(f"Project: {p_data['title_en']} already exists.")
+
+        self.stdout.write(self.style.SUCCESS(f'Projects seeding completed successfully! Total projects: {len(projects_data)}'))

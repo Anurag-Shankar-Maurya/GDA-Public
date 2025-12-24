@@ -804,3 +804,4 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Created news: {n_data['title_en']}"))
             else:
                 self.stdout.write(f"News: {n_data['title_en']}' already exists.")
+        self.stdout.write(self.style.SUCCESS(f'News & Events seeding completed successfully! Total news/events: {len(news_data)}'))

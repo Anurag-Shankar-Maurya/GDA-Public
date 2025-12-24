@@ -1243,3 +1243,5 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Created story: {s_data['title_en']}"))
             else:
                 self.stdout.write(f"Story: {s_data['title_en']}' already exists.")
+
+        self.stdout.write(self.style.SUCCESS(f'Success Stories seeding completed successfully! Total stories: {len(stories_data)}'))
