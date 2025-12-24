@@ -12,7 +12,7 @@
 
 ![GDA Dashboard Preview](static/gitAssets/dashboard.png)
 
-[🌐 Live Demo](https://gda-oy5s.onrender.com) | [📚 Documentation](https://github.com/Anurag-Shankar-Maurya/GDA/wiki) | [🤝 Contributing](CONTRIBUTING.md)
+[🌐 Live Demo](https://gda-public.vercel.app/) | [📚 Documentation](https://github.com/Anurag-Shankar-Maurya/GDA/wiki) | [🤝 Contributing](CONTRIBUTING.md)
 
 ## 📋 Table of Contents
 
@@ -479,7 +479,7 @@ In your Render project settings, add the following environment variables:
    - Build Command: `./build.sh`
    - Start Command: `gunicorn gda.wsgi:application --bind 0.0.0.0:$PORT`
 
-Render will automatically handle the deployment process. The current live demo is hosted on Render at [https://gda-oy5s.onrender.com](https://gda-oy5s.onrender.com)
+Render will automatically handle the deployment process.
 
 ### Option 3: Deploying to Vercel
 
@@ -501,6 +501,8 @@ In your Vercel project settings, add the following environment variables:
 #### 2. Deploy
 
 Vercel will automatically deploy the application when you push changes to your GitHub repository. The `vercel.json` file configures the build and routing settings.
+
+The current live demo is hosted on Vercel.
 
 ### Option 4: Manual Deployment with WSGI/ASGI
 
