@@ -5,11 +5,40 @@ services:
     build: .
     ports:
       - "8000:8000"
+    env_file:
+      - .env
     environment:
-      - DEBUG=False
+      - DEBUG=${DEBUG:-False}
       - SECRET_KEY=${SECRET_KEY}
-      - DATABASE_URL=postgresql://gda_user:gda_password@db:5432/gda_db
-      - STATIC_ROOT=/app/static
+      - USE_POSTGRES=${USE_POSTGRES:-True}
+      - DB_ENGINE=${DB_ENGINE:-django.db.backends.postgresql}
+      - DB_NAME=${DB_NAME:-gda_db}
+      - DB_USER=${DB_USER:-gda_user}
+      - DB_PASSWORD=${DB_PASSWORD:-gda_password}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - STATIC_ROOT=${STATIC_ROOT:-/app/static}
+      - EMAIL_BACKEND=${EMAIL_BACKEND:-django.core.mail.backends.smtp.EmailBackend}
+      - EMAIL_HOST=${EMAIL_HOST:-smtp.gmail.com}
+      - EMAIL_PORT=${EMAIL_PORT:-465}
+      - EMAIL_USE_SSL=${EMAIL_USE_SSL:-True}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER:-}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD:-}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-}
+      - EMAIL_SUBJECT_PREFIX=${EMAIL_SUBJECT_PREFIX:-GDA}
+      - EMAIL_TIMEOUT=${EMAIL_TIMEOUT:-10}
+      - SECURE_SSL_REDIRECT=${SECURE_SSL_REDIRECT:-False}
+      - SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE:-False}
+      - CSRF_COOKIE_SECURE=${CSRF_COOKIE_SECURE:-False}
+      - SECURE_HSTS_SECONDS=${SECURE_HSTS_SECONDS:-0}
+      - SECURE_HSTS_INCLUDE_SUBDOMAINS=${SECURE_HSTS_INCLUDE_SUBDOMAINS:-False}
+      - SECURE_HSTS_PRELOAD=${SECURE_HSTS_PRELOAD:-False}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID:-}
+      - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET:-}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID:-}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET:-}
     depends_on:
       - db
     volumes:
@@ -20,9 +49,9 @@ services:
   db:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: gda_db
-      POSTGRES_USER: gda_user
-      POSTGRES_PASSWORD: gda_password
+      POSTGRES_DB: ${DB_NAME:-gda_db}
+      POSTGRES_USER: ${DB_USER:-gda_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-gda_password}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -30,8 +59,8 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
-      - "443:443"
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
