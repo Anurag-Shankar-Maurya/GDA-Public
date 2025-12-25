@@ -10,17 +10,17 @@
 [![Django Version](https://img.shields.io/badge/Django-5.2.6-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com/)
 [![Python Version](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg?style=for-the-badge)](https://github.com/Anurag-Shankar-Maurya/GDA/actions)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg?style=for-the-badge)](https://github.com/Anurag-Shankar-Maurya/GDA-Public/actions)
 
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/anuragsm/gda)
-[![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/Anurag-Shankar-Maurya/GDA)
+[![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/Anurag-Shankar-Maurya/GDA-Public)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org/)
-[![REST API](https://img.shields.io/badge/REST-API-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://github.com/Anurag-Shankar-Maurya/GDA)
+[![REST API](https://img.shields.io/badge/REST-API-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://github.com/Anurag-Shankar-Maurya/GDA-Public)
 
 <h3>
   <a href="https://gda-public.vercel.app/">🚀 Live Demo</a>
   <span> · </span>
-  <a href="https://github.com/Anurag-Shankar-Maurya/GDA/wiki">📚 Documentation</a>
+  <a href="https://github.com/Anurag-Shankar-Maurya/GDA-Public/wiki">📚 Documentation</a>
   <span> · </span>
   <a href="CONTRIBUTING.md">🤝 Contributing</a>
 </h3>
@@ -1336,19 +1336,19 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 <td align="center" width="25%">
 
 **💬 Discussions**  
-[GitHub Discussions](https://github.com/Anurag-Shankar-Maurya/GDA/discussions)
+[GitHub Discussions](https://github.com/Anurag-Shankar-Maurya/GDA-Public/discussions)
 
 </td>
 <td align="center" width="25%">
 
 **📖 Wiki**  
-[Project Wiki](https://github.com/Anurag-Shankar-Maurya/GDA/wiki)
+[Project Wiki](https://github.com/Anurag-Shankar-Maurya/GDA-Public/wiki)
 
 </td>
 <td align="center" width="25%">
 
 **🐛 Issues**  
-[Bug Tracker](https://github.com/Anurag-Shankar-Maurya/GDA/issues)
+[Bug Tracker](https://github.com/Anurag-Shankar-Maurya/GDA-Public/issues)
 
 </td>
 </tr>
@@ -1468,7 +1468,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 ## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Anurag-Shankar-Maurya/GDA&type=Date)](https://star-history.com/#Anurag-Shankar-Maurya/GDA&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Anurag-Shankar-Maurya/GDA-Public&type=Date)](https://star-history.com/#Anurag-Shankar-Maurya/GDA-Public&Date)
 
 ---
 
@@ -1476,14 +1476,14 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 **Give a ⭐ if this project helped you!**
 
-<a href="https://github.com/Anurag-Shankar-Maurya/GDA">
-  <img src="https://img.shields.io/github/stars/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Star" alt="GitHub stars"/>
+<a href="https://github.com/Anurag-Shankar-Maurya/GDA-Public">
+  <img src="https://img.shields.io/github/stars/Anurag-Shankar-Maurya/GDA-Public.svg?style=social&label=Star" alt="GitHub stars"/>
 </a>
-<a href="https://github.com/Anurag-Shankar-Maurya/GDA">
-  <img src="https://img.shields.io/github/forks/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Fork" alt="GitHub forks"/>
+<a href="https://github.com/Anurag-Shankar-Maurya/GDA-Public">
+  <img src="https://img.shields.io/github/forks/Anurag-Shankar-Maurya/GDA-Public.svg?style=social&label=Fork" alt="GitHub forks"/>
 </a>
-<a href="https://github.com/Anurag-Shankar-Maurya/GDA">
-  <img src="https://img.shields.io/github/watchers/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Watch" alt="GitHub watchers"/>
+<a href="https://github.com/Anurag-Shankar-Maurya/GDA-Public">
+  <img src="https://img.shields.io/github/watchers/Anurag-Shankar-Maurya/GDA-Public.svg?style=social&label=Watch" alt="GitHub watchers"/>
 </a>
 
 ---
