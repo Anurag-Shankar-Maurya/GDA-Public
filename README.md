@@ -1,20 +1,48 @@
-# 🌍 GDA - Global Development Alliance
+<div align="center">
 
-[![Django Version](https://img.shields.io/badge/Django-5.2.6-green.svg)](https://djangoproject.com/)
-[![Python Version](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/Anurag-Shankar-Maurya/GDA/actions)
-[![Contributors](https://img.shields.io/badge/contributors-welcome-orange.svg)](CONTRIBUTING.md)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://hub.docker.com/r/anuragsm/gda)
-[![Vercel](https://img.shields.io/badge/Vercel-Ready-black.svg)](https://vercel.com/new/clone?repository-url=https://github.com/Anurag-Shankar-Maurya/GDA)
+# 🌍 Global Development Alliance
+### *Empowering Change Through Technology*
 
-> A sophisticated Django-based Content Management System engineered for international volunteer organizations to orchestrate volunteer projects, optimize user engagement, and streamline organizational content management.
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&duration=3000&pause=1000&color=00A67E&center=true&vCenter=true&width=600&lines=Volunteer+Management+Platform;Built+with+Django+%F0%9F%90%8D;Open+Source+%E2%9D%A4%EF%B8%8F;Global+Impact+%F0%9F%8C%8E" alt="Typing SVG" />
+</p>
 
-![GDA Dashboard Preview](static/gitAssets/dashboard.png)
+[![Django Version](https://img.shields.io/badge/Django-5.2.6-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com/)
+[![Python Version](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg?style=for-the-badge)](https://github.com/Anurag-Shankar-Maurya/GDA/actions)
 
-[🌐 Live Demo](https://gda-public.vercel.app/) | [📚 Documentation](https://github.com/Anurag-Shankar-Maurya/GDA/wiki) | [🤝 Contributing](CONTRIBUTING.md)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/anuragsm/gda)
+[![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/Anurag-Shankar-Maurya/GDA)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org/)
+[![REST API](https://img.shields.io/badge/REST-API-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://github.com/Anurag-Shankar-Maurya/GDA)
 
-## 📋 Table of Contents
+<h3>
+  <a href="https://gda-public.vercel.app/">🚀 Live Demo</a>
+  <span> · </span>
+  <a href="https://github.com/Anurag-Shankar-Maurya/GDA/wiki">📚 Documentation</a>
+  <span> · </span>
+  <a href="CONTRIBUTING.md">🤝 Contributing</a>
+</h3>
+
+> **A sophisticated Django-powered CMS engineered for international volunteer organizations**  
+> *Orchestrate volunteer projects · Optimize engagement · Streamline content management*
+
+</div>
+
+---
+
+<div align="center">
+  <img src="static/gitAssets/dashboard.png" alt="GDA Dashboard Preview" width="90%" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"/>
+</div>
+
+---
+
+## 📑 Table of Contents
+
+<details>
+<summary><b>Click to expand navigation</b></summary>
+<br>
 
 - [🌟 Overview](#-overview)
 - [✨ Key Features](#-key-features)
@@ -30,60 +58,179 @@
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 - [👥 Support](#-support)
+- [� License](#-license)
+- [👥 Support](#-support)
 - [🙏 Acknowledgments](#-acknowledgments)
+
+</details>
+
+---
 
 ## 🌟 Overview
 
-The Global Development Alliance (GDA) platform represents a cutting-edge solution for volunteer coordination and impact measurement. Built with enterprise-grade Django framework, it provides comprehensive tools for managing international volunteer programs, tracking participant engagement, and showcasing organizational success stories.
+<table>
+<tr>
+<td width="50%">
 
-### 🎯 Mission
-To empower volunteer organizations with data-driven insights and streamlined management capabilities, fostering sustainable global development through enhanced volunteer coordination.
+### 🎯 Our Mission
 
-### 📊 Impact Metrics
-- **500+** Active Volunteer Projects
-- **10,000+** Registered Participants
-- **50+** Partner Organizations
-- **Real-time** Analytics Dashboard
+To **empower volunteer organizations** with data-driven insights and streamlined management capabilities, fostering sustainable global development through enhanced volunteer coordination.
+
+The GDA platform represents a cutting-edge solution for volunteer coordination and impact measurement. Built with enterprise-grade Django framework, it provides comprehensive tools for managing international volunteer programs, tracking participant engagement, and showcasing organizational success stories.
+
+</td>
+<td width="50%">
+
+### 📊 Impact at a Glance
+
+```text
+┌─────────────────────────────────┐
+│  🎯 500+ Active Projects        │
+│  👥 10,000+ Volunteers          │
+│  🤝 50+ Partner Organizations   │
+│  📈 Real-time Analytics         │
+│  🌍 Global Reach                │
+└─────────────────────────────────┘
+```
+
+<div align="center">
+
+**🚀 Transforming Volunteer Management**
+
+</div>
+
+</td>
+</tr>
+</table>
+
+---
 
 ## ✨ Key Features
 
+<div align="center">
+
+### 💎 *Built for Impact, Designed for Excellence*
+
+</div>
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
 ### 🏗️ Project Management Suite
-- **Comprehensive Project Lifecycle**: From inception to completion tracking.
-- **Advanced Enrollment System**: Automated capacity management and waitlist handling.
-- **Multi-dimensional Filtering**: Theme, location, duration, and difficulty-based project discovery.
-- **Performance Analytics**: Real-time enrollment tracking and utilization metrics.
+
+```diff
++ Comprehensive Project Lifecycle
++ Automated Enrollment System
++ Multi-dimensional Filtering
++ Performance Analytics
+```
+
+- **📋 Full Lifecycle Tracking**: From inception to completion
+- **🎯 Smart Enrollment**: Automated capacity & waitlist management
+- **🔍 Advanced Filters**: Theme, location, duration & difficulty
+- **📊 Real-time Metrics**: Live enrollment tracking & utilization
+
+</td>
+<td width="50%" valign="top">
 
 ### 👥 User Management & Analytics
-- **Sophisticated User Profiles**: Detailed participant information with guardian verification.
-- **Social Authentication**: Seamless login with Google, Facebook, and GitHub.
-- **Demographic Intelligence**: Gender, country, and engagement pattern analysis.
-- **Behavioral Analytics**: User activity tracking and engagement scoring.
-- **Advanced Search Engine**: Multi-criteria user discovery and management.
+
+```diff
++ Sophisticated User Profiles
++ Social Authentication
++ Demographic Intelligence
++ Behavioral Analytics
+```
+
+- **🔐 OAuth Integration**: Google, Facebook & GitHub login
+- **📈 Deep Insights**: Gender, country & engagement patterns
+- **🔎 Smart Search**: Multi-criteria user discovery
+- **⚡ Activity Tracking**: Real-time engagement scoring
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
 
 ### 📝 Content Management System
-- **Dynamic News Platform**: Real-time news and event publication system.
-- **Multimedia Success Stories**: Rich content creation with image and video integration.
-- **Intelligent FAQ Management**: Categorized knowledge base with priority ordering.
-- **SEO-Optimized Content**: Search engine friendly content structure.
+
+```diff
++ Dynamic News Platform
++ Multimedia Success Stories
++ Intelligent FAQ System
++ SEO-Optimized Content
+```
+
+- **📰 Real-time Publishing**: News & event management
+- **🎬 Rich Media**: Image & video integration
+- **💡 Knowledge Base**: Categorized FAQs with priority
+- **🔎 SEO Ready**: Search engine friendly structure
+
+</td>
+<td width="50%" valign="top">
 
 ### 📊 Business Intelligence Dashboard
-- **Executive Summary**: High-level organizational metrics and KPIs.
-- **Interactive Data Visualization**: Chart.js-powered analytics with real-time updates.
-- **Custom Reporting**: Exportable reports for stakeholder communication.
-- **Performance Monitoring**: System health and user engagement tracking.
 
-### 🌐 Internationalization and Localization
-- **Multi-language Support**: Full support for English and Traditional Chinese (zh_TW).
-- **Translatable Content**: All models and templates are designed for easy localization.
-- **Automated Translation Files**: `makemessages` and `compilemessages` for streamlined translation workflows.
+```diff
++ Executive Summary
++ Interactive Visualization
++ Custom Reporting
++ Performance Monitoring
+```
 
-### 🚀 API and Integrations
-- **RESTful API**: A comprehensive REST API for projects, news, success stories, and user data.
-- **API Documentation**: Auto-generated Swagger and ReDoc documentation for all endpoints.
-- **External Service Integration**: KICC project data synchronization.
-- **Secure API Access**: Token-based authentication and permission classes.
+- **📈 Live KPIs**: High-level organizational metrics
+- **📉 Chart.js Powered**: Beautiful interactive charts
+- **📄 Export Reports**: Stakeholder communication ready
+- **🎯 Health Monitoring**: System & user engagement tracking
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🌐 Internationalization
+
+```diff
++ Multi-language Support
++ Translatable Content
++ Automated Workflows
+```
+
+- **🇬🇧🇹🇼 Languages**: English & Traditional Chinese
+- **🔄 Easy Localization**: All models & templates ready
+- **⚙️ Auto Translation**: Streamlined i18n workflows
+
+</td>
+<td width="50%" valign="top">
+
+### 🚀 API & Integrations
+
+```diff
++ RESTful API
++ Auto-generated Docs
++ External Services
++ Secure Access
+```
+
+- **🔌 REST API**: Complete CRUD operations
+- **📖 Swagger/ReDoc**: Auto-generated documentation
+- **🔗 KICC Integration**: Project data synchronization
+- **🔒 Token Auth**: Secure API access control
+
+</td>
+</tr>
+</table>
+
+---
 
 ## 🏗️ Architecture
+
+<div align="center">
+
+### 🎨 *Elegant System Design*
+
+</div>
 
 ```mermaid
 graph TB
@@ -115,394 +262,910 @@ graph TB
     D --> P
 ```
 
-### System Components
-- **Frontend Layer**: Responsive Bootstrap 5 interface with Chart.js visualizations
-- **Application Layer**: Django 5.2.6 with modular app architecture
-- **Data Layer**: PostgreSQL for production, SQLite for development
-- **API Layer**: Django REST Framework for RESTful services
-- **Media Layer**: Local storage with cloud storage capability
+<details>
+<summary><b>🔍 System Components Breakdown</b></summary>
+<br>
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **🎨 Frontend** | Bootstrap 5 + Chart.js | Responsive UI with rich visualizations |
+| **⚙️ Application** | Django 5.2.6 | Modular app architecture |
+| **💾 Data** | PostgreSQL/SQLite | Production & development databases |
+| **🔌 API** | Django REST Framework | RESTful web services |
+| **📦 Media** | Local/Cloud Storage | Asset management |
+| **🔄 Cache** | Redis | Performance optimization |
+| **🌐 Web Server** | Nginx/Apache | Reverse proxy & static files |
+
+</details>
+
+---
 
 ## 🚀 Technology Stack
 
-| Component | Technology | Version | Purpose |
-|-----------|------------|---------|---------|
-| **Backend** | Django | 5.2.6 | Web Framework |
-| **Database** | PostgreSQL/SQLite | 15+/3+ | Primary Data Store |
-| **Frontend** | Bootstrap | 5.3 | UI Framework |
-| **JavaScript** | Vanilla JS | ES6+ | Client-side Logic |
-| **Charts** | Chart.js | 4.0+ | Data Visualization |
-| **API** | Django REST | 3.16.1 | RESTful Services |
-| **Deployment** | Gunicorn/Vercel | 21+ | WSGI Server/Hosting |
-| **Container** | Docker | 24+ | Containerization |
-| **Web Server** | Nginx | 1.25+ | Reverse Proxy |
-| **Python** | Python | 3.11+ | Programming Language |
+<div align="center">
+
+### 🛠️ *Built with Industry-Leading Tools*
+
+</div>
+
+<table align="center">
+<tr align="center">
+<td>
+
+**Backend**  
+<img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django"/>  
+<sub>5.2.6</sub>
+
+</td>
+<td>
+
+**Language**  
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>  
+<sub>3.11+</sub>
+
+</td>
+<td>
+
+**Database**  
+<img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>  
+<sub>15+</sub>
+
+</td>
+<td>
+
+**Frontend**  
+<img src="https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap"/>  
+<sub>5.3</sub>
+
+</td>
+</tr>
+<tr align="center">
+<td>
+
+**API**  
+<img src="https://img.shields.io/badge/DRF-ff1709?style=for-the-badge&logo=django&logoColor=white" alt="DRF"/>  
+<sub>3.16.1</sub>
+
+</td>
+<td>
+
+**Charts**  
+<img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js"/>  
+<sub>4.0+</sub>
+
+</td>
+<td>
+
+**Container**  
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>  
+<sub>24+</sub>
+
+</td>
+<td>
+
+**Server**  
+<img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx"/>  
+<sub>1.25+</sub>
+
+</td>
+</tr>
+<tr align="center">
+<td>
+
+**Deployment**  
+<img src="https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white" alt="Gunicorn"/>  
+<sub>21+</sub>
+
+</td>
+<td>
+
+**Hosting**  
+<img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel"/>  
+<sub>Cloud</sub>
+
+</td>
+<td>
+
+**Cache**  
+<img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis"/>  
+<sub>7+</sub>
+
+</td>
+<td>
+
+**JavaScript**  
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>  
+<sub>ES6+</sub>
+
+</td>
+</tr>
+</table>
+
+<div align="center">
+
+**🌟 Enterprise-Grade • 🚀 Production-Ready • 💯 Scalable**
+
+</div>
+
+---
 
 ## 📋 Prerequisites
 
-### System Requirements
-- **Operating System**: Linux/Windows/macOS
-- **Python Version**: 3.11 or higher
-- **Memory**: Minimum 1GB RAM (2GB recommended)
-- **Storage**: 200MB free space for application and database
-- **Network**: Stable internet connection for dependency installation
+<div align="center">
 
-### Development Tools
-- Git version control system
-- Virtual environment manager (venv)
-- Code editor (VS Code recommended)
-- Docker (optional, for containerized development)
-- Database client (optional, for PostgreSQL development)
+### 🔧 *What You'll Need*
+
+</div>
+
+<table>
+<tr>
+<td width="50%">
+
+#### 💻 System Requirements
+
+```yaml
+Operating System:
+  - ✅ Linux
+  - ✅ Windows
+  - ✅ macOS
+
+Resources:
+  - Memory: 1GB RAM (2GB recommended)
+  - Storage: 200MB free space
+  - Network: Stable internet
+```
+
+</td>
+<td width="50%">
+
+#### 🛠️ Development Tools
+
+```yaml
+Required:
+  - 🐍 Python 3.11+
+  - 📦 Git
+  - 🔧 venv/virtualenv
+
+Optional:
+  - 🐳 Docker
+  - 📝 VS Code
+  - 🗄️ PostgreSQL Client
+```
+
+</td>
+</tr>
+</table>
+
+---
 
 ## 🛠️ Local Development Setup
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+<div align="center">
 
-### Prerequisites
+### 🚀 *Get Started in Minutes*
 
-*   Python 3.11+
-*   Git
-*   A virtual environment manager (like `venv`)
+</div>
 
-### 1. Clone the Repository
+> These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### 📦 Quick Start Guide
+
+<details open>
+<summary><b>Step 1️⃣: Clone the Repository</b></summary>
+<br>
 
 ```bash
 git clone https://github.com/Anurag-Shankar-Maurya/GDA-Public.git
 cd GDA-Public
 ```
 
-### 2. Set Up Virtual Environment
+</details>
+
+<details open>
+<summary><b>Step 2️⃣: Set Up Virtual Environment</b></summary>
+<br>
 
 ```bash
-# Create and activate a virtual environment
+# Create virtual environment
 python -m venv venv
-# On Windows Powershell
+
+# Activate on Windows PowerShell
 venv\Scripts\activate
-# On Windows Bash
+
+# Activate on Windows Bash
 source venv/Scripts/activate
-# On macOS/Linux
+
+# Activate on macOS/Linux
 source venv/bin/activate
 ```
 
-### 3. Install Dependencies
+</details>
+
+<details open>
+<summary><b>Step 3️⃣: Install Dependencies</b></summary>
+<br>
 
 ```bash
-# Upgrade pip and install packages
+# Upgrade pip and install all packages
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Configure Environment
+</details>
 
-The project uses an `.env` file for environment variables.
+<details open>
+<summary><b>Step 4️⃣: Configure Environment</b></summary>
+<br>
 
 ```bash
-# Create a .env file from the example
+# Create .env file from template
 cp .env.example .env
 ```
 
-Now, open the `.env` file and set a `SECRET_KEY`. You can generate one using Django's `get_random_secret_key()` function. For local development, the default `sqlite3` database will be used.
+> 💡 **Tip**: Open `.env` and set your `SECRET_KEY`. Use Django's `get_random_secret_key()` for production.
 
-### 5. Set Up the Database
+</details>
+
+<details open>
+<summary><b>Step 5️⃣: Set Up Database</b></summary>
+<br>
 
 ```bash
-# Run database migrations
+# Run migrations
 python manage.py migrate
 
-# Create a superuser to access the admin panel
+# Create superuser account
 python manage.py createsuperuser
 ```
 
-### 6. Run the Development Server
+</details>
+
+<details open>
+<summary><b>Step 6️⃣: Launch Development Server</b></summary>
+<br>
 
 ```bash
 python manage.py runserver
 ```
 
-You can now access the application:
-*   **Main Site:** [http://1227.0.0.1:8000/](http://127.0.0.1:8000/)
-*   **Management Dashboard:** [http://127.0.0.1:8000/management/](http://127.0.0.1:8000/management/)
+### 🎉 Success! Your application is now running:
+
+<table>
+<tr>
+<td align="center">🏠 <b>Main Site</b></td>
+<td><a href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a></td>
+</tr>
+<tr>
+<td align="center">⚙️ <b>Admin Panel</b></td>
+<td><a href="http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a></td>
+</tr>
+<tr>
+<td align="center">📊 <b>Dashboard</b></td>
+<td><a href="http://127.0.0.1:8000/management/">http://127.0.0.1:8000/management/</a></td>
+</tr>
+</table>
+
+</details>
+
+---
 
 ## ⚙️ Environment Variables
 
-This project uses a `.env` file to manage environment variables for both local development and production. To get started, copy the example file:
+<div align="center">
+
+### 🔐 *Secure Configuration Management*
+
+</div>
+
+> This project uses a `.env` file for environment variables. Get started quickly:
 
 ```bash
 cp .env.example .env
 ```
 
-Then, open the `.env` file and fill in the required values as described below.
+### 📝 Configuration Categories
 
-### Django Core Settings
+<details>
+<summary><b>🔑 Django Core Settings</b></summary>
+<br>
 
--   `SECRET_KEY`: A long, random string used for cryptographic signing. **Required for production.**
--   `DEBUG`: Set to `True` for local development to get detailed error pages. **Must be `False` in production.**
+| Variable | Description | Required | Example |
+|----------|-------------|----------|---------|
+| `SECRET_KEY` | Cryptographic signing key | ✅ Production | `django-insecure-xyz...` |
+| `DEBUG` | Debug mode (NEVER True in production) | ✅ Always | `True` / `False` |
 
-### Database Configuration
+> ⚠️ **Security**: Generate `SECRET_KEY` using `get_random_secret_key()`
 
--   `USE_POSTGRES`: Set to `True` to use a PostgreSQL database (recommended for production) or `False` to use the default `sqlite3` database (convenient for local development).
--   `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`: Credentials for your PostgreSQL database. These are only required if `USE_POSTGRES` is set to `True`.
+</details>
 
-*Note: For production deployments on services like Render or Vercel, you might use a single `DATABASE_URL` string instead, which `dj-database-url` will parse.*
+<details>
+<summary><b>🗄️ Database Configuration</b></summary>
+<br>
 
-### Email Delivery
+| Variable | Description | Required | Example |
+|----------|-------------|----------|---------|
+| `USE_POSTGRES` | Enable PostgreSQL | ❌ | `True` / `False` |
+| `DB_NAME` | Database name | ⚠️ If PostgreSQL | `gda_db` |
+| `DB_USER` | Database user | ⚠️ If PostgreSQL | `postgres` |
+| `DB_PASSWORD` | Database password | ⚠️ If PostgreSQL | `your_password` |
+| `DB_HOST` | Database host | ⚠️ If PostgreSQL | `localhost` |
+| `DB_PORT` | Database port | ⚠️ If PostgreSQL | `5432` |
 
-These settings are required for features like email verification and password resets.
+> 💡 **Tip**: For local development, leave `USE_POSTGRES=False` to use SQLite
 
--   `EMAIL_BACKEND`: The backend to use for sending emails. `django.core.mail.backends.smtp.EmailBackend` is standard.
--   `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`: Your SMTP server credentials. For Gmail, consider using an "App Password" for better security.
--   `EMAIL_USE_SSL`: Set to `True` for secure connections (e.g., port 465).
--   `DEFAULT_FROM_EMAIL`: The default email address for automated messages.
+</details>
 
-### Deployment Security
+<details>
+<summary><b>📧 Email Delivery</b></summary>
+<br>
 
-These settings should be enabled when deploying your application over HTTPS in production.
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `EMAIL_BACKEND` | Email backend class | `django.core.mail.backends.smtp.EmailBackend` |
+| `EMAIL_HOST` | SMTP server | `smtp.gmail.com` |
+| `EMAIL_PORT` | SMTP port | `465` |
+| `EMAIL_HOST_USER` | SMTP username | `your-email@gmail.com` |
+| `EMAIL_HOST_PASSWORD` | SMTP password | `your_app_password` |
+| `EMAIL_USE_SSL` | Use SSL/TLS | `True` |
+| `DEFAULT_FROM_EMAIL` | Default sender | `noreply@gda.org` |
 
--   `SECURE_SSL_REDIRECT`: Set to `True` to redirect all HTTP requests to HTTPS.
--   `SESSION_COOKIE_SECURE`: Set to `True` to only send session cookies over HTTPS.
--   `CSRF_COOKIE_SECURE`: Set to `True` to only send the CSRF cookie over HTTPS.
--   `SECURE_HSTS_SECONDS`, `SECURE_HSTS_INCLUDE_SUBDOMAINS`, `SECURE_HSTS_PRELOAD`: Settings for HTTP Strict Transport Security (HSTS). Be cautious when enabling these, as they can have long-term effects on browser behavior.
+> 🔒 **Gmail Users**: Use [App Passwords](https://support.google.com/accounts/answer/185833) for security
 
-### Social Authentication (OAuth)
+</details>
 
-To enable social logins, you need to obtain API credentials from each provider and add them to your `.env` file.
+<details>
+<summary><b>🔒 Production Security</b></summary>
+<br>
 
--   **Google**:
-    -   `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
-    -   Get credentials from the [Google Cloud Console](https://console.cloud.google.com/).
-    -   Set the authorized redirect URI to: `http://127.0.0.1:8000/accounts/google/login/callback/` (for local development).
+| Variable | Description | Production Value |
+|----------|-------------|-----------------|
+| `SECURE_SSL_REDIRECT` | Force HTTPS | `True` |
+| `SESSION_COOKIE_SECURE` | Secure session cookies | `True` |
+| `CSRF_COOKIE_SECURE` | Secure CSRF cookies | `True` |
+| `SECURE_HSTS_SECONDS` | HSTS duration | `31536000` |
+| `SECURE_HSTS_INCLUDE_SUBDOMAINS` | Apply to subdomains | `True` |
+| `SECURE_HSTS_PRELOAD` | HSTS preload | `True` |
 
--   **Facebook**:
-    -   `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`
-    -   Get credentials from [Meta for Developers](https://developers.facebook.com/).
-    -   Set the valid OAuth redirect URI to: `http://127.0.0.1:8000/accounts/facebook/login/callback/`.
+> ⚠️ **Warning**: HSTS settings are permanent. Test thoroughly before enabling!
 
--   **GitHub**:
-    -   `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
-    -   Get credentials from your [GitHub Developer settings](https://github.com/settings/developers).
-    -   Set the authorization callback URL to: `http://127.0.0.1:8000/accounts/github/login/callback/`.
+</details>
 
+<details>
+<summary><b>🔐 Social Authentication (OAuth)</b></summary>
+<br>
+
+#### Google OAuth
+
+| Variable | Get From | Redirect URI |
+|----------|----------|--------------|
+| `GOOGLE_CLIENT_ID` | [Google Cloud Console](https://console.cloud.google.com/) | `http://127.0.0.1:8000/accounts/google/login/callback/` |
+| `GOOGLE_CLIENT_SECRET` | [Google Cloud Console](https://console.cloud.google.com/) | - |
+
+#### Facebook OAuth
+
+| Variable | Get From | Redirect URI |
+|----------|----------|--------------|
+| `FACEBOOK_CLIENT_ID` | [Meta for Developers](https://developers.facebook.com/) | `http://127.0.0.1:8000/accounts/facebook/login/callback/` |
+| `FACEBOOK_CLIENT_SECRET` | [Meta for Developers](https://developers.facebook.com/) | - |
+
+#### GitHub OAuth
+
+| Variable | Get From | Redirect URI |
+|----------|----------|--------------|
+| `GITHUB_CLIENT_ID` | [GitHub Developer Settings](https://github.com/settings/developers) | `http://127.0.0.1:8000/accounts/github/login/callback/` |
+| `GITHUB_CLIENT_SECRET` | [GitHub Developer Settings](https://github.com/settings/developers) | - |
+
+</details>
+
+
+---
 
 ## 📖 Usage Guide
 
-### Database Seeding
+<div align="center">
 
-The project provides several commands to populate the database with sample data for development and testing. These commands are useful for quickly setting up a local environment with realistic content.
+### 🎯 *Making the Most of GDA*
 
-#### All-in-One Development Seeding
+</div>
 
-For a quick and comprehensive setup, you can use the main `seed` command. This will populate the database with a complete set of sample data, including users, projects, news, success stories, and FAQs.
+### 🌱 Database Seeding
+
+Quickly populate your database with realistic sample data for development and testing.
+
+#### 🚀 Quick Start: All-in-One Seeding
 
 ```bash
 python manage.py seed
 ```
 
-This command creates:
--   Sample user accounts (with the default password: `password123`)
--   A variety of volunteer projects across different themes and countries
--   News articles and events
--   Success stories linked to projects
--   Frequently asked questions
+<div align="center">
 
-#### Granular Seeding (Optional)
+**🎉 Creates a complete environment in seconds!**
 
-If you need more control over the seeding process, you can run the following commands to seed specific types of content individually:
+</div>
 
--   **Seed Projects**:
-    ```bash
-    python manage.py seed_projects
-    ```
--   **Seed News and Events**:
-    ```bash
-    python manage.py seed_news
-    ```
--   **Seed Success Stories**:
-    ```bash
-    python manage.py seed_stories
-    ```
--   **Seed FAQs**:
-    ```bash
-    python manage.py seed_faqs
-    ```
--   **Create Superuser and Staff Accounts**:
-    ```bash
-    python manage.py seed_superuser
-    ```
+<table>
+<tr>
+<td>
 
-#### Production Data Seeding
+**What Gets Created:**
+- 👥 Sample user accounts (password: `password123`)
+- 🎯 Diverse volunteer projects
+- 📰 News articles & events
+- ✨ Success stories with projects
+- ❓ Categorized FAQs
 
-To populate the database with production data from CSV files:
+</td>
+</tr>
+</table>
+
+#### 🎨 Granular Seeding (Advanced)
+
+<details>
+<summary><b>Individual Seeding Commands</b></summary>
+<br>
 
 ```bash
-# Seed production data from CSV files
+# Seed specific content types
+python manage.py seed_projects      # 🎯 Projects only
+python manage.py seed_news          # 📰 News & events
+python manage.py seed_stories       # ✨ Success stories
+python manage.py seed_faqs          # ❓ FAQ entries
+python manage.py seed_superuser     # 👤 Admin accounts
+```
+
+</details>
+
+#### 🏭 Production Data Seeding
+
+```bash
+# Load production data from CSV files
 python manage.py seed_production
 
-# Clear existing data and reseed production data
+# Clear and reload production data
 python manage.py seed_production --clear
 ```
 
-This command reads data from CSV files located in `apps/content/data/` and is intended for setting up a production-like environment.
+> 📂 **Location**: CSV files in `apps/content/data/`
 
-### Admin Panel Access
+---
 
-After running migrations and creating a superuser, you can access the Django admin panel at:
-- **Admin Panel:** [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+### 🎛️ Admin Panel Access
 
-Use the superuser credentials you created during setup.
+<div align="center">
 
-### API Documentation
+**🔐 Powerful Administrative Interface**
 
-The project includes auto-generated API documentation using DRF-YASG:
-- **Swagger UI:** [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
-- **ReDoc:** [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
+</div>
 
-### Internationalization
+After creating a superuser, access the admin panel:
 
-To update translation files:
+<table align="center">
+<tr>
+<td align="center">
+
+**🏠 Admin Dashboard**  
+[http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+
+</td>
+</tr>
+</table>
+
+> 🔑 Use your superuser credentials created during setup
+
+---
+
+### 📚 API Documentation
+
+<div align="center">
+
+**🚀 Auto-Generated Interactive Documentation**
+
+</div>
+
+<table>
+<tr>
+<td align="center" width="50%">
+
+#### 📘 Swagger UI
+**Interactive API Explorer**
+
+[http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
+
+<img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger"/>
+
+</td>
+<td align="center" width="50%">
+
+#### 📙 ReDoc
+**Clean API Reference**
+
+[http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
+
+<img src="https://img.shields.io/badge/ReDoc-8A2BE2?style=for-the-badge&logo=readme&logoColor=white" alt="ReDoc"/>
+
+</td>
+</tr>
+</table>
+
+---
+
+### 🌍 Internationalization
+
+<details>
+<summary><b>Update Translation Files</b></summary>
+<br>
 
 ```bash
-# Generate translation files for Chinese (Taiwan)
+# Generate translation files for Traditional Chinese
 python manage.py makemessages -l zh_TW --ignore venv
 
 # Compile translation files
 python manage.py compilemessages
 ```
 
-### Key Application Features
+**Supported Languages:**
+- 🇬🇧 English (Default)
+- 🇹🇼 Traditional Chinese (zh_TW)
 
-#### For Volunteers
-- Browse and apply for volunteer projects
-- View project details, requirements, and timelines
-- Track application status and enrolled projects
-- Access success stories and impact metrics
+</details>
 
-#### For Administrators
-- Manage projects, users, and content through the admin panel
-- Monitor volunteer engagement and project progress
-- Publish news, events, and announcements
-- Generate reports and analytics
+---
+
+### 🎯 Key Application Features
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### 👥 For Volunteers
+
+```yaml
+Discover:
+  - 🔍 Browse volunteer projects
+  - 📋 View detailed requirements
+  - ⏰ Check timelines
+
+Engage:
+  - ✉️ Apply for projects
+  - 📊 Track application status
+  - 🎯 View enrolled projects
+  - ✨ Read success stories
+```
+
+</td>
+<td width="50%" valign="top">
+
+#### ⚙️ For Administrators
+
+```yaml
+Manage:
+  - 🎯 Projects & user accounts
+  - 📊 Content via admin panel
+  - 📈 Volunteer engagement
+
+Publish:
+  - 📰 News & announcements
+  - 📅 Events & updates
+  - ✨ Impact reports
+
+Monitor:
+  - 📈 Analytics & KPIs
+  - 📊 Project progress
+  - 📄 Generate reports
+```
+
+</td>
+</tr>
+</table>
+
+---
 
 ## 🧪 Testing Guidelines
 
-This project includes a small test suite and follows standard Django test discovery rules. Below are recommended workflows and tips for running and structuring tests locally and in CI.
+<div align="center">
 
-Quick commands
+### 🎯 *Ensuring Quality & Reliability*
 
+</div>
+
+> Comprehensive testing suite following Django best practices
+
+### ⚡ Quick Commands
+
+<table>
+<tr>
+<td>
+
+**Run all tests (verbose)**
 ```bash
-# Run all tests (verbose)
 python manage.py test -v 2
+```
 
-# Run tests for a single app
+</td>
+<td>
+
+**Test specific app**
+```bash
 python manage.py test apps.content -v 2
+```
 
-# Run an individual test case or test method
+</td>
+</tr>
+<tr>
+<td>
+
+**Individual test**
+```bash
 python manage.py test apps.content.tests.SmokeTest.test_homepage_loads -v 2
 ```
 
-Test structure and best practices
+</td>
+<td>
 
-- Place tests in `tests.py` inside each app or create a `tests/` package inside the app.
-- Name test modules and functions/classes using the `test` prefix so Django/unittest discovers them (e.g., `tests.py`, `tests/test_models.py`, `TestMyModel.test_saves`).
-- Keep tests small and deterministic. Prefer factory fixtures or Django's `TestCase.setUp()` for test data.
-- Use Django's `TestCase` for tests that need database access; it wraps each test in a transaction and flushes the DB between tests.
-- For faster unit tests that don't use the DB, use `SimpleTestCase` or plain `unittest.TestCase`.
-
-Running tests in CI
-
-- Run `python -m pip install -r requirements.txt` before running tests (or use the project image from your CI pipeline).
-- Use an in-memory SQLite DB for unit tests if you want speed (`DATABASE_URL=sqlite:///:memory:`) or configure a real PostgreSQL service for integration tests.
-- Fail the build on any warnings in `python manage.py check --deploy` when running in production mode (i.e., `DEBUG=False`).
-
-Debugging test failures
-
-- Re-run a single failing test with increased verbosity: `python manage.py test path.to.test -v 3`.
-- Use `--keepdb` to avoid rebuilding the test DB during iterative debugging:
-
+**Keep DB between runs**
 ```bash
 python manage.py test -v 2 --keepdb
 ```
 
-- If tests fail because of missing environment variables (e.g., `SECRET_KEY`), create a local `.env` from `.env.example` and export the values in your shell or CI secrets.
+</td>
+</tr>
+</table>
 
-Writing new tests
+---
 
-- Add tests when fixing bugs or adding features. Aim to cover model logic, view behavior, form validation, and key templates.
-- Use factories (e.g., Factory Boy) or fixtures to build test data where helpful.
+### 📋 Test Structure & Best Practices
 
-CI recommendations
+<details>
+<summary><b>🏗️ Organizing Tests</b></summary>
+<br>
 
-- Add a workflow that installs dependencies, runs `python manage.py check --deploy` with production-like env vars, and then runs `python manage.py test`.
-- Consider splitting unit tests (fast) and integration tests (slow) into separate CI jobs.
+```python
+# Place tests in tests.py or create tests/ package
+apps/
+  content/
+    tests.py              # ✅ Simple approach
+    tests/                # ✅ Advanced approach
+      __init__.py
+      test_models.py
+      test_views.py
+      test_api.py
+```
 
+**Naming Conventions:**
+- 📁 Files: `test_*.py` or `tests.py`
+- 🎯 Classes: `Test*` or `*Test`
+- ✅ Functions: `test_*`
+
+</details>
+
+<details>
+<summary><b>🎨 Writing Good Tests</b></summary>
+<br>
+
+| Do ✅ | Don't ❌ |
+|------|---------|
+| Keep tests small & focused | Write long, complex tests |
+| Use factories/fixtures | Hard-code test data |
+| Test one thing per test | Test multiple behaviors |
+| Use `TestCase` for DB tests | Use `TestCase` for simple unit tests |
+| Use descriptive names | Use vague names like `test1` |
+
+**Example:**
+```python
+from django.test import TestCase
+
+class ProjectModelTest(TestCase):
+    def setUp(self):
+        self.project = Project.objects.create(
+            title="Test Project"
+        )
+    
+    def test_project_creation(self):
+        self.assertEqual(self.project.title, "Test Project")
+```
+
+</details>
+
+---
+
+### 🚀 Running Tests in CI
+
+<details>
+<summary><b>CI Pipeline Configuration</b></summary>
+<br>
+
+```yaml
+# Example GitHub Actions workflow
+- name: Install Dependencies
+  run: pip install -r requirements.txt
+
+- name: Run Django Checks
+  run: python manage.py check --deploy
+  env:
+    DEBUG: False
+
+- name: Run Tests
+  run: python manage.py test -v 2
+  env:
+    DATABASE_URL: sqlite:///:memory:
+```
+
+**Best Practices:**
+- ⚡ Use in-memory SQLite for speed
+- 🔍 Run `check --deploy` in production mode
+- 🚨 Fail build on any warnings
+- 📊 Track test coverage
+
+</details>
+
+---
+
+### 🐛 Debugging Test Failures
+
+```bash
+# Re-run single failing test with max verbosity
+python manage.py test path.to.test -v 3
+
+# Keep database for inspection
+python manage.py test -v 2 --keepdb
+
+# Run with Python debugger
+python -m pdb manage.py test path.to.test
+```
+
+> 💡 **Tip**: Use `--keepdb` to speed up iterative debugging
+
+---
+
+### ✍️ Writing New Tests
+
+<div align="center">
+
+**🎯 Aim for comprehensive coverage**
+
+</div>
+
+Focus on:
+- ✅ Model logic & validation
+- ✅ View behavior & permissions
+- ✅ Form validation & errors
+- ✅ API endpoints & serialization
+- ✅ Template rendering
+- ✅ Business logic & calculations
+
+**Coverage Goals:**
+- 🥉 Minimum: 60%
+- 🥈 Good: 80%
+- 🥇 Excellent: 90%+
+
+---
 
 ## 🚀 Production Deployment
 
-This project is configured for deployment using either Docker or Vercel.
+<div align="center">
 
-### Option 1: Deploying with Docker
+### 🌐 *Multiple Deployment Options*
 
-This is the recommended method for a full production-like environment with Nginx and PostgreSQL.
+Choose the platform that best fits your needs
+
+</div>
+
+---
+
+### 🐳 Option 1: Docker Deployment
+
+<div align="center">
+
+**⭐ Recommended for Full Production Environment**
+
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
+<img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx"/>
+<img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
+
+</div>
+
+<details open>
+<summary><b>🚀 Getting Started with Docker</b></summary>
+<br>
 
 #### Prerequisites
+- 🐳 Docker
+- 🔧 Docker Compose
 
-*   Docker
-*   Docker Compose
+#### Step 1: Configure Environment
 
-#### 1. Configure Environment
-
-Create a `.env` file in the project root and add the following variables:
-
-```
+```bash
+# Create .env file
 DEBUG=False
 SECRET_KEY=<your-strong-secret-key>
 ```
-The `DATABASE_URL` is already configured in `docker-compose.yml` to connect to the PostgreSQL service.
 
-#### 2. Build and Run the Containers
+> 💡 `DATABASE_URL` is auto-configured in `docker-compose.yml`
+
+#### Step 2: Build & Launch
 
 ```bash
-docker-compose build # Build the Docker images
+# Build images
+docker-compose build
 
-docker-compose up -d --build # Build and start the containers in detached mode
+# Start all services (detached mode)
+docker-compose up -d --build
 ```
 
-This command will build the Docker image for the web service, and start the `web`, `db` (PostgreSQL), and `nginx` services in detached mode.
+#### Step 3: Access Application
 
-#### 3. Accessing the Application
+<table>
+<tr>
+<td align="center">
 
-The application will be available at `http://localhost`. Nginx is configured to listen on port 80.
+**🌐 Application**  
+http://localhost
 
-### Option 2: Deploying to Render
+</td>
+<td>
 
-Deploying to Render is a straightforward process. Here are the detailed steps to get your web service live:
+Services running:
+- 🐳 Web (Django + Gunicorn)
+- 🗄️ Database (PostgreSQL)
+- 🌐 Web Server (Nginx)
 
-#### 1. Create a New Web Service
-- From your Render dashboard, click the **"New"** button and select **"Web Service"**.
+</td>
+</tr>
+</table>
 
-#### 2. Connect Your Repository
-- Connect your GitHub account and select your repository (e.g., `Anurag-Shankar-Maurya/GDA-Public`).
+</details>
 
-#### 3. Configure Service Settings
-Fill out the configuration form with the following details:
-- **Name**: A unique name for your web service (e.g., `gda-production`).
-- **Region**: Choose a region that is geographically close to your users (e.g., Oregon (US West)).
-- **Branch**: Select the Git branch to build and deploy from (e.g., `main`).
-- **Root Directory**: Leave this blank unless you are using a monorepo structure.
-- **Runtime**: Select **Python 3**.
-- **Build Command**: Set this to `pip install -r requirements.txt`.
-- **Start Command**: Use `python manage.py collectstatic --noinput && gunicorn gda.wsgi:application`.
-- **Instance Type**: For hobby projects or testing, you can start with the **Free** instance type. For production use, consider a paid instance for better performance and features like zero-downtime deploys.
+---
 
-#### 4. Add Environment Variables
-- Under the **"Environment Variables"** section, you can add your secrets and configuration.
-- You can add them one by one or use the **"Add from .env"** option to bulk-upload them from your local `.env` file.
-- **Required variables for production:**
-    - `SECRET_KEY`: Your production secret key.
-    - `DEBUG`: Set to `False`.
-    - `DATABASE_URL`: Your Render PostgreSQL database connection string.
-    - `PYTHON_VERSION`: Specify your Python version, e.g., `3.11.0`.
+### 🎨 Option 2: Render Deployment
 
-#### 5. Create Web Service
-- Click the **"Create Web Service"** button at the bottom of the page. Render will automatically start the build and deployment process.
+<div align="center">
+
+**🚀 Simple Cloud Deployment**
+
+<img src="https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white" alt="Render"/>
+
+</div>
+
+<details>
+<summary><b>📝 Detailed Render Setup</b></summary>
+<br>
+
+#### 1️⃣ Create New Web Service
+- Click **"New"** → **"Web Service"** from dashboard
+
+#### 2️⃣ Connect Repository
+- Link your GitHub account
+- Select `Anurag-Shankar-Maurya/GDA-Public`
+
+#### 3️⃣ Configure Service
+
+| Setting | Value |
+|---------|-------|
+| **Name** | `gda-production` |
+| **Region** | Oregon (US West) or nearest |
+| **Branch** | `main` |
+| **Runtime** | Python 3 |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `python manage.py collectstatic --noinput && gunicorn gda.wsgi:application` |
+| **Instance Type** | Free (testing) / Paid (production) |
+
+#### 4️⃣ Add Environment Variables
+
+```bash
+SECRET_KEY=<your-secret-key>
+DEBUG=False
+DATABASE_URL=<render-postgres-url>
+PYTHON_VERSION=3.11.0
+```
+
+> 💡 **Tip**: Use "Add from .env" to bulk upload
+
+#### 5️⃣ Deploy!
+Click **"Create Web Service"** - Render handles the rest! 🎉
+
+</details>
 
 ### Option 3: Deploying to Vercel
 
@@ -535,80 +1198,102 @@ Vercel provides a seamless deployment experience for Django projects. Here’s h
 
 The current live demo is hosted on Vercel.
 
-### Option 4: Manual Deployment with WSGI/ASGI
+---
 
-For a more traditional deployment on a virtual machine or a bare-metal server, you can use a production-grade WSGI or ASGI server.
-
-#### WSGI Deployment (e.g., with Gunicorn)
-
-Gunicorn is a mature and widely used WSGI server for Unix-like systems.
-
-```bash
-# Install Gunicorn
-pip install gunicorn
-
-# Run the application with Gunicorn
-gunicorn gda.wsgi:application --bind 0.0.0.0:8000 --workers 4
-```
-
-On Windows, you can use `waitress`:
-```bash
-# Install Waitress
-pip install waitress
-
-# Run the application with Waitress
-waitress-serve --listen=0.0.0.0:8000 gda.wsgi:application
-```
-
-#### ASGI Deployment (e.g., with Uvicorn)
-
-If your application has asynchronous features (like Django Channels), you should use an ASGI server like Uvicorn.
-
-```bash
-# Install Uvicorn
-pip install uvicorn
-
-# Run the application with Uvicorn
-uvicorn gda.asgi:application --host 0.0.0.0 --port 8000 --workers 4
-```
 ## 🤝 Contributing
 
-We welcome contributions from the community! Please see our [Contributing Guidelines](CONTRIBUTING.md) for detailed information.
+<div align="center">
 
-### Development Workflow
+### 💖 *Join Our Community*
+
+We welcome contributions from developers worldwide!
+
+</div>
+
+> Please see our [Contributing Guidelines](CONTRIBUTING.md) for detailed information.
+
+### 🔄 Development Workflow
+
 ```mermaid
 flowchart LR
-    A[Fork Repository] --> B[Create Feature Branch]
-    B --> C[Make Changes]
-    C --> D[Write Tests]
-    D --> E[Run Test Suite]
-    E --> F[Submit Pull Request]
-    F --> G[Code Review]
-    G --> H[Merge to Main]
+    A[🍴 Fork Repo] --> B[🌿 Feature Branch]
+    B --> C[✏️ Make Changes]
+    C --> D[🧪 Write Tests]
+    D --> E[✅ Run Tests]
+    E --> F[📤 Pull Request]
+    F --> G[👀 Code Review]
+    G --> H[🎉 Merge to Main]
 ```
 
-### Code Standards
-- **PEP 8**: Python style guide compliance
-- **Django Best Practices**: Framework-specific conventions
-- **Documentation**: Comprehensive docstrings and comments
-- **Testing**: Minimum 80% code coverage
+---
 
-### Commit Message Format
-```
-type(scope): description
+### 📋 Code Standards
+
+<table>
+<tr>
+<td width="50%">
+
+#### ✅ What We Follow
+
+- **🐍 PEP 8**: Python style guide
+- **🎨 Django Best Practices**: Framework conventions  
+- **📝 Documentation**: Clear docstrings & comments
+- **🧪 Testing**: Minimum 80% coverage
+- **♿ Accessibility**: WCAG 2.1 standards
+- **🔒 Security**: OWASP top 10 compliance
+
+</td>
+<td width="50%">
+
+#### 📝 Commit Message Format
+
+```bash
+type(scope): subject
 
 [optional body]
 
 [optional footer]
 ```
 
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation
+- `style`: Formatting
+- `refactor`: Code restructure
+- `test`: Testing
+- `chore`: Maintenance
+
+</td>
+</tr>
+</table>
+
+**Example Commits:**
+```bash
+feat(auth): add Google OAuth integration
+fix(api): resolve pagination issue in projects endpoint
+docs(readme): update deployment instructions
+```
+
+---
 
 ## 📄 License
 
+<div align="center">
+
+### 📜 MIT License
+
+**Open Source • Free to Use • Attribution Required**
+
+</div>
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```
+<details>
+<summary><b>📋 View Full License</b></summary>
+<br>
+
+```text
 MIT License
 
 Copyright (c) 2024 Global Development Alliance
@@ -622,48 +1307,193 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ```
+
+</details>
+
+---
 
 ## 👥 Support
 
-### Getting Help
-- 📧 **Email**: anuragshankarmaurya@gmail.com
-- 💬 **GitHub Discussions**: [Join the conversation](https://github.com/Anurag-Shankar-Maurya/GDA/discussions)
-- 📖 **Wiki**: [Project Wiki](https://github.com/Anurag-Shankar-Maurya/GDA/wiki)
-- 🐛 **Issue Tracker**: [GitHub Issues](https://github.com/Anurag-Shankar-Maurya/GDA/issues)
+<div align="center">
 
-### Support Options
-- **Community Support**: GitHub issues and discussions
-- **Bug Reports**: Submit via GitHub Issues
-- **Feature Requests**: Submit via GitHub Discussions
-- **Security Issues**: Send directly to anuragshankarmaurya@gmail.com
+### 🆘 *Get Help When You Need It*
+
+</div>
+
+<table>
+<tr>
+<td align="center" width="25%">
+
+**📧 Email**  
+[anuragshankarmaurya@gmail.com](mailto:anuragshankarmaurya@gmail.com)
+
+</td>
+<td align="center" width="25%">
+
+**💬 Discussions**  
+[GitHub Discussions](https://github.com/Anurag-Shankar-Maurya/GDA/discussions)
+
+</td>
+<td align="center" width="25%">
+
+**📖 Wiki**  
+[Project Wiki](https://github.com/Anurag-Shankar-Maurya/GDA/wiki)
+
+</td>
+<td align="center" width="25%">
+
+**🐛 Issues**  
+[Bug Tracker](https://github.com/Anurag-Shankar-Maurya/GDA/issues)
+
+</td>
+</tr>
+</table>
+
+### 🎯 Support Channels
+
+<table>
+<tr>
+<td width="50%">
+
+**💡 General Support**
+- 💬 GitHub Discussions (Community)
+- 📚 Documentation & Wiki
+- ❓ FAQ Section
+- 📧 Email Support
+
+</td>
+<td width="50%">
+
+**🐛 Issues & Requests**
+- 🐞 Bug Reports (GitHub Issues)
+- ✨ Feature Requests (Discussions)
+- 🔒 Security Issues (Direct Email)
+- 📊 Project Feedback
+
+</td>
+</tr>
+</table>
+
+---
 
 ## 🙏 Acknowledgments
 
-### Core Team
-- **Lead Developer**: [Anurag Shankar Maurya](https://github.com/Anurag-Shankar-Maurya)
-- **Contributors**: Open source community members
-- **Testers**: Community beta testers
+<div align="center">
 
-### Technology Stack
-- [Django](https://www.djangoproject.com/): The web framework for perfectionists with deadlines
-- [Bootstrap](https://getbootstrap.com/): The world's most popular frontend toolkit
-- [Chart.js](https://www.chartjs.org/): Simple yet flexible JavaScript charting
-- [PostgreSQL](https://www.postgresql.org/): The world's most advanced open source database
-- [Docker](https://www.docker.com/): Containerization platform
+### 💎 *Built with Love & Amazing Tools*
 
-### Special Thanks
-To the open source community and all contributors who help make this project better.
+</div>
+
+### 👨‍💻 Core Team
+
+<table>
+<tr>
+<td align="center">
+
+<img src="https://avatars.githubusercontent.com/u/yourusername?s=100" width="100px;" alt="" style="border-radius: 50%;"/><br />
+<sub><b>Anurag Shankar Maurya</b></sub><br />
+<sub>Lead Developer</sub><br />
+<a href="https://github.com/Anurag-Shankar-Maurya">
+  <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" height="20"/>
+</a>
+
+</td>
+<td width="70%">
+
+**Project Leadership:**
+- 🎨 Architecture & Design
+- 💻 Core Development
+- 📖 Documentation
+- 🌟 Community Management
+
+**Special Thanks:**
+- 🤝 Open Source Contributors
+- 🧪 Beta Testers
+- 💡 Feature Suggestions
+- 🐛 Bug Reports
+
+</td>
+</tr>
+</table>
+
+### 🛠️ Technology Stack
+
+<div align="center">
+
+**Powered by these amazing open-source projects**
+
+</div>
+
+<table>
+<tr>
+<td align="center">
+
+<img src="https://static.djangoproject.com/img/logos/django-logo-negative.png" width="120" alt="Django"/><br/>
+**Django**<br/>
+*Web Framework*
+
+</td>
+<td align="center">
+
+<img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png" width="80" alt="Bootstrap"/><br/>
+**Bootstrap**<br/>
+*UI Framework*
+
+</td>
+<td align="center">
+
+<img src="https://www.chartjs.org/img/chartjs-logo.svg" width="80" alt="Chart.js"/><br/>
+**Chart.js**<br/>
+*Visualization*
+
+</td>
+<td align="center">
+
+<img src="https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg" width="80" alt="PostgreSQL"/><br/>
+**PostgreSQL**<br/>
+*Database*
+
+</td>
+</tr>
+</table>
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by [Anurag Shankar Maurya](https://github.com/Anurag-Shankar-Maurya)**
+## ⭐ Star History
 
-[![GitHub stars](https://img.shields.io/github/stars/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Star)](https://github.com/Anurag-Shankar-Maurya/GDA)
-[![GitHub forks](https://img.shields.io/github/forks/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Fork)](https://github.com/Anurag-Shankar-Maurya/GDA)
+[![Star History Chart](https://api.star-history.com/svg?repos=Anurag-Shankar-Maurya/GDA&type=Date)](https://star-history.com/#Anurag-Shankar-Maurya/GDA&Date)
 
-*Empowering volunteer organizations through technology*
+---
 
-</div>
+### 🌟 Show Your Support
+
+**Give a ⭐ if this project helped you!**
+
+<a href="https://github.com/Anurag-Shankar-Maurya/GDA">
+  <img src="https://img.shields.io/github/stars/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Star" alt="GitHub stars"/>
+</a>
+<a href="https://github.com/Anurag-Shankar-Maurya/GDA">
+  <img src="https://img.shields.io/github/forks/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Fork" alt="GitHub forks"/>
+</a>
+<a href="https://github.com/Anurag-Shankar-Maurya/GDA">
+  <img src="https://img.shields.io/github/watchers/Anurag-Shankar-Maurya/GDA.svg?style=social&label=Watch" alt="GitHub watchers"/>
+</a>
+
+---
+
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=24&duration=3000&pause=1000&color=00A67E&center=true&vCenter=true&width=600&lines=Built+with+%E2%9D%A4%EF%B8%8F+by+Anurag+Shankar+Maurya;Empowering+Organizations;Through+Technology;Join+Our+Mission!" alt="Typing SVG" />
+
+---
+
+**🌍 Empowering volunteer organizations through technology**
+
+*Making a difference, one line of code at a time* 💻✨
+
+<sub>© 2024 Global Development Alliance. Released under the MIT License.</sub>
