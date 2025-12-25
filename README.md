@@ -268,7 +268,7 @@ graph TB
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| **🎨 Frontend** | Bootstrap 5 + Chart.js | Responsive UI with rich visualizations |
+| **🎨 Frontend** | Tailwind CSS + Font Awesome + Chart.js | Responsive UI with utility-first styling |
 | **⚙️ Application** | Django 5.2.6 | Modular app architecture |
 | **💾 Data** | PostgreSQL/SQLite | Production & development databases |
 | **🔌 API** | Django REST Framework | RESTful web services |
@@ -314,8 +314,8 @@ graph TB
 <td>
 
 **Frontend**  
-<img src="https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap"/>  
-<sub>5.3</sub>
+<img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"/>  
+<sub>3.x</sub>
 
 </td>
 </tr>
@@ -332,6 +332,13 @@ graph TB
 **Charts**  
 <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js"/>  
 <sub>4.0+</sub>
+
+</td>
+<td>
+
+**Icons**  
+<img src="https://img.shields.io/badge/Font_Awesome-339AF0?style=for-the-badge&logo=fontawesome&logoColor=white" alt="Font Awesome"/>  
+<sub>6.x</sub>
 
 </td>
 <td>
@@ -1440,16 +1447,23 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 </td>
 <td align="center">
 
-<img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png" width="80" alt="Bootstrap"/><br/>
-**Bootstrap**<br/>
-*UI Framework*
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" width="120" alt="Tailwind CSS"/><br/>
+**Tailwind CSS**<br/>
+*Utility-First CSS*
 
 </td>
 <td align="center">
 
-<img src="https://www.chartjs.org/img/chartjs-logo.svg" width="80" alt="Chart.js"/><br/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Chart.js_logo.svg" width="80" alt="Chart.js"/><br/>
 **Chart.js**<br/>
-*Visualization*
+*Charts Library*
+
+</td>
+<td align="center">
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Font_Awesome_logomark_blue.svg" width="80" alt="Font Awesome"/><br/>
+**Font Awesome**<br/>
+*Icon Library*
 
 </td>
 <td align="center">
@@ -1496,4 +1510,4 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 *Making a difference, one line of code at a time* 💻✨
 
-<sub>© 2024 Global Development Alliance. Released under the MIT License.</sub>
+<sub>© 2025 Global Development Alliance. Released under the MIT License.</sub>
