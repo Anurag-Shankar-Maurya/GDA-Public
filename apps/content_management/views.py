@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.http import JsonResponse, HttpResponse
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from apps.content.models import Project, NewsEvent, SuccessStory, SuccessStoryGalleryImage, ProjectGalleryImage, NewsEventGalleryImage, FAQ
 from django.views.generic import TemplateView
@@ -8,10 +10,20 @@ from django.utils import timezone
 import logging
 import mimetypes
 import os
+import csv
+import json
+from datetime import timedelta
 from apps.users.models import CustomUser
-from django.db.models.functions import TruncMonth, TruncYear
+from django.db.models.functions import TruncMonth, TruncYear, TruncDay, TruncWeek
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import SuccessStoryForm, ProjectForm, NewsEventForm, FAQForm
+from django.core.serializers.json import DjangoJSONEncoder
+try:
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+    XLSX_AVAILABLE = True
+except ImportError:
+    XLSX_AVAILABLE = False
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -121,6 +133,227 @@ def handle_news_event_gallery_image_uploads(request, news_event_instance):
 
 
 # --- Dashboard Views --- 
+class DashboardDataView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    JSON API view to serve aggregated data for dashboard charts.
+    Accepts GET parameters:
+    - range: '30d', '90d', '6m', '1y', 'all'
+    - frequency: 'day', 'week', 'month'
+    """
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get(self, request, *args, **kwargs):
+        range_param = request.GET.get('range', '6m')
+        freq_param = request.GET.get('frequency', 'month')
+        
+        # Calculate start date
+        today = timezone.now()
+        start_date = today - timedelta(days=180) # Default 6m
+        
+        if range_param == '30d':
+            start_date = today - timedelta(days=30)
+        elif range_param == '90d':
+            start_date = today - timedelta(days=90)
+        elif range_param == '6m':
+            start_date = today - timedelta(days=180)
+        elif range_param == '1y':
+            start_date = today - timedelta(days=365)
+        elif range_param == 'all':
+            start_date = today - timedelta(days=365*5) # Cap at 5 years for 'all' to avoid crazy loads
+        
+        # Determine Trunc function
+        if freq_param == 'day':
+            trunc_func = TruncDay
+        elif freq_param == 'week':
+            trunc_func = TruncWeek
+        else:
+            trunc_func = TruncMonth
+            
+        # 1. User Growth Over Time
+        user_growth = (
+            CustomUser.objects
+            .filter(date_joined__gte=start_date)
+            .annotate(period=trunc_func('date_joined'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        user_labels = [item['period'].strftime('%Y-%m-%d') for item in user_growth]
+        user_data = [item['count'] for item in user_growth]
+        
+        # 2. Content Creation Activity (Stacked)
+        # We need to normalize dates across all 3 content types
+        projects = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .annotate(period=trunc_func('created_at'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        news = (
+            NewsEvent.objects
+            .filter(publish_date__gte=start_date)
+            .annotate(period=trunc_func('publish_date'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        stories = (
+            SuccessStory.objects
+            .filter(published_at__gte=start_date)
+            .annotate(period=trunc_func('published_at'))
+            .values('period')
+            .annotate(count=Count('id'))
+            .order_by('period')
+        )
+        
+        # Create a set of all periods found
+        all_periods = set()
+        for qs in [projects, news, stories]:
+            for item in qs:
+                all_periods.add(item['period'])
+        
+        sorted_periods = sorted(list(all_periods))
+        content_labels = [p.strftime('%Y-%m-%d') for p in sorted_periods]
+        
+        # Map data to periods
+        def map_data(qs_data, periods):
+            data_map = {item['period']: item['count'] for item in qs_data}
+            return [data_map.get(p, 0) for p in periods]
+            
+        project_data = map_data(projects, sorted_periods)
+        news_data = map_data(news, sorted_periods)
+        story_data = map_data(stories, sorted_periods)
+        
+        # 3. Projects by Theme (Pie/Doughnut)
+        themes = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .values('theme')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        theme_labels = [item['theme'] for item in themes]
+        theme_data = [item['count'] for item in themes]
+        
+        # 4. Projects by Country (Bar)
+        countries = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .values('country')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        country_labels = [item['country'] for item in countries]
+        country_data = [item['count'] for item in countries]
+
+        # 5. Beneficiaries Impact (Top 5 Projects created in range)
+        top_projects_impact = (
+             Project.objects
+             .filter(created_at__gte=start_date, headcount__gt=0)
+             .order_by('-headcount')[:5]
+             .values('title', 'headcount')
+        )
+        impact_labels = [item['title'][:20] + '...' for item in top_projects_impact]
+        impact_data = [item['headcount'] for item in top_projects_impact]
+
+        # 6. User Demographics (Gender)
+        # Note: Not filtered by date range as demographics are usually "current state"
+        gender_dist = (
+            CustomUser.objects
+            .exclude(gender='')
+            .values('gender')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        gender_labels = [item['gender'] for item in gender_dist]
+        gender_data = [item['count'] for item in gender_dist]
+
+        # 7. Projects by Difficulty
+        # Filtered by date range to show mix of recent projects
+        difficulty_dist = (
+            Project.objects
+            .filter(created_at__gte=start_date)
+            .values('difficulty')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        difficulty_labels = [item['difficulty'] for item in difficulty_dist]
+        difficulty_data = [item['count'] for item in difficulty_dist]
+
+        # 8. User Countries (Top 5)
+        user_countries = (
+            CustomUser.objects
+            .exclude(country_code='')
+            .values('country_code')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:5]
+        )
+        user_country_labels = [item['country_code'] for item in user_countries]
+        user_country_data = [item['count'] for item in user_countries]
+
+        # 9. Login Methods
+        login_methods = (
+            CustomUser.objects
+            .values('login_method')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+        )
+        login_method_labels = [item['login_method'] for item in login_methods]
+        login_method_data = [item['count'] for item in login_methods]
+        
+        data = {
+            'user_growth': {
+                'labels': user_labels,
+                'data': user_data
+            },
+            'content_activity': {
+                'labels': content_labels,
+                'datasets': {
+                    'projects': project_data,
+                    'news': news_data,
+                    'stories': story_data
+                }
+            },
+            'themes': {
+                'labels': theme_labels,
+                'data': theme_data
+            },
+            'countries': {
+                'labels': country_labels,
+                'data': country_data
+            },
+            'impact': {
+                'labels': impact_labels,
+                'data': impact_data
+            },
+            'demographics': {
+                'gender': {
+                    'labels': gender_labels,
+                    'data': gender_data
+                },
+                'countries': {
+                    'labels': user_country_labels,
+                    'data': user_country_data
+                },
+                'login_methods': {
+                    'labels': login_method_labels,
+                    'data': login_method_data
+                }
+            },
+            'project_difficulty': {
+                'labels': difficulty_labels,
+                'data': difficulty_data
+            }
+        }
+        
+        return JsonResponse(data)
+
 class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'content_management/management_dashboard.html'
     login_url = '/login/'
@@ -214,6 +447,16 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
         # --- FAQs ---
         context['total_faqs'] = FAQ.objects.count()
 
+        # --- System Health & Info ---
+        context['kicc_synced_projects'] = Project.objects.filter(kicc_project_id__isnull=False).exclude(kicc_project_id='').count()
+        faq_votes = FAQ.objects.aggregate(
+            total_up=Sum('thumbs_up'),
+            total_down=Sum('thumbs_down')
+        )
+        total_faq_votes = (faq_votes['total_up'] or 0) + (faq_votes['total_down'] or 0)
+        context['faq_helpfulness_ratio'] = round((faq_votes['total_up'] or 0) * 100 / total_faq_votes, 1) if total_faq_votes > 0 else 100
+        context['admin_user_count'] = CustomUser.objects.filter(is_staff=True).count()
+
         # --- Gallery Images ---
         context['total_project_gallery_images'] = ProjectGalleryImage.objects.count()
         context['total_success_story_gallery_images'] = SuccessStoryGalleryImage.objects.count()
@@ -223,6 +466,54 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
             context['total_success_story_gallery_images'] + 
             context['total_news_event_gallery_images']
         )
+        
+        # --- Cover Images & Videos ---
+        context['total_cover_images'] = (
+            Project.objects.exclude(cover_image_blob__isnull=True).exclude(cover_image_blob__exact=b'').count() +
+            NewsEvent.objects.exclude(cover_image_blob__isnull=True).exclude(cover_image_blob__exact=b'').count() +
+            SuccessStory.objects.exclude(cover_image_blob__isnull=True).exclude(cover_image_blob__exact=b'').count()
+        )
+        context['total_videos'] = Project.objects.aggregate(
+            total=Count('video_urls', filter=Q(video_urls__isnull=False) & ~Q(video_urls='[]'))
+        )['total'] or 0
+
+        # --- Image & Cover URLs ---
+        projects_with_urls = Project.objects.filter(image_urls__isnull=False).exclude(image_urls='[]').values_list('image_urls', flat=True)
+        news_with_urls = NewsEvent.objects.filter(image_urls__isnull=False).exclude(image_urls='[]').values_list('image_urls', flat=True)
+        stories_with_urls = SuccessStory.objects.filter(image_urls__isnull=False).exclude(image_urls='[]').values_list('image_urls', flat=True)
+
+        context['total_gallery_image_urls'] = sum(len(urls) for urls in projects_with_urls) + \
+                                              sum(len(urls) for urls in news_with_urls) + \
+                                              sum(len(urls) for urls in stories_with_urls)
+
+        context['total_cover_image_urls'] = (
+            Project.objects.filter(cover_image_url__isnull=False).exclude(cover_image_url__exact='').count() +
+            NewsEvent.objects.filter(cover_image_url__isnull=False).exclude(cover_image_url__exact='').count() +
+            SuccessStory.objects.filter(cover_image_url__isnull=False).exclude(cover_image_url__exact='').count()
+        )
+
+        # --- Additional Engagement Metrics ---
+        context['avg_enrollment_per_project'] = round(context['total_enrolled'] / context['total_projects'], 1) if context['total_projects'] > 0 else 0
+        context['content_completion_rate'] = round((context['published_stories'] + context['published_news_events']) * 100 / (context['total_success_stories'] + context['total_news_events']), 1) if (context['total_success_stories'] + context['total_news_events']) > 0 else 0
+
+        # --- Additional Media Metrics ---
+        context['total_media_items'] = (
+            context['total_gallery_images'] + context['total_cover_images'] + 
+            context['total_gallery_image_urls'] + context['total_cover_image_urls'] + 
+            context['total_videos']
+        )
+
+        # --- Additional System Health Metrics ---
+        context['total_database_records'] = (
+            context['total_users'] + context['total_projects'] + 
+            context['total_news_events'] + context['total_success_stories'] + 
+            context['total_faqs'] + context['total_gallery_images']
+        )
+        context['data_integrity_score'] = round(
+            (context['kicc_synced_projects'] * 100 / context['total_projects']) if context['total_projects'] > 0 else 0, 1
+        )
+        context['content_freshness_days'] = (timezone.now().date() - Project.objects.aggregate(latest=Max('updated_at'))['latest'].date()).days if Project.objects.exists() else 0
+
 
         # --- Recent Content ---
         context['recent_projects'] = Project.objects.order_by('-created_at')[:5]
@@ -266,6 +557,250 @@ class ManagementDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateV
         context['activity_news_data'] = news_counts
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        context = self.get_context_data()
+        
+        if format_type == 'csv':
+            return self.export_csv(context)
+        elif format_type == 'tsv':
+            return self.export_tsv(context)
+        elif format_type == 'json':
+            return self.export_json(context)
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx(context)
+        elif format_type == 'html':
+            return self.export_html(context)
+        else:
+            return self.export_csv(context)
+
+    def export_csv(self, context):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow(['Category', 'Metric', 'Value'])
+        
+        # User Stats
+        writer.writerow(['Users', 'Total Users', context['total_users']])
+        writer.writerow(['Users', 'New Users (30d)', context['new_users_30d']])
+        writer.writerow(['Users', 'Active Users (30d)', context['active_users_30d']])
+        writer.writerow(['Users', 'User Growth %', context['user_growth_pct']])
+        
+        # Project Stats
+        writer.writerow(['Projects', 'Total Projects', context['total_projects']])
+        writer.writerow(['Projects', 'Active Projects', context['active_projects']])
+        writer.writerow(['Projects', 'Completed Projects', context['completed_projects']])
+        writer.writerow(['Projects', 'Upcoming Projects', context['upcoming_projects']])
+        writer.writerow(['Projects', 'Featured Projects', context['featured_projects']])
+        writer.writerow(['Projects', 'Hero Projects', context['hero_projects']])
+        writer.writerow(['Projects', 'Total Capacity', context['total_capacity']])
+        writer.writerow(['Projects', 'Total Enrolled', context['total_enrolled']])
+        writer.writerow(['Projects', 'Utilization Rate %', context['utilization_rate']])
+        
+        # Content Stats
+        writer.writerow(['Content', 'Total News & Events', context['total_news_events']])
+        writer.writerow(['Content', 'Published News & Events', context['published_news_events']])
+        writer.writerow(['Content', 'Total Success Stories', context['total_success_stories']])
+        writer.writerow(['Content', 'Published Stories', context['published_stories']])
+        writer.writerow(['Content', 'Total FAQs', context['total_faqs']])
+        
+        # Impact Stats
+        writer.writerow(['Impact', 'Total Beneficiaries', context['total_beneficiaries']])
+        writer.writerow(['Impact', 'Total Hours Contributed', context['total_hours_contributed']])
+        writer.writerow(['Impact', 'Avg Beneficiaries per Story', context['avg_beneficiaries_per_story']])
+        writer.writerow(['Impact', 'Avg Hours per Story', context['avg_hours_per_story']])
+        
+        return response
+
+    def export_tsv(self, context):
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow(['Category', 'Metric', 'Value'])
+        
+        # User Stats
+        writer.writerow(['Users', 'Total Users', context['total_users']])
+        writer.writerow(['Users', 'New Users (30d)', context['new_users_30d']])
+        writer.writerow(['Users', 'Active Users (30d)', context['active_users_30d']])
+        writer.writerow(['Users', 'User Growth %', context['user_growth_pct']])
+        
+        # Project Stats
+        writer.writerow(['Projects', 'Total Projects', context['total_projects']])
+        writer.writerow(['Projects', 'Active Projects', context['active_projects']])
+        writer.writerow(['Projects', 'Completed Projects', context['completed_projects']])
+        writer.writerow(['Projects', 'Upcoming Projects', context['upcoming_projects']])
+        writer.writerow(['Projects', 'Featured Projects', context['featured_projects']])
+        writer.writerow(['Projects', 'Hero Projects', context['hero_projects']])
+        writer.writerow(['Projects', 'Total Capacity', context['total_capacity']])
+        writer.writerow(['Projects', 'Total Enrolled', context['total_enrolled']])
+        writer.writerow(['Projects', 'Utilization Rate %', context['utilization_rate']])
+        
+        # Content Stats
+        writer.writerow(['Content', 'Total News & Events', context['total_news_events']])
+        writer.writerow(['Content', 'Published News & Events', context['published_news_events']])
+        writer.writerow(['Content', 'Total Success Stories', context['total_success_stories']])
+        writer.writerow(['Content', 'Published Stories', context['published_stories']])
+        writer.writerow(['Content', 'Total FAQs', context['total_faqs']])
+        
+        # Impact Stats
+        writer.writerow(['Impact', 'Total Beneficiaries', context['total_beneficiaries']])
+        writer.writerow(['Impact', 'Total Hours Contributed', context['total_hours_contributed']])
+        writer.writerow(['Impact', 'Avg Beneficiaries per Story', context['avg_beneficiaries_per_story']])
+        writer.writerow(['Impact', 'Avg Hours per Story', context['avg_hours_per_story']])
+        
+        return response
+
+    def export_json(self, context):
+        data = {
+            'users': {
+                'total_users': context['total_users'],
+                'new_users_30d': context['new_users_30d'],
+                'active_users_30d': context['active_users_30d'],
+                'user_growth_pct': context['user_growth_pct']
+            },
+            'projects': {
+                'total_projects': context['total_projects'],
+                'active_projects': context['active_projects'],
+                'completed_projects': context['completed_projects'],
+                'upcoming_projects': context['upcoming_projects'],
+                'featured_projects': context['featured_projects'],
+                'hero_projects': context['hero_projects'],
+                'total_capacity': context['total_capacity'],
+                'total_enrolled': context['total_enrolled'],
+                'utilization_rate': context['utilization_rate']
+            },
+            'content': {
+                'total_news_events': context['total_news_events'],
+                'published_news_events': context['published_news_events'],
+                'total_success_stories': context['total_success_stories'],
+                'published_stories': context['published_stories'],
+                'total_faqs': context['total_faqs']
+            },
+            'impact': {
+                'total_beneficiaries': context['total_beneficiaries'],
+                'total_hours_contributed': context['total_hours_contributed'],
+                'avg_beneficiaries_per_story': context['avg_beneficiaries_per_story'],
+                'avg_hours_per_story': context['avg_hours_per_story']
+            }
+        }
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.json"'
+        return response
+
+    def export_xlsx(self, context):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Dashboard Summary"
+        
+        headers = ['Category', 'Metric', 'Value']
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+        
+        data = [
+            ['Users', 'Total Users', context['total_users']],
+            ['Users', 'New Users (30d)', context['new_users_30d']],
+            ['Users', 'Active Users (30d)', context['active_users_30d']],
+            ['Users', 'User Growth %', context['user_growth_pct']],
+            ['Projects', 'Total Projects', context['total_projects']],
+            ['Projects', 'Active Projects', context['active_projects']],
+            ['Projects', 'Completed Projects', context['completed_projects']],
+            ['Projects', 'Upcoming Projects', context['upcoming_projects']],
+            ['Projects', 'Featured Projects', context['featured_projects']],
+            ['Projects', 'Hero Projects', context['hero_projects']],
+            ['Projects', 'Total Capacity', context['total_capacity']],
+            ['Projects', 'Total Enrolled', context['total_enrolled']],
+            ['Projects', 'Utilization Rate %', context['utilization_rate']],
+            ['Content', 'Total News & Events', context['total_news_events']],
+            ['Content', 'Published News & Events', context['published_news_events']],
+            ['Content', 'Total Success Stories', context['total_success_stories']],
+            ['Content', 'Published Stories', context['published_stories']],
+            ['Content', 'Total FAQs', context['total_faqs']],
+            ['Impact', 'Total Beneficiaries', context['total_beneficiaries']],
+            ['Impact', 'Total Hours Contributed', context['total_hours_contributed']],
+            ['Impact', 'Avg Beneficiaries per Story', context['avg_beneficiaries_per_story']],
+            ['Impact', 'Avg Hours per Story', context['avg_hours_per_story']]
+        ]
+        
+        for row_num, row in enumerate(data, 2):
+            for col_num, value in enumerate(row, 1):
+                ws.cell(row=row_num, column=col_num, value=value)
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self, context):
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Management Dashboard Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Management Dashboard Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Users</td><td>Total Users</td><td>{context['total_users']}</td></tr>
+                    <tr><td>Users</td><td>New Users (30d)</td><td>{context['new_users_30d']}</td></tr>
+                    <tr><td>Users</td><td>Active Users (30d)</td><td>{context['active_users_30d']}</td></tr>
+                    <tr><td>Users</td><td>User Growth %</td><td>{context['user_growth_pct']}</td></tr>
+                    <tr><td>Projects</td><td>Total Projects</td><td>{context['total_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Active Projects</td><td>{context['active_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Completed Projects</td><td>{context['completed_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Upcoming Projects</td><td>{context['upcoming_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Featured Projects</td><td>{context['featured_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Hero Projects</td><td>{context['hero_projects']}</td></tr>
+                    <tr><td>Projects</td><td>Total Capacity</td><td>{context['total_capacity']}</td></tr>
+                    <tr><td>Projects</td><td>Total Enrolled</td><td>{context['total_enrolled']}</td></tr>
+                    <tr><td>Projects</td><td>Utilization Rate %</td><td>{context['utilization_rate']}</td></tr>
+                    <tr><td>Content</td><td>Total News & Events</td><td>{context['total_news_events']}</td></tr>
+                    <tr><td>Content</td><td>Published News & Events</td><td>{context['published_news_events']}</td></tr>
+                    <tr><td>Content</td><td>Total Success Stories</td><td>{context['total_success_stories']}</td></tr>
+                    <tr><td>Content</td><td>Published Stories</td><td>{context['published_stories']}</td></tr>
+                    <tr><td>Content</td><td>Total FAQs</td><td>{context['total_faqs']}</td></tr>
+                    <tr><td>Impact</td><td>Total Beneficiaries</td><td>{context['total_beneficiaries']}</td></tr>
+                    <tr><td>Impact</td><td>Total Hours Contributed</td><td>{context['total_hours_contributed']}</td></tr>
+                    <tr><td>Impact</td><td>Avg Beneficiaries per Story</td><td>{context['avg_beneficiaries_per_story']}</td></tr>
+                    <tr><td>Impact</td><td>Avg Hours per Story</td><td>{context['avg_hours_per_story']}</td></tr>
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="management_dashboard.html"'
+        return response
 
 
 class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
@@ -318,6 +853,352 @@ class UserAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             queryset = queryset.order_by('-date_joined')
 
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        elif format_type == 'pdf':
+            return self.export_pdf()
+        else:
+            return self.export_csv()
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 
+            'Gender', 'Blood Group', 'Guardian Name', 'Guardian Relation', 'Address', 
+            'Contact', 'Country Code', 'Login Method', 'Onboarding Complete', 
+            'Email Verified', 'Is Active', 'Is Staff', 'Is Superuser', 'Date Joined', 
+            'Last Login'
+        ])
+        
+        for user in queryset:
+            writer.writerow([
+                user.id,
+                user.username,
+                user.email,
+                user.first_name,
+                user.last_name,
+                user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '',
+                user.gender,
+                user.blood_group,
+                user.guardian_name,
+                user.guardian_relation,
+                user.address,
+                user.contact,
+                user.country_code,
+                user.login_method,
+                'Yes' if user.onboarding_complete else 'No',
+                'Yes' if user.email_verified else 'No',
+                'Yes' if user.is_active else 'No',
+                'Yes' if user.is_staff else 'No',
+                'Yes' if user.is_superuser else 'No',
+                user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
+                user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else ''
+            ])
+        
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 
+            'Gender', 'Blood Group', 'Guardian Name', 'Guardian Relation', 'Address', 
+            'Contact', 'Country Code', 'Login Method', 'Onboarding Complete', 
+            'Email Verified', 'Is Active', 'Is Staff', 'Is Superuser', 'Date Joined', 
+            'Last Login'
+        ])
+        
+        for user in queryset:
+            writer.writerow([
+                user.id,
+                user.username,
+                user.email,
+                user.first_name,
+                user.last_name,
+                user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '',
+                user.gender,
+                user.blood_group,
+                user.guardian_name,
+                user.guardian_relation,
+                user.address,
+                user.contact,
+                user.country_code,
+                user.login_method,
+                'Yes' if user.onboarding_complete else 'No',
+                'Yes' if user.email_verified else 'No',
+                'Yes' if user.is_active else 'No',
+                'Yes' if user.is_staff else 'No',
+                'Yes' if user.is_superuser else 'No',
+                user.date_joined.strftime('%Y-%m-%d %H:%M:%S'),
+                user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else ''
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for user in queryset:
+            data.append({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'date_of_birth': user.date_of_birth.isoformat() if user.date_of_birth else None,
+                'gender': user.gender,
+                'blood_group': user.blood_group,
+                'guardian_name': user.guardian_name,
+                'guardian_relation': user.guardian_relation,
+                'address': user.address,
+                'contact': user.contact,
+                'country_code': user.country_code,
+                'login_method': user.login_method,
+                'onboarding_complete': user.onboarding_complete,
+                'email_verified': user.email_verified,
+                'is_active': user.is_active,
+                'is_staff': user.is_staff,
+                'is_superuser': user.is_superuser,
+                'date_joined': user.date_joined.isoformat(),
+                'last_login': user.last_login.isoformat() if user.last_login else None
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "User Analytics"
+        
+        headers = [
+            'ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 
+            'Gender', 'Blood Group', 'Guardian Name', 'Guardian Relation', 'Address', 
+            'Contact', 'Country Code', 'Login Method', 'Onboarding Complete', 
+            'Email Verified', 'Is Active', 'Is Staff', 'Is Superuser', 'Date Joined', 
+            'Last Login'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, user in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=user.id)
+            ws.cell(row=row_num, column=2, value=user.username)
+            ws.cell(row=row_num, column=3, value=user.email)
+            ws.cell(row=row_num, column=4, value=user.first_name)
+            ws.cell(row=row_num, column=5, value=user.last_name)
+            ws.cell(row=row_num, column=6, value=user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '')
+            ws.cell(row=row_num, column=7, value=user.gender)
+            ws.cell(row=row_num, column=8, value=user.blood_group)
+            ws.cell(row=row_num, column=9, value=user.guardian_name)
+            ws.cell(row=row_num, column=10, value=user.guardian_relation)
+            ws.cell(row=row_num, column=11, value=user.address)
+            ws.cell(row=row_num, column=12, value=user.contact)
+            ws.cell(row=row_num, column=13, value=user.country_code)
+            ws.cell(row=row_num, column=14, value=user.login_method)
+            ws.cell(row=row_num, column=15, value='Yes' if user.onboarding_complete else 'No')
+            ws.cell(row=row_num, column=16, value='Yes' if user.email_verified else 'No')
+            ws.cell(row=row_num, column=17, value='Yes' if user.is_active else 'No')
+            ws.cell(row=row_num, column=18, value='Yes' if user.is_staff else 'No')
+            ws.cell(row=row_num, column=19, value='Yes' if user.is_superuser else 'No')
+            ws.cell(row=row_num, column=20, value=user.date_joined.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=21, value=user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else '')
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>User Analytics Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>User Analytics Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date of Birth</th>
+                        <th>Gender</th>
+                        <th>Blood Group</th>
+                        <th>Guardian Name</th>
+                        <th>Guardian Relation</th>
+                        <th>Address</th>
+                        <th>Contact</th>
+                        <th>Country Code</th>
+                        <th>Login Method</th>
+                        <th>Onboarding Complete</th>
+                        <th>Email Verified</th>
+                        <th>Is Active</th>
+                        <th>Is Staff</th>
+                        <th>Is Superuser</th>
+                        <th>Date Joined</th>
+                        <th>Last Login</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for user in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{user.id}</td>
+                        <td>{user.username}</td>
+                        <td>{user.email}</td>
+                        <td>{user.first_name}</td>
+                        <td>{user.last_name}</td>
+                        <td>{user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else ''}</td>
+                        <td>{user.gender}</td>
+                        <td>{user.blood_group}</td>
+                        <td>{user.guardian_name}</td>
+                        <td>{user.guardian_relation}</td>
+                        <td>{user.address}</td>
+                        <td>{user.contact}</td>
+                        <td>{user.country_code}</td>
+                        <td>{user.login_method}</td>
+                        <td>{'Yes' if user.onboarding_complete else 'No'}</td>
+                        <td>{'Yes' if user.email_verified else 'No'}</td>
+                        <td>{'Yes' if user.is_active else 'No'}</td>
+                        <td>{'Yes' if user.is_staff else 'No'}</td>
+                        <td>{'Yes' if user.is_superuser else 'No'}</td>
+                        <td>{user.date_joined.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else ''}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.html"'
+        return response
+
+    def export_pdf(self):
+        queryset = self.get_queryset()
+        try:
+            from reportlab.lib import colors
+            from reportlab.lib.pagesizes import letter
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.lib.styles import getSampleStyleSheet
+        except ImportError:
+            return HttpResponse("PDF export not available. Please install reportlab.", status=400)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="user_analytics.pdf"'
+        
+        doc = SimpleDocTemplate(response, pagesize=letter)
+        elements = []
+        styles = getSampleStyleSheet()
+        
+        elements.append(Paragraph("User Analytics Export", styles['Heading1']))
+        elements.append(Paragraph(f"Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}", styles['Normal']))
+        elements.append(Paragraph(f"Total records: {queryset.count()}", styles['Normal']))
+        elements.append(Spacer(1, 12))
+        
+        data = [
+            ['ID', 'Username', 'Email', 'First Name', 'Last Name', 'Date of Birth', 'Gender', 'Country Code', 'Login Method', 'Is Active', 'Date Joined']
+        ]
+        
+        for user in queryset[:100]:  # Limit to 100 for PDF
+            data.append([
+                str(user.id),
+                user.username,
+                user.email,
+                user.first_name,
+                user.last_name,
+                user.date_of_birth.strftime('%Y-%m-%d') if user.date_of_birth else '',
+                user.gender,
+                user.country_code,
+                user.login_method,
+                'Yes' if user.is_active else 'No',
+                user.date_joined.strftime('%Y-%m-%d')
+            ])
+        
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTSIZE', (0, 1), (-1, -1), 8)
+        ]))
+        elements.append(table)
+        
+        doc.build(elements)
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -440,7 +1321,7 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
         context['popular_projects'] = Project.objects.filter(headcount__gt=0).order_by('-headcount')[:10]
 
         # Projects by Theme with enrollment counts
-        context['enrollments_by_theme'] = (
+        context['enrollments_by_theme'] = list(
             Project.objects
             .values('theme')
             .annotate(total_enrollments=Sum('headcount'), project_count=Count('id'))
@@ -448,7 +1329,7 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
         )
 
         # Projects by Country with enrollment counts
-        context['enrollments_by_country'] = (
+        context['enrollments_by_country'] = list(
             Project.objects
             .values('country')
             .annotate(total_enrollments=Sum('headcount'), project_count=Count('id'))
@@ -471,6 +1352,243 @@ class ApplicationAnalyticsView(LoginRequiredMixin, UserPassesTestMixin, Template
         context['recent_enrollments'] = Project.objects.filter(headcount__gt=0).order_by('-updated_at')[:10]
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        context = self.get_context_data()
+        
+        if format_type == 'csv':
+            return self.export_csv(context)
+        elif format_type == 'tsv':
+            return self.export_tsv(context)
+        elif format_type == 'json':
+            return self.export_json(context)
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx(context)
+        elif format_type == 'html':
+            return self.export_html(context)
+        else:
+            return self.export_csv(context)
+
+    def export_csv(self, context):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow(['Metric', 'Value'])
+        
+        writer.writerow(['Total Enrollments', context['total_enrollments']])
+        writer.writerow(['Projects with Enrollments', context['projects_with_enrollments']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Theme'])
+        writer.writerow(['Theme', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_theme']:
+            writer.writerow([item['theme'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Country'])
+        writer.writerow(['Country', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_country']:
+            writer.writerow([item['country'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Popular Projects'])
+        writer.writerow(['Title', 'Enrollments'])
+        for project in context['popular_projects']:
+            writer.writerow([project.title, project.headcount])
+        
+        writer.writerow([])
+        writer.writerow(['Capacity Utilization'])
+        writer.writerow(['Project Title', 'Enrolled', 'Capacity', 'Utilization %'])
+        for item in context['capacity_data']:
+            writer.writerow([item['title'], item['enrolled'], item['capacity'], round(item['utilization'], 1)])
+        
+        return response
+
+    def export_tsv(self, context):
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow(['Metric', 'Value'])
+        
+        writer.writerow(['Total Enrollments', context['total_enrollments']])
+        writer.writerow(['Projects with Enrollments', context['projects_with_enrollments']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Theme'])
+        writer.writerow(['Theme', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_theme']:
+            writer.writerow([item['theme'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Enrollments by Country'])
+        writer.writerow(['Country', 'Total Enrollments', 'Project Count'])
+        for item in context['enrollments_by_country']:
+            writer.writerow([item['country'], item['total_enrollments'], item['project_count']])
+        
+        writer.writerow([])
+        writer.writerow(['Popular Projects'])
+        writer.writerow(['Title', 'Enrollments'])
+        for project in context['popular_projects']:
+            writer.writerow([project.title, project.headcount])
+        
+        writer.writerow([])
+        writer.writerow(['Capacity Utilization'])
+        writer.writerow(['Project Title', 'Enrolled', 'Capacity', 'Utilization %'])
+        for item in context['capacity_data']:
+            writer.writerow([item['title'], item['enrolled'], item['capacity'], round(item['utilization'], 1)])
+        
+        return response
+
+    def export_json(self, context):
+        data = {
+            'total_enrollments': context['total_enrollments'],
+            'projects_with_enrollments': context['projects_with_enrollments'],
+            'enrollments_by_theme': context['enrollments_by_theme'],
+            'enrollments_by_country': context['enrollments_by_country'],
+            'popular_projects': [{'title': p.title, 'enrollments': p.headcount} for p in context['popular_projects']],
+            'capacity_data': context['capacity_data'],
+            'recent_enrollments': [{'title': p.title, 'enrollments': p.headcount, 'updated_at': p.updated_at.isoformat()} for p in context['recent_enrollments']]
+        }
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.json"'
+        return response
+
+    def export_xlsx(self, context):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        wb = Workbook()
+        
+        # Summary Sheet
+        ws_summary = wb.active
+        ws_summary.title = "Summary"
+        ws_summary['A1'] = 'Metric'
+        ws_summary['B1'] = 'Value'
+        ws_summary['A1'].font = Font(bold=True)
+        ws_summary['B1'].font = Font(bold=True)
+        ws_summary['A2'] = 'Total Enrollments'
+        ws_summary['B2'] = context['total_enrollments']
+        ws_summary['A3'] = 'Projects with Enrollments'
+        ws_summary['B3'] = context['projects_with_enrollments']
+        
+        # Theme Sheet
+        ws_theme = wb.create_sheet("Enrollments by Theme")
+        ws_theme['A1'] = 'Theme'
+        ws_theme['B1'] = 'Total Enrollments'
+        ws_theme['C1'] = 'Project Count'
+        for cell in [ws_theme['A1'], ws_theme['B1'], ws_theme['C1']]:
+            cell.font = Font(bold=True)
+        for row_num, item in enumerate(context['enrollments_by_theme'], 2):
+            ws_theme.cell(row=row_num, column=1, value=item['theme'])
+            ws_theme.cell(row=row_num, column=2, value=item['total_enrollments'])
+            ws_theme.cell(row=row_num, column=3, value=item['project_count'])
+        
+        # Country Sheet
+        ws_country = wb.create_sheet("Enrollments by Country")
+        ws_country['A1'] = 'Country'
+        ws_country['B1'] = 'Total Enrollments'
+        ws_country['C1'] = 'Project Count'
+        for cell in [ws_country['A1'], ws_country['B1'], ws_country['C1']]:
+            cell.font = Font(bold=True)
+        for row_num, item in enumerate(context['enrollments_by_country'], 2):
+            ws_country.cell(row=row_num, column=1, value=item['country'])
+            ws_country.cell(row=row_num, column=2, value=item['total_enrollments'])
+            ws_country.cell(row=row_num, column=3, value=item['project_count'])
+        
+        # Popular Projects Sheet
+        ws_popular = wb.create_sheet("Popular Projects")
+        ws_popular['A1'] = 'Title'
+        ws_popular['B1'] = 'Enrollments'
+        for cell in [ws_popular['A1'], ws_popular['B1']]:
+            cell.font = Font(bold=True)
+        for row_num, project in enumerate(context['popular_projects'], 2):
+            ws_popular.cell(row=row_num, column=1, value=project.title)
+            ws_popular.cell(row=row_num, column=2, value=project.headcount)
+        
+        # Capacity Sheet
+        ws_capacity = wb.create_sheet("Capacity Utilization")
+        ws_capacity['A1'] = 'Project Title'
+        ws_capacity['B1'] = 'Enrolled'
+        ws_capacity['C1'] = 'Capacity'
+        ws_capacity['D1'] = 'Utilization %'
+        for cell in [ws_capacity['A1'], ws_capacity['B1'], ws_capacity['C1'], ws_capacity['D1']]:
+            cell.font = Font(bold=True)
+        for row_num, item in enumerate(context['capacity_data'], 2):
+            ws_capacity.cell(row=row_num, column=1, value=item['title'])
+            ws_capacity.cell(row=row_num, column=2, value=item['enrolled'])
+            ws_capacity.cell(row=row_num, column=3, value=item['capacity'])
+            ws_capacity.cell(row=row_num, column=4, value=round(item['utilization'], 1))
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self, context):
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Application Analytics Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; margin-bottom: 20px; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1, h2 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Application Analytics Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            
+            <h2>Summary</h2>
+            <table>
+                <tr><th>Metric</th><th>Value</th></tr>
+                <tr><td>Total Enrollments</td><td>{context['total_enrollments']}</td></tr>
+                <tr><td>Projects with Enrollments</td><td>{context['projects_with_enrollments']}</td></tr>
+            </table>
+            
+            <h2>Enrollments by Theme</h2>
+            <table>
+                <tr><th>Theme</th><th>Total Enrollments</th><th>Project Count</th></tr>
+                {"".join(f"<tr><td>{item['theme']}</td><td>{item['total_enrollments']}</td><td>{item['project_count']}</td></tr>" for item in context['enrollments_by_theme'])}
+            </table>
+            
+            <h2>Enrollments by Country</h2>
+            <table>
+                <tr><th>Country</th><th>Total Enrollments</th><th>Project Count</th></tr>
+                {"".join(f"<tr><td>{item['country']}</td><td>{item['total_enrollments']}</td><td>{item['project_count']}</td></tr>" for item in context['enrollments_by_country'])}
+            </table>
+            
+            <h2>Popular Projects</h2>
+            <table>
+                <tr><th>Title</th><th>Enrollments</th></tr>
+                {"".join(f"<tr><td>{project.title}</td><td>{project.headcount}</td></tr>" for project in context['popular_projects'])}
+            </table>
+            
+            <h2>Capacity Utilization</h2>
+            <table>
+                <tr><th>Project Title</th><th>Enrolled</th><th>Capacity</th><th>Utilization %</th></tr>
+                {"".join(f"<tr><td>{item['title']}</td><td>{item['enrolled']}</td><td>{item['capacity']}</td><td>{round(item['utilization'], 1)}</td></tr>" for item in context['capacity_data'])}
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="application_analytics.html"'
+        return response
 
 
 
@@ -525,6 +1643,320 @@ class ProjectListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             queryset = queryset.order_by('-created_at')
 
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            # Default to CSV
+            return self.export_csv()
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="projects.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'Project ID', 'KICC Project ID', 'Title', 'Teaser', 'Background Objectives', 
+            'Tasks Eligibility', 'Country', 'Theme', 'Duration', 'Difficulty', 'Headcount', 
+            'Total Headcount', 'Cover Image URL', 'Video URLs', 'Image URLs', 
+            'Application Deadline', 'Start Date', 'End Date', 'Is Active', 'Is Hero Highlight', 
+            'Is Featured', 'Enrolled Users Count', 'Created At', 'Updated At'
+        ])
+        
+        for project in queryset:
+            writer.writerow([
+                project.id,
+                project.project_id,
+                project.kicc_project_id or '',
+                project.title,
+                project.teaser,
+                project.background_objectives,
+                project.tasks_eligibility,
+                project.country,
+                project.theme,
+                project.duration,
+                project.difficulty,
+                project.headcount or 0,
+                project.total_headcount,
+                project.cover_image_url or '',
+                ', '.join(project.video_urls) if project.video_urls else '',
+                ', '.join(project.image_urls) if project.image_urls else '',
+                project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else '',
+                project.start_date.strftime('%Y-%m-%d') if project.start_date else '',
+                project.end_date.strftime('%Y-%m-%d') if project.end_date else '',
+                'Yes' if project.is_active else 'No',
+                'Yes' if project.is_hero_highlight else 'No',
+                'Yes' if project.is_featured else 'No',
+                project.enrolled_users.count(),
+                project.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                project.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="projects.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'Project ID', 'KICC Project ID', 'Title', 'Teaser', 'Background Objectives', 
+            'Tasks Eligibility', 'Country', 'Theme', 'Duration', 'Difficulty', 'Headcount', 
+            'Total Headcount', 'Cover Image URL', 'Video URLs', 'Image URLs', 
+            'Application Deadline', 'Start Date', 'End Date', 'Is Active', 'Is Hero Highlight', 
+            'Is Featured', 'Enrolled Users Count', 'Created At', 'Updated At'
+        ])
+        
+        for project in queryset:
+            writer.writerow([
+                project.id,
+                project.project_id,
+                project.kicc_project_id or '',
+                project.title,
+                project.teaser,
+                project.background_objectives,
+                project.tasks_eligibility,
+                project.country,
+                project.theme,
+                project.duration,
+                project.difficulty,
+                project.headcount or 0,
+                project.total_headcount,
+                project.cover_image_url or '',
+                ', '.join(project.video_urls) if project.video_urls else '',
+                ', '.join(project.image_urls) if project.image_urls else '',
+                project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else '',
+                project.start_date.strftime('%Y-%m-%d') if project.start_date else '',
+                project.end_date.strftime('%Y-%m-%d') if project.end_date else '',
+                'Yes' if project.is_active else 'No',
+                'Yes' if project.is_hero_highlight else 'No',
+                'Yes' if project.is_featured else 'No',
+                project.enrolled_users.count(),
+                project.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                project.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for project in queryset:
+            data.append({
+                'id': project.id,
+                'project_id': project.project_id,
+                'kicc_project_id': project.kicc_project_id,
+                'title': project.title,
+                'teaser': project.teaser,
+                'background_objectives': project.background_objectives,
+                'tasks_eligibility': project.tasks_eligibility,
+                'country': project.country,
+                'theme': project.theme,
+                'duration': project.duration,
+                'difficulty': project.difficulty,
+                'headcount': project.headcount,
+                'total_headcount': project.total_headcount,
+                'cover_image_url': project.cover_image_url,
+                'video_urls': project.video_urls,
+                'image_urls': project.image_urls,
+                'application_deadline': project.application_deadline.isoformat() if project.application_deadline else None,
+                'start_date': project.start_date.isoformat() if project.start_date else None,
+                'end_date': project.end_date.isoformat() if project.end_date else None,
+                'is_active': project.is_active,
+                'is_hero_highlight': project.is_hero_highlight,
+                'is_featured': project.is_featured,
+                'enrolled_users_count': project.enrolled_users.count(),
+                'created_at': project.created_at.isoformat(),
+                'updated_at': project.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="projects.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Projects"
+        
+        # Header row with styling
+        headers = [
+            'ID', 'Project ID', 'KICC Project ID', 'Title', 'Teaser', 'Background Objectives', 
+            'Tasks Eligibility', 'Country', 'Theme', 'Duration', 'Difficulty', 'Headcount', 
+            'Total Headcount', 'Cover Image URL', 'Video URLs', 'Image URLs', 
+            'Application Deadline', 'Start Date', 'End Date', 'Is Active', 'Is Hero Highlight', 
+            'Is Featured', 'Enrolled Users Count', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        # Data rows
+        for row_num, project in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=project.id)
+            ws.cell(row=row_num, column=2, value=project.project_id)
+            ws.cell(row=row_num, column=3, value=project.kicc_project_id)
+            ws.cell(row=row_num, column=4, value=project.title)
+            ws.cell(row=row_num, column=5, value=project.teaser)
+            ws.cell(row=row_num, column=6, value=project.background_objectives)
+            ws.cell(row=row_num, column=7, value=project.tasks_eligibility)
+            ws.cell(row=row_num, column=8, value=project.country)
+            ws.cell(row=row_num, column=9, value=project.theme)
+            ws.cell(row=row_num, column=10, value=project.duration)
+            ws.cell(row=row_num, column=11, value=project.difficulty)
+            ws.cell(row=row_num, column=12, value=project.headcount or 0)
+            ws.cell(row=row_num, column=13, value=project.total_headcount)
+            ws.cell(row=row_num, column=14, value=project.cover_image_url)
+            ws.cell(row=row_num, column=15, value=', '.join(project.video_urls) if project.video_urls else '')
+            ws.cell(row=row_num, column=16, value=', '.join(project.image_urls) if project.image_urls else '')
+            ws.cell(row=row_num, column=17, value=project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else '')
+            ws.cell(row=row_num, column=18, value=project.start_date.strftime('%Y-%m-%d') if project.start_date else '')
+            ws.cell(row=row_num, column=19, value=project.end_date.strftime('%Y-%m-%d') if project.end_date else '')
+            ws.cell(row=row_num, column=20, value='Yes' if project.is_active else 'No')
+            ws.cell(row=row_num, column=21, value='Yes' if project.is_hero_highlight else 'No')
+            ws.cell(row=row_num, column=22, value='Yes' if project.is_featured else 'No')
+            ws.cell(row=row_num, column=23, value=project.enrolled_users.count())
+            ws.cell(row=row_num, column=24, value=project.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=25, value=project.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        # Auto-adjust column widths
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)  # Max width of 50
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="projects.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Projects Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Projects Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Project ID</th>
+                        <th>KICC Project ID</th>
+                        <th>Title</th>
+                        <th>Teaser</th>
+                        <th>Background Objectives</th>
+                        <th>Tasks Eligibility</th>
+                        <th>Country</th>
+                        <th>Theme</th>
+                        <th>Duration</th>
+                        <th>Difficulty</th>
+                        <th>Headcount</th>
+                        <th>Total Headcount</th>
+                        <th>Cover Image URL</th>
+                        <th>Video URLs</th>
+                        <th>Image URLs</th>
+                        <th>Application Deadline</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Is Active</th>
+                        <th>Is Hero Highlight</th>
+                        <th>Is Featured</th>
+                        <th>Enrolled Users Count</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for project in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{project.id}</td>
+                        <td>{project.project_id}</td>
+                        <td>{project.kicc_project_id or ''}</td>
+                        <td>{project.title}</td>
+                        <td>{project.teaser}</td>
+                        <td>{project.background_objectives}</td>
+                        <td>{project.tasks_eligibility}</td>
+                        <td>{project.country}</td>
+                        <td>{project.theme}</td>
+                        <td>{project.duration}</td>
+                        <td>{project.difficulty}</td>
+                        <td>{project.headcount or 0}</td>
+                        <td>{project.total_headcount}</td>
+                        <td>{project.cover_image_url or ''}</td>
+                        <td>{', '.join(project.video_urls) if project.video_urls else ''}</td>
+                        <td>{', '.join(project.image_urls) if project.image_urls else ''}</td>
+                        <td>{project.application_deadline.strftime('%Y-%m-%d %H:%M:%S') if project.application_deadline else ''}</td>
+                        <td>{project.start_date.strftime('%Y-%m-%d') if project.start_date else ''}</td>
+                        <td>{project.end_date.strftime('%Y-%m-%d') if project.end_date else ''}</td>
+                        <td>{'Yes' if project.is_active else 'No'}</td>
+                        <td>{'Yes' if project.is_hero_highlight else 'No'}</td>
+                        <td>{'Yes' if project.is_featured else 'No'}</td>
+                        <td>{project.enrolled_users.count()}</td>
+                        <td>{project.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{project.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="projects.html"'
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -713,6 +2145,250 @@ class NewsEventListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
         return queryset
 
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            return self.export_csv()
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="news_events.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'News Event ID', 'Title', 'Body', 'Content Type', 'Cover Image URL', 
+            'External Link', 'Video URLs', 'Image URLs', 'Publish Date', 'Is Published', 
+            'Is Hero Highlight', 'Is Featured', 'Created At', 'Updated At'
+        ])
+        
+        for item in queryset:
+            writer.writerow([
+                item.id,
+                item.news_event_id,
+                item.title,
+                item.body,
+                item.content_type,
+                item.cover_image_url or '',
+                item.external_link or '',
+                ', '.join(item.video_urls) if item.video_urls else '',
+                ', '.join(item.image_urls) if item.image_urls else '',
+                item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else '',
+                'Yes' if item.is_published else 'No',
+                'Yes' if item.is_hero_highlight else 'No',
+                'Yes' if item.is_featured else 'No',
+                item.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                item.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="news_events.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'News Event ID', 'Title', 'Body', 'Content Type', 'Cover Image URL', 
+            'External Link', 'Video URLs', 'Image URLs', 'Publish Date', 'Is Published', 
+            'Is Hero Highlight', 'Is Featured', 'Created At', 'Updated At'
+        ])
+        
+        for item in queryset:
+            writer.writerow([
+                item.id,
+                item.news_event_id,
+                item.title,
+                item.body,
+                item.content_type,
+                item.cover_image_url or '',
+                item.external_link or '',
+                ', '.join(item.video_urls) if item.video_urls else '',
+                ', '.join(item.image_urls) if item.image_urls else '',
+                item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else '',
+                'Yes' if item.is_published else 'No',
+                'Yes' if item.is_hero_highlight else 'No',
+                'Yes' if item.is_featured else 'No',
+                item.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                item.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for item in queryset:
+            data.append({
+                'id': item.id,
+                'news_event_id': item.news_event_id,
+                'title': item.title,
+                'body': item.body,
+                'content_type': item.content_type,
+                'cover_image_url': item.cover_image_url,
+                'external_link': item.external_link,
+                'video_urls': item.video_urls,
+                'image_urls': item.image_urls,
+                'publish_date': item.publish_date.isoformat() if item.publish_date else None,
+                'is_published': item.is_published,
+                'is_hero_highlight': item.is_hero_highlight,
+                'is_featured': item.is_featured,
+                'created_at': item.created_at.isoformat(),
+                'updated_at': item.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="news_events.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "News Events"
+        
+        headers = [
+            'ID', 'News Event ID', 'Title', 'Body', 'Content Type', 'Cover Image URL', 
+            'External Link', 'Video URLs', 'Image URLs', 'Publish Date', 'Is Published', 
+            'Is Hero Highlight', 'Is Featured', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, item in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=item.id)
+            ws.cell(row=row_num, column=2, value=item.news_event_id)
+            ws.cell(row=row_num, column=3, value=item.title)
+            ws.cell(row=row_num, column=4, value=item.body)
+            ws.cell(row=row_num, column=5, value=item.content_type)
+            ws.cell(row=row_num, column=6, value=item.cover_image_url)
+            ws.cell(row=row_num, column=7, value=item.external_link)
+            ws.cell(row=row_num, column=8, value=', '.join(item.video_urls) if item.video_urls else '')
+            ws.cell(row=row_num, column=9, value=', '.join(item.image_urls) if item.image_urls else '')
+            ws.cell(row=row_num, column=10, value=item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else '')
+            ws.cell(row=row_num, column=11, value='Yes' if item.is_published else 'No')
+            ws.cell(row=row_num, column=12, value='Yes' if item.is_hero_highlight else 'No')
+            ws.cell(row=row_num, column=13, value='Yes' if item.is_featured else 'No')
+            ws.cell(row=row_num, column=14, value=item.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=15, value=item.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="news_events.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>News & Events Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>News & Events Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>News Event ID</th>
+                        <th>Title</th>
+                        <th>Body</th>
+                        <th>Content Type</th>
+                        <th>Cover Image URL</th>
+                        <th>External Link</th>
+                        <th>Video URLs</th>
+                        <th>Image URLs</th>
+                        <th>Publish Date</th>
+                        <th>Is Published</th>
+                        <th>Is Hero Highlight</th>
+                        <th>Is Featured</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for item in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{item.id}</td>
+                        <td>{item.news_event_id}</td>
+                        <td>{item.title}</td>
+                        <td>{item.body}</td>
+                        <td>{item.content_type}</td>
+                        <td>{item.cover_image_url or ''}</td>
+                        <td>{item.external_link or ''}</td>
+                        <td>{', '.join(item.video_urls) if item.video_urls else ''}</td>
+                        <td>{', '.join(item.image_urls) if item.image_urls else ''}</td>
+                        <td>{item.publish_date.strftime('%Y-%m-%d %H:%M:%S') if item.publish_date else ''}</td>
+                        <td>{'Yes' if item.is_published else 'No'}</td>
+                        <td>{'Yes' if item.is_hero_highlight else 'No'}</td>
+                        <td>{'Yes' if item.is_featured else 'No'}</td>
+                        <td>{item.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{item.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="news_events.html"'
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('search', '')
@@ -896,6 +2572,256 @@ class SuccessStoryListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             queryset = queryset.order_by('-published_at')
 
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            return self.export_csv()
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'Success Story ID', 'Title', 'Body', 'Related Project', 'Cover Image URL', 
+            'Is Hero Highlight', 'Is Featured', 'Image URLs', 'Video URLs', 'Beneficiaries', 
+            'Total Hours Contributed', 'Is Published', 'Published At', 'Created At', 'Updated At'
+        ])
+        
+        for story in queryset:
+            writer.writerow([
+                story.id,
+                story.success_story_id,
+                story.title,
+                story.body,
+                story.related_project.title if story.related_project else '',
+                story.cover_image_url or '',
+                'Yes' if story.is_hero_highlight else 'No',
+                'Yes' if story.is_featured else 'No',
+                ', '.join(story.image_urls) if story.image_urls else '',
+                ', '.join(story.video_urls) if story.video_urls else '',
+                story.beneficiaries or '',
+                story.total_hours_contributed or '',
+                'Yes' if story.is_published else 'No',
+                story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else '',
+                story.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                story.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'Success Story ID', 'Title', 'Body', 'Related Project', 'Cover Image URL', 
+            'Is Hero Highlight', 'Is Featured', 'Image URLs', 'Video URLs', 'Beneficiaries', 
+            'Total Hours Contributed', 'Is Published', 'Published At', 'Created At', 'Updated At'
+        ])
+        
+        for story in queryset:
+            writer.writerow([
+                story.id,
+                story.success_story_id,
+                story.title,
+                story.body,
+                story.related_project.title if story.related_project else '',
+                story.cover_image_url or '',
+                'Yes' if story.is_hero_highlight else 'No',
+                'Yes' if story.is_featured else 'No',
+                ', '.join(story.image_urls) if story.image_urls else '',
+                ', '.join(story.video_urls) if story.video_urls else '',
+                story.beneficiaries or '',
+                story.total_hours_contributed or '',
+                'Yes' if story.is_published else 'No',
+                story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else '',
+                story.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                story.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for story in queryset:
+            data.append({
+                'id': story.id,
+                'success_story_id': story.success_story_id,
+                'title': story.title,
+                'body': story.body,
+                'related_project': story.related_project.title if story.related_project else None,
+                'cover_image_url': story.cover_image_url,
+                'is_hero_highlight': story.is_hero_highlight,
+                'is_featured': story.is_featured,
+                'image_urls': story.image_urls,
+                'video_urls': story.video_urls,
+                'beneficiaries': story.beneficiaries,
+                'total_hours_contributed': story.total_hours_contributed,
+                'is_published': story.is_published,
+                'published_at': story.published_at.isoformat() if story.published_at else None,
+                'created_at': story.created_at.isoformat(),
+                'updated_at': story.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Success Stories"
+        
+        headers = [
+            'ID', 'Success Story ID', 'Title', 'Body', 'Related Project', 'Cover Image URL', 
+            'Is Hero Highlight', 'Is Featured', 'Image URLs', 'Video URLs', 'Beneficiaries', 
+            'Total Hours Contributed', 'Is Published', 'Published At', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, story in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=story.id)
+            ws.cell(row=row_num, column=2, value=story.success_story_id)
+            ws.cell(row=row_num, column=3, value=story.title)
+            ws.cell(row=row_num, column=4, value=story.body)
+            ws.cell(row=row_num, column=5, value=story.related_project.title if story.related_project else '')
+            ws.cell(row=row_num, column=6, value=story.cover_image_url)
+            ws.cell(row=row_num, column=7, value='Yes' if story.is_hero_highlight else 'No')
+            ws.cell(row=row_num, column=8, value='Yes' if story.is_featured else 'No')
+            ws.cell(row=row_num, column=9, value=', '.join(story.image_urls) if story.image_urls else '')
+            ws.cell(row=row_num, column=10, value=', '.join(story.video_urls) if story.video_urls else '')
+            ws.cell(row=row_num, column=11, value=story.beneficiaries)
+            ws.cell(row=row_num, column=12, value=story.total_hours_contributed)
+            ws.cell(row=row_num, column=13, value='Yes' if story.is_published else 'No')
+            ws.cell(row=row_num, column=14, value=story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else '')
+            ws.cell(row=row_num, column=15, value=story.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=16, value=story.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Success Stories Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>Success Stories Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Success Story ID</th>
+                        <th>Title</th>
+                        <th>Body</th>
+                        <th>Related Project</th>
+                        <th>Cover Image URL</th>
+                        <th>Is Hero Highlight</th>
+                        <th>Is Featured</th>
+                        <th>Image URLs</th>
+                        <th>Video URLs</th>
+                        <th>Beneficiaries</th>
+                        <th>Total Hours Contributed</th>
+                        <th>Is Published</th>
+                        <th>Published At</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for story in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{story.id}</td>
+                        <td>{story.success_story_id}</td>
+                        <td>{story.title}</td>
+                        <td>{story.body}</td>
+                        <td>{story.related_project.title if story.related_project else ''}</td>
+                        <td>{story.cover_image_url or ''}</td>
+                        <td>{'Yes' if story.is_hero_highlight else 'No'}</td>
+                        <td>{'Yes' if story.is_featured else 'No'}</td>
+                        <td>{', '.join(story.image_urls) if story.image_urls else ''}</td>
+                        <td>{', '.join(story.video_urls) if story.video_urls else ''}</td>
+                        <td>{story.beneficiaries or ''}</td>
+                        <td>{story.total_hours_contributed or ''}</td>
+                        <td>{'Yes' if story.is_published else 'No'}</td>
+                        <td>{story.published_at.strftime('%Y-%m-%d %H:%M:%S') if story.published_at else ''}</td>
+                        <td>{story.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{story.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="success_stories.html"'
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1096,6 +3022,229 @@ class FAQListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
             queryset = queryset.order_by('order')
 
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        export_format = request.GET.get('export')
+        if export_format:
+            return self.export_data(export_format)
+        return super().get(request, *args, **kwargs)
+
+    def export_data(self, format_type):
+        queryset = self.get_queryset()
+        
+        if format_type == 'csv':
+            return self.export_csv()
+        elif format_type == 'tsv':
+            return self.export_tsv()
+        elif format_type == 'json':
+            return self.export_json()
+        elif format_type == 'xlsx' and XLSX_AVAILABLE:
+            return self.export_xlsx()
+        elif format_type == 'html':
+            return self.export_html()
+        else:
+            return self.export_csv()
+
+    def export_csv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="faqs.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow([
+            'ID', 'FAQ ID', 'Question', 'Answer', 'Order', 'Is Schema Ready', 
+            'Thumbs Up', 'Thumbs Down', 'Total Votes', 'Helpfulness Ratio %', 'Created At', 'Updated At'
+        ])
+        
+        for faq in queryset:
+            writer.writerow([
+                faq.id,
+                faq.faq_id,
+                faq.question,
+                faq.answer,
+                faq.order,
+                'Yes' if faq.is_schema_ready else 'No',
+                faq.thumbs_up,
+                faq.thumbs_down,
+                faq.total_votes,
+                f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%',
+                faq.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                faq.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_tsv(self):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type='text/tab-separated-values')
+        response['Content-Disposition'] = 'attachment; filename="faqs.tsv"'
+        
+        writer = csv.writer(response, delimiter='\t')
+        writer.writerow([
+            'ID', 'FAQ ID', 'Question', 'Answer', 'Order', 'Is Schema Ready', 
+            'Thumbs Up', 'Thumbs Down', 'Total Votes', 'Helpfulness Ratio %', 'Created At', 'Updated At'
+        ])
+        
+        for faq in queryset:
+            writer.writerow([
+                faq.id,
+                faq.faq_id,
+                faq.question,
+                faq.answer,
+                faq.order,
+                'Yes' if faq.is_schema_ready else 'No',
+                faq.thumbs_up,
+                faq.thumbs_down,
+                faq.total_votes,
+                f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%',
+                faq.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                faq.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            ])
+        
+        return response
+
+    def export_json(self):
+        queryset = self.get_queryset()
+        data = []
+        
+        for faq in queryset:
+            data.append({
+                'id': faq.id,
+                'faq_id': faq.faq_id,
+                'question': faq.question,
+                'answer': faq.answer,
+                'order': faq.order,
+                'is_schema_ready': faq.is_schema_ready,
+                'thumbs_up': faq.thumbs_up,
+                'thumbs_down': faq.thumbs_down,
+                'total_votes': faq.total_votes,
+                'helpfulness_ratio': faq.helpfulness_ratio,
+                'created_at': faq.created_at.isoformat(),
+                'updated_at': faq.updated_at.isoformat()
+            })
+        
+        response = HttpResponse(json.dumps(data, indent=2), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename="faqs.json"'
+        return response
+
+    def export_xlsx(self):
+        if not XLSX_AVAILABLE:
+            return HttpResponse("XLSX export not available. Please install openpyxl.", status=400)
+            
+        queryset = self.get_queryset()
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "FAQs"
+        
+        headers = [
+            'ID', 'FAQ ID', 'Question', 'Answer', 'Order', 'Is Schema Ready', 
+            'Thumbs Up', 'Thumbs Down', 'Total Votes', 'Helpfulness Ratio %', 'Created At', 'Updated At'
+        ]
+        
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        for row_num, faq in enumerate(queryset, 2):
+            ws.cell(row=row_num, column=1, value=faq.id)
+            ws.cell(row=row_num, column=2, value=faq.faq_id)
+            ws.cell(row=row_num, column=3, value=faq.question)
+            ws.cell(row=row_num, column=4, value=faq.answer)
+            ws.cell(row=row_num, column=5, value=faq.order)
+            ws.cell(row=row_num, column=6, value='Yes' if faq.is_schema_ready else 'No')
+            ws.cell(row=row_num, column=7, value=faq.thumbs_up)
+            ws.cell(row=row_num, column=8, value=faq.thumbs_down)
+            ws.cell(row=row_num, column=9, value=faq.total_votes)
+            ws.cell(row=row_num, column=10, value=f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%')
+            ws.cell(row=row_num, column=11, value=faq.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+            ws.cell(row=row_num, column=12, value=faq.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="faqs.xlsx"'
+        wb.save(response)
+        return response
+
+    def export_html(self):
+        queryset = self.get_queryset()
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>FAQs Export</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; margin: 20px; }}
+                table {{ border-collapse: collapse; width: 100%; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th {{ background-color: #f2f2f2; font-weight: bold; }}
+                tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                h1 {{ color: #333; }}
+            </style>
+        </head>
+        <body>
+            <h1>FAQs Export</h1>
+            <p>Generated on: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+            <p>Total records: {queryset.count()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>FAQ ID</th>
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>Order</th>
+                        <th>Is Schema Ready</th>
+                        <th>Thumbs Up</th>
+                        <th>Thumbs Down</th>
+                        <th>Total Votes</th>
+                        <th>Helpfulness Ratio %</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+        """
+        
+        for faq in queryset:
+            html_content += f"""
+                    <tr>
+                        <td>{faq.id}</td>
+                        <td>{faq.faq_id}</td>
+                        <td>{faq.question}</td>
+                        <td>{faq.answer}</td>
+                        <td>{faq.order}</td>
+                        <td>{'Yes' if faq.is_schema_ready else 'No'}</td>
+                        <td>{faq.thumbs_up}</td>
+                        <td>{faq.thumbs_down}</td>
+                        <td>{faq.total_votes}</td>
+                        <td>{f"{faq.helpfulness_ratio}%" if faq.total_votes > 0 else '0%'}</td>
+                        <td>{faq.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                        <td>{faq.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    </tr>
+            """
+        
+        html_content += """
+                </tbody>
+            </table>
+        </body>
+        </html>
+        """
+        
+        response = HttpResponse(html_content, content_type='text/html')
+        response['Content-Disposition'] = 'attachment; filename="faqs.html"'
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

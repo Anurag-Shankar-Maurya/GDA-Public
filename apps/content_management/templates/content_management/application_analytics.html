@@ -14,12 +14,11 @@
 </li>
 {% endblock %}
 
-{% block extra_head %}
-<!-- Chart.js for data visualization -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-{% endblock %}
-
 {% block content %}
+<!-- Data for JS -->
+{{ enrollments_by_theme|json_script:"theme-data" }}
+{{ enrollments_by_country|json_script:"country-data" }}
+
 <div class="max-w-7xl mx-auto">
     
     <!-- Sticky Header -->
@@ -37,6 +36,34 @@
             <span class="text-xs text-gray-500 dark:text-gray-400 hidden sm:inline-block" id="last-updated">
                 {% trans "Updated:" %} <span id="update-time">{{ last_updated|default_if_none:_("Live Data") }}</span>
             </span>
+            
+            <!-- Export Dropdown -->
+            <div class="relative inline-block text-left">
+                <button type="button" id="exportMenuBtn" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 transition-colors" aria-expanded="false" aria-haspopup="true">
+                    <i class="fas fa-download mr-2"></i> {% trans "Export" %}
+                    <i class="fas fa-chevron-down ml-2"></i>
+                </button>
+                <div id="exportMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                    <div class="py-1" role="menu">
+                        <a href="?export=csv" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center" role="menuitem">
+                            <i class="fas fa-file-csv mr-2 text-green-500"></i> {% trans "Export as CSV" %}
+                        </a>
+                        <a href="?export=tsv" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center" role="menuitem">
+                            <i class="fas fa-file-alt mr-2 text-blue-500"></i> {% trans "Export as TSV" %}
+                        </a>
+                        <a href="?export=json" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center" role="menuitem">
+                            <i class="fas fa-file-code mr-2 text-yellow-500"></i> {% trans "Export as JSON" %}
+                        </a>
+                        <a href="?export=xlsx" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center" role="menuitem">
+                            <i class="fas fa-file-excel mr-2 text-green-600"></i> {% trans "Export as XLSX" %}
+                        </a>
+                        <a href="?export=html" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center" role="menuitem">
+                            <i class="fas fa-file-code mr-2 text-orange-500"></i> {% trans "Export as HTML" %}
+                        </a>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -88,29 +115,28 @@
     </div>
 
     <!-- Enhanced Charts Section -->
-    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12"> -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <!-- Enrollments by Theme -->
-        <!-- <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
                 <i class="fas fa-palette mr-3 text-purple-500"></i>
-                Enrollments by Theme
+                {% trans "Enrollments by Theme" %}
             </h3>
             <div class="relative">
                 <canvas id="themeChart" width="400" height="300"></canvas>
             </div>
-        </div> -->
+        </div>
 
         <!-- Enrollments by Country -->
-        <!-- <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
                 <i class="fas fa-globe-americas mr-3 text-green-500"></i>
-                Geographic Distribution
+                {% trans "Geographic Distribution" %}
             </h3>
-            <div class="relative">
-                <canvas id="countryEnrollChart" width="400" height="300"></canvas>
-            </div>
+            <!-- Map Container -->
+            <div id="countryEnrollMap" class="w-full h-[300px]"></div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Popular Projects -->
     <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
@@ -204,240 +230,174 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block static_js %}
+<!-- Ensure Chart.js is loaded explicitly here -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<!-- Export Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Google Charts -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script>
-// Enhanced Chart.js Configuration
-Chart.defaults.font.family = "'Inter', 'Segoe UI', 'Roboto', sans-serif";
-Chart.defaults.font.size = 12;
-Chart.defaults.color = '#6B7280';
-
-// Define translated strings for JS
-const transTotalEnrollments = "{% trans 'Total Enrollments' %}";
-const transEnrollments = "{% trans 'Enrollments' %}";
-
-// Theme Chart with Enhanced Styling
-const themeData = {{ enrollments_by_theme|safe }};
-const themeLabels = themeData.map(item => item.theme);
-const themeCounts = themeData.map(item => item.total_enrollments);
-
-const themeChart = new Chart(document.getElementById('themeChart'), {
-    type: 'bar',
-    data: {
-        labels: themeLabels,
-        datasets: [{
-            label: transTotalEnrollments,
-            data: themeCounts,
-            backgroundColor: [
-                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-                'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
-            ].slice(0, themeLabels.length),
-            borderColor: [
-                '#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#a8edea'
-            ].slice(0, themeLabels.length),
-            borderWidth: 2,
-            borderRadius: 8,
-            borderSkipped: false,
-            hoverBackgroundColor: [
-                '#5a67d8', '#e53e3e', '#3182ce', '#38a169', '#d69e2e', '#805ad5'
-            ].slice(0, themeLabels.length),
-            hoverBorderColor: '#ffffff',
-            hoverBorderWidth: 3
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            },
-            tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                titleColor: '#ffffff',
-                bodyColor: '#ffffff',
-                cornerRadius: 8,
-                displayColors: false,
-                callbacks: {
-                    title: function(context) {
-                        return context[0].label;
-                    },
-                    label: function(context) {
-                        return `${transEnrollments}: ${context.parsed.y}`;
-                    }
-                }
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.1)',
-                    borderDash: [5, 5]
-                },
-                ticks: {
-                    color: '#6B7280',
-                    font: {
-                        weight: '500'
-                    }
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                },
-                ticks: {
-                    color: '#6B7280',
-                    font: {
-                        weight: '500'
-                    },
-                    maxRotation: 45,
-                    minRotation: 45
-                }
-            }
-        },
-        animation: {
-            duration: 2000,
-            easing: 'easeInOutQuart',
-            onComplete: function() {
-                // Add glow effect after animation
-                const chartCanvas = document.getElementById('themeChart');
-                chartCanvas.style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.3)';
-            }
-        },
-        onHover: (event, activeElements) => {
-            event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-        }
-    }
-});
-
-// Country Enrollment Chart with Enhanced Styling
-const countryEnrollData = {{ enrollments_by_country|safe }};
-const countryEnrollLabels = countryEnrollData.map(item => item.country);
-const countryEnrollCounts = countryEnrollData.map(item => item.total_enrollments);
-
-const countryEnrollChart = new Chart(document.getElementById('countryEnrollChart'), {
-    type: 'doughnut',
-    data: {
-        labels: countryEnrollLabels,
-        datasets: [{
-            data: countryEnrollCounts,
-            backgroundColor: [
-                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-                'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-                'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-                'linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%)'
-            ].slice(0, countryEnrollLabels.length),
-            borderColor: '#ffffff',
-            borderWidth: 3,
-            hoverBorderColor: '#ffffff',
-            hoverBorderWidth: 4,
-            hoverOffset: 10
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '60%',
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    padding: 20,
-                    usePointStyle: true,
-                    pointStyle: 'circle',
-                    font: {
-                        size: 12,
-                        weight: '500'
-                    }
-                }
-            },
-            tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                titleColor: '#ffffff',
-                bodyColor: '#ffffff',
-                cornerRadius: 8,
-                callbacks: {
-                    title: function(context) {
-                        return context[0].label;
-                    },
-                    label: function(context) {
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = ((context.parsed / total) * 100).toFixed(1);
-                        return `${context.parsed} ${transEnrollments.toLowerCase()} (${percentage}%)`;
-                    }
-                }
-            }
-        },
-        animation: {
-            duration: 2500,
-            easing: 'easeInOutQuart',
-            animateRotate: true,
-            animateScale: true,
-            onComplete: function() {
-                // Add glow effect after animation
-                const chartCanvas = document.getElementById('countryEnrollChart');
-                chartCanvas.style.boxShadow = '0 0 20px rgba(102, 126, 234, 0.3)';
-            }
-        },
-        onHover: (event, activeElements) => {
-            event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
-        }
-    }
-});
-
-// Chart Loading Animation
 document.addEventListener('DOMContentLoaded', function() {
-    const chartContainers = document.querySelectorAll('.chart-container');
+    console.log("Analytics script loaded");
 
+    // Retrieve data from JSON scripts safely
+    const themeDataElement = document.getElementById('theme-data');
+    const countryDataElement = document.getElementById('country-data');
+    
+    let themeData = [];
+    let countryEnrollData = [];
+
+    if (themeDataElement) {
+        try {
+            themeData = JSON.parse(themeDataElement.textContent);
+        } catch(e) {
+            console.error("Error parsing theme data", e);
+        }
+    }
+    
+    if (countryDataElement) {
+        try {
+            countryEnrollData = JSON.parse(countryDataElement.textContent);
+        } catch(e) {
+            console.error("Error parsing country data", e);
+        }
+    }
+
+    // Define translated strings for JS
+    const transTotalEnrollments = "{% trans 'Total Enrollments' %}";
+    const transEnrollments = "{% trans 'Enrollments' %}";
+
+    // Theme Chart
+    const themeCtx = document.getElementById('themeChart');
+    if (themeCtx) {
+        const themeLabels = themeData.map(item => item.theme);
+        const themeCounts = themeData.map(item => item.total_enrollments);
+
+        new Chart(themeCtx, {
+            type: 'bar',
+            data: {
+                labels: themeLabels,
+                datasets: [{
+                    label: transTotalEnrollments,
+                    data: themeCounts,
+                    backgroundColor: [
+                        '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#6366f1', '#14b8a6'
+                    ].slice(0, themeLabels.length),
+                    borderColor: '#ffffff',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // Country Enrollment Map (Google Charts)
+    google.charts.load('current', {
+        'packages': ['geochart'],
+    });
+    
+    google.charts.setOnLoadCallback(drawRegionsMap);
+
+    function drawRegionsMap() {
+        if (!countryEnrollData || countryEnrollData.length === 0) return;
+
+        const mapData = [['Country', 'Enrollments']];
+        countryEnrollData.forEach(item => {
+            mapData.push([item.country, item.total_enrollments]);
+        });
+
+        const data = google.visualization.arrayToDataTable(mapData);
+
+        const isDark = document.documentElement.classList.contains('dark');
+        
+        const options = {
+            backgroundColor: 'transparent',
+            datalessRegionColor: isDark ? '#374151' : '#f3f4f6', 
+            defaultColor: '#f5f5f5',
+            colorAxis: {
+                colors: ['#a7f3d0', '#059669'] 
+            },
+            legend: {textStyle: {color: isDark ? '#e5e7eb' : '#374151', fontSize: 12}},
+            tooltip: {textStyle: {color: '#374151'}, showColorCode: true},
+            keepAspectRatio: true,
+        };
+
+        const chart = new google.visualization.GeoChart(document.getElementById('countryEnrollMap'));
+
+        chart.draw(data, options);
+        
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            chart.draw(data, options);
+        });
+        
+        // Handle Theme Change Re-render
+        const themeBtn = document.getElementById('theme-toggle');
+        if(themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                setTimeout(() => {
+                    const newIsDark = document.documentElement.classList.contains('dark');
+                    options.datalessRegionColor = newIsDark ? '#374151' : '#f3f4f6';
+                    options.legend.textStyle.color = newIsDark ? '#e5e7eb' : '#374151';
+                    chart.draw(data, options);
+                }, 100);
+            });
+        }
+    }
+
+    // Chart Animations
+    const chartContainers = document.querySelectorAll('.chart-container');
     chartContainers.forEach((container, index) => {
         container.style.opacity = '0';
         container.style.transform = 'translateY(30px)';
-
         setTimeout(() => {
             container.style.transition = 'all 0.8s ease-out';
             container.style.opacity = '1';
             container.style.transform = 'translateY(0)';
         }, index * 200);
     });
-});
 
-// Scroll-triggered animations for charts
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const chartObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const chartCanvas = entry.target.querySelector('canvas');
-            if (chartCanvas) {
-                chartCanvas.style.animation = 'chartGlow 2s ease-in-out';
-            }
+    // Add CSS animation for chart glow
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes chartGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(102, 126, 234, 0.6); }
         }
-    });
-}, observerOptions);
+    `;
+    document.head.appendChild(style);
 
-document.querySelectorAll('.chart-container').forEach(container => {
-    chartObserver.observe(container);
-});
-
-// Add CSS animation for chart glow
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes chartGlow {
-        0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
-        50% { box-shadow: 0 0 30px rgba(102, 126, 234, 0.6); }
+    // --- Export Functionality ---
+    const exportMenuBtn = document.getElementById('exportMenuBtn');
+    const exportMenu = document.getElementById('exportMenu');
+    
+    if (exportMenuBtn && exportMenu) {
+        exportMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            exportMenu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', (e) => {
+            if (!exportMenuBtn.contains(e.target) && !exportMenu.contains(e.target)) {
+                exportMenu.classList.add('hidden');
+            }
+        });
     }
-`;
-document.head.appendChild(style);
+});
 </script>
-
 {% endblock %}

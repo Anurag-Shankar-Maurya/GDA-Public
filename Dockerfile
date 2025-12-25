@@ -45,7 +45,7 @@ RUN apt-get update \
 
 # Create non-root user and required directories
 RUN useradd --create-home --shell /bin/bash app && \
-    mkdir -p /wheels /app/staticfiles /app/media && \
+    mkdir -p /wheels /app/static /app/media && \
     chown -R app:app /app /wheels /home/app
 
 # Copy wheels and requirements from builder

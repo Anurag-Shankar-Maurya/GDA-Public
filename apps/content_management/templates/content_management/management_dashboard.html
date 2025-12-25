@@ -10,14 +10,9 @@
 </li>
 {% endblock %}
 
-{% block extra_head %}
-<!-- Chart.js for data visualization -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-{% endblock %}
-
 {% block content %}
 <!-- Modern Gradient Header Section -->
-<div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-800 rounded-xl shadow-2xl p-8 mb-8 text-white relative overflow-hidden">
+<div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-800 rounded-xl shadow-2xl p-8 mb-0 text-white relative overflow-hidden">
     <div class="absolute inset-0 bg-black bg-opacity-20"></div>
     <div class="relative z-10">
         <div class="flex items-center justify-between flex-wrap gap-4">
@@ -40,7 +35,7 @@
         </div>
 
         <!-- Quick Stats Row -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white border-opacity-20">
+        <!-- <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white border-opacity-20">
             <div class="text-center">
                 <div class="text-2xl md:text-3xl font-bold text-yellow-300">{{ total_projects }}</div>
                 <div class="text-sm text-blue-200">{% trans "Projects" %}</div>
@@ -57,276 +52,349 @@
                 <div class="text-2xl md:text-3xl font-bold text-pink-300">{{ total_gallery_images }}</div>
                 <div class="text-sm text-blue-200">{% trans "Gallery Images" %}</div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 
 <div class="container max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-
-    <!-- Enhanced Analytics Navigation -->
-    <div class="mb-8">
-        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-lg p-6">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <i class="fas fa-chart-bar mr-3 text-primary-blue"></i>
-                {% trans "Detailed Analytics" %}
-            </h2>
-            <div class="flex flex-wrap gap-4">
-                <a href="{% url 'user_analytics' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    <i class="fas fa-users mr-3"></i>
-                    {% trans "User Analytics" %}
-                    <i class="fas fa-arrow-right ml-3"></i>
-                </a>
-                <a href="{% url 'application_analytics' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    <i class="fas fa-chart-pie mr-3"></i>
-                    {% trans "Application Analytics" %}
-                    <i class="fas fa-arrow-right ml-3"></i>
-                </a>
+    <!-- Compact Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+        <!-- User Metrics Card -->
+        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "User Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-users"></i>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Enhanced Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-        <!-- Users Card -->
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total Users" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_users }}</p>
-                <p class="text-sm opacity-80 mt-1">+{{ new_users_30d }} {% trans "new (30d)" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-users"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ total_users }}</p>
+                    <p class="opacity-80">{% trans "Total Users" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">+{{ new_users_30d }}</p>
+                    <p class="opacity-80">{% trans "New (30d)" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ active_users_30d }}</p>
+                    <p class="opacity-80">{% trans "Active (30d)" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ onboarding_rate }}%</p>
+                    <p class="opacity-80">{% trans "Onboarded" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Projects Card -->
-        <div class="bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Active Projects" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ active_projects }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ utilization_rate }}% {% trans "Utilization" %}</p>
+        <!-- Content Metrics Card -->
+        <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Content Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-file-alt"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-play-circle"></i>
-            </div>
-        </div>
-
-        <!-- News Card -->
-        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "News & Events" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_news_events }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ published_news_events }} {% trans "Published" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-newspaper"></i>
-            </div>
-        </div>
-
-        <!-- Stories Card -->
-        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Success Stories" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_success_stories }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Impact stories" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-trophy"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ active_projects }}</p>
+                    <p class="opacity-80">{% trans "Projects" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_news_events }}</p>
+                    <p class="opacity-80">{% trans "News & Events" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_success_stories }}</p>
+                    <p class="opacity-80">{% trans "Stories" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_faqs }}</p>
+                    <p class="opacity-80">{% trans "FAQs" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- FAQs Card -->
-        <div class="bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total FAQs" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_faqs }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Help content" %}</p>
+        <!-- Impact Metrics Card -->
+        <div class="bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Impact Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-chart-line"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-question-circle"></i>
-            </div>
-        </div>
-
-        <!-- Beneficiaries Card -->
-        <div class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total Beneficiaries" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_beneficiaries }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "People helped" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-users"></i>
-            </div>
-        </div>
-
-        <!-- Hours Card -->
-        <div class="bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Hours Contributed" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_hours_contributed }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Community effort" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-hourglass-half"></i>
-            </div>
-        </div>
-        
-        <!-- Capacity Card -->
-        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Total Capacity" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ total_capacity }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ total_enrolled }} {% trans "Enrolled" %}</p>
-            </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-chair"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ total_beneficiaries }}</p>
+                    <p class="opacity-80">{% trans "Beneficiaries" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_hours_contributed }}</p>
+                    <p class="opacity-80">{% trans "Hours" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_capacity }}</p>
+                    <p class="opacity-80">{% trans "Capacity" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_enrolled }}</p>
+                    <p class="opacity-80">{% trans "Enrolled" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Upcoming Deadlines Card -->
-        <div class="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Upcoming Deadlines" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ upcoming_deadlines }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Next 30 days" %}</p>
+        <!-- Engagement Metrics Card -->
+        <div class="bg-gradient-to-br from-orange-500 to-red-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Engagement Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-bolt"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-calendar-alt"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ utilization_rate }}%</p>
+                    <p class="opacity-80">{% trans "Utilization" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ upcoming_deadlines }}</p>
+                    <p class="opacity-80">{% trans "Deadlines" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ published_news_events }}</p>
+                    <p class="opacity-80">{% trans "Published" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ featured_projects|add:featured_news|add:featured_stories }}</p>
+                    <p class="opacity-80">{% trans "Featured" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ avg_enrollment_per_project }}</p>
+                    <p class="opacity-80">{% trans "Avg Enrollment" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ content_completion_rate }}%</p>
+                    <p class="opacity-80">{% trans "Content Complete" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- Featured Content Card -->
-        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Featured Content" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ featured_projects|add:featured_news|add:featured_stories }}</p>
-                <p class="text-sm opacity-80 mt-1">{% trans "Projects, News & Stories" %}</p>
+        <!-- Media Metrics Card -->
+        <div class="bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "Media Metrics" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-images"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-star"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ total_gallery_images }}</p>
+                    <p class="opacity-80">{% trans "Gallery Blobs" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_cover_images }}</p>
+                    <p class="opacity-80">{% trans "Cover Blobs" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_gallery_image_urls }}</p>
+                    <p class="opacity-80">{% trans "Gallery URLs" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_cover_image_urls }}</p>
+                    <p class="opacity-80">{% trans "Cover URLs" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_videos }}</p>
+                    <p class="opacity-80">{% trans "Videos" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_media_items }}</p>
+                    <p class="opacity-80">{% trans "Total Media" %}</p>
+                </div>
             </div>
         </div>
 
-        <!-- User Engagement Card -->
-        <div class="bg-gradient-to-r from-teal-500 to-green-500 text-white shadow-lg rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
-            <div>
-                <h3 class="text-lg font-medium mb-1">{% trans "Active Users (30d)" %}</h3>
-                <p class="text-4xl font-bold group-hover:scale-110 transition-transform duration-300">{{ active_users_30d }}</p>
-                <p class="text-sm opacity-80 mt-1">{{ onboarding_rate }}% {% trans "Onboarded" %}</p>
+        <!-- System Health Card -->
+        <div class="bg-gradient-to-br from-gray-500 to-slate-600 text-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">{% trans "System Health" %}</h3>
+                <div class="text-3xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
             </div>
-            <div class="text-5xl opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-user-check"></i>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <p class="font-medium">{{ kicc_synced_projects }}</p>
+                    <p class="opacity-80">{% trans "KICC Synced" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ faq_helpfulness_ratio }}%</p>
+                    <p class="opacity-80">{% trans "FAQ Helpfulness" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ admin_user_count }}</p>
+                    <p class="opacity-80">{% trans "Admins" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ total_database_records }}</p>
+                    <p class="opacity-80">{% trans "DB Records" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ data_integrity_score }}%</p>
+                    <p class="opacity-80">{% trans "Data Integrity" %}</p>
+                </div>
+                <div>
+                    <p class="font-medium">{{ content_freshness_days }}</p>
+                    <p class="opacity-80">{% trans "Days Since Update" %}</p>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Data Visualization & Content Analytics -->
-    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-                <i class="fas fa-chart-pie mr-3 text-primary-blue"></i>
-                {% trans "Content Distribution" %}
-            </h3>
-            <div class="relative" style="height: 300px;">
-                <canvas id="contentDistributionChart"></canvas>
-            </div>
-        </div>
-        <div class="chart-container bg-white dark:bg-card-bg-dark p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-                <i class="fas fa-chart-line mr-3 text-green-500"></i>
-                {% trans "Monthly Activity Trend" %}
-            </h3>
-            <div class="relative" style="height: 300px;">
-                <canvas id="activityTrendChart"></canvas>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Project Insights Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        <!-- Projects by Difficulty -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Difficulty" %}</h3>
-            <div class="space-y-4">
-                {% for item in projects_by_difficulty %}
-                <div>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ item.difficulty }}</span>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {% widthratio item.count total_projects 100 %}%"></div>
+    <div class="mb-12">
+        <!-- Dashboard Filter Controls -->
+        <div class="bg-white dark:bg-card-bg-dark rounded-xl shadow-md p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+                <i class="fas fa-chart-line mr-3 text-primary-blue"></i>
+                {% trans "Analytics Overview" %}
+            </h2>
+            <div class="flex flex-wrap gap-3">
+                <div class="flex items-center space-x-2">
+                    <label for="timeRange" class="text-sm font-medium text-gray-700 dark:text-gray-300">{% trans "Range:" %}</label>
+                    <select id="timeRange" class="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-blue focus:border-primary-blue sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="30d">{% trans "Last 30 Days" %}</option>
+                        <option value="90d">{% trans "Last 90 Days" %}</option>
+                        <option value="6m" selected>{% trans "Last 6 Months" %}</option>
+                        <option value="1y">{% trans "Last Year" %}</option>
+                        <option value="all">{% trans "All Time" %}</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="frequency" class="text-sm font-medium text-gray-700 dark:text-gray-300">{% trans "Freq:" %}</label>
+                    <select id="frequency" class="form-select block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-blue focus:border-primary-blue sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="day">{% trans "Daily" %}</option>
+                        <option value="week">{% trans "Weekly" %}</option>
+                        <option value="month" selected>{% trans "Monthly" %}</option>
+                    </select>
+                </div>
+                <button id="refreshData" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors duration-200">
+                    <i class="fas fa-sync-alt mr-2"></i> {% trans "Refresh" %}
+                </button>
+                
+                <!-- Export Dropdown -->
+                <div class="relative inline-block text-left">
+                    <button type="button" id="exportMenuBtn" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 transition-colors duration-200" aria-expanded="false" aria-haspopup="true">
+                        <i class="fas fa-download mr-2"></i> {% trans "Export" %}
+                        <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div id="exportMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all duration-200 ease-out transform opacity-0 scale-95">
+                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="exportMenuBtn">
+                            <a href="?export=csv" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 flex items-center" role="menuitem">
+                                <i class="fas fa-file-csv mr-2 text-green-500"></i> {% trans "Export as CSV" %}
+                            </a>
+                            <a href="?export=tsv" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 flex items-center" role="menuitem">
+                                <i class="fas fa-file-alt mr-2 text-blue-500"></i> {% trans "Export as TSV" %}
+                            </a>
+                            <a href="?export=json" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 flex items-center" role="menuitem">
+                                <i class="fas fa-file-code mr-2 text-yellow-500"></i> {% trans "Export as JSON" %}
+                            </a>
+                            <a href="?export=xlsx" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 flex items-center" role="menuitem">
+                                <i class="fas fa-file-excel mr-2 text-green-600"></i> {% trans "Export as XLSX" %}
+                            </a>
+                            <a href="?export=html" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 flex items-center" role="menuitem">
+                                <i class="fas fa-file-code mr-2 text-orange-500"></i> {% trans "Export as HTML" %}
+                            </a>
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
 
-        <!-- Projects by Theme -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Theme" %}</h3>
-            <div class="flex flex-wrap gap-2">
-                {% for item in projects_by_theme %}
-                <span class="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-                    {{ item.theme }} ({{ item.count }})
-                </span>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Projects by Country -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Country" %}</h3>
-            <div class="space-y-2">
-                {% for item in projects_by_country %}
-                <div class="flex justify-between items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{{ item.country }}</span>
-                    <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-indigo-100 bg-indigo-600 rounded-full">{{ item.count }}</span>
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- User Growth Chart -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Growth" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="userGrowthChart"></canvas>
                 </div>
-                {% endfor %}
+            </div>
+
+            <!-- Content Activity Chart -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Content Creation Activity" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="contentActivityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Projects by Theme -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Theme" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="projectThemeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Projects by Country -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Country" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="projectCountryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- User Gender Distribution -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Gender Distribution" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="userGenderChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Project Difficulty -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Projects by Difficulty" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="projectDifficultyChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Beneficiaries Impact -->
+            <div class="chart-container bg-white dark:bg-card-bg-dark p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 lg:col-span-2">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Top 5 Projects by Impact (Headcount)" %}</h3>
+                <div class="relative h-72">
+                    <canvas id="impactChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- User Demographics & Additional Stats Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <!-- User Demographics -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
+        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6 chart-container">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Demographics" %}</h3>
-            <div class="space-y-4">
-                <div>
-                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Gender Distribution" %}</h4>
-                    {% for item in users_by_gender %}
-                    <div class="flex justify-between mb-1">
-                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ item.gender|default:"Not specified" }}</span>
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div>
-                    <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Top Countries" %}</h4>
-                    {% for item in users_by_country %}
-                    <div class="flex justify-between mb-1">
-                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ item.country_code|upper }}</span>
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
-                    </div>
-                    {% endfor %}
+            <div>
+                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Top User Countries" %}</h4>
+                <div class="relative h-72">
+                    <canvas id="userCountryBarChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- Login Methods & Engagement -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
+        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6 chart-container">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "User Engagement" %}</h3>
-            <div class="space-y-4">
+            <div class="space-y-6">
                 <div>
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{% trans "Login Methods" %}</h4>
-                    {% for item in login_methods %}
-                    <div class="flex justify-between mb-1">
-                        <span class="text-xs text-gray-600 dark:text-gray-400">{{ item.login_method|title }}</span>
-                        <span class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ item.count }}</span>
+                    <div class="relative h-48">
+                        <canvas id="loginMethodPieChart"></canvas>
                     </div>
-                    {% endfor %}
                 </div>
                 <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                     <div class="flex justify-between items-center">
@@ -340,36 +408,36 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Content & Impact Summary -->
-        <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Content & Impact Summary" %}</h3>
-            <div class="space-y-4">
+    <!-- Content & Impact Summary -->
+    <div class="bg-white dark:bg-card-bg-dark shadow-lg rounded-xl p-6 mb-12 chart-container">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{% trans "Content & Impact Summary" %}</h3>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Project Duration" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_project_duration }} {% trans "days" %}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Beneficiaries/Story" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_beneficiaries_per_story }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Hours/Story" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_hours_per_story }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Unique Enrolled Users" %}</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ unique_enrolled_users }}</span>
+            </div>
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Project Duration" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_project_duration }} {% trans "days" %}</span>
+                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Published Stories" %}</span>
+                    <span class="text-sm font-medium text-green-600">{{ published_stories }}</span>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Beneficiaries/Story" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_beneficiaries_per_story }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Avg Hours/Story" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ avg_hours_per_story }}</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Unique Enrolled Users" %}</span>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ unique_enrolled_users }}</span>
-                </div>
-                <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Published Stories" %}</span>
-                        <span class="text-sm font-medium text-green-600">{{ published_stories }}</span>
-                    </div>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Hero Highlights" %}</span>
-                        <span class="text-sm font-medium text-yellow-600">{{ hero_projects|add:hero_news|add:hero_stories }}</span>
-                    </div>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-sm text-gray-700 dark:text-gray-300">{% trans "Hero Highlights" %}</span>
+                    <span class="text-sm font-medium text-yellow-600">{{ hero_projects|add:hero_news|add:hero_stories }}</span>
                 </div>
             </div>
         </div>
@@ -529,196 +597,310 @@
 {% endblock %}
 
 {% block static_js %}
+<!-- Ensure Chart.js is loaded explicitly here -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<!-- Export Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <script>
-// Content Distribution Pie Chart
-const contentDistributionCtx = document.getElementById('contentDistributionChart').getContext('2d');
-const contentDistributionChart = new Chart(contentDistributionCtx, {
-    type: 'doughnut',
-    data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-            data: {{ chart_data|safe }},
-            backgroundColor: [
-                'rgba(59, 130, 246, 0.8)',
-                'rgba(245, 158, 11, 0.8)',
-                'rgba(168, 85, 247, 0.8)',
-                'rgba(239, 68, 68, 0.8)'
-            ],
-            borderColor: [
-                'rgba(59, 130, 246, 1)',
-                'rgba(245, 158, 11, 1)',
-                'rgba(168, 85, 247, 1)',
-                'rgba(239, 68, 68, 1)'
-            ],
-            borderWidth: 2,
-            hoverOffset: 10
-        }]
-    },
-    options: {
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Dashboard script loaded");
+
+    // 1. Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+        console.error("Chart.js is not loaded!");
+        return;
+    }
+
+    // Chart instances storage
+    let chartInstances = {};
+    let currentDashboardData = null; // Store data for CSV export
+
+    // Base Chart Options
+    const baseOptions = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'bottom',
                 labels: {
-                    padding: 20,
-                    usePointStyle: true,
-                    font: {
-                        size: 12
-                    }
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.parsed || 0;
-                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                        return `${label}: ${value} (${percentage}%)`;
-                    }
-                }
-            }
-        },
-        animation: {
-            animateScale: true,
-            animateRotate: true
-        }
-    }
-});
-
-// Monthly Activity Trend Line Chart
-const activityTrendCtx = document.getElementById('activityTrendChart').getContext('2d');
-const activityTrendChart = new Chart(activityTrendCtx, {
-    type: 'line',
-    data: {
-        labels: {{ activity_months|safe }},
-        datasets: [{
-            label: '{% trans "Projects Created" %}',
-            data: {{ activity_project_data|safe }},
-            borderColor: 'rgba(59, 130, 246, 1)',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 8
-        }, {
-            label: '{% trans "News & Events" %}',
-            data: {{ activity_news_data|safe }},
-            borderColor: 'rgba(245, 158, 11, 1)',
-            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            borderWidth: 3,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: 'rgba(245, 158, 11, 1)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 8
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-            intersect: false,
-            mode: 'index'
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
                     usePointStyle: true,
                     padding: 20
                 }
             },
             tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                titleColor: '#fff',
-                bodyColor: '#fff',
-                borderColor: 'rgba(59, 130, 246, 0.5)',
-                borderWidth: 1
+                mode: 'index',
+                intersect: false,
             }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.1)'
-                },
-                ticks: {
-                    precision: 0
-                }
-            },
-            x: {
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.1)'
-                }
+        }
+    };
+
+    function isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+    }
+
+    function getChartColors() {
+        const dark = isDarkMode();
+        return {
+            grid: dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+            text: dark ? '#e5e7eb' : '#374151'
+        };
+    }
+
+    // Initialize
+    initCharts();
+
+    function initCharts() {
+        fetchData();
+    }
+
+    async function fetchData() {
+        const range = document.getElementById('timeRange').value;
+        const frequency = document.getElementById('frequency').value;
+        const btn = document.getElementById('refreshData');
+        
+        // Save original icon to restore later
+        const originalContent = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>';
+        btn.disabled = true;
+
+        try {
+            const url = `{% url 'dashboard_data' %}?range=${range}&frequency=${frequency}`;
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        },
-        animation: {
-            duration: 2000,
-            easing: 'easeInOutQuart'
+            
+            const data = await response.json();
+            currentDashboardData = data; // Store for export
+            updateCharts(data);
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+            btn.classList.add('bg-red-600'); // Visual error indication
+        } finally {
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
         }
     }
-});
 
-// Add loading animation for charts
-document.addEventListener('DOMContentLoaded', function() {
+    function updateCharts(data) {
+        const colors = getChartColors();
+        const commonScales = {
+            y: {
+                beginAtZero: true,
+                grid: { color: colors.grid, borderColor: colors.grid },
+                ticks: { color: colors.text }
+            },
+            x: {
+                grid: { color: colors.grid, borderColor: colors.grid },
+                ticks: { color: colors.text }
+            }
+        };
+
+        // 1. User Growth Chart
+        updateChart('userGrowthChart', 'line', {
+            labels: data.user_growth.labels,
+            datasets: [{
+                label: '{% trans "New Users" %}',
+                data: data.user_growth.data,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6, // Fix: Make points visible for single data points
+                pointHoverRadius: 8
+            }]
+        }, { scales: commonScales });
+
+        // 2. Content Activity Chart
+        updateChart('contentActivityChart', 'bar', {
+            labels: data.content_activity.labels,
+            datasets: [
+                {
+                    label: '{% trans "Projects" %}',
+                    data: data.content_activity.datasets.projects,
+                    backgroundColor: '#10b981',
+                },
+                {
+                    label: '{% trans "News/Events" %}',
+                    data: data.content_activity.datasets.news,
+                    backgroundColor: '#f59e0b',
+                },
+                {
+                    label: '{% trans "Stories" %}',
+                    data: data.content_activity.datasets.stories,
+                    backgroundColor: '#8b5cf6',
+                }
+            ]
+        }, { 
+            scales: {
+                x: { ...commonScales.x, stacked: true },
+                y: { ...commonScales.y, stacked: true }
+            }
+        });
+
+        // 3. Projects by Theme
+        updateChart('projectThemeChart', 'doughnut', {
+            labels: data.themes.labels,
+            datasets: [{
+                data: data.themes.data,
+                backgroundColor: [
+                    '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#6366f1'
+                ],
+                borderWidth: 0
+            }]
+        }, { 
+            plugins: {
+                legend: { position: 'right' }
+            },
+            scales: {} // Disable axes for doughnut
+        });
+
+        // 4. Projects by Country
+        updateChart('projectCountryChart', 'bar', {
+            labels: data.countries.labels,
+            datasets: [{
+                label: '{% trans "Projects" %}',
+                data: data.countries.data,
+                backgroundColor: '#6366f1',
+                borderRadius: 4
+            }]
+        }, { scales: commonScales });
+
+        // 6. User Gender Chart
+        updateChart('userGenderChart', 'doughnut', {
+            labels: data.demographics.gender.labels,
+            datasets: [{
+                data: data.demographics.gender.data,
+                backgroundColor: ['#3b82f6', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6'],
+                borderWidth: 0
+            }]
+        }, {
+            plugins: { legend: { position: 'right' } },
+            scales: {} 
+        });
+
+        // 7. Project Difficulty Chart
+        updateChart('projectDifficultyChart', 'bar', {
+            labels: data.project_difficulty.labels,
+            datasets: [{
+                label: '{% trans "Projects" %}',
+                data: data.project_difficulty.data,
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], // Green, Yellow, Red logic roughly
+                borderRadius: 4
+            }]
+        }, { scales: commonScales });
+        
+        // 5. Impact Chart
+        updateChart('impactChart', 'bar', {
+            labels: data.impact.labels,
+            datasets: [{
+                label: '{% trans "Beneficiaries (Headcount)" %}',
+                data: data.impact.data,
+                backgroundColor: '#ec4899',
+                borderRadius: 4
+            }]
+        }, {
+            indexAxis: 'y',
+            scales: commonScales
+        });
+
+        // 8. User Countries (Bar)
+        updateChart('userCountryBarChart', 'bar', {
+            labels: data.demographics.countries.labels,
+            datasets: [{
+                label: '{% trans "Users" %}',
+                data: data.demographics.countries.data,
+                backgroundColor: '#6366f1',
+                borderRadius: 4
+            }]
+        }, { scales: commonScales });
+
+        // 9. Login Methods (Doughnut)
+        updateChart('loginMethodPieChart', 'doughnut', {
+            labels: data.demographics.login_methods.labels,
+            datasets: [{
+                data: data.demographics.login_methods.data,
+                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+                borderWidth: 0
+            }]
+        }, {
+            plugins: { legend: { position: 'right', labels: { boxWidth: 12 } } },
+            scales: {} 
+        });
+    }
+
+    function updateChart(canvasId, type, data, optionsOverrides = {}) {
+        const ctxElement = document.getElementById(canvasId);
+        
+        if (!ctxElement) {
+            console.warn(`Canvas element with id '${canvasId}' not found.`);
+            return;
+        }
+        
+        const ctx = ctxElement.getContext('2d');
+        const colors = getChartColors();
+
+        if (chartInstances[canvasId]) {
+            chartInstances[canvasId].destroy();
+        }
+
+        // Safer options merging
+        const finalOptions = JSON.parse(JSON.stringify(baseOptions)); // Deep clone base
+        
+        // Manually merge overrides
+        if(optionsOverrides.scales) finalOptions.scales = optionsOverrides.scales;
+        if(optionsOverrides.indexAxis) finalOptions.indexAxis = optionsOverrides.indexAxis;
+        
+        // Merge plugins logic
+        if(optionsOverrides.plugins) {
+            if(optionsOverrides.plugins.legend) {
+                // Ensure base plugins exist if not already present (deep clone handles it usually)
+                if(!finalOptions.plugins) finalOptions.plugins = {};
+                if(!finalOptions.plugins.legend) finalOptions.plugins.legend = {};
+                
+                Object.assign(finalOptions.plugins.legend, optionsOverrides.plugins.legend);
+            }
+        }
+        
+        // Update text colors for dark mode
+        if(finalOptions.plugins && finalOptions.plugins.legend && finalOptions.plugins.legend.labels) {
+            finalOptions.plugins.legend.labels.color = colors.text;
+        }
+
+        chartInstances[canvasId] = new Chart(ctx, {
+            type: type,
+            data: data,
+            options: finalOptions
+        });
+    }
+
+    // Event Listeners
+    const refreshBtn = document.getElementById('refreshData');
+    if(refreshBtn) refreshBtn.addEventListener('click', fetchData);
+    
+    const timeRangeSelect = document.getElementById('timeRange');
+    if(timeRangeSelect) timeRangeSelect.addEventListener('change', fetchData);
+    
+    const freqSelect = document.getElementById('frequency');
+    if(freqSelect) freqSelect.addEventListener('change', fetchData);
+
+    // Initial animations
     const chartContainers = document.querySelectorAll('.chart-container');
     chartContainers.forEach(container => {
         container.style.opacity = '0';
         container.style.transform = 'translateY(20px)';
-
         setTimeout(() => {
             container.style.transition = 'all 0.6s ease-out';
             container.style.opacity = '1';
             container.style.transform = 'translateY(0)';
         }, 300);
     });
-
-    // Animate summary cards on scroll
-    const summaryCards = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-4 > div');
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }, index * 100);
-            }
-        });
-    }, observerOptions);
-
-    summaryCards.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        card.style.transition = 'all 0.6s ease-out';
-        observer.observe(card);
-    });
-
-    // Add hover effects for quick action cards
-    const quickActionCards = document.querySelectorAll('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 a');
-    quickActionCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-4px) scale(1.02)';
-        });
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-
-    // Animate header gradient on load
+    
+    // Header gradient animation
     const header = document.querySelector('.bg-gradient-to-r.from-blue-600');
     if (header) {
         header.style.opacity = '0';
@@ -730,13 +912,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     }
 
-    // Add pulse animation to key metrics in header
-    const headerStats = document.querySelectorAll('.bg-gradient-to-r.from-blue-600 .grid.grid-cols-2.md\\:grid-cols-4 .font-bold');
-    headerStats.forEach((stat, index) => {
-        setTimeout(() => {
-            stat.style.animation = 'pulse 2s ease-in-out';
-        }, 1000 + index * 200);
-    });
+    // --- Export Functionality ---
+    const exportMenuBtn = document.getElementById('exportMenuBtn');
+    const exportMenu = document.getElementById('exportMenu');
+    
+    if (exportMenuBtn && exportMenu) {
+        exportMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            exportMenu.classList.toggle('hidden');
+            exportMenu.classList.toggle('opacity-0');
+            exportMenu.classList.toggle('scale-95');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!exportMenuBtn.contains(e.target) && !exportMenu.contains(e.target)) {
+                exportMenu.classList.add('hidden');
+                exportMenu.classList.add('opacity-0');
+                exportMenu.classList.add('scale-95');
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
