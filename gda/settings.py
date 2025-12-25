@@ -282,7 +282,8 @@ DATE_INPUT_FORMATS = [
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# In Docker, STATIC_ROOT should be /app/static (set via env var); locally use 'staticfiles'
+STATIC_ROOT = Path(os.environ.get('STATIC_ROOT', BASE_DIR / 'staticfiles'))
 
 # Security-related settings — set via environment in production
 SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
